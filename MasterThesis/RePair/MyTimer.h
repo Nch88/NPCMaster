@@ -1,5 +1,4 @@
-#include <ctime>
-#include <iostream>
+#include "stdafx.h"
 
 #pragma once
 

@@ -9,8 +9,16 @@
 
 #include <stdio.h>
 #include <tchar.h>
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <ctime>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 
 // TODO: reference additional headers your program requires here
 #include "MyTimer.h"
+#include "SymbolRecord.h"
+#include "PairRecord.h"
