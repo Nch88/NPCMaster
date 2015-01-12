@@ -20,21 +20,22 @@ void Initializer::SequenceArray(string filename,
 	char newSymbol;
 	char oldSymbol;
 	string pair;
+	int index = 0;
 
 	PairRecord* tmpRecord;
-	SymbolRecord previousOccurence;
-	SymbolRecord newOccurence;
+	SymbolRecord* previousOccurence;
+	SymbolRecord* newOccurence;
 
 	ifstream file(filename);
 
 	if (file.is_open())
 	{
 		file >> noskipws >> oldSymbol;
-		sequenceArray->push_back(new SymbolRecord(oldSymbol));
+		sequenceArray->push_back(new SymbolRecord(oldSymbol, index++));
 
 		while (file >> noskipws >> newSymbol)
 		{
-			sequenceArray->push_back(new SymbolRecord(newSymbol));
+			sequenceArray->push_back(new SymbolRecord(newSymbol, index++));
 			stringstream ss;
 			ss << oldSymbol << newSymbol;
 			ss >> pair;
@@ -47,17 +48,18 @@ void Initializer::SequenceArray(string filename,
 				tmpRecord->inc();
 				tmpRecord->setIndexFirst(sequenceArray->size() - 2); //First symbol in active pair
 				tmpRecord->setIndexLast(sequenceArray->size() - 2);
+				tmpRecord->nextPair = NULL;
+				tmpRecord->previousPair = NULL;
 			}
 			else
 			{
 				tmpRecord->inc();
 
+				previousOccurence = (*sequenceArray)[tmpRecord->getIndexLast()];
+				newOccurence = (*sequenceArray)[sequenceArray->size() - 2];
 
-				previousOccurence = *(*sequenceArray)[tmpRecord->getIndexLast()];
-				newOccurence = *(*sequenceArray)[sequenceArray->size() - 2];
-
-				previousOccurence.setNext(&newOccurence);
-				newOccurence.setPrevious(&previousOccurence);
+				previousOccurence->next = newOccurence;
+				newOccurence->previous = previousOccurence;
 
 				tmpRecord->setIndexLast(sequenceArray->size() - 2);
 			}

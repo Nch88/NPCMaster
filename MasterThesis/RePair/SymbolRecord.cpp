@@ -11,11 +11,25 @@ SymbolRecord::SymbolRecord(char s)
 	symbol = s;
 }
 
+SymbolRecord::SymbolRecord(char s, int i)
+{
+	symbol = s;
+	index = i;
+}
+
 SymbolRecord::SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n)
 {
 	symbol = s;
 	previous = p;
 	next = n;
+}
+
+SymbolRecord::SymbolRecord(char s, int i, SymbolRecord* p, SymbolRecord* n)
+{
+	symbol = s;
+	previous = p;
+	next = n;
+	index = i;
 }
 
 SymbolRecord::~SymbolRecord()
