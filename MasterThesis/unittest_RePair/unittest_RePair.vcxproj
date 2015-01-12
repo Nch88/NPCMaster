@@ -82,7 +82,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\RePair\Initializer.cpp" />
     <ClCompile Include="..\RePair\MyTimer.cpp" />
+    <ClCompile Include="..\RePair\PairRecord.cpp" />
+    <ClCompile Include="..\RePair\SymbolRecord.cpp" />
+    <ClCompile Include="unittest_Initializer.cpp" />
     <ClCompile Include="unittest_MyTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +98,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\RePair\Initializer.h" />
     <ClInclude Include="..\RePair\MyTimer.h" />
+    <ClInclude Include="..\RePair\PairRecord.h" />
+    <ClInclude Include="..\RePair\SymbolRecord.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

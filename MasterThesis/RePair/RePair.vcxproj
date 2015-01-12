@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Initializer.h" />
     <ClInclude Include="MyTimer.h" />
     <ClInclude Include="PairRecord.h" />
     <ClInclude Include="stdafx.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="MyTimer.cpp" />
     <ClCompile Include="PairRecord.cpp" />
     <ClCompile Include="RePair.cpp" />

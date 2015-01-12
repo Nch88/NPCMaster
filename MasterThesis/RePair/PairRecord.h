@@ -3,11 +3,15 @@
 #pragma once
 class PairRecord
 {
+public:
 	int count;
 	int arrayIndexFirst;
 	int arrayIndexLast;
+	std::string pair;
+	PairRecord* previousPair;
+	PairRecord* nextPair;
 
-public:
+
 	PairRecord();
 	PairRecord(int indexFirst, int indexLast);
 	~PairRecord();

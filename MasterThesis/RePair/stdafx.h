@@ -22,3 +22,4 @@
 #include "MyTimer.h"
 #include "SymbolRecord.h"
 #include "PairRecord.h"
+#include "Initializer.h"

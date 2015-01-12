@@ -2,11 +2,13 @@
 
 #pragma once
 class SymbolRecord
-{	char symbol;
+{	
+public:
+	char symbol;
 	SymbolRecord* previous;
 	SymbolRecord* next;
 
-public:
+
 	SymbolRecord();
 	SymbolRecord(char s);
 	SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n);
