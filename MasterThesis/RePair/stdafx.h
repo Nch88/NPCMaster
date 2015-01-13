@@ -23,3 +23,4 @@
 #include "SymbolRecord.h"
 #include "PairRecord.h"
 #include "Initializer.h"
+#include "AlgorithmP.h"
