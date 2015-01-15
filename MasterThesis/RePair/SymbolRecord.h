@@ -1,27 +1,28 @@
 #include "stdafx.h"
 
+using namespace std;
 #pragma once
 class SymbolRecord
 {	
 public:
 	char symbol;
 	int index;
-	SymbolRecord* previous;
-	SymbolRecord* next;
+	shared_ptr<SymbolRecord> previous;
+	shared_ptr<SymbolRecord> next;
 
 
 	SymbolRecord();
 	SymbolRecord(char s);
 	SymbolRecord(char s, int index);
-	SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n);
-	SymbolRecord(char s, int index, SymbolRecord* p, SymbolRecord* n);
+	SymbolRecord(char s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
+	SymbolRecord(char s, int index, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
 	~SymbolRecord();
 
-	void setPrevious(SymbolRecord* p);
-	void setNext(SymbolRecord* n);
+	void setPrevious(shared_ptr<SymbolRecord> p);
+	void setNext(shared_ptr<SymbolRecord> n);
 
 	char getSymbol();
-	SymbolRecord* getPrevious();
-	SymbolRecord* getNext();
+	shared_ptr<SymbolRecord> getPrevious();
+	shared_ptr<SymbolRecord> getNext();
 };
 

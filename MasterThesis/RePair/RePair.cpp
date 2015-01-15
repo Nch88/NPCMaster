@@ -10,38 +10,32 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	unordered_map<char, string> dictionary;
-	unordered_map<string, PairRecord> activePairs;
-	vector<SymbolRecord*> sequenceArray;
-	int Symbols = 65;
+	auto dictionary = make_unique<unordered_map<char, string>>();
+	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+	auto Symbols = make_unique<int>(65);
 	
 	Initializer init;
 	AlgorithmP algP;
-	Test test;
+	//MyTest test;
 	
-	init.SequenceArray("diddy.txt", &sequenceArray, &activePairs);
+	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
 
 	int priorityQueueSize;
 
-	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueueSize = sqrt(sequenceArray->size());
 
-	vector<PairRecord*> priorityQueue(priorityQueueSize);
+	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
 	
-	init.PriorityQueue(priorityQueueSize, &activePairs, &priorityQueue);
-
-	test.Sequence("Original sequence", &sequenceArray);
-
-	//See fig. 4, algprithm P
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+	//See fig. 4, algorithm P
 	algP.run(
-		&sequenceArray,
-		&dictionary,
-		&activePairs,
-		&priorityQueue,
-		&Symbols);
-
-	test.Sequence("Altered sequence", &sequenceArray);
-
-	test.Dictionary("Dictionary", &dictionary);
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		Symbols);
+	
 
 	return 0;
 }

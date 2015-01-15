@@ -14,37 +14,42 @@ Initializer::~Initializer()
 
 
 void Initializer::SequenceArray(string filename,
-	vector<SymbolRecord*> * sequenceArray,
-	unordered_map<string, PairRecord> * activePairs)
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
 {
 	char newSymbol;
 	char oldSymbol;
 	string pair;
 	int index = 0;
 
-	PairRecord* tmpRecord;
-	SymbolRecord* previousOccurence;
-	SymbolRecord* newOccurence;
+	shared_ptr<PairRecord> tmpRecord;
+	shared_ptr<SymbolRecord> previousOccurence;
+	shared_ptr<SymbolRecord> newOccurence;
 
 	ifstream file(filename);
 
 	if (file.is_open())
 	{
 		file >> noskipws >> oldSymbol;
-		sequenceArray->push_back(new SymbolRecord(oldSymbol, index++));
+		sequenceArray->push_back(make_shared<SymbolRecord>(oldSymbol, index++));
 
 		while (file >> noskipws >> newSymbol)
 		{
-			sequenceArray->push_back(new SymbolRecord(newSymbol, index++));
+			sequenceArray->push_back(make_shared<SymbolRecord>(newSymbol, index++));
 			stringstream ss;
 			ss << oldSymbol << newSymbol;
 			ss >> pair;
 
-			tmpRecord = &(*activePairs)[pair];
-			tmpRecord->pair = pair;
+			tmpRecord = (*activePairs)[pair];
+			if (!tmpRecord)
+			{
+				(*activePairs)[pair] = make_shared<PairRecord>();
+				tmpRecord = (*activePairs)[pair];
+			}
 
 			if (tmpRecord->getCount() == 0) //First occurence of active pair
 			{
+				tmpRecord->pair = pair;
 				tmpRecord->inc();
 				tmpRecord->setIndexFirst(sequenceArray->size() - 2); //First symbol in active pair
 				tmpRecord->setIndexLast(sequenceArray->size() - 2);
@@ -72,32 +77,40 @@ void Initializer::SequenceArray(string filename,
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	unordered_map<string, PairRecord> * activePairs,
-	vector<PairRecord*> * priorityQueue)
+	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
+	shared_ptr<PairRecord> tmpRecord;
 
-
-	for (unordered_map<string, PairRecord>::iterator it = (*activePairs).begin(); it != (*activePairs).end(); it++)
+	for each (auto it in (*activePairs))
 	{
-		if (it->second.count >= 2)
-		{
-			if (it->second.count > priorityQueueSize)
+		if (it.second->count >= 2)
+		{			
+			if (it.second->count > priorityQueueSize)
 				priorityIndex = priorityQueueSize - 1;
 
 			else
-				priorityIndex = it->second.count - 2;
+				priorityIndex = it.second->count - 2;
 
 
 			if ((*priorityQueue)[priorityIndex] == NULL)
-				(*priorityQueue)[priorityIndex] = &(it->second);
+				(*priorityQueue)[priorityIndex] = (it.second);
 
 			else
 			{
-				(*priorityQueue)[priorityIndex]->previousPair = &(it->second);
-				it->second.nextPair = (*priorityQueue)[priorityIndex];
-				(*priorityQueue)[priorityIndex] = &(it->second);
+				tmpRecord = (*priorityQueue)[priorityIndex];
+				while (tmpRecord->nextPair)
+				{
+					tmpRecord = tmpRecord->nextPair;
+				}
+				tmpRecord->nextPair = (it.second);
+				it.second->previousPair = tmpRecord;
+				it.second->nextPair = NULL;
+				/*(*priorityQueue)[priorityIndex]->previousPair = (it.second);
+				it.second->nextPair = (*priorityQueue)[priorityIndex];
+				(*priorityQueue)[priorityIndex] = (it.second);*/
 			}
 		}
-	}
+	}	
 }

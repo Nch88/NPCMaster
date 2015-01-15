@@ -12,21 +12,13 @@ PairRecord::PairRecord(int indexFirst, int indexLast)
 	count = 0;
 	arrayIndexFirst = indexFirst;
 	arrayIndexLast = indexLast;
+	previousPair = NULL;
+	nextPair = NULL;
 }
 
 
 PairRecord::~PairRecord()
 {
-	if (nextPair)
-	{
-		delete nextPair;
-		nextPair = 0;
-	}
-	if (previousPair)
-	{
-		delete previousPair;
-		previousPair = 0;
-	}
 }
 
 

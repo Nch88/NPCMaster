@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 
 // TODO: reference additional headers your program requires here
@@ -24,4 +25,4 @@
 #include "PairRecord.h"
 #include "Initializer.h"
 #include "AlgorithmP.h"
-#include "Test.h"
+#include "MyTest.h"

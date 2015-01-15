@@ -39,7 +39,7 @@
     <ClInclude Include="AlgorithmP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="MyTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClCompile Include="AlgorithmP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="MyTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

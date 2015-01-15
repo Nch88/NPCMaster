@@ -4,27 +4,33 @@
 
 SymbolRecord::SymbolRecord()
 {
+	previous = NULL;
+	next = NULL;
 }
 
 SymbolRecord::SymbolRecord(char s)
 {
 	symbol = s;
+	previous = NULL;
+	next = NULL;
 }
 
 SymbolRecord::SymbolRecord(char s, int i)
 {
 	symbol = s;
 	index = i;
+	previous = NULL;
+	next = NULL;
 }
 
-SymbolRecord::SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n)
+SymbolRecord::SymbolRecord(char s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
 {
 	symbol = s;
 	previous = p;
 	next = n;
 }
 
-SymbolRecord::SymbolRecord(char s, int i, SymbolRecord* p, SymbolRecord* n)
+SymbolRecord::SymbolRecord(char s, int i, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
 {
 	symbol = s;
 	previous = p;
@@ -34,24 +40,14 @@ SymbolRecord::SymbolRecord(char s, int i, SymbolRecord* p, SymbolRecord* n)
 
 SymbolRecord::~SymbolRecord()
 {
-	if (next)
-	{
-		delete next;
-		next = 0;
-	}
-	if (previous)
-	{
-		delete previous;
-		previous = 0;
-	}
 }
 
-void SymbolRecord::setPrevious(SymbolRecord* p)
+void SymbolRecord::setPrevious(shared_ptr<SymbolRecord> p)
 {
 	previous = p;
 }
 
-void SymbolRecord::setNext(SymbolRecord* n)
+void SymbolRecord::setNext(shared_ptr<SymbolRecord> n)
 {
 	next = n;
 }
@@ -61,12 +57,12 @@ char SymbolRecord::getSymbol()
 	return symbol;
 }
 
-SymbolRecord* SymbolRecord::getPrevious()
+shared_ptr<SymbolRecord> SymbolRecord::getPrevious()
 {
 	return previous;
 }
 
-SymbolRecord* SymbolRecord::getNext()
+shared_ptr<SymbolRecord> SymbolRecord::getNext()
 {
 	return next;
 }
