@@ -33,7 +33,7 @@ TEST(removeFromListInPriorityQueue, onlyInTheList)
 
 	tmpPairRecordAdjacent->count--;
 
-	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent, &priorityQueue);
+	algP.removeFromListInPriorityQueue(4, tmpPairRecordAdjacent, &priorityQueue);
 
 	ASSERT_EQ(NULL, priorityQueue[4]);
 }
@@ -67,7 +67,7 @@ TEST(removeFromListInPriorityQueue, firstInTheList)
 
 	tmpPairRecordAdjacent->count--;
 
-	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent, &priorityQueue);
+	algP.removeFromListInPriorityQueue(1, tmpPairRecordAdjacent, &priorityQueue);
 
 	ASSERT_EQ("id", priorityQueue[1]->pair);
 }
@@ -100,7 +100,7 @@ TEST(removeFromListInPriorityQueue, lastInTheList)
 
 	tmpPairRecordAdjacent->count--;
 
-	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent, &priorityQueue);
+	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent->count -1, tmpPairRecordAdjacent, &priorityQueue);
 
 	ASSERT_EQ(NULL, tmpPairRecordAdjacent->previousPair->nextPair);
 }
@@ -134,7 +134,7 @@ TEST(removeFromListInPriorityQueue, middleOfTheList)
 
 	tmpPairRecordAdjacent->count--;
 
-	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent, &priorityQueue);	
+	algP.removeFromListInPriorityQueue(tmpPairRecordAdjacent->count - 1, tmpPairRecordAdjacent, &priorityQueue);
 
 	ASSERT_EQ(tmpPairRecordAdjacent->nextPair, tmpPairRecordAdjacent->previousPair->nextPair);
 	ASSERT_EQ(tmpPairRecordAdjacent->previousPair, tmpPairRecordAdjacent->nextPair->previousPair);

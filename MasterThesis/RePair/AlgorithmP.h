@@ -9,7 +9,7 @@ public:
 	AlgorithmP();
 	~AlgorithmP();
 
-	void removeFromListInPriorityQueue(PairRecord * tmpPairRecordAdjacent, vector<PairRecord*> * priorityQueue);
+	void removeFromListInPriorityQueue(int index, PairRecord * tmpPairRecordAdjacent, vector<PairRecord*> * priorityQueue);
 	void replaceAllPairs(
 		int sequenceIndex,
 		vector<SymbolRecord*> * sequenceArray,

@@ -4,50 +4,7 @@
 #include "stdafx.h"
 using namespace std;
 
-void TestSequence(string msg, vector<SymbolRecord*> * sequenceArray)
-{
-	//Test
-	stringstream ss;
-	string s;
 
-	cout << msg << ": ";
-	for (int i = 0; i < sequenceArray->size(); i++)
-	{
-		if ((*sequenceArray)[i]->symbol != (char) 0)
-			ss << (*sequenceArray)[i]->symbol;
-	}
-	ss >> s;
-	cout << s << endl << endl;
-	//End Test
-}
-
-void TestSequenceWithIndex(string msg, vector<SymbolRecord*> * sequenceArray)
-{
-	//Test
-
-	cout << msg << ": " << endl;
-	for (int i = 0; i < sequenceArray->size(); i++)
-	{
-		cout << (*sequenceArray)[i]->symbol << " at: " << (*sequenceArray)[i]->index << endl;
-	}
-	cout << endl << endl;
-	//End Test
-}
-
-void TestDictionary(string msg, unordered_map<char, string> * dictionary)
-{
-	//Test
-	stringstream ss;
-	string s;
-
-	cout << msg << ": " << endl;
-	for (auto it = (*dictionary).cbegin(); it != (*dictionary).cend(); ++it)
-	{
-		cout << it->first << " --> " << it->second << endl;
-	}
-	cout << s << endl << endl;
-	//End Test
-}
 
 
 
@@ -60,7 +17,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Initializer init;
 	AlgorithmP algP;
-
+	Test test;
+	
 	init.SequenceArray("diddy.txt", &sequenceArray, &activePairs);
 
 	int priorityQueueSize;
@@ -71,7 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	init.PriorityQueue(priorityQueueSize, &activePairs, &priorityQueue);
 
-	TestSequence("Original sequence", &sequenceArray);
+	test.Sequence("Original sequence", &sequenceArray);
 
 	//See fig. 4, algprithm P
 	algP.run(
@@ -81,9 +39,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		&priorityQueue,
 		&Symbols);
 
-	TestSequence("Altered sequence", &sequenceArray);
+	test.Sequence("Altered sequence", &sequenceArray);
 
-	TestDictionary("Dictionary", &dictionary);
+	test.Dictionary("Dictionary", &dictionary);
 
 	return 0;
 }

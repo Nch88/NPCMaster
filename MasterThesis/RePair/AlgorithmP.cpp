@@ -13,9 +13,8 @@ AlgorithmP::~AlgorithmP()
 }
 
 
-void AlgorithmP::removeFromListInPriorityQueue(PairRecord * tmpPairRecordAdjacent, vector<PairRecord*> * priorityQueue)
+void AlgorithmP::removeFromListInPriorityQueue(int index, PairRecord * tmpPairRecordAdjacent, vector<PairRecord*> * priorityQueue)
 {
-	int index = tmpPairRecordAdjacent->count - 1;
 	if (index > priorityQueue->size() - 1)
 		index = priorityQueue->size() - 1;
 
@@ -62,12 +61,12 @@ void AlgorithmP::managePriorityQueueDecrement(PairRecord * tmpPairRecordAdjacent
 
 	if (tmpPairRecordAdjacent->count == 1) //Remove from priority queue
 	{
-		removeFromListInPriorityQueue(tmpPairRecordAdjacent, priorityQueue);
+		removeFromListInPriorityQueue(0, tmpPairRecordAdjacent, priorityQueue);
 	}
 	//Remove from current priority queue entry and add to one lower
 	else if (tmpPairRecordAdjacent->count > 1 && tmpPairRecordAdjacent->count <= priorityQueue->size() - 1)
 	{
-		removeFromListInPriorityQueue(tmpPairRecordAdjacent, priorityQueue);
+		removeFromListInPriorityQueue(tmpPairRecordAdjacent->count - 1, tmpPairRecordAdjacent, priorityQueue);
 
 		insertIntoListInPriorityQueue(
 			tmpPairRecordAdjacent->count - 2,
@@ -247,7 +246,7 @@ void AlgorithmP::replaceInstanceOfPair(
 		//Move up in priority queue
 		else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
 		{
-			removeFromListInPriorityQueue(tmpPairRecord, priorityQueue);
+			removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
 			insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
 		}
 	}
@@ -276,7 +275,7 @@ void AlgorithmP::replaceInstanceOfPair(
 		//Move up in priority queue
 		else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
 		{
-			removeFromListInPriorityQueue(tmpPairRecord, priorityQueue);
+			removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
 			insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
 		}
 	}

@@ -24,3 +24,4 @@
 #include "PairRecord.h"
 #include "Initializer.h"
 #include "AlgorithmP.h"
+#include "Test.h"
