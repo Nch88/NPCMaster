@@ -279,6 +279,16 @@ void AlgorithmP::replaceInstanceOfPair(
 			insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
 		}
 	}
+	/*if (tmpPairRecord)
+	{
+		delete tmpPairRecord;
+		tmpPairRecord = 0;
+	}
+	if (tmpPairRecordAdjacent)
+	{
+		delete tmpPairRecordAdjacent;
+		tmpPairRecordAdjacent = 0;
+	}*/
 }
 
 void AlgorithmP::establishContext(
@@ -360,6 +370,31 @@ void AlgorithmP::replaceAllPairs(
 
 
 	} while (running);
+
+	if (symbolLeft)
+	{
+		delete symbolLeft;
+		symbolLeft = 0;
+	}
+	if (symbolRight)
+	{
+		delete symbolRight;
+		symbolRight = 0;
+	}
+	if (symbolPrevious)
+	{
+		delete symbolPrevious;
+		symbolPrevious = 0;
+	}
+	if (symbolNext)
+	{
+		delete symbolNext;
+		symbolNext = 0;
+	}
+	if (&symbolOld)
+	{
+		delete &symbolOld;
+	}
 }
 
 void AlgorithmP::manageHighPriorityList(
@@ -369,8 +404,8 @@ void AlgorithmP::manageHighPriorityList(
 	vector<PairRecord*> * priorityQueue,
 	int * Symbols)
 {
-	PairRecord* tmpPairRecord;
-	PairRecord* tmpPairRecordSelected;
+	PairRecord* tmpPairRecord = NULL;
+	PairRecord* tmpPairRecordSelected = NULL;
 	int sequenceIndex = 0;
 
 	while ((*priorityQueue)[priorityQueue->size() - 1])
@@ -395,6 +430,16 @@ void AlgorithmP::manageHighPriorityList(
 			Symbols);
 		Symbols++;
 	}
+	if (tmpPairRecord)
+	{
+		delete tmpPairRecord;
+		tmpPairRecord = 0;
+	}
+	if (tmpPairRecordSelected)
+	{
+		delete tmpPairRecordSelected;
+		tmpPairRecordSelected = 0;
+	}
 }
 
 void AlgorithmP::manageOneEntryOnList(
@@ -405,8 +450,7 @@ void AlgorithmP::manageOneEntryOnList(
 	int * Symbols,
 	int i)
 {
-	PairRecord* tmpPairRecord;
-	PairRecord* tmpPairRecordSelected;
+	PairRecord* tmpPairRecord = NULL;
 	int sequenceIndex;
 
 	tmpPairRecord = (*priorityQueue)[i];
@@ -428,6 +472,12 @@ void AlgorithmP::manageOneEntryOnList(
 		Symbols);
 
 	(*Symbols)++;
+
+	if (tmpPairRecord)
+	{
+		delete tmpPairRecord;
+		tmpPairRecord = 0;
+	}
 }
 
 void AlgorithmP::manageOneList(

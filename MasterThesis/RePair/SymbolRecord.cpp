@@ -34,6 +34,16 @@ SymbolRecord::SymbolRecord(char s, int i, SymbolRecord* p, SymbolRecord* n)
 
 SymbolRecord::~SymbolRecord()
 {
+	if (next)
+	{
+		delete next;
+		next = 0;
+	}
+	if (previous)
+	{
+		delete previous;
+		previous = 0;
+	}
 }
 
 void SymbolRecord::setPrevious(SymbolRecord* p)

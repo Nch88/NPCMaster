@@ -17,6 +17,16 @@ PairRecord::PairRecord(int indexFirst, int indexLast)
 
 PairRecord::~PairRecord()
 {
+	if (nextPair)
+	{
+		delete nextPair;
+		nextPair = 0;
+	}
+	if (previousPair)
+	{
+		delete previousPair;
+		previousPair = 0;
+	}
 }
 
 
