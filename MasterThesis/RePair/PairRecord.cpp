@@ -5,6 +5,8 @@
 PairRecord::PairRecord()
 {
 	count = 0;
+	nextPair = NULL;
+	previousPair = NULL;
 }
 
 PairRecord::PairRecord(int indexFirst, int indexLast)
@@ -12,6 +14,8 @@ PairRecord::PairRecord(int indexFirst, int indexLast)
 	count = 0;
 	arrayIndexFirst = indexFirst;
 	arrayIndexLast = indexLast;
+	nextPair = NULL;
+	previousPair = NULL;
 }
 
 

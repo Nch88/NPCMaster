@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -54,6 +54,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\Git-repos\NPCMaster\MasterThesis;D:\Documents\Programming Projects\Googletest\gtest-1.7.0\include;D:\Documents\Programming Projects\Googletest\gtest-1.7.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseMSVC>true</UseMSVC>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -70,6 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <UseMSVC>true</UseMSVC>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,14 +84,42 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\RePair\AlgorithmP.cpp" />
-    <ClCompile Include="..\RePair\Initializer.cpp" />
-    <ClCompile Include="..\RePair\MyTimer.cpp" />
-    <ClCompile Include="..\RePair\PairRecord.cpp" />
-    <ClCompile Include="..\RePair\SymbolRecord.cpp" />
-    <ClCompile Include="unittest_AlgorithmP.cpp" />
-    <ClCompile Include="unittest_Initializer.cpp" />
-    <ClCompile Include="unittest_MyTimer.cpp" />
+    <ClCompile Include="..\RePair\AlgorithmP.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="..\RePair\Initializer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="..\RePair\MyTimer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="..\RePair\PairRecord.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="..\RePair\SymbolRecord.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="..\RePair\Test.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="unittest_AlgorithmP.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="unittest_Initializer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="unittest_MyTimer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\googletest\googletest.vcxproj">
@@ -105,6 +135,7 @@
     <ClInclude Include="..\RePair\MyTimer.h" />
     <ClInclude Include="..\RePair\PairRecord.h" />
     <ClInclude Include="..\RePair\SymbolRecord.h" />
+    <ClInclude Include="..\RePair\Test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,22 +6,22 @@ class SymbolRecord
 public:
 	char symbol;
 	int index;
-	SymbolRecord* previous;
-	SymbolRecord* next;
+	shared_ptr<SymbolRecord> previous;
+	shared_ptr<SymbolRecord> next;
 
 
 	SymbolRecord();
 	SymbolRecord(char s);
 	SymbolRecord(char s, int index);
-	SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n);
-	SymbolRecord(char s, int index, SymbolRecord* p, SymbolRecord* n);
+	SymbolRecord(char s, unique_ptr<SymbolRecord>& p, unique_ptr<SymbolRecord>& n);
+	SymbolRecord(char s, int index, unique_ptr<SymbolRecord>& p, unique_ptr<SymbolRecord>& n);
 	~SymbolRecord();
 
-	void setPrevious(SymbolRecord* p);
-	void setNext(SymbolRecord* n);
+	void setPrevious(unique_ptr<SymbolRecord>& p);
+	void setNext(unique_ptr<SymbolRecord>& n);
 
 	char getSymbol();
-	SymbolRecord* getPrevious();
-	SymbolRecord* getNext();
+	unique_ptr<SymbolRecord> getPrevious();
+	unique_ptr<SymbolRecord> getNext();
 };
 

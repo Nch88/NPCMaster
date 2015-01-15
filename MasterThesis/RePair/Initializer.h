@@ -10,11 +10,10 @@ public:
 	~Initializer();
 
 	void SequenceArray(string filename,
-		vector<SymbolRecord*> * sequenceArray,
-		unordered_map<std::string, PairRecord> * activePairs);
-
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+		unique_ptr<unordered_map<string, PairRecord>>& activePairs);
 	void PriorityQueue(int priorityQueueSize,
-		unordered_map<string, PairRecord> * activePairs,
-		vector<PairRecord*> * priorityQueue);
+		unique_ptr<unordered_map<string, PairRecord>>& activePairs,
+		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 };
 

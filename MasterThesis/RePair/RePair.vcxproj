@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -52,6 +52,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <UseMSVC>true</UseMSVC>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -67,6 +69,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <UseMSVC>true</UseMSVC>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,18 +89,43 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SymbolRecord.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Test.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AlgorithmP.cpp" />
-    <ClCompile Include="Initializer.cpp" />
-    <ClCompile Include="MyTimer.cpp" />
-    <ClCompile Include="PairRecord.cpp" />
-    <ClCompile Include="RePair.cpp" />
+    <ClCompile Include="AlgorithmP.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="Initializer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="MyTimer.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="PairRecord.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="RePair.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
     </ClCompile>
-    <ClCompile Include="SymbolRecord.cpp" />
+    <ClCompile Include="SymbolRecord.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</UseMSVC>
+      <UseMSVC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</UseMSVC>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

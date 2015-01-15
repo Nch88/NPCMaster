@@ -9,12 +9,16 @@ SymbolRecord::SymbolRecord()
 SymbolRecord::SymbolRecord(char s)
 {
 	symbol = s;
+	next = NULL;
+	previous = NULL;
 }
 
 SymbolRecord::SymbolRecord(char s, int i)
 {
 	symbol = s;
 	index = i;
+	next = NULL;
+	previous = NULL;
 }
 
 SymbolRecord::SymbolRecord(char s, SymbolRecord* p, SymbolRecord* n)

@@ -8,8 +8,8 @@ public:
 	int arrayIndexFirst;
 	int arrayIndexLast;
 	std::string pair;
-	PairRecord* previousPair;
-	PairRecord* nextPair;
+	shared_ptr<PairRecord> previousPair;
+	shared_ptr<PairRecord> nextPair;
 
 
 	PairRecord();
