@@ -19,8 +19,13 @@ void Initializer::SequenceArray(string filename,
 {
 	char newSymbol;
 	char oldSymbol;
+	char nextSymbol;
+
+	char duplicateCheck1 = '\0';
+	char duplicateCheck2 = '\0';
 	string pair;
 	int index = 0;
+	bool identical = false;
 
 	shared_ptr<PairRecord> tmpRecord;
 	shared_ptr<SymbolRecord> previousOccurence;
@@ -36,6 +41,8 @@ void Initializer::SequenceArray(string filename,
 		while (file >> noskipws >> newSymbol)
 		{
 			sequenceArray->push_back(make_shared<SymbolRecord>(newSymbol, index++));
+
+
 			stringstream ss;
 			ss << oldSymbol << newSymbol;
 			ss >> pair;
@@ -69,7 +76,19 @@ void Initializer::SequenceArray(string filename,
 				tmpRecord->setIndexLast(sequenceArray->size() - 2);
 			}
 
+			/*if (newSymbol == oldSymbol)
+				identical = true;
+			else
+				identical = false;
+
+			if (newSymbol == oldSymbol && newSymbol == duplicateCheck1 && newSymbol == duplicateCheck2)
+			{
+				tmpRecord->count--;
+			}
+
 			oldSymbol = newSymbol;
+			duplicateCheck1 = oldSymbol;
+			duplicateCheck2 = duplicateCheck1;*/
 		}
 
 		file.close();

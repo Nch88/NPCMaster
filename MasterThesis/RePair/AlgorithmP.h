@@ -83,12 +83,12 @@ public:
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<int>& Symbols,
 		int i);
-	/*void manageHighPriorityList(
-		vector<SymbolRecord*> * sequenceArray,
-		unordered_map<char, string> * dictionary,
-		unordered_map<string, PairRecord> * activePairs,
-		vector<PairRecord*> * priorityQueue,
-		int * Symbols);*/
+	void manageHighPriorityList(
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+		unique_ptr<unordered_map<char, string>>& dictionary,
+		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+		unique_ptr<int>& Symbols);
 	void AlgorithmP::manageLowerPriorityLists(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,

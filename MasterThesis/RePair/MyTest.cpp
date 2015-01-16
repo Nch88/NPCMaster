@@ -67,7 +67,7 @@ void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, string>>& dic
 	cout << msg << ": " << endl;
 	for each (auto pair in (*dictionary))
 	{
-		cout << pair.first << " " << pair.second << " ";
+		cout << pair.first << " -> " << pair.second << ", ";
 	}
 	cout << s << endl << endl;
 	//End Test

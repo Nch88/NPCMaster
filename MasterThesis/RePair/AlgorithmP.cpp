@@ -94,7 +94,11 @@ void AlgorithmP::decrementCount(
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
 	tmpPairRecordAdjacent->count--;
-
+	if (symbolLeft->next)
+	{
+		symbolLeft->next->previous = NULL;
+		symbolLeft->next = NULL;
+	}
 	managePriorityQueueDecrement(tmpPairRecordAdjacent, priorityQueue);
 	if (tmpPairRecordAdjacent->count == 0)
 		activePairs->erase(tmpPairRecordAdjacent->pair);
@@ -115,17 +119,33 @@ void AlgorithmP::replacePair(
 	ss >> tmpPair;
 	ss.clear();
 
+	if (symbolLeft && symbolLeft->next)
+	{
+		symbolLeft->next->previous = NULL;
+		symbolLeft->next = NULL;
+	}
+
 	(*dictionary)[newSymbol] = tmpPair;
 	symbolLeft->symbol = newSymbol;
 	symbolRight->symbol = (char)0;
 
-	symbolRight->next = symbolNext;
+	if (symbolNext && symbolNext->symbol != '\0')
+	{
+		symbolRight->next = symbolNext;
+	}
+	else
+		symbolRight->next = NULL;
+	
 	symbolRight->previous = symbolLeft;
 
 	(*activePairs)[tmpPair]->count--;
 
-	if ((*activePairs)[tmpPair]->count == 0)	
-		(*activePairs).erase(tmpPair);	
+	if ((*activePairs)[tmpPair]->count == 0)
+	{
+		symbolLeft->next = NULL;
+		(*activePairs).erase(tmpPair);
+	}
+		
 }
 
 void AlgorithmP::increaseCount(
@@ -328,10 +348,32 @@ void AlgorithmP::establishContext(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	int sequenceIndex)
 {
+	SymbolRecord tmpSymbol;
+
 	symbolLeft = (*sequenceArray)[sequenceIndex];
 	symbolRight = (*sequenceArray)[sequenceIndex + 1];
+	
 	if ((symbolRight)->symbol == (char)0)
-		symbolRight = symbolRight->next;
+	{
+		tmpSymbol = *symbolRight;
+		//Update threading counter - start
+		if (symbolRight->next->index + 1 < sequenceArray->size())
+		{
+			symbolRight->next = (*sequenceArray)[symbolRight->next->index + 1];
+			(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
+		}			
+		else
+			symbolRight->next = NULL;
+		//(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
+		if (symbolRight->next && (symbolRight->next)->symbol == (char)0)
+		{
+			symbolRight->next = symbolRight->next->next;
+			(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
+		}
+		//Update threading counter - end
+		symbolRight = tmpSymbol.next;
+	}
+		
 	if (sequenceIndex != 0)
 	{
 		symbolPrevious = (*sequenceArray)[sequenceIndex - 1];
@@ -349,6 +391,16 @@ void AlgorithmP::establishContext(
 	}
 	else
 		symbolNext = NULL;
+
+	if (symbolLeft->symbol == '\0' || symbolRight->symbol == '\0')
+	{
+		cout << "something is wrong!!" << endl;
+		cout << "previous: " << symbolPrevious->symbol << endl;
+		cout << "left: " << symbolLeft->symbol << endl;
+		cout << "right: " << symbolRight->symbol << endl;
+		cout << "next: " << symbolNext->symbol << endl;
+		exit;
+	}
 }
 
 void AlgorithmP::replaceAllPairs(
@@ -399,51 +451,43 @@ void AlgorithmP::replaceAllPairs(
 	} while (running);
 }
 
-//void AlgorithmP::manageHighPriorityList(
-//	vector<SymbolRecord*> * sequenceArray,
-//	unordered_map<char, string> * dictionary,
-//	unordered_map<string, PairRecord> * activePairs,
-//	vector<PairRecord*> * priorityQueue,
-//	int * Symbols)
-//{
-//	PairRecord* tmpPairRecord = NULL;
-//	PairRecord* tmpPairRecordSelected = NULL;
-//	int sequenceIndex = 0;
-//
-//	while ((*priorityQueue)[priorityQueue->size() - 1])
-//	{
-//		tmpPairRecordSelected = (*priorityQueue)[priorityQueue->size() - 1];
-//		//Find pair with most occurences
-//		do
-//		{
-//			tmpPairRecord = (*priorityQueue)[priorityQueue->size() - 1];
-//			if (tmpPairRecord->count > tmpPairRecordSelected->count)
-//				tmpPairRecordSelected = tmpPairRecord;
-//		} while (tmpPairRecord->nextPair != NULL);
-//
-//		sequenceIndex = tmpPairRecord->arrayIndexFirst;
-//
-//		replaceAllPairs(
-//			sequenceIndex,
-//			sequenceArray,
-//			dictionary,
-//			activePairs,
-//			priorityQueue,
-//			Symbols);
-//		Symbols++;
-//	}
-//	if (tmpPairRecord)
-//	{
-//		delete tmpPairRecord;
-//		tmpPairRecord = 0;
-//	}
-//	if (tmpPairRecordSelected)
-//	{
-//		delete tmpPairRecordSelected;
-//		tmpPairRecordSelected = 0;
-//	}
-//}
-//
+void AlgorithmP::manageHighPriorityList(
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+	unique_ptr<unordered_map<char, string>>& dictionary,
+	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+	unique_ptr<int>& Symbols)
+{
+	auto tmpPairRecord = make_shared<PairRecord>();
+	auto tmpPairRecordSelected = make_shared<PairRecord>();
+	int sequenceIndex = 0;
+
+	while ((*priorityQueue)[priorityQueue->size() - 1])
+	{
+		tmpPairRecordSelected = (*priorityQueue)[priorityQueue->size() - 1];
+		tmpPairRecord = (*priorityQueue)[priorityQueue->size() - 1];
+		//Find pair with most occurences
+		while (tmpPairRecord->nextPair)
+		{
+			tmpPairRecord = tmpPairRecord->nextPair;
+			if (tmpPairRecord->count > tmpPairRecordSelected->count)
+				tmpPairRecordSelected = tmpPairRecord;
+		} 
+
+		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+
+		replaceAllPairs(
+			sequenceIndex,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			Symbols);
+
+		(*Symbols)++;
+	}
+}
+
 void AlgorithmP::manageOneEntryOnList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	unique_ptr<unordered_map<char, string>>& dictionary,
@@ -461,9 +505,17 @@ void AlgorithmP::manageOneEntryOnList(
 
 	//Remove current pair from priority queue
 	if (tmpPairRecord->nextPair)
+	{
 		(*priorityQueue)[i] = tmpPairRecord->nextPair;
+		(*priorityQueue)[i]->previousPair = NULL;
+		tmpPairRecord->previousPair = NULL;
+		tmpPairRecord->nextPair = NULL;
+	}		
 	else
+	{
 		(*priorityQueue)[i] = NULL;
+	}
+		
 
 	replaceAllPairs(
 		sequenceIndex,

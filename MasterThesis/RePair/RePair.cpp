@@ -17,9 +17,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Initializer init;
 	AlgorithmP algP;
-	//MyTest test;
+	MyTest test;
+
+	string input = "diddy.txt";
+	string input2 = "test.txt";
 	
-	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
+	init.SequenceArray(input2, sequenceArray, activePairs);
 
 	int priorityQueueSize;
 
@@ -35,6 +38,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		activePairs,
 		priorityQueue,
 		Symbols);
+
+	test.Sequence("Sequence", sequenceArray);
+	test.Dictionary("Dictionary", dictionary);
 	
 
 	return 0;

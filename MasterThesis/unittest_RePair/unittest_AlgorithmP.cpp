@@ -849,6 +849,304 @@ using namespace std;
 //
 //}
 //
+//TEST(manageLowerPriorityLists, everything)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+//	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
+//	string diddy3 = "singingAo.wahAiByAiByAumAiByAo";
+//	string diddy4 = "singingAo.wahCByCByAumCByAo";
+//
+//	ASSERT_EQ(diddy1, test.SequenceToString(sequenceArray));
+//
+//	for (int i = priorityQueue->size() - 2; i >= 0; i--)
+//	{
+//		while ((*priorityQueue)[i])
+//		{
+//			auto tmpPairRecord = make_shared<PairRecord>();
+//			int sequenceIndex;
+//
+//			tmpPairRecord = (*priorityQueue)[i];
+//
+//			if ((*Symbols) == 66)
+//			{
+//				int x = 0;
+//			}
+//			if ((*Symbols) == 67)
+//			{
+//				ASSERT_EQ("Ai", tmpPairRecord->pair);
+//			}
+//
+//			sequenceIndex = tmpPairRecord->arrayIndexFirst;
+//
+//			//Remove current pair from priority queue
+//			if (tmpPairRecord->nextPair)
+//			{
+//				(*priorityQueue)[i] = tmpPairRecord->nextPair;
+//				(*priorityQueue)[i]->previousPair = NULL;
+//				tmpPairRecord->previousPair = NULL;
+//				tmpPairRecord->nextPair = NULL;
+//			}
+//			else
+//			{
+//				(*priorityQueue)[i] = NULL;
+//			}
+//
+//			auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
+//			auto symbolRight = make_shared<SymbolRecord>(); //b
+//			auto symbolPrevious = make_shared<SymbolRecord>(); //Symbol to the left of pair to be replaced, x
+//			auto symbolNext = make_shared<SymbolRecord>(); //y
+//
+//			bool firstPair;
+//			bool lastPair;
+//			bool firstInstance = true;
+//			bool running = true;
+//			SymbolRecord symbolOld = *(*sequenceArray)[sequenceIndex];
+//			//Test test;
+//
+//			do
+//			{
+//				//Step 1, Establish context of xaby
+//
+//				algP.establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex);
+//
+//				if ((*Symbols) == 65 && count == 0)
+//				{
+//					ASSERT_EQ('g', symbolPrevious->symbol);
+//					ASSERT_EQ('.', symbolLeft->symbol);
+//					ASSERT_EQ('d', symbolRight->symbol);
+//					ASSERT_EQ('o', symbolNext->symbol);
+//				}
+//
+//				auto tmpPairRecord = make_shared<PairRecord>();
+//				auto tmpPairRecordAdjacent = make_shared<PairRecord>();
+//				char newSymbol;
+//
+//				stringstream ss;
+//				string tmpPair;
+//
+//				
+//
+//				//Step 2, decrement counts of xa and by
+//				if (symbolPrevious) //xa
+//				{
+//					ASSERT_NE('\0', symbolPrevious->symbol);
+//					ASSERT_NE('\0', symbolLeft->symbol);
+//					ss << symbolPrevious->symbol << symbolLeft->symbol;
+//					ss >> tmpPair;
+//					ss.clear();
+//					tmpPairRecordAdjacent = (*activePairs)[tmpPair];
+//					if ((*Symbols) == 65 && count == 0)
+//					{
+//						ASSERT_EQ(1, tmpPairRecordAdjacent->count);
+//					}
+//					if (tmpPairRecordAdjacent)
+//						algP.decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);
+//
+//					if ((*Symbols) == 66 && count == 2)
+//					{
+//						ASSERT_EQ("id", tmpPair);
+//					}
+//					if ((*Symbols) == 67 && count == 0)
+//					{
+//						ASSERT_ANY_THROW((*activePairs).at("hA"));
+//					}
+//				}
+//
+//				if (symbolNext) //by
+//				{
+//					ASSERT_NE('\0', symbolPrevious->symbol);
+//					ASSERT_NE('\0', symbolLeft->symbol);
+//					ss << symbolRight->symbol << symbolNext->symbol;
+//					ss >> tmpPair;
+//					ss.clear();
+//					tmpPairRecordAdjacent = (*activePairs)[tmpPair];
+//
+//					if (tmpPairRecordAdjacent)
+//						algP.decrementCount(symbolRight, symbolNext, activePairs, priorityQueue, tmpPairRecordAdjacent);
+//
+//					if ((*Symbols) == 66 && count == 2)
+//					{
+//						ASSERT_EQ("dy", tmpPair);
+//					}
+//					if ((*Symbols) == 67 && count == 0)
+//					{
+//						ASSERT_EQ(2, (*activePairs)["iB"]->count);
+//					}
+//				}
+//
+//				//Step 3, replace ab, leaving xAy
+//				if ((*Symbols) == 67 && count == 2)
+//				{
+//					int x = 0;
+//				}
+//
+//				if (symbolRight->symbol == '\0')
+//				{
+//					int x = 0;
+//				}
+//				algP.replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs);
+//
+//				if ((*Symbols) == 66 && count == 2)
+//				{
+//					ASSERT_ANY_THROW((*activePairs).at("dd"));
+//				}
+//				if ((*Symbols) == 67 && count == 0)
+//				{
+//					ASSERT_EQ(2, (*activePairs)["Ai"]->count);
+//				}
+//
+//				//Step 4, increase counts of xA and Ay
+//				if (symbolPrevious) //xA
+//				{
+//					ASSERT_NE('\0', symbolPrevious->symbol);
+//					ASSERT_NE('\0', symbolLeft->symbol);
+//					ss << symbolPrevious->symbol << symbolLeft->symbol;
+//					ss >> tmpPair;
+//					ss.clear();
+//
+//					tmpPairRecord = (*activePairs)[tmpPair];
+//					if (!tmpPairRecord)
+//					{
+//						(*activePairs)[tmpPair] = make_shared<PairRecord>();
+//						tmpPairRecord = (*activePairs)[tmpPair];
+//					}
+//
+//					algP.increaseCount(symbolPrevious, symbolLeft, tmpPairRecord, activePairs);
+//
+//					if (tmpPairRecord->count == 1) //New pair
+//					{
+//						algP.setupPairRecord(symbolPrevious, symbolLeft, tmpPairRecord);
+//						algP.setupPairSequence(sequenceArray, tmpPairRecord);
+//					}
+//					else //Update link between  pair sequence
+//					{
+//						algP.updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
+//						algP.updatePairRecord(symbolPrevious, tmpPairRecord);
+//					}
+//
+//					if (tmpPairRecord->count == 2) //Insert into priority queue					
+//					{
+//						algP.insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
+//					}
+//					//Move up in priority queue
+//					else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
+//					{
+//						algP.removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
+//						algP.insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
+//					}
+//					if ((*Symbols) == 67 && count == 0)
+//					{
+//						ASSERT_EQ(1, (*activePairs)["hC"]->count);
+//					}
+//				}
+//				if (symbolNext) //Ay
+//				{			
+//					ASSERT_NE('\0', symbolPrevious->symbol);
+//					ASSERT_NE('\0', symbolLeft->symbol);
+//					ss << symbolLeft->symbol << symbolNext->symbol;
+//					ss >> tmpPair;
+//					ss.clear();
+//
+//					tmpPairRecord = (*activePairs)[tmpPair];
+//					if (!tmpPairRecord)
+//					{
+//						(*activePairs)[tmpPair] = make_shared<PairRecord>();
+//						tmpPairRecord = (*activePairs)[tmpPair];
+//					}
+//
+//					algP.increaseCount(symbolLeft, symbolNext, tmpPairRecord, activePairs);
+//
+//					if (tmpPairRecord->count == 1) //New pair
+//					{
+//						algP.setupPairRecord(symbolLeft, symbolNext, tmpPairRecord);
+//						algP.setupPairSequence(sequenceArray, tmpPairRecord);
+//					}
+//					else //Update link between  pair sequence
+//					{
+//						algP.updatePairSequence(symbolLeft, sequenceArray, tmpPairRecord);
+//						algP.updatePairRecord(symbolLeft, tmpPairRecord);
+//					}
+//
+//					if (tmpPairRecord->count == 2) //Insert into priority queue	
+//					{
+//						algP.insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
+//					}
+//
+//					//Move up in priority queue
+//					else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
+//					{
+//						algP.removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
+//						algP.insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
+//					}	
+//					if ((*Symbols) == 67 && count == 0)
+//					{
+//						ASSERT_EQ(1, (*activePairs)["CB"]->count);
+//					}
+//				}
+//
+//				if ((*Symbols) == 67 && count == 2)
+//				{
+//					ASSERT_ANY_THROW((*activePairs).at("Ai"));
+//				}
+//				count++;
+//				if (!symbolOld.next)
+//					break;
+//
+//				sequenceIndex = (*symbolOld.next).index;
+//				symbolOld = *(*sequenceArray)[sequenceIndex];
+//
+//
+//			} while (running);
+//
+//			(*Symbols)++;
+//
+//			test.Dictionary("Dictionary", dictionary);
+//			test.Sequence("Sequence", sequenceArray);
+//			test.PriorityQueue("Priority queue", priorityQueue);
+//			cout << "<------------- next round" << endl;
+//
+//			if (*Symbols == 66 + 1)
+//			{
+//				ASSERT_EQ("dd", (*dictionary)['B']);
+//				ASSERT_EQ(diddy3, test.SequenceToString(sequenceArray));	
+//				count = 0;
+//			}
+//			if (*Symbols == 67 + 1)
+//			{
+//				ASSERT_EQ("Ai", (*dictionary)['C']);
+//				ASSERT_EQ(diddy4, test.SequenceToString(sequenceArray));
+//				count = 0;
+//			}
+//		}
+//		if (i == 4)
+//		{
+//			ASSERT_EQ(".d", (*dictionary)['A']);
+//			ASSERT_EQ(diddy2, test.SequenceToString(sequenceArray));	
+//			count = 0;
+//		}
+//	}
+//}
+
 TEST(manageLowerPriorityLists, everything)
 {
 	Initializer init;
@@ -859,7 +1157,9 @@ TEST(manageLowerPriorityLists, everything)
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<int>(65);
 
-	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
+	
+
+	init.SequenceArray(input, sequenceArray, activePairs);
 
 	int priorityQueueSize;
 
@@ -872,221 +1172,16 @@ TEST(manageLowerPriorityLists, everything)
 	int count = 0;
 
 	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
-	string diddy3 = "singingAo.wahAiByAiByAumAiByAo";
-	string diddy4 = "singingAo.wahCByCByAumCByAo";
+	string diddy2 = "sHHG.wahEEAumEG";
 
 	ASSERT_EQ(diddy1, test.SequenceToString(sequenceArray));
 
-	for (int i = priorityQueue->size() - 2; i >= 0; i--)
-	{
-		while ((*priorityQueue)[i])
-		{
-			auto tmpPairRecord = make_shared<PairRecord>();
-			int sequenceIndex;
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		Symbols);
 
-			tmpPairRecord = (*priorityQueue)[i];
-
-			
-
-			sequenceIndex = tmpPairRecord->arrayIndexFirst;
-
-			//Remove current pair from priority queue
-			if (tmpPairRecord->nextPair)
-				(*priorityQueue)[i] = tmpPairRecord->nextPair;
-			else
-				(*priorityQueue)[i] = NULL;
-
-			auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
-			auto symbolRight = make_shared<SymbolRecord>(); //b
-			auto symbolPrevious = make_shared<SymbolRecord>(); //Symbol to the left of pair to be replaced, x
-			auto symbolNext = make_shared<SymbolRecord>(); //y
-
-			bool firstPair;
-			bool lastPair;
-			bool firstInstance = true;
-			bool running = true;
-			SymbolRecord symbolOld = *(*sequenceArray)[sequenceIndex];
-			//Test test;
-
-			do
-			{
-				//Step 1, Establish context of xaby
-
-				algP.establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex);
-
-				if ((*Symbols) == 65 && count == 0)
-				{
-					ASSERT_EQ('g', symbolPrevious->symbol);
-					ASSERT_EQ('.', symbolLeft->symbol);
-					ASSERT_EQ('d', symbolRight->symbol);
-					ASSERT_EQ('o', symbolNext->symbol);
-				}
-
-				auto tmpPairRecord = make_shared<PairRecord>();
-				auto tmpPairRecordAdjacent = make_shared<PairRecord>();
-				char newSymbol;
-
-				stringstream ss;
-				string tmpPair;
-
-				
-
-				//Step 2, decrement counts of xa and by
-				if (symbolPrevious) //xa
-				{
-					ASSERT_NE('\0', symbolPrevious->symbol);
-					ASSERT_NE('\0', symbolLeft->symbol);
-					ss << symbolPrevious->symbol << symbolLeft->symbol;
-					ss >> tmpPair;
-					ss.clear();
-					tmpPairRecordAdjacent = (*activePairs)[tmpPair];
-					if ((*Symbols) == 65 && count == 0)
-					{
-						ASSERT_EQ(1, tmpPairRecordAdjacent->count);
-					}
-					if (tmpPairRecordAdjacent)
-						algP.decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);
-				}
-
-				if (symbolNext) //by
-				{
-					ASSERT_NE('\0', symbolPrevious->symbol);
-					ASSERT_NE('\0', symbolLeft->symbol);
-					ss << symbolRight->symbol << symbolNext->symbol;
-					ss >> tmpPair;
-					ss.clear();
-					tmpPairRecordAdjacent = (*activePairs)[tmpPair];
-
-					if (tmpPairRecordAdjacent)
-						algP.decrementCount(symbolRight, symbolNext, activePairs, priorityQueue, tmpPairRecordAdjacent);
-				}
-
-				//Step 3, replace ab, leaving xAy
-
-				algP.replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs);
-
-				//Step 4, increase counts of xA and Ay
-				if (symbolPrevious) //xA
-				{
-					ASSERT_NE('\0', symbolPrevious->symbol);
-					ASSERT_NE('\0', symbolLeft->symbol);
-					ss << symbolPrevious->symbol << symbolLeft->symbol;
-					ss >> tmpPair;
-					ss.clear();
-
-					tmpPairRecord = (*activePairs)[tmpPair];
-					if (!tmpPairRecord)
-					{
-						(*activePairs)[tmpPair] = make_shared<PairRecord>();
-						tmpPairRecord = (*activePairs)[tmpPair];
-					}
-
-					algP.increaseCount(symbolPrevious, symbolLeft, tmpPairRecord, activePairs);
-
-					if (tmpPairRecord->count == 1) //New pair
-					{
-						algP.setupPairRecord(symbolPrevious, symbolLeft, tmpPairRecord);
-						algP.setupPairSequence(sequenceArray, tmpPairRecord);
-					}
-					else //Update link between  pair sequence
-					{
-						algP.updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
-						algP.updatePairRecord(symbolPrevious, tmpPairRecord);
-					}
-
-					if (tmpPairRecord->count == 2) //Insert into priority queue					
-					{
-						algP.insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
-					}
-					//Move up in priority queue
-					else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
-					{
-						algP.removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
-						algP.insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
-					}
-				}
-				if (symbolNext) //Ay
-				{			
-					ASSERT_NE('\0', symbolPrevious->symbol);
-					ASSERT_NE('\0', symbolLeft->symbol);
-					ss << symbolLeft->symbol << symbolNext->symbol;
-					ss >> tmpPair;
-					ss.clear();
-
-					tmpPairRecord = (*activePairs)[tmpPair];
-					if (!tmpPairRecord)
-					{
-						(*activePairs)[tmpPair] = make_shared<PairRecord>();
-						tmpPairRecord = (*activePairs)[tmpPair];
-					}
-
-					algP.increaseCount(symbolLeft, symbolNext, tmpPairRecord, activePairs);
-
-					if (tmpPairRecord->count == 1) //New pair
-					{
-						algP.setupPairRecord(symbolLeft, symbolNext, tmpPairRecord);
-						algP.setupPairSequence(sequenceArray, tmpPairRecord);
-					}
-					else //Update link between  pair sequence
-					{
-						algP.updatePairSequence(symbolLeft, sequenceArray, tmpPairRecord);
-						algP.updatePairRecord(symbolLeft, tmpPairRecord);
-					}
-
-					if (tmpPairRecord->count == 2) //Insert into priority queue	
-					{
-						algP.insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
-					}
-
-					//Move up in priority queue
-					else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
-					{
-						algP.removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
-						algP.insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
-					}
-
-					
-
-
-					count++;
-				}
-
-				if (!symbolOld.next)
-					break;
-
-				sequenceIndex = (*symbolOld.next).index;
-				symbolOld = *(*sequenceArray)[sequenceIndex];
-
-
-			} while (running);
-
-			(*Symbols)++;
-
-			test.Dictionary("Dictionary", dictionary);
-			test.Sequence("Sequence", sequenceArray);
-			test.PriorityQueue("Priority queue", priorityQueue);
-			cout << "<------------- next round" << endl;
-
-			if (*Symbols == 66 + 1)
-			{
-				ASSERT_EQ("dd", (*dictionary)['B']);
-				ASSERT_EQ(diddy3, test.SequenceToString(sequenceArray));	
-				count = 0;
-			}
-			if (*Symbols == 67 + 1)
-			{
-				ASSERT_EQ("Ai", (*dictionary)['C']);
-				ASSERT_EQ(diddy4, test.SequenceToString(sequenceArray));
-				count = 0;
-				break;
-			}
-		}
-		if (i == 4)
-		{
-			ASSERT_EQ(".d", (*dictionary)['A']);
-			ASSERT_EQ(diddy2, test.SequenceToString(sequenceArray));	
-			count = 0;
-		}
-	}
+	ASSERT_EQ(diddy2, test.SequenceToString(sequenceArray));
 }
