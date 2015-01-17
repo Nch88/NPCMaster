@@ -45,14 +45,17 @@ string MyTest::SequenceToString(unique_ptr<vector<shared_ptr<SymbolRecord>>>& se
 	//End Test
 }
 
-void MyTest::SequenceWithIndex(string msg, vector<SymbolRecord*> * sequenceArray)
+void MyTest::SequenceWithIndex(string msg, unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray)
 {
 	//Test
+	stringstream ss;
+	string s;
 
 	cout << msg << ": " << endl;
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
-		cout << (*sequenceArray)[i]->symbol << " at: " << (*sequenceArray)[i]->index << endl;
+		if ((*sequenceArray)[i]->symbol != (char)0)
+			cout << (*sequenceArray)[i]->symbol << " at: " << (*sequenceArray)[i]->index << endl;
 	}
 	cout << endl << endl;
 	//End Test

@@ -242,6 +242,7 @@ void AlgorithmP::replaceInstanceOfPair(
 		ss >> tmpPair;
 		ss.clear();
 		tmpPairRecordAdjacent = (*activePairs)[tmpPair];
+
 		if (tmpPairRecordAdjacent)
 			decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);
 	}
@@ -254,7 +255,10 @@ void AlgorithmP::replaceInstanceOfPair(
 		ss.clear();
 		tmpPairRecordAdjacent = (*activePairs)[tmpPair];
 
-		if (tmpPairRecordAdjacent)
+		if (tmpPairRecordAdjacent &&																		//If Pair record exists
+			!(symbolRight->symbol == symbolNext->symbol &&													//But it is not the case that the symbols are identical
+			symbolRight->symbol == symbolLeft->symbol &&
+			!(symbolRight->next && symbolRight->previous)))													//while not being part of a sequence of pairs
 			decrementCount(symbolRight, symbolNext, activePairs, priorityQueue, tmpPairRecordAdjacent);
 	}
 
@@ -276,29 +280,44 @@ void AlgorithmP::replaceInstanceOfPair(
 			tmpPairRecord = (*activePairs)[tmpPair];
 		}
 
-		increaseCount(symbolPrevious, symbolLeft, tmpPairRecord, activePairs);
+		if (symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0 &&								//If we have identical symbols which have been seen before
+			(symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->symbol ||			//and the previous symbol was also the same (meaning at least three in a row)
+			((*sequenceArray)[symbolPrevious->index - 1]->symbol == '\0' &&								
+			symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->previous->symbol)) &&
+			!tmpPairRecord->skippedPair)																//and we registered the last pair
+		{
+			tmpPairRecord->skippedPair = true;															//Then skip this pair
+		}
+		else																							//else register pair as normal
+		{
+			tmpPairRecord->skippedPair = false;
 
-		if (tmpPairRecord->count == 1) //New pair
-		{
-			setupPairRecord(symbolPrevious, symbolLeft, tmpPairRecord);
-			setupPairSequence(sequenceArray, tmpPairRecord);
-		}
-		else //Update link between  pair sequence
-		{
-			updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
-			updatePairRecord(symbolPrevious, tmpPairRecord);
+			increaseCount(symbolPrevious, symbolLeft, tmpPairRecord, activePairs);
+
+			if (tmpPairRecord->count == 1) //New pair
+			{
+				setupPairRecord(symbolPrevious, symbolLeft, tmpPairRecord);
+				setupPairSequence(sequenceArray, tmpPairRecord);
+			}
+			else //Update link between  pair sequence
+			{
+				updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
+				updatePairRecord(symbolPrevious, tmpPairRecord);
+			}
+
+			if (tmpPairRecord->count == 2) //Insert into priority queue					
+			{
+				insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
+			}
+			//Move up in priority queue
+			else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
+			{
+				removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
+				insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
+			}
 		}
 
-		if (tmpPairRecord->count == 2) //Insert into priority queue					
-		{
-			insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
-		}
-		//Move up in priority queue
-		else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
-		{
-			removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
-			insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
-		}
+		
 	}
 	if (symbolNext) //Ay
 	{
@@ -332,7 +351,7 @@ void AlgorithmP::replaceInstanceOfPair(
 		}
 
 		//Move up in priority queue
-		else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size())
+		else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
 		{
 			removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
 			insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
@@ -421,12 +440,11 @@ void AlgorithmP::replaceAllPairs(
 	bool firstInstance = true;
 	bool running = true;
 	SymbolRecord symbolOld = *(*sequenceArray)[sequenceIndex];
-	//Test test;
+	MyTest test;
 
 	do
 	{
 		//Step 1, Establish context of xaby
-
 		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex);
 		//test.Context("Context", symbolLeft, symbolRight, symbolPrevious, symbolNext);
 
@@ -441,13 +459,19 @@ void AlgorithmP::replaceAllPairs(
 			symbolPrevious,
 			symbolNext);
 
-		if (!symbolOld.next)
+		if (!symbolOld.next || ((*symbolOld.next).symbol == '\0' && !symbolOld.next->next))
 			break;
 
-		sequenceIndex = (*symbolOld.next).index;
-		symbolOld = *(*sequenceArray)[sequenceIndex];
-
-
+		if ((*symbolOld.next).symbol == '\0')
+		{
+			sequenceIndex = (*symbolOld.next->next).index;
+			symbolOld = *(*sequenceArray)[sequenceIndex];
+		}
+		else
+		{
+			sequenceIndex = (*symbolOld.next).index;
+			symbolOld = *(*sequenceArray)[sequenceIndex];
+		}
 	} while (running);
 }
 
@@ -461,11 +485,13 @@ void AlgorithmP::manageHighPriorityList(
 	auto tmpPairRecord = make_shared<PairRecord>();
 	auto tmpPairRecordSelected = make_shared<PairRecord>();
 	int sequenceIndex = 0;
+	int last = priorityQueue->size() - 1;
+	MyTest test;
 
-	while ((*priorityQueue)[priorityQueue->size() - 1])
+	while ((*priorityQueue)[last])
 	{
-		tmpPairRecordSelected = (*priorityQueue)[priorityQueue->size() - 1];
-		tmpPairRecord = (*priorityQueue)[priorityQueue->size() - 1];
+		tmpPairRecordSelected = (*priorityQueue)[last];
+		tmpPairRecord = (*priorityQueue)[last];
 		//Find pair with most occurences
 		while (tmpPairRecord->nextPair)
 		{
@@ -473,8 +499,29 @@ void AlgorithmP::manageHighPriorityList(
 			if (tmpPairRecord->count > tmpPairRecordSelected->count)
 				tmpPairRecordSelected = tmpPairRecord;
 		} 
-
 		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+
+		//Remove current pair from priority queue
+		if (!tmpPairRecordSelected->previousPair && !tmpPairRecordSelected->nextPair)				//Only in the list
+		{
+			(*priorityQueue)[last] = NULL;			
+		}
+		else if (!tmpPairRecordSelected->previousPair)												//First in the list
+		{
+			(*priorityQueue)[last] = tmpPairRecordSelected->nextPair;
+			(*priorityQueue)[last]->previousPair = NULL;
+		}
+		else if (!tmpPairRecordSelected->nextPair)													//Last in the list
+		{
+			tmpPairRecordSelected->previousPair->nextPair = NULL;
+		}
+		else																						//Middle of the list
+		{
+			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
+			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
+		}
+		tmpPairRecordSelected->previousPair = NULL;
+		tmpPairRecordSelected->nextPair = NULL;		
 
 		replaceAllPairs(
 			sequenceIndex,
@@ -575,12 +622,12 @@ void AlgorithmP::run(
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<int>& Symbols)
 {
-	/*manageHighPriorityList(
+	manageHighPriorityList(
 		sequenceArray,
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);*/
+		Symbols);
 
 	manageLowerPriorityLists(
 		sequenceArray,

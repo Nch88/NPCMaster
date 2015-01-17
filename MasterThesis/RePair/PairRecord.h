@@ -8,6 +8,7 @@ public:
 	int count;
 	int arrayIndexFirst;
 	int arrayIndexLast;
+	bool skippedPair;
 	std::string pair;
 	shared_ptr<PairRecord> previousPair;
 	shared_ptr<PairRecord> nextPair;

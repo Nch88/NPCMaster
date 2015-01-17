@@ -12,85 +12,106 @@ Initializer::~Initializer()
 {
 }
 
+void Initializer::setupPairRecord(
+	char leftSymbol,
+	char rightSymbol,
+	int offset,
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+{
+	shared_ptr<PairRecord> tmpRecord;
+	shared_ptr<SymbolRecord> previousOccurence;
+	shared_ptr<SymbolRecord> newOccurence;
+	string pair;
+	stringstream ss;
+	ss << leftSymbol << rightSymbol;
+	ss >> pair;
+
+	tmpRecord = (*activePairs)[pair];
+	if (!tmpRecord)
+	{
+		(*activePairs)[pair] = make_shared<PairRecord>();
+		tmpRecord = (*activePairs)[pair];
+	}
+
+	if (tmpRecord->getCount() == 0) //First occurence of active pair
+	{
+		tmpRecord->pair = pair;
+		tmpRecord->inc();
+		tmpRecord->setIndexFirst(sequenceArray->size() - offset); //First symbol in active pair
+		tmpRecord->setIndexLast(sequenceArray->size() - offset);
+		tmpRecord->nextPair = NULL;
+		tmpRecord->previousPair = NULL;
+	}
+	else
+	{
+		tmpRecord->inc();
+
+		previousOccurence = (*sequenceArray)[tmpRecord->getIndexLast()];
+		newOccurence = (*sequenceArray)[sequenceArray->size() - offset];
+
+		previousOccurence->next = newOccurence;
+		newOccurence->previous = previousOccurence;
+
+		tmpRecord->setIndexLast(sequenceArray->size() - offset);
+	}
+}
 
 void Initializer::SequenceArray(string filename,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
 {
-	char newSymbol;
-	char oldSymbol;
-	char nextSymbol;
-
-	char duplicateCheck1 = '\0';
-	char duplicateCheck2 = '\0';
-	string pair;
+	char previousSymbol;
+	char leftSymbol;
+	char rightSymbol;
 	int index = 0;
-	bool identical = false;
-
-	shared_ptr<PairRecord> tmpRecord;
-	shared_ptr<SymbolRecord> previousOccurence;
-	shared_ptr<SymbolRecord> newOccurence;
+	bool skippedPair = false;
 
 	ifstream file(filename);
 
 	if (file.is_open())
 	{
-		file >> noskipws >> oldSymbol;
-		sequenceArray->push_back(make_shared<SymbolRecord>(oldSymbol, index++));
-
-		while (file >> noskipws >> newSymbol)
+		if (file >> noskipws >> previousSymbol)
 		{
-			sequenceArray->push_back(make_shared<SymbolRecord>(newSymbol, index++));
+			sequenceArray->push_back(make_shared<SymbolRecord>(previousSymbol, index++));
 
-
-			stringstream ss;
-			ss << oldSymbol << newSymbol;
-			ss >> pair;
-
-			tmpRecord = (*activePairs)[pair];
-			if (!tmpRecord)
+			if (file >> noskipws >> leftSymbol)
 			{
-				(*activePairs)[pair] = make_shared<PairRecord>();
-				tmpRecord = (*activePairs)[pair];
+				sequenceArray->push_back(make_shared<SymbolRecord>(leftSymbol, index++));
+
+				setupPairRecord(
+					previousSymbol,
+					leftSymbol,
+					2,
+					sequenceArray,
+					activePairs);
 			}
-
-			if (tmpRecord->getCount() == 0) //First occurence of active pair
-			{
-				tmpRecord->pair = pair;
-				tmpRecord->inc();
-				tmpRecord->setIndexFirst(sequenceArray->size() - 2); //First symbol in active pair
-				tmpRecord->setIndexLast(sequenceArray->size() - 2);
-				tmpRecord->nextPair = NULL;
-				tmpRecord->previousPair = NULL;
-			}
-			else
-			{
-				tmpRecord->inc();
-
-				previousOccurence = (*sequenceArray)[tmpRecord->getIndexLast()];
-				newOccurence = (*sequenceArray)[sequenceArray->size() - 2];
-
-				previousOccurence->next = newOccurence;
-				newOccurence->previous = previousOccurence;
-
-				tmpRecord->setIndexLast(sequenceArray->size() - 2);
-			}
-
-			/*if (newSymbol == oldSymbol)
-				identical = true;
-			else
-				identical = false;
-
-			if (newSymbol == oldSymbol && newSymbol == duplicateCheck1 && newSymbol == duplicateCheck2)
-			{
-				tmpRecord->count--;
-			}
-
-			oldSymbol = newSymbol;
-			duplicateCheck1 = oldSymbol;
-			duplicateCheck2 = duplicateCheck1;*/
 		}
 
+		while (file >> noskipws >> rightSymbol)
+		{
+			sequenceArray->push_back(make_shared<SymbolRecord>(rightSymbol, index++));
+
+			if (leftSymbol == rightSymbol && 
+				leftSymbol == previousSymbol &&
+				!skippedPair)
+			{
+				skippedPair = true;
+				previousSymbol = leftSymbol;
+				leftSymbol = rightSymbol;
+				continue;
+			}
+			setupPairRecord(
+				leftSymbol,
+				rightSymbol,
+				2,
+				sequenceArray,
+				activePairs);
+
+			skippedPair = false;
+			previousSymbol = leftSymbol;
+			leftSymbol = rightSymbol;
+		}
 		file.close();
 	}
 }
