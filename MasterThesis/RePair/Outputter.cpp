@@ -57,7 +57,12 @@ void Outputter::dictionary(
 
 	for each (auto pair in (*dictionary))
 	{
-		myfile << pair.first << " " << pair.second << endl;
+		if (pair.second.size() == 2)
+			myfile << pair.first << " " << pair.second[0] << "" << pair.second[1] << endl;
+		else if (pair.second.size() == 1)
+			myfile << pair.first << " " << pair.second[0] << endl;
+		else
+			myfile << pair.first << endl;
 	}
 
 	myfile.close();

@@ -108,7 +108,7 @@ void AlgorithmP::replacePair(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolNext,
-	unique_ptr<int>& Symbols,
+	unique_ptr<unsigned int>& Symbols,
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
 {
@@ -211,7 +211,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols,
+	unique_ptr<unsigned int>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolPrevious,
@@ -428,7 +428,7 @@ void AlgorithmP::replaceAllPairs(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols)
+	unique_ptr<unsigned int>& Symbols)
 {
 	auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
 	auto symbolRight = make_shared<SymbolRecord>(); //b
@@ -475,12 +475,35 @@ void AlgorithmP::replaceAllPairs(
 	} while (running);
 }
 
+void AlgorithmP::newSymbol(
+	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
+{	
+	bool badSymbol = true;
+
+	if ((*Symbols) == 254)
+	{
+		cout << "Ran out of symbols, aborting compression" << endl;
+		exit;
+	}
+
+	while (badSymbol)
+	{		
+		(*Symbols)++;
+		if ((*symbolMap)[(*Symbols)])// || (*Symbols) == 129)
+			badSymbol = true;
+		else
+			badSymbol = false;
+	}
+}
+
 void AlgorithmP::manageHighPriorityList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols)
+	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	auto tmpPairRecord = make_shared<PairRecord>();
 	auto tmpPairRecordSelected = make_shared<PairRecord>();
@@ -523,6 +546,8 @@ void AlgorithmP::manageHighPriorityList(
 		tmpPairRecordSelected->previousPair = NULL;
 		tmpPairRecordSelected->nextPair = NULL;		
 
+		newSymbol(Symbols, symbolMap);
+
 		replaceAllPairs(
 			sequenceIndex,
 			sequenceArray,
@@ -531,7 +556,7 @@ void AlgorithmP::manageHighPriorityList(
 			priorityQueue,
 			Symbols);
 
-		(*Symbols)++;
+		
 	}
 }
 
@@ -540,8 +565,9 @@ void AlgorithmP::manageOneEntryOnList(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols,
-	int i)
+	unique_ptr<unsigned int>& Symbols,
+	int i,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	auto tmpPairRecord = make_shared<PairRecord>();
 	int sequenceIndex;
@@ -563,6 +589,7 @@ void AlgorithmP::manageOneEntryOnList(
 		(*priorityQueue)[i] = NULL;
 	}
 		
+	newSymbol(Symbols, symbolMap);
 
 	replaceAllPairs(
 		sequenceIndex,
@@ -570,9 +597,7 @@ void AlgorithmP::manageOneEntryOnList(
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
-
-	(*Symbols)++;
+		Symbols);	
 }
 
 void AlgorithmP::manageOneList(
@@ -580,8 +605,9 @@ void AlgorithmP::manageOneList(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols,
-	int i)
+	unique_ptr<unsigned int>& Symbols,
+	int i,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	while ((*priorityQueue)[i])
 	{
@@ -591,7 +617,8 @@ void AlgorithmP::manageOneList(
 			activePairs,
 			priorityQueue,
 			Symbols,
-			i);
+			i,
+			symbolMap);
 	}
 }
 
@@ -600,7 +627,8 @@ void AlgorithmP::manageLowerPriorityLists(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols)
+	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	
 	for (int i = priorityQueue->size() - 2; i >= 0; i--)
@@ -611,7 +639,8 @@ void AlgorithmP::manageLowerPriorityLists(
 			activePairs,
 			priorityQueue,
 			Symbols,
-			i);
+			i,
+			symbolMap);
 	}
 }
 
@@ -620,19 +649,22 @@ void AlgorithmP::run(
 	unique_ptr<unordered_map<char, string>>& dictionary,
 	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<int>& Symbols)
+	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	manageHighPriorityList(
 		sequenceArray,
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		symbolMap);
 
 	manageLowerPriorityLists(
 		sequenceArray,
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		symbolMap);
 }

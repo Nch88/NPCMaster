@@ -38,9 +38,8 @@ string MyTest::SequenceToString(unique_ptr<vector<shared_ptr<SymbolRecord>>>& se
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
 		if ((*sequenceArray)[i]->symbol != (char)0)
-			ss << (*sequenceArray)[i]->symbol;
+			s += (*sequenceArray)[i]->symbol;
 	}
-	ss >> s;
 	return s;
 	//End Test
 }

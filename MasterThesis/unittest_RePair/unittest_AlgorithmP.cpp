@@ -1147,19 +1147,324 @@ using namespace std;
 //	}
 //}
 
-TEST(manageRun, everything)
+//TEST(manageRun, everything)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "diddy.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+//	string diddy2 = "sHHG.wahEEAumEG";
+//
+//	ASSERT_EQ(diddy1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(diddy2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testDuplicates, evenNrOfSymbols)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicates.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aaaabbbb";
+//	string string2 = "AABB";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testDuplicates, evenNrOfSymbolsSplit)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicates3.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aabbbbaa";
+//	string string2 = "ABBA";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testDuplicates, unevenNrOFSymbols)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicates2.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aaaaabbbb";
+//	string string2 = "AAaBB";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testHighPriorityLists, withDuplicates1)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicatesLong.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbb";
+//	string string2 = "EEADD";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testHighPriorityLists, withDuplicates2)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicatesLong2.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbb";
+//	string string2 = "EEAaDD";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+//
+//TEST(testHighPriorityLists, withDuplicates3)
+//{
+//	Initializer init;
+//	AlgorithmP algP;
+//
+//	auto dictionary = make_unique<unordered_map<char, string>>();
+//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//	auto Symbols = make_unique<int>(65);
+//
+//	string input = "duplicatesLong3.txt";
+//
+//	init.SequenceArray(input, sequenceArray, activePairs);
+//
+//	int priorityQueueSize;
+//
+//	priorityQueueSize = sqrt(sequenceArray->size());
+//
+//	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+//
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
+//	MyTest test;
+//	int count = 0;
+//
+//	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbcccccccccccccccccccccccccccccccccc";
+//	string string2 = "HHAaGGIIB";
+//
+//	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		Symbols);
+//
+//	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+//}
+
+TEST(testSymbols, incrementingSymbolNoClash)
+{
+	auto Symbols = make_unique<unsigned int>(127);
+	auto symbolMap = make_unique<unordered_map<char, bool>>();
+
+	AlgorithmP algP;
+
+	ASSERT_EQ(127, (*Symbols));
+
+	algP.newSymbol(Symbols, symbolMap);
+
+	ASSERT_EQ(128, (*Symbols));
+}
+
+TEST(testSymbols, incrementingSymbolClash)
+{
+	auto Symbols = make_unique<unsigned int>(127);
+	auto symbolMap = make_unique<unordered_map<char, bool>>();
+
+	AlgorithmP algP;
+
+	(*symbolMap)[(char)128] = true;
+
+	ASSERT_EQ(127, (*Symbols));
+
+	algP.newSymbol(Symbols, symbolMap);
+
+	ASSERT_EQ(129, (*Symbols));
+}
+
+TEST(manageRun, fancyText)
 {
 	Initializer init;
 	AlgorithmP algP;
+	Outputter out;
 
 	auto dictionary = make_unique<unordered_map<char, string>>();
 	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
+	auto Symbols = make_unique<unsigned int>(127);
+	auto symbolMap = make_unique<unordered_map<char, bool>>();
 
-	string input = "diddy.txt";
+	string input = "diddyFancy.txt";
 
-	init.SequenceArray(input, sequenceArray, activePairs);
+	init.SequenceArray(input, sequenceArray, activePairs, symbolMap);
 
 	int priorityQueueSize;
 
@@ -1171,7 +1476,7 @@ TEST(manageRun, everything)
 	MyTest test;
 	int count = 0;
 
-	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string diddy1 = "singing.do.wah.\ndiddy.diddy.dum.diddy.do";
 	string diddy2 = "sHHG.wahEEAumEG";
 
 	ASSERT_EQ(diddy1, test.SequenceToString(sequenceArray));
@@ -1181,24 +1486,30 @@ TEST(manageRun, everything)
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		symbolMap);
 
-	ASSERT_EQ(diddy2, test.SequenceToString(sequenceArray));
+	ASSERT_EQ(19, test.SequenceToString(sequenceArray).size());
+
+	out.compressedFile(input, sequenceArray);
+	out.dictionary(input, dictionary);
 }
 
-TEST(testDuplicates, evenNrOfSymbols)
+TEST(manageRun, fancyText2)
 {
 	Initializer init;
 	AlgorithmP algP;
+	Outputter out;
 
 	auto dictionary = make_unique<unordered_map<char, string>>();
 	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
+	auto Symbols = make_unique<unsigned int>(127);
+	auto symbolMap = make_unique<unordered_map<char, bool>>();
 
-	string input = "duplicates.txt";
+	string input = "diddyFancy2.txt";
 
-	init.SequenceArray(input, sequenceArray, activePairs);
+	init.SequenceArray(input, sequenceArray, activePairs, symbolMap);
 
 	int priorityQueueSize;
 
@@ -1210,212 +1521,21 @@ TEST(testDuplicates, evenNrOfSymbols)
 	MyTest test;
 	int count = 0;
 
-	string string1 = "aaaabbbb";
-	string string2 = "AABB";
+	string diddy1 = "singing.do.wah.\n\n\n\n\n\n\ndiddy.diddy.dum.diddy.do";
+	string diddy2 = "sHHG.wahEEAumEG";
 
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols);
-
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
-}
-
-TEST(testDuplicates, evenNrOfSymbolsSplit)
-{
-	Initializer init;
-	AlgorithmP algP;
-
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
-
-	string input = "duplicates3.txt";
-
-	init.SequenceArray(input, sequenceArray, activePairs);
-
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
-	MyTest test;
-	int count = 0;
-
-	string string1 = "aabbbbaa";
-	string string2 = "ABBA";
-
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
+	ASSERT_EQ(diddy1, test.SequenceToString(sequenceArray));
 
 	algP.run(
 		sequenceArray,
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		symbolMap);
 
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
-}
+	ASSERT_EQ(22, test.SequenceToString(sequenceArray).size());
 
-TEST(testDuplicates, unevenNrOFSymbols)
-{
-	Initializer init;
-	AlgorithmP algP;
-
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
-
-	string input = "duplicates2.txt";
-
-	init.SequenceArray(input, sequenceArray, activePairs);
-
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
-	MyTest test;
-	int count = 0;
-
-	string string1 = "aaaaabbbb";
-	string string2 = "AAaBB";
-
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols);
-
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
-}
-
-TEST(testHighPriorityLists, withDuplicates1)
-{
-	Initializer init;
-	AlgorithmP algP;
-
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
-
-	string input = "duplicatesLong.txt";
-
-	init.SequenceArray(input, sequenceArray, activePairs);
-
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
-	MyTest test;
-	int count = 0;
-
-	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbb";
-	string string2 = "EEADD";
-
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols);
-
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
-}
-
-TEST(testHighPriorityLists, withDuplicates2)
-{
-	Initializer init;
-	AlgorithmP algP;
-
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
-
-	string input = "duplicatesLong2.txt";
-
-	init.SequenceArray(input, sequenceArray, activePairs);
-
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
-	MyTest test;
-	int count = 0;
-
-	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbb";
-	string string2 = "EEAaDD";
-
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols);
-
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
-}
-
-TEST(testHighPriorityLists, withDuplicates3)
-{
-	Initializer init;
-	AlgorithmP algP;
-
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
-
-	string input = "duplicatesLong3.txt";
-
-	init.SequenceArray(input, sequenceArray, activePairs);
-
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue);
-	MyTest test;
-	int count = 0;
-
-	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbcccccccccccccccccccccccccccccccccc";
-	string string2 = "HHAaGGIIB";
-
-	ASSERT_EQ(string1, test.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols);
-
-	ASSERT_EQ(string2, test.SequenceToString(sequenceArray));
+	out.compressedFile(input, sequenceArray);
+	out.dictionary(input, dictionary);
 }

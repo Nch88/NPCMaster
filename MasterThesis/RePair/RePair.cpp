@@ -13,18 +13,21 @@ int _tmain(int argc, _TCHAR* argv[])
 	auto dictionary = make_unique<unordered_map<char, string>>();
 	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<int>(65);
+	auto Symbols = make_unique<unsigned int>(127);
+	auto symbolMap = make_unique<unordered_map<char, bool>>();
 	
 	Initializer init;
 	AlgorithmP algP;
 	MyTest test;
 	Outputter out;
 
-	string input = "diddy.txt";
+	string input1 = "diddy.txt";
 	string input2 = "test.txt";
 	string input3 = "world192.txt";
+
+	string input = input3;
 	
-	init.SequenceArray(input3, sequenceArray, activePairs);
+	init.SequenceArray(input, sequenceArray, activePairs, symbolMap);
 
 	int priorityQueueSize;
 
@@ -39,7 +42,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		symbolMap);
 	
 	out.compressedFile(input, sequenceArray);
 	out.dictionary(input, dictionary);

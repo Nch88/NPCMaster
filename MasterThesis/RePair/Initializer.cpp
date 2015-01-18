@@ -57,9 +57,16 @@ void Initializer::setupPairRecord(
 	}
 }
 
+void Initializer::checkSymbol(char symbol, unique_ptr<unordered_map<char, bool>>& symbolMap)
+{
+	if ((int)symbol >= 128)	
+		(*symbolMap)[symbol] = true;	
+}
+
 void Initializer::SequenceArray(string filename,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	char previousSymbol;
 	char leftSymbol;
@@ -74,10 +81,12 @@ void Initializer::SequenceArray(string filename,
 		if (file >> noskipws >> previousSymbol)
 		{
 			sequenceArray->push_back(make_shared<SymbolRecord>(previousSymbol, index++));
+			checkSymbol(previousSymbol, symbolMap);
 
 			if (file >> noskipws >> leftSymbol)
 			{
 				sequenceArray->push_back(make_shared<SymbolRecord>(leftSymbol, index++));
+				checkSymbol(leftSymbol, symbolMap);
 
 				setupPairRecord(
 					previousSymbol,
@@ -91,6 +100,7 @@ void Initializer::SequenceArray(string filename,
 		while (file >> noskipws >> rightSymbol)
 		{
 			sequenceArray->push_back(make_shared<SymbolRecord>(rightSymbol, index++));
+			checkSymbol(rightSymbol, symbolMap);
 
 			if (leftSymbol == rightSymbol && 
 				leftSymbol == previousSymbol &&

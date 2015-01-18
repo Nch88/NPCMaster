@@ -33,7 +33,7 @@ public:
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolNext,
-		unique_ptr<int>& Symbols,
+		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs);
 	void insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
@@ -57,7 +57,7 @@ public:
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols,
+		unique_ptr<unsigned int>& Symbols,
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolPrevious,
@@ -68,37 +68,45 @@ public:
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols);
-	void AlgorithmP::manageOneEntryOnList(
+		unique_ptr<unsigned int>& Symbols);
+	void newSymbol(
+		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
+	void manageOneEntryOnList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols,
-		int i);
+		unique_ptr<unsigned int>& Symbols,
+		int i,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void manageOneList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols,
-		int i);
+		unique_ptr<unsigned int>& Symbols,
+		int i,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void manageHighPriorityList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols);
+		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void AlgorithmP::manageLowerPriorityLists(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols);
+		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void run(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, string>>& dictionary,
 		unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<int>& Symbols);
+		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<unordered_map<char, bool>>& symbolMap);
 };
