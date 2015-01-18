@@ -60,7 +60,7 @@ void MyTest::SequenceWithIndex(string msg, unique_ptr<vector<shared_ptr<SymbolRe
 	//End Test
 }
 
-void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, string>>& dictionary)
+void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, Pair>>& dictionary)
 {
 	//Test
 	stringstream ss;
@@ -69,28 +69,34 @@ void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, string>>& dic
 	cout << msg << ": " << endl;
 	for each (auto pair in (*dictionary))
 	{
-		cout << pair.first << " -> " << pair.second << ", ";
+		cout << pair.first << " -> " << pair.second.leftSymbol << pair.second.rightSymbol << ", ";
 	}
 	cout << s << endl << endl;
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
 {
 	cout << msg << ": ";
-	for each (auto pair in (*activePairs))
+	for each (auto leftSymbol in (*activePairs))
 	{
-		cout << pair.first << " ";
+		for each (auto pair in leftSymbol.second)
+		{
+			cout << leftSymbol.first << pair.first << " ";
+		}
 	}
 	cout << endl << endl;
 }
 
-void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
 {
 	cout << msg << ": ";
-	for each (auto pair in (*activePairs))
+	for each (auto leftSymbol in (*activePairs))
 	{
-		cout << "\'" << pair.first << " " << pair.second->count << "\' ";
+		for each (auto pair in leftSymbol.second)
+		{
+			cout << "\'" << leftSymbol.first << pair.first << " " << pair.second->count << "\' ";
+		}
 	}
 	cout << endl << endl;
 }
@@ -105,7 +111,7 @@ void MyTest::PriorityQueue(string msg, unique_ptr<vector<shared_ptr<PairRecord>>
 		cout << "Count " << i+2 << ": ";
 		while (tmpP)
 		{
-			cout << tmpP->pair << " ";
+			cout << tmpP->pair.leftSymbol << tmpP->pair.rightSymbol << " ";
 			tmpP = tmpP->nextPair;
 		}
 		cout << endl << endl;

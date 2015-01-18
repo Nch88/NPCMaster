@@ -14,6 +14,6 @@ public:
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
 	void dictionary(
 		string inputFile,
-		unique_ptr<unordered_map<char, string>>& dictionary);
+		unique_ptr<unordered_map<char, Pair>>& dictionary);
 };
 

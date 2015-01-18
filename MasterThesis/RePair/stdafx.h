@@ -22,6 +22,7 @@
 // TODO: reference additional headers your program requires here
 #include "MyTimer.h"
 #include "SymbolRecord.h"
+#include "Pair.h"
 #include "PairRecord.h"
 #include "Initializer.h"
 #include "AlgorithmP.h"

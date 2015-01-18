@@ -87,6 +87,7 @@
     <ClCompile Include="..\RePair\MyTest.cpp" />
     <ClCompile Include="..\RePair\MyTimer.cpp" />
     <ClCompile Include="..\RePair\Outputter.cpp" />
+    <ClCompile Include="..\RePair\Pair.cpp" />
     <ClCompile Include="..\RePair\PairRecord.cpp" />
     <ClCompile Include="..\RePair\SymbolRecord.cpp" />
     <ClCompile Include="unittest_AlgorithmP.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="..\RePair\MyTest.h" />
     <ClInclude Include="..\RePair\MyTimer.h" />
     <ClInclude Include="..\RePair\Outputter.h" />
+    <ClInclude Include="..\RePair\Pair.h" />
     <ClInclude Include="..\RePair\PairRecord.h" />
     <ClInclude Include="..\RePair\SymbolRecord.h" />
   </ItemGroup>

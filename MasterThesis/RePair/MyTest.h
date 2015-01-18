@@ -8,11 +8,11 @@ public:
 	MyTest();
 	~MyTest();
 
-	void Dictionary(string msg, unique_ptr<unordered_map<char, string>>& dictionary);
+	void Dictionary(string msg, unique_ptr<unordered_map<char, Pair>>& dictionary);
 	void SequenceWithIndex(string msg, unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
 	void Sequence(string msg, unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
-	void ActivePairs(string msg, unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs);
-	void ActivePairsDetails(string msg, unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs);
+	void ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs);
+	void ActivePairsDetails(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs);
 	void PriorityQueue(string msg, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 	void Context(
 		string msg,

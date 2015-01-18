@@ -48,6 +48,9 @@
     <ClCompile Include="..\RePair\Outputter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\RePair\Pair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\RePair\MyTimer.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\RePair\Outputter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RePair\Pair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

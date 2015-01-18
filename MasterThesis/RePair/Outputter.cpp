@@ -48,7 +48,7 @@ void Outputter::compressedFile(
 
 void Outputter::dictionary(
 	string inputFile,
-	unique_ptr<unordered_map<char, string>>& dictionary)
+	unique_ptr<unordered_map<char, Pair>>& dictionary)
 {
 	ofstream myfile;
 	string outFile = createName(inputFile, "CompressedDictionary");
@@ -57,12 +57,7 @@ void Outputter::dictionary(
 
 	for each (auto pair in (*dictionary))
 	{
-		if (pair.second.size() == 2)
-			myfile << pair.first << " " << pair.second[0] << "" << pair.second[1] << endl;
-		else if (pair.second.size() == 1)
-			myfile << pair.first << " " << pair.second[0] << endl;
-		else
-			myfile << pair.first << endl;
+		myfile << pair.first << " " << pair.second.leftSymbol << "" << pair.second.rightSymbol << endl;
 	}
 
 	myfile.close();

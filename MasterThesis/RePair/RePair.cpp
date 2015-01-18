@@ -10,11 +10,12 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	auto dictionary = make_unique<unordered_map<char, string>>();
-	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+	auto dictionary = make_unique<unordered_map<char, Pair>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(127);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
+
 	
 	Initializer init;
 	AlgorithmP algP;

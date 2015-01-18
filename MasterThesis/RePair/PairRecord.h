@@ -2,17 +2,17 @@
 
 using namespace std;
 #pragma once
+
 class PairRecord
 {
 public:
+	Pair pair;
 	int count;
 	int arrayIndexFirst;
 	int arrayIndexLast;
-	bool skippedPair;
-	std::string pair;
+	bool skippedPair;	
 	shared_ptr<PairRecord> previousPair;
 	shared_ptr<PairRecord> nextPair;
-
 
 	PairRecord();
 	PairRecord(int indexFirst, int indexLast);

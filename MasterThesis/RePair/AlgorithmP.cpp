@@ -89,7 +89,7 @@ void AlgorithmP::managePriorityQueueDecrement(shared_ptr<PairRecord>& tmpPairRec
 void AlgorithmP::decrementCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
@@ -101,7 +101,12 @@ void AlgorithmP::decrementCount(
 	}
 	managePriorityQueueDecrement(tmpPairRecordAdjacent, priorityQueue);
 	if (tmpPairRecordAdjacent->count == 0)
-		activePairs->erase(tmpPairRecordAdjacent->pair);
+	{
+		(*activePairs)[tmpPairRecordAdjacent->pair.leftSymbol].erase(tmpPairRecordAdjacent->pair.rightSymbol);
+		if ((*activePairs)[tmpPairRecordAdjacent->pair.leftSymbol].empty())
+			(*activePairs).erase(tmpPairRecordAdjacent->pair.leftSymbol);
+	}
+		
 }
 
 void AlgorithmP::replacePair(
@@ -109,15 +114,13 @@ void AlgorithmP::replacePair(
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolNext,
 	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
 {
-	stringstream ss;
-	string tmpPair;
+	Pair tmpPair;
 	char newSymbol = (char)(*Symbols);
-	ss << symbolLeft->symbol << symbolRight->symbol;
-	ss >> tmpPair;
-	ss.clear();
+	tmpPair.leftSymbol = symbolLeft->symbol;
+	tmpPair.rightSymbol = symbolRight->symbol;
 
 	if (symbolLeft && symbolLeft->next)
 	{
@@ -137,13 +140,14 @@ void AlgorithmP::replacePair(
 		symbolRight->next = NULL;
 	
 	symbolRight->previous = symbolLeft;
+	(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->count--;
 
-	(*activePairs)[tmpPair]->count--;
-
-	if ((*activePairs)[tmpPair]->count == 0)
+	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->count == 0)
 	{
 		symbolLeft->next = NULL;
-		(*activePairs).erase(tmpPair);
+		(*activePairs)[tmpPair.leftSymbol].erase(tmpPair.rightSymbol);
+		if ((*activePairs)[tmpPair.leftSymbol].empty())
+			(*activePairs).erase(tmpPair.leftSymbol);
 	}
 		
 }
@@ -152,14 +156,9 @@ void AlgorithmP::increaseCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<PairRecord>& tmpPairRecord,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs)
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
 {
-	stringstream ss;
-	string tmpPair;
-	ss << symbolLeft->symbol << symbolRight->symbol;
-	ss >> tmpPair;
-	ss.clear();
-	tmpPairRecord = (*activePairs)[tmpPair];
+	tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolRight->symbol];
 	tmpPairRecord->count++;	
 }
 
@@ -168,16 +167,16 @@ void AlgorithmP::setupPairRecord(
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<PairRecord>& tmpPairRecord)
 {
-	stringstream ss;
-	string tmpPair;
-	ss << symbolLeft->symbol << symbolRight->symbol;
-	ss >> tmpPair;
-	ss.clear();
+	Pair tmpPair;
+	tmpPair.leftSymbol = symbolLeft->symbol;
+	tmpPair.rightSymbol = symbolRight->symbol;
+
 	tmpPairRecord->previousPair = NULL;
 	tmpPairRecord->nextPair = NULL;
 	tmpPairRecord->arrayIndexFirst = symbolLeft->index;
 	tmpPairRecord->arrayIndexLast = symbolLeft->index;
-	tmpPairRecord->pair = tmpPair;
+	tmpPairRecord->pair.leftSymbol = tmpPair.leftSymbol;
+	tmpPairRecord->pair.rightSymbol = tmpPair.rightSymbol;
 }
 
 void AlgorithmP::setupPairSequence(
@@ -208,8 +207,8 @@ void AlgorithmP::updatePairSequence(
 
 void AlgorithmP::replaceInstanceOfPair(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
@@ -221,9 +220,6 @@ void AlgorithmP::replaceInstanceOfPair(
 	auto tmpPairRecord = make_shared<PairRecord>();
 	auto tmpPairRecordAdjacent = make_shared<PairRecord>();
 	char newSymbol;
-
-	stringstream ss;
-	string tmpPair;	
 
 	/*Test test;
 
@@ -237,11 +233,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	//Step 2, decrement counts of xa and by
 	if (symbolPrevious) //xa
 	{
-
-		ss << symbolPrevious->symbol << symbolLeft->symbol;
-		ss >> tmpPair;
-		ss.clear();
-		tmpPairRecordAdjacent = (*activePairs)[tmpPair];
+		tmpPairRecordAdjacent = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];
 
 		if (tmpPairRecordAdjacent)
 			decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);
@@ -249,11 +241,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	
 	if (symbolNext) //by
 	{
-
-		ss << symbolRight->symbol << symbolNext->symbol;
-		ss >> tmpPair;
-		ss.clear();
-		tmpPairRecordAdjacent = (*activePairs)[tmpPair];
+		tmpPairRecordAdjacent = (*activePairs)[symbolRight->symbol][symbolNext->symbol];
 
 		if (tmpPairRecordAdjacent &&																		//If Pair record exists
 			!(symbolRight->symbol == symbolNext->symbol &&													//But it is not the case that the symbols are identical
@@ -269,15 +257,11 @@ void AlgorithmP::replaceInstanceOfPair(
 	//Step 4, increase counts of xA and Ay
 	if (symbolPrevious) //xA
 	{
-		ss << symbolPrevious->symbol << symbolLeft->symbol;
-		ss >> tmpPair;
-		ss.clear();
-
-		tmpPairRecord = (*activePairs)[tmpPair];
+		tmpPairRecord = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];
 		if (!tmpPairRecord)
 		{
-			(*activePairs)[tmpPair] = make_shared<PairRecord>();
-			tmpPairRecord = (*activePairs)[tmpPair];
+			(*activePairs)[symbolPrevious->symbol][symbolLeft->symbol] = make_shared<PairRecord>();
+			tmpPairRecord = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];
 		}
 
 		if (symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0 &&								//If we have identical symbols which have been seen before
@@ -321,15 +305,12 @@ void AlgorithmP::replaceInstanceOfPair(
 	}
 	if (symbolNext) //Ay
 	{
-		ss << symbolLeft->symbol << symbolNext->symbol;
-		ss >> tmpPair;
-		ss.clear();
+		tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolNext->symbol];
 
-		tmpPairRecord = (*activePairs)[tmpPair];
 		if (!tmpPairRecord)
 		{
-			(*activePairs)[tmpPair] = make_shared<PairRecord>();
-			tmpPairRecord = (*activePairs)[tmpPair];
+			(*activePairs)[symbolLeft->symbol][symbolNext->symbol] = make_shared<PairRecord>();
+			tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolNext->symbol];
 		}
 
 		increaseCount(symbolLeft, symbolNext, tmpPairRecord, activePairs);
@@ -425,8 +406,8 @@ void AlgorithmP::establishContext(
 void AlgorithmP::replaceAllPairs(
 	int sequenceIndex,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols)
 {
@@ -499,8 +480,8 @@ void AlgorithmP::newSymbol(
 
 void AlgorithmP::manageHighPriorityList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	unique_ptr<unordered_map<char, bool>>& symbolMap)
@@ -562,8 +543,8 @@ void AlgorithmP::manageHighPriorityList(
 
 void AlgorithmP::manageOneEntryOnList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	int i,
@@ -602,8 +583,8 @@ void AlgorithmP::manageOneEntryOnList(
 
 void AlgorithmP::manageOneList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	int i,
@@ -624,8 +605,8 @@ void AlgorithmP::manageOneList(
 
 void AlgorithmP::manageLowerPriorityLists(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	unique_ptr<unordered_map<char, bool>>& symbolMap)
@@ -646,8 +627,8 @@ void AlgorithmP::manageLowerPriorityLists(
 
 void AlgorithmP::run(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, string>>& dictionary,
-	unique_ptr<unordered_map<string, shared_ptr<PairRecord>>>& activePairs,
+	unique_ptr<unordered_map<char, Pair>>& dictionary,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	unique_ptr<unordered_map<char, bool>>& symbolMap)
