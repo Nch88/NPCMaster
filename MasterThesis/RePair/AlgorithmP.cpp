@@ -13,7 +13,10 @@ AlgorithmP::~AlgorithmP()
 }
 
 
-void AlgorithmP::removeFromListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
+void AlgorithmP::removeFromListInPriorityQueue(
+	int index, 
+	shared_ptr<PairRecord>& tmpPairRecordAdjacent, 
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
 {
 	if (index > priorityQueue->size() - 1)
 		index = priorityQueue->size() - 1;
@@ -38,7 +41,10 @@ void AlgorithmP::removeFromListInPriorityQueue(int index, shared_ptr<PairRecord>
 	tmpPairRecordAdjacent->nextPair = NULL;
 }
 
-void AlgorithmP::insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecord, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
+void AlgorithmP::insertIntoListInPriorityQueue(
+	int index, 
+	shared_ptr<PairRecord>& tmpPairRecord, 
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
 {
 	int pQIndex = index;
 	shared_ptr<PairRecord> tmpRecord;
@@ -60,14 +66,12 @@ void AlgorithmP::insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>
 		tmpRecord->nextPair = tmpPairRecord;
 		tmpPairRecord->previousPair = tmpRecord;
 		tmpPairRecord->nextPair = NULL;
-		/*(*priorityQueue)[pQIndex]->previousPair = tmpPairRecord;
-		tmpPairRecord->nextPair = (*priorityQueue)[pQIndex];
-		(*priorityQueue)[pQIndex] = tmpPairRecord;
-		tmpPairRecord->previousPair = NULL;*/
 	}
 }
 
-void AlgorithmP::managePriorityQueueDecrement(shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
+void AlgorithmP::managePriorityQueueDecrement(
+	shared_ptr<PairRecord>& tmpPairRecordAdjacent, 
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
 {
 
 	if (tmpPairRecordAdjacent->count == 1) //Remove from priority queue
@@ -100,13 +104,41 @@ void AlgorithmP::decrementCount(
 		symbolLeft->next = NULL;
 	}
 	managePriorityQueueDecrement(tmpPairRecordAdjacent, priorityQueue);
-	if (tmpPairRecordAdjacent->count == 0)
+	/*if (tmpPairRecordAdjacent->count == 0)
 	{
 		(*activePairs)[tmpPairRecordAdjacent->pair.leftSymbol].erase(tmpPairRecordAdjacent->pair.rightSymbol);
 		if ((*activePairs)[tmpPairRecordAdjacent->pair.leftSymbol].empty())
 			(*activePairs).erase(tmpPairRecordAdjacent->pair.leftSymbol);
-	}
+	}*/
 		
+}
+
+void AlgorithmP::threadEmptySymbols(
+	shared_ptr<SymbolRecord>& symbolLeft,
+	shared_ptr<SymbolRecord>& symbolRight,
+	shared_ptr<SymbolRecord>& symbolNext,
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray)
+{
+	int index;
+	if (symbolNext && symbolNext->symbol != '\0')
+	{
+		symbolRight->next = symbolNext;
+	}
+	else
+		symbolRight->next = NULL;
+
+	symbolRight->previous = symbolLeft;
+
+	if (symbolRight->index > 0 && (*sequenceArray)[symbolRight->index - 1]->symbol == '\0')							//Update the symbol to the left of this one if necessary
+	{
+		(*sequenceArray)[symbolRight->index - 1]->previous = symbolRight->previous;
+		(*sequenceArray)[symbolRight->index - 1]->next = symbolRight->next;
+	}
+	if (symbolRight->index < sequenceArray->size() - 1 && (*sequenceArray)[symbolRight->index + 1]->symbol == '\0') //Update the symbol to the right of this one if necessary
+	{
+		(*sequenceArray)[symbolRight->index + 1]->previous = symbolRight->previous;
+		(*sequenceArray)[symbolRight->index + 1]->next = symbolRight->next;
+	}		
 }
 
 void AlgorithmP::replacePair(
@@ -115,7 +147,8 @@ void AlgorithmP::replacePair(
 	shared_ptr<SymbolRecord>& symbolNext,
 	unique_ptr<unsigned int>& Symbols,
 	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray)
 {
 	Pair tmpPair;
 	char newSymbol = (char)(*Symbols);
@@ -132,22 +165,20 @@ void AlgorithmP::replacePair(
 	symbolLeft->symbol = newSymbol;
 	symbolRight->symbol = (char)0;
 
-	if (symbolNext && symbolNext->symbol != '\0')
-	{
-		symbolRight->next = symbolNext;
-	}
-	else
-		symbolRight->next = NULL;
-	
-	symbolRight->previous = symbolLeft;
+	threadEmptySymbols(
+		symbolLeft,
+		symbolRight,
+		symbolNext,
+		sequenceArray);
+
 	(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->count--;
 
 	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->count == 0)
 	{
 		symbolLeft->next = NULL;
-		(*activePairs)[tmpPair.leftSymbol].erase(tmpPair.rightSymbol);
+		/*(*activePairs)[tmpPair.leftSymbol].erase(tmpPair.rightSymbol);
 		if ((*activePairs)[tmpPair.leftSymbol].empty())
-			(*activePairs).erase(tmpPair.leftSymbol);
+			(*activePairs).erase(tmpPair.leftSymbol);*/
 	}
 		
 }
@@ -221,15 +252,6 @@ void AlgorithmP::replaceInstanceOfPair(
 	auto tmpPairRecordAdjacent = make_shared<PairRecord>();
 	char newSymbol;
 
-	/*Test test;
-
-	test.Sequence("Sequence", sequenceArray);
-	test.ActivePairsDetails("Active pairs", activePairs);
-	test.PriorityQueue("Priority queue", priorityQueue);
-	test.Dictionary("Dictionary", dictionary);
-	test.Context("Context", symbolLeft, symbolRight, symbolPrevious, symbolNext);
-	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;*/
-
 	//Step 2, decrement counts of xa and by
 	if (symbolPrevious) //xa
 	{
@@ -252,7 +274,7 @@ void AlgorithmP::replaceInstanceOfPair(
 
 	//Step 3, replace ab, leaving xAy
 
-	replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs);
+	replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs, sequenceArray);
 
 	//Step 4, increase counts of xA and Ay
 	if (symbolPrevious) //xA
@@ -264,9 +286,31 @@ void AlgorithmP::replaceInstanceOfPair(
 			tmpPairRecord = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];
 		}
 
-		if (symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0 &&								//If we have identical symbols which have been seen before
+		if (symbolPrevious->symbol == -117) //TEST
+		{
+			bool b1 = symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0;
+			bool b2 = symbolPrevious->index > 0;
+			bool b3 = symbolPrevious->index < sequenceArray->size();
+			shared_ptr<SymbolRecord> s1 = (*sequenceArray)[symbolPrevious->index - 1];
+			bool b4 = symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->symbol;
+			bool b5 = (*sequenceArray)[symbolPrevious->index - 1]->symbol == '\0';
+			shared_ptr<SymbolRecord> s6 = (*sequenceArray)[symbolPrevious->index - 5]->previous;
+			shared_ptr<SymbolRecord> s5 = (*sequenceArray)[symbolPrevious->index - 4]->previous;
+			shared_ptr<SymbolRecord> s4 = (*sequenceArray)[symbolPrevious->index - 3]->previous;
+			shared_ptr<SymbolRecord> s3 = (*sequenceArray)[symbolPrevious->index - 2]->previous;
+			shared_ptr<SymbolRecord> s2 = (*sequenceArray)[symbolPrevious->index - 1]->previous;
+			bool b6 = symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->previous->symbol;
+			bool b7 = !tmpPairRecord->skippedPair;
+		}
+		
+
+		if (symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0 &&				//If we have identical symbols which have been seen before
+			symbolPrevious->index > 0 &&
+			symbolPrevious->index < sequenceArray->size() &&
+			(*sequenceArray)[symbolPrevious->index - 1] &&
 			(symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->symbol ||			//and the previous symbol was also the same (meaning at least three in a row)
-			((*sequenceArray)[symbolPrevious->index - 1]->symbol == '\0' &&								
+			((*sequenceArray)[symbolPrevious->index - 1]->symbol == '\0' &&	
+			(*sequenceArray)[symbolPrevious->index - 1]->previous->symbol &&
 			symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->previous->symbol)) &&
 			!tmpPairRecord->skippedPair)																//and we registered the last pair
 		{

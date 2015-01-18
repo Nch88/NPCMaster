@@ -29,13 +29,19 @@ public:
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<PairRecord>& tmpPairRecord,
 		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs);
+	void threadEmptySymbols(
+		shared_ptr<SymbolRecord>& symbolLeft,
+		shared_ptr<SymbolRecord>& symbolRight,
+		shared_ptr<SymbolRecord>& symbolNext,
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
 	void replacePair(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolNext,
 		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs);
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
 	void insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 	void removeFromListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 	void managePriorityQueueDecrement(shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);

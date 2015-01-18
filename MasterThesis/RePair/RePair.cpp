@@ -25,6 +25,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	string input1 = "diddy.txt";
 	string input2 = "test.txt";
 	string input3 = "world192.txt";
+	string input4 = "bible.txt";
+	string input5 = "E.coli";
 
 	string input = input3;
 	
