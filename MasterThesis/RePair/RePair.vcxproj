@@ -82,6 +82,7 @@
     <ClInclude Include="AlgorithmP.h" />
     <ClInclude Include="Initializer.h" />
     <ClInclude Include="MyTimer.h" />
+    <ClInclude Include="Outputter.h" />
     <ClInclude Include="PairRecord.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SymbolRecord.h" />
@@ -92,6 +93,7 @@
     <ClCompile Include="AlgorithmP.cpp" />
     <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="MyTimer.cpp" />
+    <ClCompile Include="Outputter.cpp" />
     <ClCompile Include="PairRecord.cpp" />
     <ClCompile Include="RePair.cpp" />
     <ClCompile Include="stdafx.cpp">

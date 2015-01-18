@@ -26,3 +26,4 @@
 #include "Initializer.h"
 #include "AlgorithmP.h"
 #include "MyTest.h"
+#include "Outputter.h"

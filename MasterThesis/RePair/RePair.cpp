@@ -18,11 +18,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	Initializer init;
 	AlgorithmP algP;
 	MyTest test;
+	Outputter out;
 
 	string input = "diddy.txt";
 	string input2 = "test.txt";
+	string input3 = "world192.txt";
 	
-	init.SequenceArray(input2, sequenceArray, activePairs);
+	init.SequenceArray(input3, sequenceArray, activePairs);
 
 	int priorityQueueSize;
 
@@ -38,10 +40,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		activePairs,
 		priorityQueue,
 		Symbols);
-
-	test.Sequence("Sequence", sequenceArray);
-	test.Dictionary("Dictionary", dictionary);
 	
+	out.compressedFile(input, sequenceArray);
+	out.dictionary(input, dictionary);
 
 	return 0;
 }
