@@ -122,7 +122,7 @@ void AlgorithmP::manageSequenceDecrement(
 void AlgorithmP::decrementCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
@@ -170,12 +170,13 @@ void AlgorithmP::replacePair(
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolNext,
 	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
-	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray)
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+	Conditions& c)
 {
 	Pair tmpPair;
-	char newSymbol = (char)(*Symbols);
+	unsigned int newSymbol = (*Symbols);
 	tmpPair.leftSymbol = symbolLeft->symbol;
 	tmpPair.rightSymbol = symbolRight->symbol;
 
@@ -187,28 +188,31 @@ void AlgorithmP::replacePair(
 
 	(*dictionary)[newSymbol] = tmpPair;
 	symbolLeft->symbol = newSymbol;
-	symbolRight->symbol = (char)0;
-
+	symbolRight->symbol = 0;
+	
 	threadEmptySymbols(
 		symbolLeft,
 		symbolRight,
 		symbolNext,
 		sequenceArray);
 
-	(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count--;
-
-	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count == 0)
+	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol] && (*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord)
 	{
-		symbolLeft->next = NULL;
-		//(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord = NULL;
-	}
+		(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count--;
+
+		if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count == 0)
+		{
+			symbolLeft->next = NULL;
+			//(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord = NULL;
+		}
+	}	
 }
 
 void AlgorithmP::increaseCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<PairRecord>& tmpPairRecord,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
 {
 	tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolRight->symbol]->pairRecord;
 	tmpPairRecord->count++;	
@@ -253,19 +257,20 @@ void AlgorithmP::updatePairSequence(
 
 void AlgorithmP::checkActivePair(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolPrevious,
-	shared_ptr<SymbolRecord>& symbolNext)
+	shared_ptr<SymbolRecord>& symbolNext,
+	Conditions& c)
 {
 
 	shared_ptr<PairRecord> tmpPairRecord;
 	shared_ptr<PairTracker> tmpPairTracker;
-	char newSymbol = (char)(*Symbols);
+	unsigned int newSymbol = (*Symbols);
 
 	if (symbolPrevious) //xA
 	{
@@ -337,24 +342,26 @@ void AlgorithmP::checkActivePair(
 
 void AlgorithmP::replaceInstanceOfPair(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolPrevious,
-	shared_ptr<SymbolRecord>& symbolNext)
+	shared_ptr<SymbolRecord>& symbolNext,
+	Conditions& c)
 {
 	
 	shared_ptr<PairRecord> tmpPairRecord;
 	shared_ptr<PairRecord> tmpPairRecordAdjacent;
 	shared_ptr<PairTracker> tmpPairTracker;
-	char newSymbol;
+	unsigned int newSymbol;
+	MyTimer t;
 
 	//Step 2, decrement counts of xa and by
 	if (symbolPrevious) //xa
-	{
+	{		
 		tmpPairTracker = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];
 		if (tmpPairTracker)
 		{
@@ -363,11 +370,11 @@ void AlgorithmP::replaceInstanceOfPair(
 			if (tmpPairRecordAdjacent)
 				decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);
 		}
-		
 	}
 	
 	if (symbolNext) //by
 	{
+		
 		tmpPairTracker = (*activePairs)[symbolRight->symbol][symbolNext->symbol];
 		if (tmpPairTracker)
 		{
@@ -382,12 +389,13 @@ void AlgorithmP::replaceInstanceOfPair(
 	}
 
 	//Step 3, replace ab, leaving xAy
-
-	replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs, sequenceArray);
+	
+	replacePair(symbolLeft, symbolRight, symbolNext, Symbols, dictionary, activePairs, sequenceArray, c);
 
 	//Step 4, increase counts of xA and Ay
 	if (symbolPrevious) //xA
 	{
+		
 		tmpPairTracker = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];		
 
 		if (tmpPairTracker && tmpPairTracker->pairRecord)
@@ -457,6 +465,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	}
 	if (symbolNext) //Ay
 	{
+		
 		tmpPairTracker = (*activePairs)[symbolLeft->symbol][symbolNext->symbol];		
 
 		if (tmpPairTracker && tmpPairTracker->pairRecord)
@@ -504,32 +513,17 @@ void AlgorithmP::establishContext(
 	shared_ptr<SymbolRecord>& symbolPrevious,
 	shared_ptr<SymbolRecord>& symbolNext,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	int sequenceIndex)
+	int sequenceIndex,
+	Conditions& c)
 {
 	SymbolRecord tmpSymbol;
-	char empty = '\0';
+	unsigned int empty = 0;
 
 	symbolLeft = (*sequenceArray)[sequenceIndex];
 	symbolRight = (*sequenceArray)[sequenceIndex + 1];
 	
 	if ((symbolRight)->symbol == empty)
 	{
-		//tmpSymbol = *symbolRight;
-		////Update threading counter - start
-		//if (symbolRight->next->index + 1 < sequenceArray->size())
-		//{
-		//	symbolRight->next = (*sequenceArray)[symbolRight->next->index + 1];
-		//	(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
-		//}			
-		//else
-		//	symbolRight->next = NULL;
-		////(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
-		//if (symbolRight->next && (symbolRight->next)->symbol == empty)
-		//{
-		//	symbolRight->next = symbolRight->next->next;
-		//	(*sequenceArray)[symbolRight->next->index - 1]->previous = symbolLeft;
-		//}
-		////Update threading counter - end
 		symbolRight = symbolRight->next;
 	}
 		
@@ -565,10 +559,11 @@ void AlgorithmP::establishContext(
 void AlgorithmP::checkActivePairs(
 	int sequenceIndex,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols)
+	unique_ptr<unsigned int>& Symbols,
+	Conditions& c)
 {
 	auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
 	auto symbolRight = make_shared<SymbolRecord>(); //b
@@ -583,7 +578,7 @@ void AlgorithmP::checkActivePairs(
 	do
 	{
 		//Step 1, Establish context of xaby
-		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex);
+		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex, c);
 
 		checkActivePair(
 			sequenceArray,
@@ -594,7 +589,8 @@ void AlgorithmP::checkActivePairs(
 			symbolLeft,
 			symbolRight,
 			symbolPrevious,
-			symbolNext);
+			symbolNext,
+			c);
 
 		if (!symbolOld.next || ((*symbolOld.next).symbol == '\0' && !symbolOld.next->next))
 			break;
@@ -615,10 +611,11 @@ void AlgorithmP::checkActivePairs(
 void AlgorithmP::replaceAllPairs(
 	int sequenceIndex,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols)
+	unique_ptr<unsigned int>& Symbols,
+	Conditions& c)
 {
 	auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
 	auto symbolRight = make_shared<SymbolRecord>(); //b
@@ -631,6 +628,16 @@ void AlgorithmP::replaceAllPairs(
 	bool running = true;
 	SymbolRecord symbolOld = *(*sequenceArray)[sequenceIndex];
 	MyTest test;
+	MyTimer t;
+
+	if (c.extraVerbose)
+	{
+		cout << "	Checking for active pairs" << endl;
+	}
+	if (c.timing)
+	{		
+		t.start();
+	}
 
 	checkActivePairs(
 		sequenceIndex,
@@ -638,12 +645,19 @@ void AlgorithmP::replaceAllPairs(
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);
+		Symbols,
+		c);
 
+	if (c.extraVerbose)
+	{
+		cout << "	Replacing pairs" << endl;
+	}
 	do
 	{
 		//Step 1, Establish context of xaby
-		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex);
+		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex, c);
+		
+
 		
 		replaceInstanceOfPair(
 			sequenceArray,
@@ -654,7 +668,8 @@ void AlgorithmP::replaceAllPairs(
 			symbolLeft,
 			symbolRight,
 			symbolPrevious,
-			symbolNext);
+			symbolNext,
+			c);				
 
 		if (!symbolOld.next || ((*symbolOld.next).symbol == '\0' && !symbolOld.next->next))
 			break;
@@ -670,37 +685,35 @@ void AlgorithmP::replaceAllPairs(
 			symbolOld = *(*sequenceArray)[sequenceIndex];
 		}
 	} while (running);
+	if (c.timing)
+	{
+		t.stop();
+		cout << "Time for replacing pair: ";
+		cout << t.getTime() << endl;
+	}
 }
 
 void AlgorithmP::newSymbol(
-	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	unique_ptr<unsigned int>& Symbols)
 {	
 	bool badSymbol = true;
 
-	if ((*Symbols) == 254)
+	if ((*Symbols) == UINT_MAX)
 	{
 		cout << "Ran out of symbols, aborting compression" << endl;
 		exit;
 	}
 
-	while (badSymbol)
-	{		
-		(*Symbols)++;
-		if ((*symbolMap)[(*Symbols)])// || (*Symbols) == 129)
-			badSymbol = true;
-		else
-			badSymbol = false;
-	}
+	(*Symbols)++;
 }
 
 void AlgorithmP::manageHighPriorityList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	Conditions& c)
 {
 	auto tmpPairRecord = make_shared<PairRecord>();
 	auto tmpPairRecordSelected = make_shared<PairRecord>();
@@ -743,7 +756,12 @@ void AlgorithmP::manageHighPriorityList(
 		tmpPairRecordSelected->previousPair = NULL;
 		tmpPairRecordSelected->nextPair = NULL;		
 
-		newSymbol(Symbols, symbolMap);
+		if (c.verbose)
+		{
+			cout << "Compressing high priority list pair: '" << tmpPairRecordSelected->pair.leftSymbol << " " << tmpPairRecordSelected->pair.rightSymbol << "' with count: " << tmpPairRecordSelected->count << endl;
+		}
+
+		newSymbol(Symbols);
 		
 		replaceAllPairs(
 			sequenceIndex,
@@ -751,18 +769,19 @@ void AlgorithmP::manageHighPriorityList(
 			dictionary,
 			activePairs,
 			priorityQueue,
-			Symbols);
+			Symbols,
+			c);
 	}
 }
 
 void AlgorithmP::manageOneEntryOnList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	int i,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	Conditions& c)
 {
 	auto tmpPairRecord = make_shared<PairRecord>();
 	int sequenceIndex;
@@ -784,7 +803,7 @@ void AlgorithmP::manageOneEntryOnList(
 		(*priorityQueue)[i] = NULL;
 	}
 		
-	newSymbol(Symbols, symbolMap);		
+	newSymbol(Symbols);		
 
 	replaceAllPairs(
 		sequenceIndex,
@@ -792,20 +811,26 @@ void AlgorithmP::manageOneEntryOnList(
 		dictionary,
 		activePairs,
 		priorityQueue,
-		Symbols);	
+		Symbols,
+		c);	
 }
 
 void AlgorithmP::manageOneList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
 	int i,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	Conditions& c)
 {
+	int count = 0;
 	while ((*priorityQueue)[i])
 	{
+		if (c.extraVerbose)
+		{
+			cout << "	Managing pair nr. " << ++count << endl;
+		}
 		manageOneEntryOnList(
 			sequenceArray,
 			dictionary,
@@ -813,21 +838,25 @@ void AlgorithmP::manageOneList(
 			priorityQueue,
 			Symbols,
 			i,
-			symbolMap);
+			c);
 	}
 }
 
 void AlgorithmP::manageLowerPriorityLists(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	Conditions& c)
 {
 	
 	for (int i = priorityQueue->size() - 2; i >= 0; i--)
 	{		
+		if (c.verbose)
+		{
+			cout << "Compressing low priority list at index: " << i << endl;
+		}
 		manageOneList(
 			sequenceArray,
 			dictionary,
@@ -835,17 +864,17 @@ void AlgorithmP::manageLowerPriorityLists(
 			priorityQueue,
 			Symbols,
 			i,
-			symbolMap);
+			c);
 	}
 }
 
 void AlgorithmP::run(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, Pair>>& dictionary,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	Conditions& c)
 {
 	manageHighPriorityList(
 		sequenceArray,
@@ -853,7 +882,7 @@ void AlgorithmP::run(
 		activePairs,
 		priorityQueue,
 		Symbols,
-		symbolMap);
+		c);
 
 	manageLowerPriorityLists(
 		sequenceArray,
@@ -861,5 +890,5 @@ void AlgorithmP::run(
 		activePairs,
 		priorityQueue,
 		Symbols,
-		symbolMap);
+		c);
 }

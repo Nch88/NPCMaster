@@ -17,10 +17,13 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <climits>
+#include <chrono>
 
 
 // TODO: reference additional headers your program requires here
 #include "MyTimer.h"
+#include "Conditions.h"
 #include "SymbolRecord.h"
 #include "Pair.h"
 #include "PairRecord.h"

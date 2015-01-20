@@ -13,11 +13,11 @@ Initializer::~Initializer()
 }
 
 void Initializer::setupPairRecord(
-	char leftSymbol,
-	char rightSymbol,
+	unsigned int leftSymbol,
+	unsigned int rightSymbol,
 	int offset,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
 {
 	shared_ptr<PairTracker> tmpTracker;
 	shared_ptr<SymbolRecord> previousOccurence;
@@ -70,16 +70,10 @@ void Initializer::setupPairRecord(
 	}
 }
 
-void Initializer::checkSymbol(char symbol, unique_ptr<unordered_map<char, bool>>& symbolMap)
-{
-	if ((int)symbol >= 128)	
-		(*symbolMap)[symbol] = true;	
-}
-
 void Initializer::SequenceArray(string filename,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
-	unique_ptr<unordered_map<char, bool>>& symbolMap)
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	Conditions& c)
 {
 	char previousSymbol;
 	char leftSymbol;
@@ -87,23 +81,26 @@ void Initializer::SequenceArray(string filename,
 	int index = 0;
 	bool skippedPair = false;
 
+	if (c.verbose)
+	{
+		cout << "Initializing sequence array and setting up active pairs" << endl;
+	}
+
 	ifstream file(filename);
 
 	if (file.is_open())
 	{
 		if (file >> noskipws >> previousSymbol)
 		{
-			sequenceArray->push_back(make_shared<SymbolRecord>(previousSymbol, index++));
-			checkSymbol(previousSymbol, symbolMap);
+			sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)previousSymbol, index++));
 
 			if (file >> noskipws >> leftSymbol)
 			{
-				sequenceArray->push_back(make_shared<SymbolRecord>(leftSymbol, index++));
-				checkSymbol(leftSymbol, symbolMap);
+				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)leftSymbol, index++));
 
 				setupPairRecord(
-					previousSymbol,
-					leftSymbol,
+					(unsigned int)previousSymbol,
+					(unsigned int)leftSymbol,
 					2,
 					sequenceArray,
 					activePairs);
@@ -112,8 +109,7 @@ void Initializer::SequenceArray(string filename,
 
 		while (file >> noskipws >> rightSymbol)
 		{
-			sequenceArray->push_back(make_shared<SymbolRecord>(rightSymbol, index++));
-			checkSymbol(rightSymbol, symbolMap);
+			sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)rightSymbol, index++));
 
 			if (leftSymbol == rightSymbol && 
 				leftSymbol == previousSymbol &&
@@ -125,8 +121,8 @@ void Initializer::SequenceArray(string filename,
 				continue;
 			}
 			setupPairRecord(
-				leftSymbol,
-				rightSymbol,
+				(unsigned int)leftSymbol,
+				(unsigned int)rightSymbol,
 				2,
 				sequenceArray,
 				activePairs);
@@ -137,14 +133,48 @@ void Initializer::SequenceArray(string filename,
 		}
 		file.close();
 	}
+	else
+	{
+		if (c.verbose)
+		{
+			cout << "Problem opening file: " << filename << endl;
+		}
+	}
+
+	if (c.verbose)
+	{
+		cout << "Initialized sequence array with size: " << sequenceArray->size() << endl;
+	}
+	if (c.extraVerbose)
+	{
+		int count = 0;
+		for each (auto leftSymbol in (*activePairs))
+		{
+			for each (auto pair in leftSymbol.second)
+			{
+				count++;
+			}
+		}
+		cout << "Initialized active pairs with: " << count << " pairs" << endl;
+	}
+	else if (c.verbose)
+	{
+		cout << "Initialized active pairs with more than: " << activePairs->size() << " pairs" << endl;
+	}
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
-	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
+	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+	Conditions& c)
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
 	shared_ptr<PairRecord> tmpRecord;
+
+	if (c.verbose)
+	{
+		cout << "Initializing priority queue" << endl;
+	}
 
 	for each (auto leftSymbol in (*activePairs))
 	{
@@ -177,4 +207,9 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 			}
 		}
 	}	
+
+	if (c.verbose)
+	{
+		cout << "Initialized priority queue" << endl;
+	}
 }

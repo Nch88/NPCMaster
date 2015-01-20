@@ -1,17 +1,17 @@
 #include "stdafx.h"
-
+using namespace std::chrono;
 #pragma once
 
 class MyTimer
 {
-	time_t tStart;
-	time_t tStop;
+	milliseconds tStart;
+	milliseconds tStop;
 public:
 	MyTimer();
 	~MyTimer();
 
 	void start();
 	void stop();
-	float getTime();
+	long long getTime();
 };
 

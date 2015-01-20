@@ -14,15 +14,22 @@ MyTimer::~MyTimer()
 
 void MyTimer::start()
 {
-	time(&tStart);
+	tStart = duration_cast< milliseconds >(
+		high_resolution_clock::now().time_since_epoch()
+		);
 }
 
 void MyTimer::stop()
 {
-	time(&tStop);
+	tStop = duration_cast< milliseconds >(
+		high_resolution_clock::now().time_since_epoch()
+		);
 }
 
-float MyTimer::getTime()
+long long MyTimer::getTime()
 {
-	return tStop - tStart;
+	milliseconds result = tStop - tStart;
+	tStart = (milliseconds)0;
+	tStop = (milliseconds)0;
+	return result.count();
 }

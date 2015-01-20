@@ -39,7 +39,7 @@ void Outputter::compressedFile(
 
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
-		if ((*sequenceArray)[i]->symbol != (char)0)
+		if ((*sequenceArray)[i]->symbol != 0)
 			myfile << (*sequenceArray)[i]->symbol;
 	}
 	myfile.close();
@@ -48,7 +48,7 @@ void Outputter::compressedFile(
 
 void Outputter::dictionary(
 	string inputFile,
-	unique_ptr<unordered_map<char, Pair>>& dictionary)
+	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary)
 {
 	ofstream myfile;
 	string outFile = createName(inputFile, "CompressedDictionary");

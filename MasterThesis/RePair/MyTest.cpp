@@ -21,7 +21,7 @@ void MyTest::Sequence(string msg, unique_ptr<vector<shared_ptr<SymbolRecord>>>& 
 	cout << msg << ": ";
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
-		if ((*sequenceArray)[i]->symbol != (char)0)
+		if ((*sequenceArray)[i]->symbol != 0)
 			ss << (*sequenceArray)[i]->symbol;
 	}
 	ss >> s;
@@ -38,7 +38,7 @@ string MyTest::SequenceToString(unique_ptr<vector<shared_ptr<SymbolRecord>>>& se
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
 		if ((*sequenceArray)[i]->symbol != (char)0)
-			s += (*sequenceArray)[i]->symbol;
+			s += (char)(*sequenceArray)[i]->symbol;
 	}
 	return s;
 	//End Test
@@ -53,14 +53,14 @@ void MyTest::SequenceWithIndex(string msg, unique_ptr<vector<shared_ptr<SymbolRe
 	cout << msg << ": " << endl;
 	for (int i = 0; i < sequenceArray->size(); i++)
 	{
-		if ((*sequenceArray)[i]->symbol != (char)0)
+		if ((*sequenceArray)[i]->symbol != 0)
 			cout << (*sequenceArray)[i]->symbol << " at: " << (*sequenceArray)[i]->index << endl;
 	}
 	cout << endl << endl;
 	//End Test
 }
 
-void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, Pair>>& dictionary)
+void MyTest::Dictionary(string msg, unique_ptr<unordered_map<unsigned int, Pair>>& dictionary)
 {
 	//Test
 	stringstream ss;
@@ -75,7 +75,7 @@ void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, Pair>>& dicti
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
+void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))
@@ -88,7 +88,7 @@ void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_ma
 	cout << endl << endl;
 }
 
-void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
+void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))

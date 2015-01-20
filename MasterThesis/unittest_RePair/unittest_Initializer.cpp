@@ -80,18 +80,17 @@ using namespace std;
 //	ASSERT_EQ(17, (*priorityQueue)[5]->count);
 //}
 //
-TEST(testInitializer, initSequenceArray)
-{
-	Initializer init;
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto symbolMap = make_unique<unordered_map<char, bool>>();
-
-	init.SequenceArray("diddy.txt", sequenceArray, activePairs, symbolMap);
-
-	ASSERT_EQ(39, sequenceArray->size());
-	ASSERT_EQ(6, (*activePairs)['.']['d']->pairRecord->count);
-}
+//TEST(testInitializer, initSequenceArray)
+//{
+//	Initializer init;
+//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+//
+//	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
+//
+//	ASSERT_EQ(39, sequenceArray->size());
+//	ASSERT_EQ(6, (*activePairs)[(int)'.'][(int)'d']->pairRecord->count);
+//}
 //
 //
 //

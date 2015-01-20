@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\RePair\AlgorithmP.cpp" />
+    <ClCompile Include="..\RePair\Conditions.cpp" />
     <ClCompile Include="..\RePair\Initializer.cpp" />
     <ClCompile Include="..\RePair\MyTest.cpp" />
     <ClCompile Include="..\RePair\MyTimer.cpp" />
@@ -105,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\RePair\AlgorithmP.h" />
+    <ClInclude Include="..\RePair\Conditions.h" />
     <ClInclude Include="..\RePair\Initializer.h" />
     <ClInclude Include="..\RePair\MyTest.h" />
     <ClInclude Include="..\RePair\MyTimer.h" />

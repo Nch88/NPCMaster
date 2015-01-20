@@ -8,14 +8,14 @@ SymbolRecord::SymbolRecord()
 	next = NULL;
 }
 
-SymbolRecord::SymbolRecord(char s)
+SymbolRecord::SymbolRecord(unsigned int s)
 {
 	symbol = s;
 	previous = NULL;
 	next = NULL;
 }
 
-SymbolRecord::SymbolRecord(char s, int i)
+SymbolRecord::SymbolRecord(unsigned int s, int i)
 {
 	symbol = s;
 	index = i;
@@ -23,14 +23,14 @@ SymbolRecord::SymbolRecord(char s, int i)
 	next = NULL;
 }
 
-SymbolRecord::SymbolRecord(char s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
+SymbolRecord::SymbolRecord(unsigned int s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
 {
 	symbol = s;
 	previous = p;
 	next = n;
 }
 
-SymbolRecord::SymbolRecord(char s, int i, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
+SymbolRecord::SymbolRecord(unsigned int s, int i, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n)
 {
 	symbol = s;
 	previous = p;
@@ -52,7 +52,7 @@ void SymbolRecord::setNext(shared_ptr<SymbolRecord> n)
 	next = n;
 }
 
-char SymbolRecord::getSymbol()
+unsigned int SymbolRecord::getSymbol()
 {
 	return symbol;
 }

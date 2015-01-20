@@ -9,19 +9,19 @@ public:
 	Initializer();
 	~Initializer();
 
-	void checkSymbol(char symbol, unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void SequenceArray(string filename,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
-		unique_ptr<unordered_map<char, bool>>& symbolMap);
+		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		Conditions& c);
 	void PriorityQueue(int priorityQueueSize,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
-		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
+		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+		Conditions& c);
 	void setupPairRecord(
-		char leftSymbol,
-		char rightSymbol,
+		unsigned int leftSymbol,
+		unsigned int rightSymbol,
 		int offset,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs);
+		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs);
 };
 

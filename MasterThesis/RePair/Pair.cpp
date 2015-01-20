@@ -6,7 +6,7 @@ Pair::Pair()
 {
 }
 
-Pair::Pair(char left, char right)
+Pair::Pair(unsigned int left, unsigned int right)
 {
 	leftSymbol = left;
 	rightSymbol = right;
