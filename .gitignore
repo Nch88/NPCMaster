@@ -1,1 +1,5 @@
 MasterThesis/MasterThesis.opensdf
+*.tlog
+*.lastbuildstate
+*.idb
+*.ipch
