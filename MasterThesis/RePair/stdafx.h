@@ -24,6 +24,7 @@
 #include "SymbolRecord.h"
 #include "Pair.h"
 #include "PairRecord.h"
+#include "PairTracker.h"
 #include "Initializer.h"
 #include "AlgorithmP.h"
 #include "MyTest.h"

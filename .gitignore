@@ -3,3 +3,5 @@ MasterThesis/MasterThesis.opensdf
 *.lastbuildstate
 *.idb
 *.ipch
+*.vcxproj
+*.filters

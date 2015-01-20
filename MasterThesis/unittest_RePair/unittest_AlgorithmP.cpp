@@ -1154,7 +1154,7 @@ TEST(manageRun, everything)
 	Outputter out;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1198,7 +1198,7 @@ TEST(testDuplicates, evenNrOfSymbols)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1239,7 +1239,7 @@ TEST(testDuplicates, evenNrOfSymbolsSplit)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1280,7 +1280,7 @@ TEST(testDuplicates, unevenNrOFSymbols)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1321,7 +1321,7 @@ TEST(testHighPriorityLists, withDuplicates1)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1362,7 +1362,7 @@ TEST(testHighPriorityLists, withDuplicates2)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1403,7 +1403,7 @@ TEST(testHighPriorityLists, withDuplicates3)
 	AlgorithmP algP;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(64);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1475,7 +1475,7 @@ TEST(manageRun, fancyText)
 	Outputter out;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(127);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();
@@ -1520,7 +1520,7 @@ TEST(manageRun, fancyText2)
 	Outputter out;
 
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(127);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();

@@ -17,40 +17,56 @@ void Initializer::setupPairRecord(
 	char rightSymbol,
 	int offset,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
 {
-	shared_ptr<PairRecord> tmpRecord;
+	shared_ptr<PairTracker> tmpTracker;
 	shared_ptr<SymbolRecord> previousOccurence;
 	shared_ptr<SymbolRecord> newOccurence;
 
-	tmpRecord = (*activePairs)[leftSymbol][rightSymbol];
-	if (!tmpRecord)
+	tmpTracker = (*activePairs)[leftSymbol][rightSymbol];
+	if (!tmpTracker)
 	{
-		(*activePairs)[leftSymbol][rightSymbol] = make_shared<PairRecord>();
-		tmpRecord = (*activePairs)[leftSymbol][rightSymbol];
+		(*activePairs)[leftSymbol][rightSymbol] = make_shared<PairTracker>();
+		tmpTracker = (*activePairs)[leftSymbol][rightSymbol];
 	}
 
-	if (tmpRecord->getCount() == 0) //First occurence of active pair
+	if (tmpTracker->seenOnce)
 	{
-		tmpRecord->pair.leftSymbol = leftSymbol;
-		tmpRecord->pair.rightSymbol = rightSymbol;
-		tmpRecord->inc();
-		tmpRecord->setIndexFirst(sequenceArray->size() - offset); //First symbol in active pair
-		tmpRecord->setIndexLast(sequenceArray->size() - offset);
-		tmpRecord->nextPair = NULL;
-		tmpRecord->previousPair = NULL;
-	}
-	else
-	{
-		tmpRecord->inc();
+		tmpTracker->pairRecord = make_shared<PairRecord>();
 
-		previousOccurence = (*sequenceArray)[tmpRecord->getIndexLast()];
+		tmpTracker->pairRecord->pair.leftSymbol = leftSymbol;
+		tmpTracker->pairRecord->pair.rightSymbol = rightSymbol;
+		tmpTracker->pairRecord->count += 2;
+		tmpTracker->pairRecord->arrayIndexFirst = tmpTracker->indexFirst; //First symbol in active pair
+		tmpTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
+		tmpTracker->pairRecord->nextPair = NULL;
+		tmpTracker->pairRecord->previousPair = NULL;
+
+		previousOccurence = (*sequenceArray)[tmpTracker->pairRecord->arrayIndexFirst];
+		newOccurence = (*sequenceArray)[tmpTracker->pairRecord->arrayIndexLast];
+
+		previousOccurence->next = newOccurence;
+		newOccurence->previous = previousOccurence;
+
+		tmpTracker->indexFirst = -1;
+		tmpTracker->seenOnce = false;
+	}
+	else if (tmpTracker->pairRecord)
+	{
+		tmpTracker->pairRecord->inc();
+
+		previousOccurence = (*sequenceArray)[tmpTracker->pairRecord->getIndexLast()];
 		newOccurence = (*sequenceArray)[sequenceArray->size() - offset];
 
 		previousOccurence->next = newOccurence;
 		newOccurence->previous = previousOccurence;
 
-		tmpRecord->setIndexLast(sequenceArray->size() - offset);
+		tmpTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
+	}
+	else
+	{
+		tmpTracker->seenOnce = true;
+		tmpTracker->indexFirst = sequenceArray->size() - offset;
 	}
 }
 
@@ -62,7 +78,7 @@ void Initializer::checkSymbol(char symbol, unique_ptr<unordered_map<char, bool>>
 
 void Initializer::SequenceArray(string filename,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<unordered_map<char, bool>>& symbolMap)
 {
 	char previousSymbol;
@@ -124,7 +140,7 @@ void Initializer::SequenceArray(string filename,
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+	unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue)
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
@@ -134,17 +150,18 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 	{
 		for each (auto it in leftSymbol.second)
 		{
-			if (it.second->count >= 2)
+			it.second->seenOnce = false;
+			if (it.second->pairRecord && it.second->pairRecord->count >= 2)
 			{
-				if (it.second->count > priorityQueueSize)
+				if (it.second->pairRecord->count > priorityQueueSize)
 					priorityIndex = priorityQueueSize - 1;
 
 				else
-					priorityIndex = it.second->count - 2;
+					priorityIndex = it.second->pairRecord->count - 2;
 
 
 				if ((*priorityQueue)[priorityIndex] == NULL)
-					(*priorityQueue)[priorityIndex] = (it.second);
+					(*priorityQueue)[priorityIndex] = (it.second->pairRecord);
 
 				else
 				{
@@ -153,9 +170,9 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 					{
 						tmpRecord = tmpRecord->nextPair;
 					}
-					tmpRecord->nextPair = (it.second);
-					it.second->previousPair = tmpRecord;
-					it.second->nextPair = NULL;
+					tmpRecord->nextPair = (it.second->pairRecord);
+					it.second->pairRecord->previousPair = tmpRecord;
+					it.second->pairRecord->nextPair = NULL;
 				}
 			}
 		}

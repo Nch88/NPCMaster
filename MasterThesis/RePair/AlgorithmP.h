@@ -28,7 +28,7 @@ public:
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<PairRecord>& tmpPairRecord,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs);
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs);
 	void threadEmptySymbols(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
@@ -40,17 +40,37 @@ public:
 		shared_ptr<SymbolRecord>& symbolNext,
 		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
 	void insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 	void removeFromListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
 	void managePriorityQueueDecrement(shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
+	void manageSequenceDecrement(
+		shared_ptr<SymbolRecord>& symbolLeft,
+		shared_ptr<PairRecord>& tmpPairRecordAdjacent);
 	void decrementCount(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		shared_ptr<PairRecord>& tmpPairRecordAdjacent);
+	void checkActivePair(
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+		unique_ptr<unordered_map<char, Pair>>& dictionary,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+		unique_ptr<unsigned int>& Symbols,
+		shared_ptr<SymbolRecord>& symbolLeft,
+		shared_ptr<SymbolRecord>& symbolRight,
+		shared_ptr<SymbolRecord>& symbolPrevious,
+		shared_ptr<SymbolRecord>& symbolNext);
+	void checkActivePairs(
+		int sequenceIndex,
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+		unique_ptr<unordered_map<char, Pair>>& dictionary,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
+		unique_ptr<unsigned int>& Symbols);
 	void establishContext(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
@@ -61,7 +81,7 @@ public:
 	void replaceInstanceOfPair(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		shared_ptr<SymbolRecord>& symbolLeft,
@@ -72,7 +92,7 @@ public:
 		int sequenceIndex,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols);
 	void newSymbol(
@@ -81,7 +101,7 @@ public:
 	void manageOneEntryOnList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		int i,
@@ -89,7 +109,7 @@ public:
 	void manageOneList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		int i,
@@ -97,21 +117,21 @@ public:
 	void manageHighPriorityList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void AlgorithmP::manageLowerPriorityLists(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, bool>>& symbolMap);
 	void run(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		unique_ptr<unordered_map<char, Pair>>& dictionary,
-		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs,
+		unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		unique_ptr<unsigned int>& Symbols,
 		unique_ptr<unordered_map<char, bool>>& symbolMap);

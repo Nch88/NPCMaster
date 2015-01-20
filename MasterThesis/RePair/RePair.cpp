@@ -4,14 +4,10 @@
 #include "stdafx.h"
 using namespace std;
 
-
-
-
-
 int _tmain(int argc, _TCHAR* argv[])
 {
 	auto dictionary = make_unique<unordered_map<char, Pair>>();
-	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>();
+	auto activePairs = make_unique<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 	auto Symbols = make_unique<unsigned int>(127);
 	auto symbolMap = make_unique<unordered_map<char, bool>>();

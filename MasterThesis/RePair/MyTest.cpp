@@ -75,7 +75,7 @@ void MyTest::Dictionary(string msg, unique_ptr<unordered_map<char, Pair>>& dicti
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
+void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))
@@ -88,14 +88,14 @@ void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<char, unordered_ma
 	cout << endl << endl;
 }
 
-void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairRecord>>>>& activePairs)
+void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<char, unordered_map<char, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))
 	{
 		for each (auto pair in leftSymbol.second)
 		{
-			cout << "\'" << leftSymbol.first << pair.first << " " << pair.second->count << "\' ";
+			cout << "\'" << leftSymbol.first << pair.first << " " << pair.second->pairRecord->count << "\' ";
 		}
 	}
 	cout << endl << endl;
