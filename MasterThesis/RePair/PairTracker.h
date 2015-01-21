@@ -8,7 +8,7 @@ public:
 	~PairTracker();
 
 	bool seenOnce;
-	int indexFirst;
+	long indexFirst;
 	shared_ptr<PairRecord> pairRecord;
 };
 

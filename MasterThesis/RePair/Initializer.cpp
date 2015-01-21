@@ -80,10 +80,15 @@ void Initializer::SequenceArray(string filename,
 	char rightSymbol;
 	int index = 0;
 	bool skippedPair = false;
+	MyTimer t;
 
 	if (c.verbose)
 	{
 		cout << "Initializing sequence array and setting up active pairs" << endl;
+	}
+	if (c.timing)
+	{
+		t.start();
 	}
 
 	ifstream file(filename);
@@ -140,7 +145,11 @@ void Initializer::SequenceArray(string filename,
 			cout << "Problem opening file: " << filename << endl;
 		}
 	}
-
+	if (c.timing)
+	{
+		t.stop();
+		cout << "sequence array and active pairs initialized in " << t.getTime() << " ms" << endl;
+	}
 	if (c.verbose)
 	{
 		cout << "Initialized sequence array with size: " << sequenceArray->size() << endl;
@@ -170,10 +179,15 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
 	shared_ptr<PairRecord> tmpRecord;
+	MyTimer t;
 
 	if (c.verbose)
 	{
 		cout << "Initializing priority queue" << endl;
+	}
+	if (c.timing)
+	{
+		t.start();
 	}
 
 	for each (auto leftSymbol in (*activePairs))
@@ -196,20 +210,33 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 				else
 				{
 					tmpRecord = (*priorityQueue)[priorityIndex];
-					while (tmpRecord->nextPair)
+					/*while (tmpRecord->nextPair)
 					{
 						tmpRecord = tmpRecord->nextPair;
 					}
-					tmpRecord->nextPair = (it.second->pairRecord);
-					it.second->pairRecord->previousPair = tmpRecord;
-					it.second->pairRecord->nextPair = NULL;
+					tmpRecord->nextPair = (it.second->pairRecord);*/
+
+					
+					/*it.second->pairRecord->previousPair = tmpRecord;
+					it.second->pairRecord->nextPair = NULL;*/
+
+					tmpRecord->previousPair = it.second->pairRecord;
+					(*priorityQueue)[priorityIndex] = it.second->pairRecord;
+					it.second->pairRecord->nextPair = tmpRecord;
+					it.second->pairRecord->previousPair = NULL;
 				}
 			}
 		}
 	}	
 
+	if (c.timing)
+	{
+		t.stop();
+		cout << "priority queue initialized in " << t.getTime() << " ms" << endl;
+	}
 	if (c.verbose)
 	{
 		cout << "Initialized priority queue" << endl;
 	}
+	
 }

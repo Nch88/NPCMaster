@@ -6,16 +6,16 @@ class SymbolRecord
 {	
 public:
 	unsigned int symbol;
-	int index;
+	long index;
 	shared_ptr<SymbolRecord> previous;
 	shared_ptr<SymbolRecord> next;
 
 
 	SymbolRecord();
 	SymbolRecord(unsigned int s);
-	SymbolRecord(unsigned int s, int index);
+	SymbolRecord(unsigned int s, long index);
 	SymbolRecord(unsigned int s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
-	SymbolRecord(unsigned int s, int index, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
+	SymbolRecord(unsigned int s, long index, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
 	~SymbolRecord();
 
 	void setPrevious(shared_ptr<SymbolRecord> p);

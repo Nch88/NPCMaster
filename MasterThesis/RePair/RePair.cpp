@@ -12,11 +12,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	auto Symbols = make_unique<unsigned int>(256);
 
 	bool verbose = true;
-	bool extraVerbose = true;
+	bool extraVerbose = false;
 	bool timer = true;
 
 	MyTimer t;
-	t.start();
 			
 	Initializer init;
 	AlgorithmP algP;
@@ -30,9 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	string input4 = "bible.txt";
 	string input5 = "E.coli";
 
-	string input = input3;	
-	t.stop();
-	long long x = t.getTime();
+	string input = input5;	
 
 	init.SequenceArray(input, sequenceArray, activePairs,c );
 	

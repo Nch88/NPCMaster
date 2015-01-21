@@ -8,7 +8,7 @@ PairRecord::PairRecord()
 	skippedPair = false;
 }
 
-PairRecord::PairRecord(int indexFirst, int indexLast)
+PairRecord::PairRecord(long indexFirst, long indexLast)
 {
 	count = 0;
 	arrayIndexFirst = indexFirst;
@@ -34,12 +34,12 @@ void PairRecord::dec()
 	count--;
 }
 
-void PairRecord::setIndexFirst(int index)
+void PairRecord::setIndexFirst(long index)
 {
 	arrayIndexFirst = index;
 }
 
-void PairRecord::setIndexLast(int index)
+void PairRecord::setIndexLast(long index)
 {
 	arrayIndexLast = index;
 }
@@ -49,12 +49,12 @@ int PairRecord::getCount()
 	return count;
 }
 
-int PairRecord::getIndexFirst()
+long PairRecord::getIndexFirst()
 {
 	return arrayIndexFirst;
 }
 
-int PairRecord::getIndexLast()
+long PairRecord::getIndexLast()
 {
 	return arrayIndexLast;
 }

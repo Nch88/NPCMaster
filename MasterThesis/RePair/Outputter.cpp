@@ -16,13 +16,14 @@ string Outputter::createName(string inputFile, string addName)
 {
 	string outFile = "";
 	int i = 0;
+	int empty = 0;
 
 	while (inputFile[i] != '.')
 		outFile += inputFile[i++];
 
 	outFile += addName;
 	
-	while (inputFile[i] != '\0')
+	while (inputFile[i] != empty)
 		outFile += inputFile[i++];
 
 	return outFile;

@@ -8,24 +8,24 @@ class PairRecord
 public:
 	Pair pair;
 	int count;
-	int arrayIndexFirst;
-	int arrayIndexLast;
+	long arrayIndexFirst;
+	long arrayIndexLast;
 	bool skippedPair;	
 	shared_ptr<PairRecord> previousPair;
 	shared_ptr<PairRecord> nextPair;
 
 	PairRecord();
-	PairRecord(int indexFirst, int indexLast);
+	PairRecord(long indexFirst, long indexLast);
 	~PairRecord();
 
 	void inc();
 	void dec();
 
-	void setIndexFirst(int indexFirst);
-	void setIndexLast(int indexLast);
+	void setIndexFirst(long indexFirst);
+	void setIndexLast(long indexLast);
 
 	int getCount();
-	int getIndexFirst();
-	int getIndexLast();
+	long getIndexFirst();
+	long getIndexLast();
 };
 
