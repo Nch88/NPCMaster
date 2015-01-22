@@ -21,6 +21,7 @@ public:
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		shared_ptr<PairRecord>& tmpPairRecord);
 	void setupPairRecord(
+		long indexFirst,
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<PairRecord>& tmpPairRecord);

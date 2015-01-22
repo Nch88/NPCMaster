@@ -24,10 +24,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	Conditions c(verbose, extraVerbose, timer);
 
 	string input1 = "diddy.txt";
-	string input2 = "test.txt";
+	string input2 = "duplicates.txt";
 	string input3 = "world192.txt";
 	string input4 = "bible.txt";
 	string input5 = "E.coli";
+	string input6 = "duplicatesLong.txt";
+	string input7 = "duplicatesLong2.txt";
+	string input8 = "duplicatesLong3.txt";
+	string input9 = "duplicatesLong4.txt";
 
 	string input = input5;	
 

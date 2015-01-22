@@ -99,25 +99,30 @@ void AlgorithmP::manageSequenceDecrement(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
-	if (symbolLeft->index == tmpPairRecordAdjacent->arrayIndexFirst && symbolLeft->index != tmpPairRecordAdjacent->arrayIndexLast)
+	if (symbolLeft->index == tmpPairRecordAdjacent->arrayIndexFirst && 
+		symbolLeft->index != tmpPairRecordAdjacent->arrayIndexLast &&
+		symbolLeft->next)
 	{
 		tmpPairRecordAdjacent->arrayIndexFirst = symbolLeft->next->index;
 		symbolLeft->next->previous = NULL;
 	}
-	else if (symbolLeft->index != tmpPairRecordAdjacent->arrayIndexFirst && symbolLeft->index == tmpPairRecordAdjacent->arrayIndexLast)
+	else if (symbolLeft->index != tmpPairRecordAdjacent->arrayIndexFirst && 
+		symbolLeft->index == tmpPairRecordAdjacent->arrayIndexLast &&
+		symbolLeft->previous)
 	{
 		tmpPairRecordAdjacent->arrayIndexLast = symbolLeft->previous->index;
 		symbolLeft->previous->next = NULL;
-	}
-	else if (tmpPairRecordAdjacent->count <= 1)
-	{
-		tmpPairRecordAdjacent->arrayIndexFirst = -1;
-		tmpPairRecordAdjacent->arrayIndexLast = -1;
 	}
 	else if (symbolLeft->previous && symbolLeft->next)
 	{
 		symbolLeft->previous->next = symbolLeft->next;
 		symbolLeft->next->previous = symbolLeft->previous;
+	}
+
+	if (symbolLeft->index == tmpPairRecordAdjacent->arrayIndexFirst && 
+		symbolLeft->index == tmpPairRecordAdjacent->arrayIndexLast)
+	{
+		cout << "Error: Pair record pointing to single instance of pair" << endl;
 	}
 
 	symbolLeft->next = NULL;
@@ -131,15 +136,18 @@ void AlgorithmP::decrementCount(
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
-	if (tmpPairRecordAdjacent->arrayIndexFirst != -1 && 
-		tmpPairRecordAdjacent->arrayIndexLast != -1)
+	/*if (tmpPairRecordAdjacent->arrayIndexFirst != -1 && 
+		tmpPairRecordAdjacent->arrayIndexLast != -1)*/
 		manageSequenceDecrement(symbolLeft, tmpPairRecordAdjacent);
 
 	tmpPairRecordAdjacent->count--;
 	managePriorityQueueDecrement(tmpPairRecordAdjacent, priorityQueue);
 
-	if (tmpPairRecordAdjacent->count == 0)
+	if (tmpPairRecordAdjacent->count == 1)
 	{
+		tmpPairRecordAdjacent->count = -1;
+		tmpPairRecordAdjacent->arrayIndexFirst = -1;
+		tmpPairRecordAdjacent->arrayIndexLast = -1;
 		//(*activePairs)[tmpPairRecordAdjacent->pair.leftSymbol][tmpPairRecordAdjacent->pair.rightSymbol]->pairRecord = NULL;
 	}		
 }
@@ -187,39 +195,7 @@ void AlgorithmP::replacePair(
 	{
 		symbolLeft->next->previous = NULL;
 		symbolLeft->next = NULL;
-	}
-
-	if (symbolNext &&
-		symbolRight &&
-		(*activePairs)[symbolRight->symbol][symbolNext->symbol] && //Doing this check to make sure that npt pair record points the symbol that is about to be empty
-		(*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord)
-	{
-		if (symbolRight->index == (*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexFirst &&
-			symbolRight->index != (*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexLast)
-		{
-			(*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexFirst = symbolRight->next->index;
-			symbolRight->next->previous = NULL;
-		}
-		else if (symbolRight->index != (*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexFirst &&
-			symbolRight->index == (*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexLast)
-		{
-			(*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexLast = symbolRight->previous->index;
-			symbolRight->previous->next = NULL;
-		}
-		else if ((*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->count <= 1)
-		{
-			(*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexFirst = -1;
-			(*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord->arrayIndexLast = -1;
-		}
-		else if (symbolRight->previous && symbolRight->next)
-		{
-			symbolLeft->previous->next = symbolLeft->next;
-			symbolLeft->next->previous = symbolLeft->previous;
-		}
-
-		symbolRight->next = NULL;
-		symbolRight->previous = NULL;
-	}
+	}	
 
 	(*dictionary)[newSymbol] = tmpPair;
 	symbolLeft->symbol = newSymbol;
@@ -231,13 +207,17 @@ void AlgorithmP::replacePair(
 		symbolNext,
 		sequenceArray);
 
-	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol] && (*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord)
+	if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol] && 
+		(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord)
 	{
 		(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count--;
 
 		if ((*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count == 0)
 		{
 			symbolLeft->next = NULL;
+			(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->count = -1;
+			(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->arrayIndexFirst = -1;
+			(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord->arrayIndexLast = -1;
 			//(*activePairs)[tmpPair.leftSymbol][tmpPair.rightSymbol]->pairRecord = NULL;
 		}
 	}	
@@ -254,13 +234,15 @@ void AlgorithmP::increaseCount(
 }
 
 void AlgorithmP::setupPairRecord(
+	long indexFirst,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<PairRecord>& tmpPairRecord)
 {
+	tmpPairRecord->count = 2;
 	tmpPairRecord->previousPair = NULL;
 	tmpPairRecord->nextPair = NULL;
-	tmpPairRecord->arrayIndexFirst = symbolLeft->index;
+	tmpPairRecord->arrayIndexFirst = indexFirst;
 	tmpPairRecord->arrayIndexLast = symbolLeft->index;
 	tmpPairRecord->pair.leftSymbol = symbolLeft->symbol;
 	tmpPairRecord->pair.rightSymbol = symbolRight->symbol;
@@ -270,8 +252,10 @@ void AlgorithmP::setupPairSequence(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	shared_ptr<PairRecord>& tmpPairRecord)
 {
-	(*sequenceArray)[tmpPairRecord->arrayIndexFirst]->next = NULL;
+	(*sequenceArray)[tmpPairRecord->arrayIndexFirst]->next = (*sequenceArray)[tmpPairRecord->arrayIndexLast];
 	(*sequenceArray)[tmpPairRecord->arrayIndexFirst]->previous = NULL;
+	(*sequenceArray)[tmpPairRecord->arrayIndexLast]->previous = (*sequenceArray)[tmpPairRecord->arrayIndexFirst];
+	(*sequenceArray)[tmpPairRecord->arrayIndexLast]->next = NULL;
 }
 
 void AlgorithmP::updatePairRecord(
@@ -290,6 +274,7 @@ void AlgorithmP::updatePairSequence(
 		(*sequenceArray)[symbolLeft->index];
 	(*sequenceArray)[symbolLeft->index]->previous =
 		(*sequenceArray)[tmpPairRecord->arrayIndexLast];
+	(*sequenceArray)[symbolLeft->index]->next = NULL;
 }
 
 void AlgorithmP::checkActivePair(
@@ -318,38 +303,39 @@ void AlgorithmP::checkActivePair(
 			if (!tmpPairTracker)
 			{
 				(*activePairs)[symbolPrevious->symbol][newSymbol] = make_shared<PairTracker>();
-				tmpPairTracker = (*activePairs)[symbolPrevious->symbol][newSymbol];
-				tmpPairTracker->seenOnce = true;
+				(*activePairs)[newSymbol][newSymbol] = make_shared<PairTracker>();
+				//tmpPairTracker = (*activePairs)[symbolPrevious->symbol][newSymbol];
+				//tmpPairTracker->seenOnce = true;
 			}
-			else if (tmpPairTracker && tmpPairTracker->seenOnce) //xA will appear more than once, make it an active pair
-			{
-				(*activePairs)[symbolPrevious->symbol][newSymbol] = make_shared<PairTracker>();
-				(*activePairs)[symbolPrevious->symbol][newSymbol]->pairRecord = make_shared<PairRecord>();
+			//else if (tmpPairTracker && tmpPairTracker->seenOnce) //xA will appear more than once, make it an active pair
+			//{
+			//	//(*activePairs)[symbolPrevious->symbol][newSymbol] = make_shared<PairTracker>();
+			//	(*activePairs)[symbolPrevious->symbol][newSymbol]->pairRecord = make_shared<PairRecord>();
 
-				tmpPairTracker->seenOnce = false;
-			}
+			//	tmpPairTracker->seenOnce = false;
+			//}
 		}
 
-		tmpPairTracker = (*activePairs)[newSymbol][symbolLeft->symbol];
-		if (tmpPairTracker && tmpPairTracker->pairRecord) //if xa is turned to xA, then we also need to check for AA
-		{
-			tmpPairTracker = (*activePairs)[newSymbol][newSymbol];
-			if (!tmpPairTracker)
-			{
-				(*activePairs)[newSymbol][newSymbol] = make_shared<PairTracker>();
-				tmpPairTracker = (*activePairs)[newSymbol][newSymbol];
-				tmpPairTracker->seenOnce = true;
-			}
-			else if (tmpPairTracker && tmpPairTracker->seenOnce) //AA will appear more than once, make it an active pair
-			{
-				(*activePairs)[newSymbol][newSymbol] = make_shared<PairTracker>();
-				(*activePairs)[newSymbol][newSymbol]->pairRecord = make_shared<PairRecord>();
-				(*activePairs)[newSymbol][newSymbol]->pairRecord->pair.leftSymbol = symbolPrevious->symbol;
-				(*activePairs)[newSymbol][newSymbol]->pairRecord->pair.rightSymbol = newSymbol;
+		//tmpPairTracker = (*activePairs)[newSymbol][symbolLeft->symbol];
+		//if (tmpPairTracker && tmpPairTracker->pairRecord) //if xa is turned to xA, then we also need to check for AA
+		//{
+		//	tmpPairTracker = (*activePairs)[newSymbol][newSymbol];
+		//	if (!tmpPairTracker)
+		//	{
+		//		(*activePairs)[newSymbol][newSymbol] = make_shared<PairTracker>();
+		//		tmpPairTracker = (*activePairs)[newSymbol][newSymbol];
+		//		tmpPairTracker->seenOnce = true;
+		//	}
+		//	else if (tmpPairTracker && tmpPairTracker->seenOnce) //AA will appear more than once, make it an active pair
+		//	{
+		//		//(*activePairs)[newSymbol][newSymbol] = make_shared<PairTracker>();
+		//		(*activePairs)[newSymbol][newSymbol]->pairRecord = make_shared<PairRecord>();
+		//		//(*activePairs)[newSymbol][newSymbol]->pairRecord->pair.leftSymbol = symbolPrevious->symbol;
+		//		//(*activePairs)[newSymbol][newSymbol]->pairRecord->pair.rightSymbol = newSymbol;
 
-				tmpPairTracker->seenOnce = false;
-			}
-		}
+		//		tmpPairTracker->seenOnce = false;
+		//	}
+		//}
 	}
 	if (symbolNext) //Ay
 	{
@@ -360,17 +346,17 @@ void AlgorithmP::checkActivePair(
 			if (!tmpPairTracker)
 			{
 				(*activePairs)[newSymbol][symbolNext->symbol] = make_shared<PairTracker>();
-				tmpPairTracker = (*activePairs)[newSymbol][symbolNext->symbol];
-				tmpPairTracker->seenOnce = true;
+				//tmpPairTracker = (*activePairs)[newSymbol][symbolNext->symbol];
+				//tmpPairTracker->seenOnce = true;
 			}
-			else if (tmpPairTracker && tmpPairTracker->seenOnce) //xA will appear more than once, make it an active pair
-			{				
-				(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord = make_shared<PairRecord>();
-				(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord->pair.leftSymbol = newSymbol;
-				(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord->pair.rightSymbol = symbolNext->symbol;
+			//else if (tmpPairTracker && tmpPairTracker->seenOnce) //xA will appear more than once, make it an active pair
+			//{				
+			//	(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord = make_shared<PairRecord>();
+			//	//(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord->pair.leftSymbol = newSymbol;
+			//	//(*activePairs)[newSymbol][symbolNext->symbol]->pairRecord->pair.rightSymbol = symbolNext->symbol;
 
-				tmpPairTracker->seenOnce = false;
-			}
+			//	tmpPairTracker->seenOnce = false;
+			//}
 		}
 	}
 }
@@ -404,9 +390,13 @@ void AlgorithmP::replaceInstanceOfPair(
 			tmpPairRecordAdjacent = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol]->pairRecord;
 
 			if (tmpPairRecordAdjacent &&																		//If Pair record exists
+				tmpPairRecordAdjacent->count > 1 &&
 				!(symbolPrevious->symbol == symbolLeft->symbol &&												//But it is not the case that the symbols are identical
 				symbolLeft->symbol == symbolRight->symbol &&
 				!(symbolPrevious->next && symbolPrevious->previous)))											//while not being part of a sequence of pairs 
+			/*if (tmpPairRecordAdjacent &&
+				symbolPrevious->next ||
+				symbolPrevious->previous)*/
 				decrementCount(symbolPrevious, symbolLeft, activePairs, priorityQueue, tmpPairRecordAdjacent);	//= the two symbols are not counted as a pair and should not be decreased
 		}
 	}
@@ -420,9 +410,13 @@ void AlgorithmP::replaceInstanceOfPair(
 			tmpPairRecordAdjacent = (*activePairs)[symbolRight->symbol][symbolNext->symbol]->pairRecord;
 
 			if (tmpPairRecordAdjacent &&																		//If Pair record exists
+				tmpPairRecordAdjacent->count > 1 &&
 				!(symbolRight->symbol == symbolNext->symbol &&													//But it is not the case that the symbols are identical
 				symbolRight->symbol == symbolLeft->symbol &&
 				!(symbolRight->next && symbolRight->previous)))													//while not being part of a sequence of pairs 
+			/*if (tmpPairRecordAdjacent &&
+				symbolRight->next ||
+				symbolRight->previous)*/
 				decrementCount(symbolRight, symbolNext, activePairs, priorityQueue, tmpPairRecordAdjacent);		//= the two symbols are not counted as a pair and should not be decreased
 		}
 		if (tmpPairTracker && tmpPairTracker->pairRecord 
@@ -439,19 +433,16 @@ void AlgorithmP::replaceInstanceOfPair(
 
 	//Step 4, increase counts of xA and Ay
 	if (symbolPrevious) //xA
-	{
-		
+	{		
 		tmpPairTracker = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol];		
 
 		if (tmpPairTracker && tmpPairTracker->pairRecord)
 		{
 			tmpPairRecord = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol]->pairRecord;
 
-			if (tmpPairRecord)
-			{
-				if (symbolPrevious->symbol == symbolLeft->symbol && tmpPairRecord->count != 0 &&				//If we have identical symbols which have been seen before
-					symbolPrevious->index > 0 &&
-					symbolPrevious->index < sequenceArray->size() &&
+			if (tmpPairRecord && tmpPairRecord->count > 1)
+			{		
+				if (symbolPrevious->symbol == symbolLeft->symbol &&												//If we have identical symbols which have been seen before
 					(*sequenceArray)[symbolPrevious->index - 1] &&
 					(symbolPrevious->symbol == (*sequenceArray)[symbolPrevious->index - 1]->symbol ||			//and the previous symbol was also the same (meaning at least three in a row)
 					((*sequenceArray)[symbolPrevious->index - 1]->symbol == empty &&
@@ -467,29 +458,34 @@ void AlgorithmP::replaceInstanceOfPair(
 
 					increaseCount(symbolPrevious, symbolLeft, tmpPairRecord, activePairs);
 
-					if (tmpPairRecord->count == 1) //New pair
-					{
-						setupPairRecord(symbolPrevious, symbolLeft, tmpPairRecord);
-						setupPairSequence(sequenceArray, tmpPairRecord);
-					}
-					else //Update link between  pair sequence
-					{
-						updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
-						updatePairRecord(symbolPrevious, tmpPairRecord);
-					}
-
-					if (tmpPairRecord->count == 2) //Insert into priority queue					
-					{
-						insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
-					}
+					updatePairSequence(symbolPrevious, sequenceArray, tmpPairRecord);
+					updatePairRecord(symbolPrevious, tmpPairRecord);
+					
 					//Move up in priority queue
-					else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
+					if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
 					{
 						removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
 						insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
 					}
 				}
 			}			
+		}
+		else if (tmpPairTracker && tmpPairTracker->seenOnce)
+		{
+			tmpPairTracker->pairRecord = make_shared<PairRecord>();
+			tmpPairRecord = (*activePairs)[symbolPrevious->symbol][symbolLeft->symbol]->pairRecord;
+			setupPairRecord(tmpPairTracker->indexFirst, symbolPrevious, symbolLeft, tmpPairRecord);
+			setupPairSequence(sequenceArray, tmpPairRecord);
+
+			insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
+
+			tmpPairTracker->seenOnce = false;
+			tmpPairTracker->indexFirst = -1;
+		}
+		else if (tmpPairTracker)
+		{
+			tmpPairTracker->seenOnce = true;
+			tmpPairTracker->indexFirst = symbolPrevious->index;
 		}
 	}
 	if (symbolNext) //Ay
@@ -501,38 +497,38 @@ void AlgorithmP::replaceInstanceOfPair(
 		{
 			tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolNext->symbol]->pairRecord;
 
-			if (tmpPairRecord)
+			if (tmpPairRecord && tmpPairRecord->count > 1)
 			{
-				tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolNext->symbol]->pairRecord;
-
 				increaseCount(symbolLeft, symbolNext, tmpPairRecord, activePairs);
 
-				if (tmpPairRecord->count == 1) //New pair
-				{
-					setupPairRecord(symbolLeft, symbolNext, tmpPairRecord);
-					setupPairSequence(sequenceArray, tmpPairRecord);
-				}
-				else //Update link between  pair sequence
-				{
-					updatePairSequence(symbolLeft, sequenceArray, tmpPairRecord);
-					updatePairRecord(symbolLeft, tmpPairRecord);
-				}
-
-				if (tmpPairRecord->count == 2) //Insert into priority queue	
-				{
-					insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
-				}
-
+				updatePairSequence(symbolLeft, sequenceArray, tmpPairRecord);
+				updatePairRecord(symbolLeft, tmpPairRecord);
+				
 				//Move up in priority queue
-				else if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
+				if (tmpPairRecord->count > 2 && tmpPairRecord->count <= priorityQueue->size() + 1)
 				{
 					removeFromListInPriorityQueue(tmpPairRecord->count - 3, tmpPairRecord, priorityQueue);
 					insertIntoListInPriorityQueue(tmpPairRecord->count - 2, tmpPairRecord, priorityQueue);
 				}
 			}
 		}
+		else if (tmpPairTracker && tmpPairTracker->seenOnce)
+		{	
+			tmpPairTracker->pairRecord = make_shared<PairRecord>();
+			tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolNext->symbol]->pairRecord;
+			setupPairRecord(tmpPairTracker->indexFirst, symbolLeft, symbolNext, tmpPairRecord);
+			setupPairSequence(sequenceArray, tmpPairRecord);
 
-		
+			insertIntoListInPriorityQueue(0, tmpPairRecord, priorityQueue);
+
+			tmpPairTracker->seenOnce = false;
+			tmpPairTracker->indexFirst = -1;
+		}
+		else if (tmpPairTracker)
+		{
+			tmpPairTracker->seenOnce = true;
+			tmpPairTracker->indexFirst = symbolLeft->index;
+		}
 	}
 }
 
@@ -607,6 +603,13 @@ void AlgorithmP::checkActivePairs(
 
 	do
 	{
+		if ((*sequenceArray)[sequenceIndex]->symbol == empty ||
+			((*sequenceArray)[sequenceIndex + 1]->symbol == empty &&
+			!(*sequenceArray)[sequenceIndex + 1]->next))
+		{
+			cout << "Error: This cannot be the start of a pair (check active pairs)" << endl;
+			break; //This is a hack, there must be a better solution			
+		}
 		//Step 1, Establish context of xaby
 		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex, c);
 
@@ -687,13 +690,17 @@ void AlgorithmP::replaceAllPairs(
 	}
 	do
 	{
-		if ((*sequenceArray)[sequenceIndex]->symbol == 0)
+		if ((*sequenceArray)[sequenceIndex]->symbol == empty ||
+			((*sequenceArray)[sequenceIndex + 1]->symbol == empty &&
+			!(*sequenceArray)[sequenceIndex + 1]->next))
 		{
-			break; //This is a hack, there must be a better solution
 			cout << "Error: This cannot be the start of a pair" << endl;
+			break; //This is a hack, there must be a better solution			
 		}
 		//Step 1, Establish context of xaby
 		establishContext(symbolLeft, symbolRight, symbolPrevious, symbolNext, sequenceArray, sequenceIndex, c);
+
+		
 		
 		replaceInstanceOfPair(
 			sequenceArray,
@@ -826,10 +833,7 @@ void AlgorithmP::manageOneEntryOnList(
 
 	sequenceIndex = tmpPairRecord->arrayIndexFirst;
 
-	if (sequenceIndex < 0 || sequenceIndex > sequenceArray->size() - 1)
-	{
-		cout << "Error: pair should not be in priority queue" << endl;
-	}
+	
 
 	//Remove current pair from priority queue
 	if (tmpPairRecord->nextPair)
@@ -842,6 +846,12 @@ void AlgorithmP::manageOneEntryOnList(
 	else
 	{
 		(*priorityQueue)[i] = NULL;
+	}
+
+	if (sequenceIndex < 0 || sequenceIndex > sequenceArray->size() - 1)
+	{
+		cout << "Error: pair should not be in priority queue" << endl;
+		return;
 	}
 		
 	newSymbol(Symbols);		
