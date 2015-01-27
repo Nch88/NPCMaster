@@ -4,13 +4,15 @@
 #include "stdafx.h"
 using namespace std;
 
+int rePair(string input, bool verbose, bool extraVerbose, bool timer)
+{	
+	Initializer init;
+
+	return init.SequenceArray(input, verbose, extraVerbose, timer);
+}
+
 int main(int argc, char* argv[])
 {	
-	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
-	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<unsigned int>(256);
-
 	bool verbose = false;
 	bool extraVerbose = false;
 	bool timer = false;
@@ -84,15 +86,9 @@ int main(int argc, char* argv[])
 	}*/
 
 	verbose = true;
-	extraVerbose = true;
+	//extraVerbose = true;
 
-	MyTimer t;
-			
-	Initializer init;
-	AlgorithmP algP;
-	MyTest test;
-	Outputter out;
-	Conditions c(verbose, extraVerbose, timer);
+	
 
 	string input1 = "diddy.txt";
 	string input2 = "duplicates.txt";
@@ -103,42 +99,11 @@ int main(int argc, char* argv[])
 	string input7 = "duplicatesLong2.txt";
 	string input8 = "duplicatesLong3.txt";
 	string input9 = "duplicatesLong4.txt";
+	string input10 = "dna.50MB";
+	string input11 = "english.50MB";
 
-	input = input3;
-	
+	input = input10;
 
-	init.SequenceArray(input, sequenceArray, activePairs,c );
-
-	if (sequenceArray->size() == 0)
-	{
-		cout << "Problem reading input file, terminating" << endl;
-		return 1;
-	}
-	
-	int priorityQueueSize;
-
-	priorityQueueSize = sqrt(sequenceArray->size());
-
-	auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);	
-
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);	
-
-	//See fig. 4, algorithm P
-	if (c.verbose)
-	{
-		cout << "Running Re-Pair compression algorithm" << endl;
-	}
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		Symbols,
-		c);
-	
-	out.compressedFile(input, sequenceArray);
-	out.dictionary(input, dictionary);
-
-	return 0;
+	return rePair(input, verbose, extraVerbose, timer);
 }
 

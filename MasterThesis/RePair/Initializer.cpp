@@ -70,73 +70,172 @@ void Initializer::setupPairRecord(
 	}
 }
 
-void Initializer::SequenceArray(string filename,
-	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
-	Conditions& c)
+int Initializer::SequenceArray(string filename,
+	bool verbose,
+	bool extraVerbose,
+	bool timer)
 {
 	char previousSymbol;
 	char leftSymbol;
 	char rightSymbol;
 	int index = 0;
+	int blockSize = 1048576/2;
+	int symbolCount = 0;
 	bool skippedPair = false;
+	bool firstBlock = true;
 	MyTimer t;
 
-	if (c.verbose)
-	{
-		cout << "Initializing sequence array and setting up active pairs" << endl;
-	}
-	if (c.timing)
-	{
-		t.start();
-	}
+	AlgorithmP algP;
+	MyTest test;
+	Outputter out;
+	Conditions c(verbose, extraVerbose, timer);
 
+	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
+	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+	auto Symbols = make_unique<unsigned int>(256);
+	
 	ifstream file(filename);
 
 	if (file.is_open())
 	{
-		if (file >> noskipws >> previousSymbol)
+		while (file.is_open())
 		{
-			sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)previousSymbol, index++));
-
-			if (file >> noskipws >> leftSymbol)
+			if (c.verbose)
 			{
-				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)leftSymbol, index++));
+				cout << "Initializing sequence array and setting up active pairs" << endl;
+			}
+			if (c.timing)
+			{
+				t.start();
+			}
 
+			if (file >> noskipws >> previousSymbol)
+			{
+				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)previousSymbol, index++));
+				symbolCount++;
+
+				if (file >> noskipws >> leftSymbol)
+				{
+					sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)leftSymbol, index++));
+					symbolCount++;
+
+					setupPairRecord(
+						(unsigned int)previousSymbol,
+						(unsigned int)leftSymbol,
+						2,
+						sequenceArray,
+						activePairs);
+				}
+			}
+
+			while (symbolCount < blockSize && file >> noskipws >> rightSymbol)
+			{
+				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)rightSymbol, index++));
+				symbolCount++;
+
+				if (leftSymbol == rightSymbol &&
+					leftSymbol == previousSymbol &&
+					!skippedPair)
+				{
+					skippedPair = true;
+					previousSymbol = leftSymbol;
+					leftSymbol = rightSymbol;
+					continue;
+				}
 				setupPairRecord(
-					(unsigned int)previousSymbol,
 					(unsigned int)leftSymbol,
+					(unsigned int)rightSymbol,
 					2,
 					sequenceArray,
 					activePairs);
-			}
-		}
 
-		while (file >> noskipws >> rightSymbol)
-		{
-			sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)rightSymbol, index++));
-
-			if (leftSymbol == rightSymbol && 
-				leftSymbol == previousSymbol &&
-				!skippedPair)
-			{
-				skippedPair = true;
+				skippedPair = false;
 				previousSymbol = leftSymbol;
 				leftSymbol = rightSymbol;
-				continue;
 			}
-			setupPairRecord(
-				(unsigned int)leftSymbol,
-				(unsigned int)rightSymbol,
-				2,
-				sequenceArray,
-				activePairs);
 
-			skippedPair = false;
-			previousSymbol = leftSymbol;
-			leftSymbol = rightSymbol;
+			if (c.timing)
+			{
+				t.stop();
+				cout << "sequence array and active pairs initialized in " << t.getTime() << " ms" << endl;
+			}
+			if (c.verbose)
+			{
+				cout << "Initialized sequence array with size: " << sequenceArray->size() << endl;
+			}
+			if (c.extraVerbose)
+			{
+				int count = 0;
+				for each (auto leftSymbol in (*activePairs))
+				{
+					for each (auto pair in leftSymbol.second)
+					{
+						count++;
+					}
+				}
+				cout << "Initialized active pairs with: " << count << " pairs" << endl;
+			}
+			else if (c.verbose)
+			{
+				cout << "Initialized active pairs with more than: " << activePairs->size() << " pairs" << endl;
+			}
+
+			if (symbolCount >= blockSize ||
+				(!(file >> noskipws >> rightSymbol) &&
+				sequenceArray->size() > 0))
+			{
+				if (sequenceArray->size() == 0)
+				{
+					cout << "Problem reading input file, terminating" << endl;
+					return 1;
+				}
+				
+				int priorityQueueSize;
+
+				priorityQueueSize = sqrt(sequenceArray->size());
+
+				auto priorityQueue = make_unique<vector<shared_ptr<PairRecord>>>(priorityQueueSize);
+				PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+				//See fig. 4, algorithm P
+				if (c.verbose)
+				{
+					cout << "Running Re-Pair compression algorithm" << endl;
+				}
+
+				algP.run(
+					sequenceArray,
+					dictionary,
+					activePairs,
+					priorityQueue,
+					Symbols,
+					c);
+
+				out.compressedFile(filename, sequenceArray, firstBlock);
+				out.dictionary(filename, dictionary, firstBlock);
+
+				if (c.verbose)
+				{
+					cout << "Finished compressing block of size: " << blockSize << " bytes" << endl;
+				}
+
+				//Reset, then read new block
+				symbolCount = 0;
+				index = 0;
+				firstBlock = false;
+				dictionary.release();
+				activePairs.release();
+				sequenceArray.release();
+				priorityQueue.release();
+				dictionary = make_unique<unordered_map<unsigned int, Pair>>();
+				activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+				sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
+				//Symbols = make_unique<unsigned int>(256);
+			}
+			else
+				file.close();
 		}
-		file.close();
 	}
 	else
 	{
@@ -145,31 +244,8 @@ void Initializer::SequenceArray(string filename,
 			cout << "Problem opening file: " << filename << endl;
 		}
 	}
-	if (c.timing)
-	{
-		t.stop();
-		cout << "sequence array and active pairs initialized in " << t.getTime() << " ms" << endl;
-	}
-	if (c.verbose)
-	{
-		cout << "Initialized sequence array with size: " << sequenceArray->size() << endl;
-	}
-	if (c.extraVerbose)
-	{
-		int count = 0;
-		for each (auto leftSymbol in (*activePairs))
-		{
-			for each (auto pair in leftSymbol.second)
-			{
-				count++;
-			}
-		}
-		cout << "Initialized active pairs with: " << count << " pairs" << endl;
-	}
-	else if (c.verbose)
-	{
-		cout << "Initialized active pairs with more than: " << activePairs->size() << " pairs" << endl;
-	}
+	cout << "Finished compressing file: " << filename << endl;
+	return 0;
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,

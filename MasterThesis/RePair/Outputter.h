@@ -11,9 +11,11 @@ public:
 	string createName(string inputFile, string addName);
 	void compressedFile(
 		string inputFile,
-		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray);
+		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
+		bool firstBlock);
 	void dictionary(
 		string inputFile,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary);
+		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+		bool firstBlock);
 };
 

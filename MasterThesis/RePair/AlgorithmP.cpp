@@ -741,7 +741,7 @@ void AlgorithmP::newSymbol(
 {	
 	bool badSymbol = true;
 
-	if ((*Symbols) == UINT_MAX)
+	if ((*Symbols) == UINT_MAX - 1)
 	{
 		cout << "Ran out of symbols, aborting compression" << endl;
 		exit;
@@ -797,7 +797,13 @@ void AlgorithmP::manageHighPriorityList(
 			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
 		}
 		tmpPairRecordSelected->previousPair = NULL;
-		tmpPairRecordSelected->nextPair = NULL;		
+		tmpPairRecordSelected->nextPair = NULL;	
+
+		if (sequenceIndex < 0 || sequenceIndex > sequenceArray->size() - 1)
+		{
+			cout << "Error: pair should not be in priority queue" << endl;
+			continue;
+		}
 
 		if (c.verbose)
 		{
