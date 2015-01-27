@@ -79,7 +79,7 @@ int Initializer::SequenceArray(string filename,
 	char leftSymbol;
 	char rightSymbol;
 	int index = 0;
-	int blockSize = 1048576/2;
+	int blockSize = 1048576;
 	int symbolCount = 0;
 	bool skippedPair = false;
 	bool firstBlock = true;

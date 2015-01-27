@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	string condition1;
 	string condition2;
 
-	/*switch (argc)
+	switch (argc)
 	{	
 	case 1:
 		cout << "No file input, terminating." << endl;
@@ -76,19 +76,15 @@ int main(int argc, char* argv[])
 	default:
 		default_label:
 		cout << "Bad input parameters, parameters can be:" << endl;
-		cout << "filename" << endl;
+		cout << "'filename'" << endl;
 		cout << "'filename' verbose / v" << endl;
 		cout << "'filename' eVerbose / eV" << endl;
 		cout << "'filename' timing / t" << endl;
 		cout << "'filename' v/eV t" << endl;
 		return 1;
 		break;
-	}*/
+	}
 
-	verbose = true;
-	//extraVerbose = true;
-
-	
 
 	string input1 = "diddy.txt";
 	string input2 = "duplicates.txt";
@@ -102,7 +98,10 @@ int main(int argc, char* argv[])
 	string input10 = "dna.50MB";
 	string input11 = "english.50MB";
 
-	input = input10;
+	//verbose = true;
+	//extraVerbose = true;
+
+	//input = input10;
 
 	return rePair(input, verbose, extraVerbose, timer);
 }
