@@ -19,54 +19,54 @@ void Initializer::setupPairRecord(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
 {
-	shared_ptr<PairTracker> tmpTracker;
+	shared_ptr<PairTracker> currentTracker;
 	shared_ptr<SymbolRecord> previousOccurence;
 	shared_ptr<SymbolRecord> newOccurence;
 
-	tmpTracker = (*activePairs)[leftSymbol][rightSymbol];
-	if (!tmpTracker)
+	currentTracker = (*activePairs)[leftSymbol][rightSymbol];
+	if (!currentTracker)
 	{
 		(*activePairs)[leftSymbol][rightSymbol] = make_shared<PairTracker>();
-		tmpTracker = (*activePairs)[leftSymbol][rightSymbol];
+		currentTracker = (*activePairs)[leftSymbol][rightSymbol];
 	}
 
-	if (tmpTracker->seenOnce)
+	if (currentTracker->seenOnce)
 	{
-		tmpTracker->pairRecord = make_shared<PairRecord>();
+		currentTracker->pairRecord = make_shared<PairRecord>();
 
-		tmpTracker->pairRecord->pair.leftSymbol = leftSymbol;
-		tmpTracker->pairRecord->pair.rightSymbol = rightSymbol;
-		tmpTracker->pairRecord->count += 2;
-		tmpTracker->pairRecord->arrayIndexFirst = tmpTracker->indexFirst; //First symbol in active pair
-		tmpTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
-		tmpTracker->pairRecord->nextPair = NULL;
-		tmpTracker->pairRecord->previousPair = NULL;
+		currentTracker->pairRecord->pair.leftSymbol = leftSymbol;
+		currentTracker->pairRecord->pair.rightSymbol = rightSymbol;
+		currentTracker->pairRecord->count = 2;
+		currentTracker->pairRecord->arrayIndexFirst = currentTracker->indexFirst; //First symbol in active pair
+		currentTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
+		currentTracker->pairRecord->nextPair = NULL;
+		currentTracker->pairRecord->previousPair = NULL;
 
-		previousOccurence = (*sequenceArray)[tmpTracker->pairRecord->arrayIndexFirst];
-		newOccurence = (*sequenceArray)[tmpTracker->pairRecord->arrayIndexLast];
+		previousOccurence = (*sequenceArray)[currentTracker->pairRecord->arrayIndexFirst];
+		newOccurence = (*sequenceArray)[currentTracker->pairRecord->arrayIndexLast];
 
 		previousOccurence->next = newOccurence;
 		newOccurence->previous = previousOccurence;
 
-		tmpTracker->indexFirst = -1;
-		tmpTracker->seenOnce = false;
+		currentTracker->indexFirst = -1;
+		currentTracker->seenOnce = false;
 	}
-	else if (tmpTracker->pairRecord)
+	else if (currentTracker->pairRecord)
 	{
-		tmpTracker->pairRecord->inc();
+		currentTracker->pairRecord->inc();
 
-		previousOccurence = (*sequenceArray)[tmpTracker->pairRecord->getIndexLast()];
+		previousOccurence = (*sequenceArray)[currentTracker->pairRecord->getIndexLast()];
 		newOccurence = (*sequenceArray)[sequenceArray->size() - offset];
 
 		previousOccurence->next = newOccurence;
 		newOccurence->previous = previousOccurence;
 
-		tmpTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
+		currentTracker->pairRecord->setIndexLast(sequenceArray->size() - offset);
 	}
 	else
 	{
-		tmpTracker->seenOnce = true;
-		tmpTracker->indexFirst = sequenceArray->size() - offset;
+		currentTracker->seenOnce = true;
+		currentTracker->indexFirst = sequenceArray->size() - offset;
 	}
 }
 

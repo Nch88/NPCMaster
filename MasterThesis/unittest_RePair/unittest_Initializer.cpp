@@ -1,7 +1,7 @@
-#include "gtest\gtest.h"
-#include "RePair\stdafx.h"
-
-using namespace std;
+//#include "gtest\gtest.h"
+//#include "RePair\stdafx.h"
+//
+//using namespace std;
 
 
 //TEST(testInitializer, initSequenceArrayDuplicates)

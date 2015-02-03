@@ -1,8 +1,8 @@
-#include "gtest\gtest.h"
-#include "RePair\stdafx.h"
-#include <memory>
-
-using namespace std;
+//#include "gtest\gtest.h"
+//#include "RePair\stdafx.h"
+//#include <memory>
+//
+//using namespace std;
 
 //
 //TEST(removeFromListInPriorityQueue, onlyInTheList)

@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "googletest", "googletest\go
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unittest_RePair", "unittest_RePair\unittest_RePair.vcxproj", "{34AB9318-A00C-4D35-94F5-10ACB7BD2B0B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RePair_v2", "RePair_v2\RePair_v2.vcxproj", "{C8689738-3967-41E8-9E49-CAC84645FDA8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unittest_RePair_v2", "unittest_RePair_v2\unittest_RePair_v2.vcxproj", "{5AFD861A-4B49-4B0D-B36B-8066640C7DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +31,14 @@ Global
 		{34AB9318-A00C-4D35-94F5-10ACB7BD2B0B}.Debug|Win32.Build.0 = Debug|Win32
 		{34AB9318-A00C-4D35-94F5-10ACB7BD2B0B}.Release|Win32.ActiveCfg = Release|Win32
 		{34AB9318-A00C-4D35-94F5-10ACB7BD2B0B}.Release|Win32.Build.0 = Release|Win32
+		{C8689738-3967-41E8-9E49-CAC84645FDA8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C8689738-3967-41E8-9E49-CAC84645FDA8}.Debug|Win32.Build.0 = Debug|Win32
+		{C8689738-3967-41E8-9E49-CAC84645FDA8}.Release|Win32.ActiveCfg = Release|Win32
+		{C8689738-3967-41E8-9E49-CAC84645FDA8}.Release|Win32.Build.0 = Release|Win32
+		{5AFD861A-4B49-4B0D-B36B-8066640C7DD5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5AFD861A-4B49-4B0D-B36B-8066640C7DD5}.Debug|Win32.Build.0 = Debug|Win32
+		{5AFD861A-4B49-4B0D-B36B-8066640C7DD5}.Release|Win32.ActiveCfg = Release|Win32
+		{5AFD861A-4B49-4B0D-B36B-8066640C7DD5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
