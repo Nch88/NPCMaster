@@ -3,7 +3,6 @@ MasterThesis/MasterThesis.opensdf
 *.lastbuildstate
 *.idb
 *.ipch
-*.vcxproj
 *.filters
 MasterThesis/Tests
 *.50MB
