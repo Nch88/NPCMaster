@@ -4,23 +4,23 @@
 
 SymbolRecord::SymbolRecord()
 {
-	previous = NULL;
-	next = NULL;
+	previous = nullptr;
+	next = nullptr;
 }
 
 SymbolRecord::SymbolRecord(unsigned int s)
 {
 	symbol = s;
-	previous = NULL;
-	next = NULL;
+	previous = nullptr;
+	next = nullptr;
 }
 
 SymbolRecord::SymbolRecord(unsigned int s, long i)
 {
 	symbol = s;
 	index = i;
-	previous = NULL;
-	next = NULL;
+	previous = nullptr;
+	next = nullptr;
 }
 
 SymbolRecord::SymbolRecord(unsigned int s, SymbolRecord * p, SymbolRecord * n)
@@ -41,4 +41,6 @@ SymbolRecord::SymbolRecord(unsigned int s, long i, SymbolRecord * p, SymbolRecor
 
 SymbolRecord::~SymbolRecord()
 {
+	previous = nullptr;
+	next = nullptr;
 }

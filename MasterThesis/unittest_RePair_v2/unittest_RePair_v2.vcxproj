@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -53,7 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Nicolai\Documents\Git_repos\NPCMaster\MasterThesis\RePair_v2;C:\Users\Nicolai\Documents\Programming Projects\Googletest\gtest-1.7.0\include;C:\Users\Nicolai\Documents\Programming Projects\Googletest\gtest-1.7.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Nicolai\Documents\Git_repos\NPCMaster\MasterThesis\;C:\Users\Nicolai\Documents\Programming Projects\Googletest\gtest-1.7.0\include;C:\Users\Nicolai\Documents\Programming Projects\Googletest\gtest-1.7.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,6 +82,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\RePair_v2\Conditions.cpp" />
+    <ClCompile Include="..\RePair_v2\Initializer.cpp" />
+    <ClCompile Include="..\RePair_v2\MyTimer.cpp" />
+    <ClCompile Include="..\RePair_v2\Pair.cpp" />
+    <ClCompile Include="..\RePair_v2\PairRecord.cpp" />
+    <ClCompile Include="..\RePair_v2\PairTracker.cpp" />
+    <ClCompile Include="..\RePair_v2\SymbolRecord.cpp" />
     <ClCompile Include="unittest_RePair_v2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +98,15 @@
     <ProjectReference Include="..\RePair_v2\RePair_v2.vcxproj">
       <Project>{c8689738-3967-41e8-9e49-cac84645fda8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\RePair_v2\Conditions.h" />
+    <ClInclude Include="..\RePair_v2\Initializer.h" />
+    <ClInclude Include="..\RePair_v2\MyTimer.h" />
+    <ClInclude Include="..\RePair_v2\Pair.h" />
+    <ClInclude Include="..\RePair_v2\PairRecord.h" />
+    <ClInclude Include="..\RePair_v2\PairTracker.h" />
+    <ClInclude Include="..\RePair_v2\SymbolRecord.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

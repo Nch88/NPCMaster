@@ -12,10 +12,12 @@ PairRecord::PairRecord(long indexFirst, long indexLast)
 	count = 0;
 	arrayIndexFirst = indexFirst;
 	arrayIndexLast = indexLast;
-	previousPair = NULL;
-	nextPair = NULL;
+	previousPair = nullptr;
+	nextPair = nullptr;
 }
 
 PairRecord::~PairRecord()
 {
+	previousPair = nullptr;
+	nextPair = nullptr;
 }
