@@ -15,7 +15,8 @@ int main(int argc, char* argv[])
 
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
-	//unordered_map<unsigned int, Pair> dictionary;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols(256);
 
 	Algorithm algorithm;
@@ -45,7 +46,8 @@ int main(int argc, char* argv[])
 			t,
 			blockSize,
 			activePairs,
-			sequenceArray);
+			sequenceArray,
+			priorityQueue);
 	}
 	else
 	{

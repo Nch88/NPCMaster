@@ -16,6 +16,7 @@ public:
 	void resetForNextBlock(
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*> & priorityQueue,
 		int blockSize);
 	void addToSequenceArray(
 		vector<SymbolRecord*> & sequenceArray,
@@ -34,4 +35,8 @@ public:
 		int offset,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray);
+	void PriorityQueue(int priorityQueueSize,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		vector<PairRecord*> & priorityQueue,
+		Conditions & c);
 };

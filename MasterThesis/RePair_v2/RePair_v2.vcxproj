@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="AlgorithmP.h" />
     <ClInclude Include="Conditions.h" />
     <ClInclude Include="Initializer.h" />
     <ClInclude Include="MyTest.h" />
@@ -94,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="AlgorithmP.cpp" />
     <ClCompile Include="Conditions.cpp" />
     <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="MyTest.cpp" />

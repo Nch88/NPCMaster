@@ -33,3 +33,4 @@
 #include "Outputter.h"
 #include "MyTest.h"
 #include "Algorithm.h"
+#include "AlgorithmP.h"

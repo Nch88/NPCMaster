@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\RePair_v2\Algorithm.cpp" />
+    <ClCompile Include="..\RePair_v2\AlgorithmP.cpp" />
     <ClCompile Include="..\RePair_v2\Conditions.cpp" />
     <ClCompile Include="..\RePair_v2\Initializer.cpp" />
     <ClCompile Include="..\RePair_v2\MyTimer.cpp" />
@@ -90,7 +91,8 @@
     <ClCompile Include="..\RePair_v2\PairRecord.cpp" />
     <ClCompile Include="..\RePair_v2\PairTracker.cpp" />
     <ClCompile Include="..\RePair_v2\SymbolRecord.cpp" />
-    <ClCompile Include="unittest_RePair_v2.cpp" />
+    <ClCompile Include="unittest_RePair_v2_AlgorithmP.cpp" />
+    <ClCompile Include="unittest_RePair_v2_Initializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\googletest\googletest.vcxproj">
@@ -102,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\RePair_v2\Algorithm.h" />
+    <ClInclude Include="..\RePair_v2\AlgorithmP.h" />
     <ClInclude Include="..\RePair_v2\Conditions.h" />
     <ClInclude Include="..\RePair_v2\Initializer.h" />
     <ClInclude Include="..\RePair_v2\MyTimer.h" />

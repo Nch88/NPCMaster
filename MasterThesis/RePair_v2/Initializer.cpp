@@ -41,6 +41,7 @@ void Initializer::resetCompleted(
 void Initializer::resetForNextBlock(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*> & priorityQueue,
 	int blockSize)
 {
 	//Reset for next block
@@ -63,6 +64,11 @@ void Initializer::resetForNextBlock(
 		}
 	}
 	sequenceArray.clear();*/
+
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		priorityQueue[i] = nullptr;
+	}
 
 	for each (auto leftSymbol in activePairs)
 	{
@@ -246,4 +252,64 @@ int Initializer::SequenceArray(
 		file.close();
 
 	return 0;
+}
+
+void Initializer::PriorityQueue(int priorityQueueSize,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	vector<PairRecord*> & priorityQueue,
+	Conditions & c)
+{
+	int priorityIndex; //Pair count - 2, PQ only counts active pairs
+	PairRecord * tmpRecord;
+	MyTimer t;
+
+	if (c.verbose)
+	{
+		cout << "Initializing priority queue" << endl;
+	}
+	if (c.timing)
+	{
+		t.start();
+	}
+
+	for each (auto leftSymbol in activePairs)
+	{
+		for each (auto rightSymbol in leftSymbol.second)
+		{
+			rightSymbol.second.seenOnce = false;
+			if (rightSymbol.second.pairRecord)
+			{
+				if (rightSymbol.second.pairRecord->count > priorityQueueSize)
+					priorityIndex = priorityQueueSize - 1;
+
+				else
+					priorityIndex = rightSymbol.second.pairRecord->count - 2;
+
+
+				if (priorityQueue[priorityIndex] == nullptr)
+					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;
+
+				else
+				{
+					tmpRecord = priorityQueue[priorityIndex];
+					
+					tmpRecord->previousPair = rightSymbol.second.pairRecord;
+					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;
+					rightSymbol.second.pairRecord->nextPair = tmpRecord;
+					rightSymbol.second.pairRecord->previousPair = nullptr;
+				}
+			}
+		}
+	}
+
+	if (c.timing)
+	{
+		t.stop();
+		cout << "priority queue initialized in " << t.getTime() << " ms" << endl;
+	}
+	if (c.verbose)
+	{
+		cout << "Initialized priority queue" << endl;
+	}
+
 }
