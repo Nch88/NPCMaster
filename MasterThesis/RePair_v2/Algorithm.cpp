@@ -20,8 +20,10 @@ int Algorithm::run(
 	MyTimer t,
 	int blockSize,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*> & priorityQueue)
 {
+	int priorityQueueSize;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())
@@ -42,19 +44,19 @@ int Algorithm::run(
 			t.stop();
 			cout << "Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
-
+		priorityQueueSize = sqrt(sequenceArray.size());
+		priorityQueue.resize(priorityQueueSize);
+		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 		if (c.timing)
 		{
 			t.start();
 			cout << "Timing reset of Sequence array and active pairs" << endl;
 		}
-
-
 		if (c.verbose)
 		{
 			cout << "Resetting for next block" << endl;
 		}
-		init.resetForNextBlock(activePairs, sequenceArray, blockSize);
+		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
 		if (c.timing)
 		{
 			t.stop();
