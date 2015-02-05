@@ -18,11 +18,13 @@ int main(int argc, char* argv[])
 	//unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols(256);
 
+	Algorithm algorithm;
 	Initializer init;
 	Conditions c;
 	c.timing = false;
 	c.verbose = true;
 	MyTimer t;
+	int r = 0;
 
 	string input1 = "diddy.txt";
 	string input2 = "E.coli";
@@ -34,40 +36,23 @@ int main(int argc, char* argv[])
 	ifstream file(filename);
 
 	if (file.is_open())
-	{
-		while (file.is_open())
-		{
-			if (c.timing)
-			{
-				t.start();
-				cout << "Timing init of Sequence array and active pairs" << endl;
-			}
-			init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
-
-			if (c.timing)
-			{
-				t.stop();
-				cout << "Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
-			}
-
-			if (c.timing)
-			{
-				t.start();
-				cout << "Timing reset of Sequence array and active pairs" << endl;
-			}
-			init.resetForNextBlock(activePairs, sequenceArray, blockSize);
-			if (c.timing)
-			{
-				t.stop();
-				cout << "Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
-			}
-		}
+	{		
+		r = algorithm.run(
+			filename,
+			file,
+			c,
+			init,
+			t,
+			blockSize,
+			activePairs,
+			sequenceArray);
 	}
 	else
 	{
 		cout << "Problem opening file: " << filename << endl;
 		return 1;
 	}
-	return 0;
+	
+	return r;
 }
 

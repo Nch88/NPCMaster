@@ -429,19 +429,7 @@ TEST(testInitialization, dna50mbTest)
 			}
 		}
 		//Reset for next block
-		for (int i = 0; i < sequenceArray.size(); i++)
-		{
-			delete sequenceArray[i];
-			sequenceArray.clear();
-		}
-		for each (auto leftSymbol in activePairs)
-		{
-			for each (auto rightSymbol in leftSymbol.second)
-			{
-				delete rightSymbol.second.pairRecord;
-			}
-		}
-		activePairs.clear();
+		init.resetForNextBlock(activePairs, sequenceArray, blockSize);
 	}
 	else
 	{

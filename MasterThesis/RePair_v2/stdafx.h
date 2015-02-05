@@ -32,3 +32,4 @@
 #include "Initializer.h"
 #include "Outputter.h"
 #include "MyTest.h"
+#include "Algorithm.h"

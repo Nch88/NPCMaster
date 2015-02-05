@@ -82,6 +82,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\RePair_v2\Algorithm.cpp" />
     <ClCompile Include="..\RePair_v2\Conditions.cpp" />
     <ClCompile Include="..\RePair_v2\Initializer.cpp" />
     <ClCompile Include="..\RePair_v2\MyTimer.cpp" />
@@ -100,6 +101,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\RePair_v2\Algorithm.h" />
     <ClInclude Include="..\RePair_v2\Conditions.h" />
     <ClInclude Include="..\RePair_v2\Initializer.h" />
     <ClInclude Include="..\RePair_v2\MyTimer.h" />

@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Algorithm.h" />
     <ClInclude Include="Conditions.h" />
     <ClInclude Include="Initializer.h" />
     <ClInclude Include="MyTest.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="Conditions.cpp" />
     <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="MyTest.cpp" />

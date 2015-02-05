@@ -9,10 +9,19 @@ public:
 	Initializer();
 	~Initializer();
 
+	void Initializer::resetCompleted(
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		int blockSize);
 	void resetForNextBlock(
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		int blockSize);
+	void addToSequenceArray(
+		vector<SymbolRecord*> & sequenceArray,
+		char & symbol,
+		long & index,
+		int & symbolCount);
 	int SequenceArray(
 		Conditions c,
 		ifstream & file,

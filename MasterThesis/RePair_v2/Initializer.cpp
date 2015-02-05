@@ -11,6 +11,33 @@ Initializer::~Initializer()
 {
 }
 
+void Initializer::resetCompleted(
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	int blockSize)
+{
+	
+
+	for (int i = 0; i < sequenceArray.size(); i++)
+	{
+		if (sequenceArray[i])
+		{
+			delete sequenceArray[i];
+			sequenceArray[i] = nullptr;
+		}
+	}
+	sequenceArray.clear();
+
+	for each (auto leftSymbol in activePairs)
+	{
+		for each (auto rightSymbol in leftSymbol.second)
+		{
+			delete rightSymbol.second.pairRecord;
+		}
+	}
+	activePairs.clear();
+}
+
 void Initializer::resetForNextBlock(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
@@ -21,11 +48,21 @@ void Initializer::resetForNextBlock(
 	{
 		if (sequenceArray[i])
 		{
+			sequenceArray[i]->next = nullptr;
+			sequenceArray[i]->previous = nullptr;
+			sequenceArray[i]->symbol = 0;
+		}
+	}
+
+	/*for (int i = 0; i < sequenceArray.size(); i++)
+	{
+		if (sequenceArray[i])
+		{
 			delete sequenceArray[i];
 			sequenceArray[i] = nullptr;
 		}
 	}
-	sequenceArray.clear();
+	sequenceArray.clear();*/
 
 	for each (auto leftSymbol in activePairs)
 	{
@@ -99,6 +136,24 @@ void Initializer::setupPairRecord(
 	}
 }
 
+void Initializer::addToSequenceArray(
+	vector<SymbolRecord*> & sequenceArray,
+	char & symbol,
+	long & index,
+	int & symbolCount)
+{
+	if (index < sequenceArray.size())
+	{
+		sequenceArray[index]->symbol = (unsigned int)symbol;
+	}
+	else
+	{
+		sequenceArray.push_back(new SymbolRecord((unsigned int)symbol, index));
+	}	
+	index++;
+	symbolCount++;
+}
+
 int Initializer::SequenceArray(
 	Conditions c,
 	ifstream & file,
@@ -116,16 +171,11 @@ int Initializer::SequenceArray(
 	c.timing = false;
 	if (file >> noskipws >> previousSymbol)
 	{
-		sequenceArray.push_back(new SymbolRecord((unsigned int)previousSymbol, index));
-		index++;
-		symbolCount++;
+		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount);
 
 		if (file >> noskipws >> leftSymbol)
 		{
-			sequenceArray.push_back(new SymbolRecord((unsigned int)leftSymbol, index));
-			index++;
-			symbolCount++;
-
+			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount);
 			
 			setupPairRecord(
 				(unsigned int)previousSymbol,
@@ -142,8 +192,7 @@ int Initializer::SequenceArray(
 				t.start();
 				cout << "	Timing push back onto Sequence array" << endl;
 			}
-			sequenceArray.push_back(new SymbolRecord((unsigned int)rightSymbol, index));
-			index++;
+			addToSequenceArray(sequenceArray, rightSymbol, index, symbolCount);
 			if (c.timing)
 			{
 				t.stop();
@@ -151,7 +200,7 @@ int Initializer::SequenceArray(
 				if (tmp > 1)
 					cout << "	Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
-			symbolCount++;
+			
 
 			if (leftSymbol == rightSymbol &&
 				leftSymbol == previousSymbol &&
