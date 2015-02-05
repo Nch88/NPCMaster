@@ -14,13 +14,14 @@ int main(int argc, char* argv[])
 	blockSize = 1048576;
 
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	vector<SymbolRecord*> sequenceArray(blockSize);
+	vector<SymbolRecord*> sequenceArray;
 	//unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols(256);
 
 	Initializer init;
 	Conditions c;
 	c.timing = false;
+	c.verbose = true;
 	MyTimer t;
 
 	string input1 = "diddy.txt";

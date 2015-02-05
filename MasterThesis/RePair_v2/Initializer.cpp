@@ -21,17 +21,11 @@ void Initializer::resetForNextBlock(
 	{
 		if (sequenceArray[i])
 		{
-			if (i == blockSize - 10)
-			{
-				int x = 9;
-			}
 			delete sequenceArray[i];
 			sequenceArray[i] = nullptr;
 		}
 	}
-	
-	/*sequenceArray.clear();
-	sequenceArray.resize(blockSize);*/
+	sequenceArray.clear();
 
 	for each (auto leftSymbol in activePairs)
 	{
@@ -122,13 +116,13 @@ int Initializer::SequenceArray(
 	c.timing = false;
 	if (file >> noskipws >> previousSymbol)
 	{
-		sequenceArray[index] = new SymbolRecord((unsigned int)previousSymbol, index);
+		sequenceArray.push_back(new SymbolRecord((unsigned int)previousSymbol, index));
 		index++;
 		symbolCount++;
 
 		if (file >> noskipws >> leftSymbol)
 		{
-			sequenceArray[index] = new SymbolRecord((unsigned int)leftSymbol, index);
+			sequenceArray.push_back(new SymbolRecord((unsigned int)leftSymbol, index));
 			index++;
 			symbolCount++;
 
@@ -148,7 +142,7 @@ int Initializer::SequenceArray(
 				t.start();
 				cout << "	Timing push back onto Sequence array" << endl;
 			}
-			sequenceArray[index] = new SymbolRecord((unsigned int)rightSymbol, index);
+			sequenceArray.push_back(new SymbolRecord((unsigned int)rightSymbol, index));
 			index++;
 			if (c.timing)
 			{
