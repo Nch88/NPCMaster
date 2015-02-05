@@ -4,6 +4,7 @@ MasterThesis/MasterThesis.opensdf
 *.idb
 *.ipch
 *.filters
+*.vcxproj
 MasterThesis/Tests
 *.50MB
 Re-Pair_Compression_techniques.zip

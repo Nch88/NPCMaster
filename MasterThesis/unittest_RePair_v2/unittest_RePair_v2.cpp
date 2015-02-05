@@ -36,7 +36,7 @@ TEST(testInitialization, diddyTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				if (sequenceArray[i]->symbol == 105 && //in
 					sequenceArray[i + 1]->symbol == 110)
@@ -130,7 +130,7 @@ TEST(testInitialization, duplicateTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				if (sequenceArray[i]->symbol == 97 && //aa
 					sequenceArray[i + 1]->symbol == 97)
@@ -191,7 +191,7 @@ TEST(testInitialization, worldTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				ASSERT_TRUE(activePairs[sequenceArray[i]->symbol][sequenceArray[i + 1]->symbol].pairRecord->count >= 2);
 			}
@@ -241,7 +241,7 @@ TEST(testInitialization, bibleTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				ASSERT_TRUE(activePairs[sequenceArray[i]->symbol][sequenceArray[i + 1]->symbol].pairRecord->count >= 2);
 			}
@@ -298,7 +298,7 @@ TEST(testInitialization, ecoliTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				ASSERT_TRUE(activePairs[sequenceArray[i]->symbol][sequenceArray[i + 1]->symbol].pairRecord->count >= 2);
 			}
@@ -423,7 +423,7 @@ TEST(testInitialization, dna50mbTest)
 				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 
-				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 
 				ASSERT_TRUE(activePairs[sequenceArray[i]->symbol][sequenceArray[i + 1]->symbol].pairRecord->count >= 2);
 			}
