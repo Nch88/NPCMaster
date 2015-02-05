@@ -12,10 +12,10 @@ AlgorithmP::~AlgorithmP()
 }
 
 void AlgorithmP::establishContext(
-	long indexSymbolLeft,
-	long indexSymbolRight,
-	long indexSymbolPrevious,
-	long indexSymbolNext,
+	long & indexSymbolLeft,
+	long & indexSymbolRight,
+	long & indexSymbolPrevious,
+	long & indexSymbolNext,
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray)
 {
@@ -62,10 +62,20 @@ void AlgorithmP::replaceAllPairs(
 	long indexSymbolPrevious = -1;
 	long indexSymbolNext = -1;
 
+	
+
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex]->next;
 
 	do
 	{
+		establishContext(
+			indexSymbolLeft,
+			indexSymbolRight,
+			indexSymbolPrevious,
+			indexSymbolNext,
+			sequenceIndex,
+			sequenceArray);
+
 
 		nextSymbol = nextSymbol->next;
 	} while (nextSymbol);

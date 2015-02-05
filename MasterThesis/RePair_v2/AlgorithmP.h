@@ -6,10 +6,10 @@ public:
 	~AlgorithmP();
 
 	void establishContext(
-		long indexSymbolLeft,
-		long indexSymbolRight,
-		long indexSymbolPrevious,
-		long indexSymbolNext,
+		long & indexSymbolLeft,
+		long & indexSymbolRight,
+		long & indexSymbolPrevious,
+		long & indexSymbolNext,
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray);
 	void replaceAllPairs(
