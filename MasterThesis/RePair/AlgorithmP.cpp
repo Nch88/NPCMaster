@@ -372,8 +372,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	shared_ptr<SymbolRecord>& symbolPrevious,
 	shared_ptr<SymbolRecord>& symbolNext,
 	Conditions& c)
-{
-	
+{	
 	shared_ptr<PairRecord> tmpPairRecord;
 	shared_ptr<PairRecord> tmpPairRecordAdjacent;
 	shared_ptr<PairTracker> tmpPairTracker;
