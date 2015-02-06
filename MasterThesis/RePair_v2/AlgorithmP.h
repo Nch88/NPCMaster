@@ -48,6 +48,23 @@ public:
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,
 		Conditions& c);
+	void incrementCountLeft(
+		long & indexSymbolPrevious,
+		long & indexSymbolLeft,
+		long & indexSymbolRight,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
+	void incrementCountRight(
+		long & indexSymbolRight,
+		long & indexSymbolNext,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*>& priorityQueue, 
+		unsigned int & Symbols,
+		Conditions& c);
 	void replaceInstanceOfPair(
 		long & indexSymbolLeft,
 		long & indexSymbolRight,

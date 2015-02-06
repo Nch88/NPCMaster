@@ -200,6 +200,52 @@ void AlgorithmP::decrementCountRight(
 
 }
 
+void AlgorithmP::incrementCountLeft(
+	long & indexSymbolPrevious,
+	long & indexSymbolLeft,
+	long & indexSymbolRight,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
+
+	if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord == NULL)
+		//This is exactly the first time we see this
+	{
+		activePairs[symbolPrevious][Symbols].seenOnce = true;
+		activePairs[symbolPrevious][Symbols].indexFirst = indexSymbolLeft;
+	}
+
+	else if (activePairs[symbolPrevious][Symbols].seenOnce)
+		//This is if we se it the second time
+	{
+		activePairs[symbolPrevious][Symbols].seenOnce = false;
+		activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord(activePairs[symbolPrevious][Symbols].indexFirst,indexSymbolLeft);
+		activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
+	}
+
+	else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
+		//This is if we see it after the second time
+	{
+		activePairs[symbolPrevious][Symbols].pairRecord->count++;
+	}
+}
+
+void AlgorithmP::incrementCountRight(
+	long & indexSymbolRight,
+	long & indexSymbolNext,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+
+}
+
 void AlgorithmP::replaceInstanceOfPair(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
