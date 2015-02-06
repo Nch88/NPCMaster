@@ -11,6 +11,30 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
+void AlgorithmP::replaceInstanceOfPair(
+	long & indexSymbolLeft,
+	long & indexSymbolRight,
+	long & indexSymbolPrevious,
+	long & indexSymbolNext,
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unique_ptr<unsigned int>& Symbols,
+	Conditions& c)
+{
+	////Decrement count of xa
+	//decrementCountLeft()
+	//{
+
+	//}
+	////Decrement count of by
+	//decrementCountRight()
+	//{
+
+	//}
+}
+
 void AlgorithmP::establishContext(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
