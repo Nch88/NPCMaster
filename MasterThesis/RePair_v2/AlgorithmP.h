@@ -36,7 +36,6 @@ public:
 	void decrementCountLeft(
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
-		long & indexSymbolRight,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,

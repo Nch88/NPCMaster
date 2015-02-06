@@ -162,7 +162,6 @@ void AlgorithmP::decrementCount(
 void AlgorithmP::decrementCountLeft(
 	long & indexSymbolPrevious, 
 	long & indexSymbolLeft, 
-	long & indexSymbolRight,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
@@ -188,6 +187,11 @@ void AlgorithmP::decrementCountLeft(
 				tracker,
 				c);
 		}
+		else
+		{
+			tracker->seenOnce = false;
+			tracker->indexFirst = -1;
+		}
 	}
 }
 
@@ -199,7 +203,28 @@ void AlgorithmP::decrementCountRight(
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
 {
+	if (indexSymbolNext >= 0)
+	{
+		PairTracker * tracker;
+		tracker =
+			&activePairs[sequenceArray[indexSymbolRight]->symbol]
+			[sequenceArray[indexSymbolNext]->symbol];
 
+		if (tracker &&
+			tracker->pairRecord &&
+			(sequenceArray[indexSymbolRight]->next ||
+			sequenceArray[indexSymbolRight]->previous))
+		{
+			decrementCount(
+				indexSymbolRight,
+				indexSymbolNext,
+				activePairs,
+				sequenceArray,
+				priorityQueue,
+				tracker,
+				c);
+		}
+	}
 }
 
 void AlgorithmP::replaceInstanceOfPair(
@@ -214,16 +239,25 @@ void AlgorithmP::replaceInstanceOfPair(
 	unsigned int & Symbols,
 	Conditions& c)
 {
-	////Decrement count of xa
-	//decrementCountLeft()
-	//{
+	//Decrement count of xa
+	decrementCountLeft(
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
 
-	//}
-	////Decrement count of by
-	//decrementCountRight()
-	//{
+	//Decrement count of by
+	decrementCountRight(
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
 
-	//}
+	//TODO: replace pair
 }
 
 void AlgorithmP::establishContext(

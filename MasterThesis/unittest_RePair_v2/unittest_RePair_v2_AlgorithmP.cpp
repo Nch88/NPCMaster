@@ -1172,6 +1172,457 @@ TEST(moveDownInPriorityQueue, middleOfList)
 	ASSERT_EQ(nullptr, priorityQueue[index]);
 }
 
+TEST(moveDownInPriorityQueue, firstInList)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 0;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = pair1;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair1->count = 2;
+
+	tracker->pairRecord = pair1;
+
+	algP.moveDownInPriorityQueue(tracker, priorityQueue);
+
+	ASSERT_EQ(nullptr, priorityQueue[index]);
+}
+
+TEST(moveDownInPriorityQueue, lastInListLargeFrequency)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 2;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = pair1;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair1->count = 6;
+
+	tracker->pairRecord = pair1;
+
+	algP.moveDownInPriorityQueue(tracker, priorityQueue);
+
+	ASSERT_EQ(pair1, priorityQueue[index]);
+	ASSERT_EQ(nullptr, priorityQueue[index - 1]);
+	ASSERT_EQ(nullptr, priorityQueue[index - 2]);
+}
+
+TEST(decrementCount, threePairsRemoveMiddle)
+{
+	AlgorithmP algP;
+	Conditions c;
+	vector<PairRecord*> priorityQueue(3);
+	long indexSymbolLeft = -1;
+	long indexSymbolRight = -1;
+	long indexSymbolPrevious = -1;
+	long indexSymbolNext = -1;
+
+	long sequenceIndex = 2;
+
+	PairTracker * tracker;
+	
+	vector<SymbolRecord*> sequenceArray;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unsigned int symbol;
+	long index;
+
+
+	//Setup symbol records in sequence array
+	symbol = 1;
+	index = 0;
+	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairLeft);
+
+	symbol = 2;
+	index = 1;
+	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairRight);
+
+	symbol = 1;
+	index = 2;
+	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairLeft);
+
+	symbol = 2;
+	index = 3;
+	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairRight);
+
+	symbol = 1;
+	index = 4;
+	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairLeft);
+
+	symbol = 2;
+	index = 5;
+	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairRight);
+
+	fstPairLeft->previous = nullptr;
+	fstPairLeft->next = scdPairLeft;
+	scdPairLeft->previous = fstPairLeft;
+	scdPairLeft->next = trdPairLeft;
+	trdPairLeft->previous = scdPairLeft;
+	trdPairLeft->next = nullptr;
+
+	//Setup active pair
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
+		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
+
+	tracker = &activePairs[scdPairLeft->symbol][scdPairRight->symbol];
+
+	//Setup Priority queue
+	priorityQueue[tracker->pairRecord->count - 2] = 
+		tracker->pairRecord;
+
+	indexSymbolLeft = scdPairLeft->index;
+	indexSymbolRight = scdPairRight->index;
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[1]);
+	ASSERT_EQ(nullptr, priorityQueue[0]);
+	
+	algP.decrementCount(
+		indexSymbolLeft,
+		indexSymbolRight,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		tracker,
+		c);
+	
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(nullptr, priorityQueue[1]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
+	ASSERT_EQ(2, tracker->pairRecord->count);
+	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
+	ASSERT_EQ(0, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexFirst);
+	ASSERT_EQ(4, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexLast);
+	ASSERT_EQ(trdPairLeft, fstPairLeft->next);
+	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->next);
+}
+
+TEST(decrementCountLeft, hasPrevious)
+{
+	AlgorithmP algP;
+	Conditions c;
+	vector<PairRecord*> priorityQueue(3);
+	long indexSymbolLeft = -1;
+	long indexSymbolRight = -1;
+	long indexSymbolPrevious = -1;
+	long indexSymbolNext = -1;
+
+	long sequenceIndex = 2;
+
+	PairTracker * tracker;
+
+	vector<SymbolRecord*> sequenceArray;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unsigned int symbol;
+	long index;
+
+
+	//Setup symbol records in sequence array
+	symbol = 1;
+	index = 0;
+	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairLeft);
+
+	symbol = 2;
+	index = 1;
+	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairRight);
+
+	symbol = 1;
+	index = 2;
+	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairLeft);
+
+	symbol = 2;
+	index = 3;
+	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairRight);
+
+	symbol = 1;
+	index = 4;
+	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairLeft);
+
+	symbol = 2;
+	index = 5;
+	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairRight);
+
+	fstPairLeft->previous = nullptr;
+	fstPairLeft->next = scdPairLeft;
+	scdPairLeft->previous = fstPairLeft;
+	scdPairLeft->next = trdPairLeft;
+	trdPairLeft->previous = scdPairLeft;
+	trdPairLeft->next = nullptr;
+
+	//Setup active pair
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
+		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
+
+	tracker = &activePairs[scdPairLeft->symbol][scdPairRight->symbol];
+
+	//Setup Priority queue
+	priorityQueue[tracker->pairRecord->count - 2] =
+		tracker->pairRecord;
+
+	indexSymbolPrevious = scdPairLeft->index;
+	indexSymbolLeft = scdPairRight->index;
+	indexSymbolRight = trdPairLeft->index;
+	
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[1]);
+	ASSERT_EQ(nullptr, priorityQueue[0]);
+
+	algP.decrementCountLeft(
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(nullptr, priorityQueue[1]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
+	ASSERT_EQ(2, tracker->pairRecord->count);
+	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
+	ASSERT_EQ(0, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexFirst);
+	ASSERT_EQ(4, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexLast);
+	ASSERT_EQ(trdPairLeft, fstPairLeft->next);
+	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->next);
+}
+
+TEST(decrementCountLeft, hasPreviousNotActivePair)
+{
+	AlgorithmP algP;
+	Conditions c;
+	vector<PairRecord*> priorityQueue(3);
+	long indexSymbolLeft = -1;
+	long indexSymbolRight = -1;
+	long indexSymbolPrevious = -1;
+	long indexSymbolNext = -1;
+
+	long sequenceIndex = 2;
+
+	PairTracker * tracker;
+
+	vector<SymbolRecord*> sequenceArray;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unsigned int symbol;
+	long index;
+
+
+	//Setup symbol records in sequence array
+	symbol = 1;
+	index = 0;
+	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairLeft);
+
+	symbol = 2;
+	index = 1;
+	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairRight);
+
+	symbol = 1;
+	index = 2;
+	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairLeft);
+
+	symbol = 2;
+	index = 3;
+	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairRight);
+
+	symbol = 1;
+	index = 4;
+	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairLeft);
+
+	symbol = 2;
+	index = 5;
+	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairRight);
+
+	fstPairLeft->previous = nullptr;
+	fstPairLeft->next = trdPairLeft;
+	scdPairLeft->previous = nullptr;
+	scdPairLeft->next = nullptr;
+	trdPairLeft->previous = fstPairLeft;
+	trdPairLeft->next = nullptr;
+
+	//Setup active pair
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
+		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 2;
+
+	tracker = &activePairs[scdPairLeft->symbol][scdPairRight->symbol];
+
+	//Setup Priority queue
+	priorityQueue[tracker->pairRecord->count - 2] =
+		tracker->pairRecord;
+
+	indexSymbolPrevious = scdPairLeft->index;
+	indexSymbolLeft = scdPairRight->index;
+	indexSymbolRight = trdPairLeft->index;
+
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(nullptr, priorityQueue[1]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
+
+	algP.decrementCountLeft(
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(nullptr, priorityQueue[1]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
+	ASSERT_EQ(2, tracker->pairRecord->count);
+	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
+	ASSERT_EQ(0, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexFirst);
+	ASSERT_EQ(4, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexLast);
+	ASSERT_EQ(trdPairLeft, fstPairLeft->next);
+	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->next);
+}
+
+TEST(decrementCountRight, hasNext)
+{
+	AlgorithmP algP;
+	Conditions c;
+	vector<PairRecord*> priorityQueue(3);
+	long indexSymbolLeft = -1;
+	long indexSymbolRight = -1;
+	long indexSymbolPrevious = -1;
+	long indexSymbolNext = -1;
+
+	long sequenceIndex = 2;
+
+	PairTracker * tracker;
+
+	vector<SymbolRecord*> sequenceArray;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unsigned int symbol;
+	long index;
+
+
+	//Setup symbol records in sequence array
+	symbol = 1;
+	index = 0;
+	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairLeft);
+
+	symbol = 2;
+	index = 1;
+	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(fstPairRight);
+
+	symbol = 1;
+	index = 2;
+	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairLeft);
+
+	symbol = 2;
+	index = 3;
+	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(scdPairRight);
+
+	symbol = 1;
+	index = 4;
+	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairLeft);
+
+	symbol = 2;
+	index = 5;
+	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(trdPairRight);
+
+	fstPairLeft->previous = nullptr;
+	fstPairLeft->next = scdPairLeft;
+	scdPairLeft->previous = fstPairLeft;
+	scdPairLeft->next = trdPairLeft;
+	trdPairLeft->previous = scdPairLeft;
+	trdPairLeft->next = nullptr;
+
+	//Setup active pair
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
+		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
+	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
+
+	tracker = &activePairs[scdPairLeft->symbol][scdPairRight->symbol];
+
+	//Setup Priority queue
+	priorityQueue[tracker->pairRecord->count - 2] =
+		tracker->pairRecord;
+
+	indexSymbolRight = scdPairLeft->index;
+	indexSymbolNext = scdPairRight->index;
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[1]);
+	ASSERT_EQ(nullptr, priorityQueue[0]);
+
+	algP.decrementCountLeft(
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
+
+	ASSERT_EQ(nullptr, priorityQueue[2]);
+	ASSERT_EQ(nullptr, priorityQueue[1]);
+	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
+	ASSERT_EQ(2, tracker->pairRecord->count);
+	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
+	ASSERT_EQ(0, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexFirst);
+	ASSERT_EQ(4, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->arrayIndexLast);
+	ASSERT_EQ(trdPairLeft, fstPairLeft->next);
+	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->previous);
+	ASSERT_EQ(nullptr, scdPairLeft->next);
+}
+
 TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)
 {
 	AlgorithmP algo;
