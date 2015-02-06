@@ -10,3 +10,6 @@ Re-Pair_Compression_techniques.zip
 *.sdf
 *.pchi
 *.vcxproj
+MasterThesis/unittest_RePair_v2/unittest_RePair_v2.vcxproj
+MasterThesis/googletest/googletest.vcxproj
+MasterThesis/googletest/googletest.vcxproj.filters
