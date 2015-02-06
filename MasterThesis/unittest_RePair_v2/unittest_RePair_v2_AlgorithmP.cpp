@@ -1019,7 +1019,7 @@ TEST(removeFromPriorityQueueList, firstInList)
 	ASSERT_EQ(pair2, pair3->previousPair);
 	ASSERT_EQ(nullptr, pair2->previousPair);
 	ASSERT_EQ(pair3, pair2->nextPair);
-	ASSERT_EQ(pair2, priorityQueue[1]);
+	ASSERT_EQ(pair2, priorityQueue[index]);
 }
 
 TEST(removeFromPriorityQueueList, lastInList)
@@ -1053,7 +1053,7 @@ TEST(removeFromPriorityQueueList, lastInList)
 	ASSERT_EQ(nullptr, pair3->previousPair);
 	ASSERT_EQ(pair1, pair2->previousPair);
 	ASSERT_EQ(nullptr, pair2->nextPair);
-	ASSERT_EQ(pair1, priorityQueue[1]);
+	ASSERT_EQ(pair1, priorityQueue[index]);
 }
 
 TEST(addToPriorityQueueList, emptyList)
@@ -1081,10 +1081,71 @@ TEST(addToPriorityQueueList, emptyList)
 
 	ASSERT_EQ(nullptr, pair1->nextPair);
 	ASSERT_EQ(nullptr, pair1->previousPair);
-	ASSERT_EQ(pair1, priorityQueue[1]);
+	ASSERT_EQ(pair1, priorityQueue[index]);
 }
 
 TEST(addToPriorityQueueList, somethingInList)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = pair1;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair2->count = 3;
+
+	tracker->pairRecord = pair2;
+
+	algP.addToPriorityQueueList(index, tracker, priorityQueue);
+
+	ASSERT_EQ(nullptr, pair1->nextPair);
+	ASSERT_EQ(pair2, pair1->previousPair);
+	ASSERT_EQ(pair1, pair2->nextPair);
+	ASSERT_EQ(nullptr, pair2->previousPair);
+	ASSERT_EQ(pair2, priorityQueue[index]);
+}
+
+TEST(addToPriorityQueueList, largeFrequency)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = pair1;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair2->count = 7;
+
+	tracker->pairRecord = pair2;
+
+	algP.addToPriorityQueueList(5, tracker, priorityQueue);
+
+	ASSERT_EQ(nullptr, pair1->nextPair);
+	ASSERT_EQ(nullptr, pair1->previousPair);
+	ASSERT_EQ(nullptr, pair2->nextPair);
+	ASSERT_EQ(nullptr, pair2->previousPair);
+	ASSERT_EQ(pair2, priorityQueue[2]);
+	ASSERT_EQ(pair1, priorityQueue[1]);
+}
+
+TEST(moveDownInPriorityQueue, middleOfList)
 {
 	AlgorithmP algP;
 	vector<PairRecord*> priorityQueue(3);
@@ -1105,11 +1166,10 @@ TEST(addToPriorityQueueList, somethingInList)
 
 	tracker->pairRecord = pair1;
 
-	algP.addToPriorityQueueList(index, tracker, priorityQueue);
+	algP.moveDownInPriorityQueue(tracker, priorityQueue);
 
-	ASSERT_EQ(nullptr, pair1->nextPair);
-	ASSERT_EQ(nullptr, pair1->previousPair);
-	ASSERT_EQ(pair1, priorityQueue[1]);
+	ASSERT_EQ(pair1, priorityQueue[index - 1]);
+	ASSERT_EQ(nullptr, priorityQueue[index]);
 }
 
 TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)

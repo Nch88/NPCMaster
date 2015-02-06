@@ -90,6 +90,8 @@ void AlgorithmP::removeFromPriorityQueueList(
 	{
 		tracker->pairRecord->previousPair->nextPair = nullptr;
 	}
+	else
+		priorityQueue[index] = nullptr;
 
 	tracker->pairRecord->previousPair = nullptr;
 	tracker->pairRecord->nextPair = nullptr;
