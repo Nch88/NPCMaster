@@ -11,6 +11,184 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
+void AlgorithmP::removeSymbolThreadingPointers(
+	long & indexSymbolLeft,
+	vector<SymbolRecord*> & sequenceArray)
+{
+	if (sequenceArray[indexSymbolLeft]->previous &&
+		sequenceArray[indexSymbolLeft]->next)
+	{
+		sequenceArray[indexSymbolLeft]->previous->next =
+			sequenceArray[indexSymbolLeft]->next;
+		sequenceArray[indexSymbolLeft]->next->previous =
+			sequenceArray[indexSymbolLeft]->previous;
+	}
+	else if (sequenceArray[indexSymbolLeft]->previous)
+	{
+		sequenceArray[indexSymbolLeft]->previous->next = nullptr;
+	}
+	else if (sequenceArray[indexSymbolLeft]->next)
+	{
+		sequenceArray[indexSymbolLeft]->next->previous = nullptr;
+	}
+	sequenceArray[indexSymbolLeft]->previous = nullptr;
+	sequenceArray[indexSymbolLeft]->next = nullptr;
+}
+
+void AlgorithmP::updatePairRecord(
+	long & indexSymbolLeft,
+	long & indexSymbolRight,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	PairTracker *& tracker)
+{
+	tracker->pairRecord->count--;
+
+	long symbolleft = sequenceArray[indexSymbolLeft]->symbol;
+	long symbolRight = sequenceArray[indexSymbolRight]->symbol;
+
+	if (tracker->pairRecord->count < 2) //Delete pair record
+	{
+		delete activePairs[symbolleft][symbolRight].pairRecord;
+		activePairs[symbolleft][symbolRight].pairRecord = nullptr;
+		activePairs[symbolleft][symbolRight].seenOnce = false;
+		activePairs[symbolleft][symbolRight].indexFirst = -1;
+		tracker->pairRecord = nullptr;
+		tracker = nullptr;
+	}
+	else
+	{
+		if (indexSymbolLeft == tracker->pairRecord->arrayIndexFirst)
+		{
+			tracker->pairRecord->arrayIndexFirst = sequenceArray[indexSymbolLeft]->next->index;
+		}
+		else if (indexSymbolLeft == tracker->pairRecord->arrayIndexLast)
+		{
+			tracker->pairRecord->arrayIndexLast = sequenceArray[indexSymbolLeft]->previous->index;
+		}
+	}	
+}
+
+void AlgorithmP::removeFromPriorityQueueList(
+	PairTracker *& tracker,
+	vector<PairRecord*>& priorityQueue)
+{
+	if (tracker->pairRecord->nextPair && tracker->pairRecord->previousPair)
+	{
+		tracker->pairRecord->nextPair->previousPair = 
+			tracker->pairRecord->previousPair;
+		tracker->pairRecord->previousPair->nextPair =
+			tracker->pairRecord->nextPair;
+	}
+	else if (tracker->pairRecord->nextPair)
+	{
+		priorityQueue[tracker->pairRecord->count - 2] = tracker->pairRecord->nextPair;
+		tracker->pairRecord->nextPair->previousPair = nullptr;		
+	}
+	else if (tracker->pairRecord->previousPair)
+	{
+		tracker->pairRecord->previousPair->nextPair = nullptr;
+	}
+
+	tracker->pairRecord->previousPair = nullptr;
+	tracker->pairRecord->nextPair = nullptr;
+}
+
+void AlgorithmP::addToPriorityQueueList(
+	PairTracker *& tracker,
+	vector<PairRecord*>& priorityQueue)
+{
+	if (priorityQueue[tracker->pairRecord->count - 2])
+	{
+		tracker->pairRecord->nextPair =
+			priorityQueue[tracker->pairRecord->count - 2];
+		priorityQueue[tracker->pairRecord->count - 2]->previousPair =
+			tracker->pairRecord;		
+	}
+	priorityQueue[tracker->pairRecord->count - 2] =
+		tracker->pairRecord;
+}
+
+void AlgorithmP::moveDownInPriorityQueue(
+	PairTracker *& tracker,
+	vector<PairRecord*>& priorityQueue)
+{
+	if (tracker->pairRecord->count == 2)
+	{
+		removeFromPriorityQueueList(tracker, priorityQueue);
+	}
+	else if (tracker->pairRecord->count - 1 <= priorityQueue.size())
+	{
+		removeFromPriorityQueueList(tracker, priorityQueue);
+		addToPriorityQueueList(tracker, priorityQueue);
+	}
+}
+
+void AlgorithmP::decrementCount(
+	long & indexSymbolLeft,
+	long & indexSymbolRight, 
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*>& priorityQueue,
+	PairTracker *& tracker,
+	Conditions& c)
+{
+	
+	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);
+
+	moveDownInPriorityQueue(tracker, priorityQueue);
+
+	updatePairRecord(
+		indexSymbolLeft,
+		indexSymbolRight,
+		activePairs,
+		sequenceArray,
+		tracker);
+}
+
+void AlgorithmP::decrementCountLeft(
+	long & indexSymbolPrevious, 
+	long & indexSymbolLeft, 
+	long & indexSymbolRight,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray, 
+	vector<PairRecord*>& priorityQueue,
+	Conditions& c)
+{	
+	if (indexSymbolPrevious >= 0)
+	{
+		PairTracker * tracker;
+		tracker = 
+			&activePairs[sequenceArray[indexSymbolPrevious]->symbol]
+						[sequenceArray[indexSymbolLeft]->symbol];
+		if (tracker && 
+			tracker->pairRecord &&
+			(sequenceArray[indexSymbolPrevious]->next ||
+			sequenceArray[indexSymbolPrevious]->previous))
+		{
+			decrementCount(
+				indexSymbolPrevious,
+				indexSymbolLeft,
+				activePairs,
+				sequenceArray,
+				priorityQueue,
+				tracker,
+				c);
+		}
+	}
+}
+
+void AlgorithmP::decrementCountRight(
+	long & indexSymbolRight,
+	long & indexSymbolNext,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray, 
+	vector<PairRecord*>& priorityQueue,
+	Conditions& c)
+{
+
+}
+
 void AlgorithmP::replaceInstanceOfPair(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
@@ -20,7 +198,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	unordered_map<unsigned int, Pair>& dictionary,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unsigned int & Symbols,
 	Conditions& c)
 {
 	////Decrement count of xa
@@ -78,7 +256,7 @@ void AlgorithmP::replaceAllPairs(
 	unordered_map<unsigned int, Pair>& dictionary,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unsigned int & Symbols,
 	Conditions& c)
 {
 	long indexSymbolLeft = -1;
@@ -88,19 +266,20 @@ void AlgorithmP::replaceAllPairs(
 
 	
 
-	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex]->next;
+	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
 
 	do
 	{
+		sequenceIndex = nextSymbol->index;
+		nextSymbol = nextSymbol->next;
+
 		establishContext(
 			indexSymbolLeft,
 			indexSymbolRight,
 			indexSymbolPrevious,
 			indexSymbolNext,
 			sequenceIndex,
-			sequenceArray);
-
-
-		nextSymbol = nextSymbol->next;
+			sequenceArray);		
+		
 	} while (nextSymbol);
 }

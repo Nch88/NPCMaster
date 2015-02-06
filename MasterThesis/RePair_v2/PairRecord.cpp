@@ -5,6 +5,8 @@
 PairRecord::PairRecord()
 {
 	count = 0;
+	previousPair = nullptr;
+	nextPair = nullptr;
 }
 
 PairRecord::PairRecord(long indexFirst, long indexLast)
