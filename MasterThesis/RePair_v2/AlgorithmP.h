@@ -15,9 +15,11 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		PairTracker *& tracker);
 	void removeFromPriorityQueueList(
+		long index,
 		PairTracker *& tracker,
 		vector<PairRecord*>& priorityQueue);
 	void addToPriorityQueueList(
+		long index,
 		PairTracker *& tracker,
 		vector<PairRecord*>& priorityQueue);
 	void moveDownInPriorityQueue(

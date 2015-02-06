@@ -960,6 +960,7 @@ TEST(removeFromPriorityQueueList, middleOfList)
 {
 	AlgorithmP algP;
 	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
 
 	PairTracker * tracker = new PairTracker();
 
@@ -967,7 +968,7 @@ TEST(removeFromPriorityQueueList, middleOfList)
 	PairRecord * pair2 = new PairRecord();
 	PairRecord * pair3 = new PairRecord();
 
-	priorityQueue[1] = pair1;
+	priorityQueue[index] = pair1;
 	pair1->nextPair = pair2;
 	pair1->previousPair = nullptr;
 	pair2->nextPair = pair3;
@@ -979,7 +980,7 @@ TEST(removeFromPriorityQueueList, middleOfList)
 
 	tracker->pairRecord = pair2;
 
-	algP.removeFromPriorityQueueList(tracker, priorityQueue);
+	algP.removeFromPriorityQueueList(index, tracker, priorityQueue);
 
 	ASSERT_EQ(pair3, pair1->nextPair);
 	ASSERT_EQ(pair1, pair3->previousPair);
@@ -991,6 +992,7 @@ TEST(removeFromPriorityQueueList, firstInList)
 {
 	AlgorithmP algP;
 	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
 
 	PairTracker * tracker = new PairTracker();
 
@@ -998,7 +1000,7 @@ TEST(removeFromPriorityQueueList, firstInList)
 	PairRecord * pair2 = new PairRecord();
 	PairRecord * pair3 = new PairRecord();
 
-	priorityQueue[1] = pair1;
+	priorityQueue[index] = pair1;
 	pair1->nextPair = pair2;
 	pair1->previousPair = nullptr;
 	pair2->nextPair = pair3;
@@ -1010,7 +1012,7 @@ TEST(removeFromPriorityQueueList, firstInList)
 
 	tracker->pairRecord = pair1;
 
-	algP.removeFromPriorityQueueList(tracker, priorityQueue);
+	algP.removeFromPriorityQueueList(index, tracker, priorityQueue);
 
 	ASSERT_EQ(nullptr, pair1->nextPair);
 	ASSERT_EQ(nullptr, pair1->previousPair);
@@ -1024,6 +1026,7 @@ TEST(removeFromPriorityQueueList, lastInList)
 {
 	AlgorithmP algP;
 	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
 
 	PairTracker * tracker = new PairTracker();
 
@@ -1031,7 +1034,7 @@ TEST(removeFromPriorityQueueList, lastInList)
 	PairRecord * pair2 = new PairRecord();
 	PairRecord * pair3 = new PairRecord();
 
-	priorityQueue[1] = pair1;
+	priorityQueue[index] = pair1;
 	pair1->nextPair = pair2;
 	pair1->previousPair = nullptr;
 	pair2->nextPair = pair3;
@@ -1043,7 +1046,7 @@ TEST(removeFromPriorityQueueList, lastInList)
 
 	tracker->pairRecord = pair3;
 
-	algP.removeFromPriorityQueueList(tracker, priorityQueue);
+	algP.removeFromPriorityQueueList(index, tracker, priorityQueue);
 
 	ASSERT_EQ(pair2, pair1->nextPair);
 	ASSERT_EQ(nullptr, pair1->previousPair);
@@ -1052,6 +1055,63 @@ TEST(removeFromPriorityQueueList, lastInList)
 	ASSERT_EQ(nullptr, pair2->nextPair);
 	ASSERT_EQ(pair1, priorityQueue[1]);
 }
+
+TEST(addToPriorityQueueList, emptyList)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = nullptr;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair1->count = 3;
+
+	tracker->pairRecord = pair1;
+
+	algP.addToPriorityQueueList(index, tracker, priorityQueue);
+
+	ASSERT_EQ(nullptr, pair1->nextPair);
+	ASSERT_EQ(nullptr, pair1->previousPair);
+	ASSERT_EQ(pair1, priorityQueue[1]);
+}
+
+TEST(addToPriorityQueueList, somethingInList)
+{
+	AlgorithmP algP;
+	vector<PairRecord*> priorityQueue(3);
+	int index = 1;
+
+	PairTracker * tracker = new PairTracker();
+
+	PairRecord * pair1 = new PairRecord();
+	PairRecord * pair2 = new PairRecord();
+
+	priorityQueue[index] = pair1;
+	pair1->nextPair = nullptr;
+	pair1->previousPair = nullptr;
+	pair2->nextPair = nullptr;
+	pair2->previousPair = nullptr;
+
+	pair1->count = 3;
+
+	tracker->pairRecord = pair1;
+
+	algP.addToPriorityQueueList(index, tracker, priorityQueue);
+
+	ASSERT_EQ(nullptr, pair1->nextPair);
+	ASSERT_EQ(nullptr, pair1->previousPair);
+	ASSERT_EQ(pair1, priorityQueue[1]);
+}
+
 TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)
 {
 	AlgorithmP algo;
@@ -1244,86 +1304,3 @@ TEST(findAllPairs, twoPairsAdjacent_oneNewPairMatches)
 	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
 }
 
-TEST(findAllPairs, fourPairsAdjacent)
-{
-	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
-	Conditions c;
-	long firstIndex = 2;
-
-	unsigned int symbol;
-	long index;
-
-	//Setup symbol records in sequence array: h i a b a b a b a b k l
-	//This gives 2 x iA, 1 x jA, 1 x Aj, 1 x Ai, 1 x Ak
-	symbol = 104;//h
-	index = 0;
-	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler1);
-
-	symbol = 105;//i
-	index = 1;
-	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler2);
-
-	symbol = 97;//a
-	index = 2;
-	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstfirst);
-
-	symbol = 98;//b
-	index = 3;
-	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstsecond);
-
-	symbol = 97;//a
-	index = 4;
-	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondfirst);
-
-	symbol = 98;//b
-	index = 5;
-	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondsecond);
-
-	symbol = 97;//a
-	index = 6;
-	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdfirst);
-
-	symbol = 98;//b
-	index = 7;
-	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdsecond);
-
-	symbol = 107;//k
-	index = 8;
-	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler3);
-
-	symbol = 108;//l
-	index = 9;
-	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler4);
-
-	//Thread pairs
-	firstfirst->next = secondfirst;
-	secondfirst->previous = firstfirst;
-	secondfirst->next = thirdfirst;
-	thirdfirst->previous = secondfirst;
-
-	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
-
-	ASSERT_TRUE(activePairs[65][65].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][65].pairRecord);
-
-	ASSERT_TRUE(activePairs[105][65].seenOnce);
-	ASSERT_EQ(NULL, activePairs[105][65].pairRecord);
-
-	ASSERT_TRUE(activePairs[65][107].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
-}

@@ -70,6 +70,7 @@ void AlgorithmP::updatePairRecord(
 }
 
 void AlgorithmP::removeFromPriorityQueueList(
+	long index,
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
@@ -82,7 +83,7 @@ void AlgorithmP::removeFromPriorityQueueList(
 	}
 	else if (tracker->pairRecord->nextPair)
 	{
-		priorityQueue[tracker->pairRecord->count - 2] = tracker->pairRecord->nextPair;
+		priorityQueue[index] = tracker->pairRecord->nextPair;
 		tracker->pairRecord->nextPair->previousPair = nullptr;		
 	}
 	else if (tracker->pairRecord->previousPair)
@@ -95,17 +96,21 @@ void AlgorithmP::removeFromPriorityQueueList(
 }
 
 void AlgorithmP::addToPriorityQueueList(
+	long index,
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
-	if (priorityQueue[tracker->pairRecord->count - 2])
+	if (index > priorityQueue.size() - 1)
+		index = priorityQueue.size() - 1;
+
+	if (priorityQueue[index])
 	{
 		tracker->pairRecord->nextPair =
-			priorityQueue[tracker->pairRecord->count - 2];
-		priorityQueue[tracker->pairRecord->count - 2]->previousPair =
+			priorityQueue[index];
+		priorityQueue[index]->previousPair =
 			tracker->pairRecord;		
 	}
-	priorityQueue[tracker->pairRecord->count - 2] =
+	priorityQueue[index] =
 		tracker->pairRecord;
 }
 
@@ -115,12 +120,18 @@ void AlgorithmP::moveDownInPriorityQueue(
 {
 	if (tracker->pairRecord->count == 2)
 	{
-		removeFromPriorityQueueList(tracker, priorityQueue);
+		removeFromPriorityQueueList(0, tracker, priorityQueue);
 	}
 	else if (tracker->pairRecord->count - 1 <= priorityQueue.size())
 	{
-		removeFromPriorityQueueList(tracker, priorityQueue);
-		addToPriorityQueueList(tracker, priorityQueue);
+		removeFromPriorityQueueList(
+			tracker->pairRecord->count - 2,
+			tracker, 
+			priorityQueue);
+		addToPriorityQueueList(
+			tracker->pairRecord->count - 3, 
+			tracker, 
+			priorityQueue);
 	}
 }
 
