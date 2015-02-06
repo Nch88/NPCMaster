@@ -461,3 +461,279 @@ TEST(establishContext, notAdjacentSymbolsLargeGaps)
 	ASSERT_EQ(12, indexSymbolRight);
 	ASSERT_EQ(18, indexSymbolNext);
 }
+
+TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+	long firstIndex = 2;
+
+	unsigned int symbol;
+	long index;
+
+	//Setup symbol records in sequence array: h i a b j a b i a b k l
+	//This gives 2 x iA, 1 x jA, 1 x Aj, 1 x Ai, 1 x Ak
+	symbol = 104;//h
+	index = 0;
+	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler1);
+
+	symbol = 105;//i
+	index = 1;
+	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler2);
+
+	symbol = 97;//a
+	index = 2;
+	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstfirst);
+
+	symbol = 98;//b
+	index = 3;
+	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstsecond);
+
+	symbol = 106;//j
+	index = 4;
+	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler3);
+
+	symbol = 97;//a
+	index = 5;
+	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondfirst);
+
+	symbol = 98;//b
+	index = 6;
+	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondsecond);
+
+	symbol = 105;//i
+	index = 7;
+	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler4);
+
+	symbol = 97;//a
+	index = 8;
+	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdfirst);
+
+	symbol = 98;//b
+	index = 9;
+	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdsecond);
+
+	symbol = 107;//k
+	index = 10;
+	SymbolRecord * filler5 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler5);
+
+	symbol = 108;//l
+	index = 11;
+	SymbolRecord * filler6 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler6);
+
+	//Thread pairs
+	firstfirst->next = secondfirst;
+	secondfirst->previous = firstfirst;
+	secondfirst->next = thirdfirst;
+	thirdfirst->previous = secondfirst;
+
+	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+
+	ASSERT_FALSE(activePairs[105][65].seenOnce);
+	ASSERT_TRUE(activePairs[105][65].pairRecord != NULL);
+
+	ASSERT_TRUE(activePairs[106][65].seenOnce);
+	ASSERT_EQ(NULL, activePairs[106][65].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][105].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][105].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][106].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][106].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][107].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
+}
+
+TEST(findAllPairs, twoPairsAdjacent_oneNewPairMatches)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+	long firstIndex = 2;
+
+	unsigned int symbol;
+	long index;
+
+	//Setup symbol records in sequence array: h i a b a b i a b k l
+	//This gives 2 x iA, 1 x AA, 1 x Ai, 1 x Ak
+	symbol = 104;//h
+	index = 0;
+	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler1);
+
+	symbol = 105;//i
+	index = 1;
+	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler2);
+
+	symbol = 97;//a
+	index = 2;
+	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstfirst);
+
+	symbol = 98;//b
+	index = 3;
+	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstsecond);
+
+	symbol = 97;//a
+	index = 4;
+	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondfirst);
+
+	symbol = 98;//b
+	index = 5;
+	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondsecond);
+
+	symbol = 105;//i
+	index = 6;
+	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler3);
+
+	symbol = 97;//a
+	index = 7;
+	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdfirst);
+
+	symbol = 98;//b
+	index = 8;
+	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdsecond);
+
+	symbol = 107;//k
+	index = 9;
+	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler4);
+
+	symbol = 108;//l
+	index = 10;
+	SymbolRecord * filler5 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler5);
+
+	//Thread pairs
+	firstfirst->next = secondfirst;
+	secondfirst->previous = firstfirst;
+	secondfirst->next = thirdfirst;
+	thirdfirst->previous = secondfirst;
+
+	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+
+	ASSERT_FALSE(activePairs[105][65].seenOnce);
+	ASSERT_TRUE(activePairs[105][65].pairRecord != NULL);
+
+	ASSERT_TRUE(activePairs[65][65].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][65].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][105].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][105].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][107].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
+}
+
+TEST(findAllPairs, fourPairsAdjacent)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+	long firstIndex = 2;
+
+	unsigned int symbol;
+	long index;
+
+	//Setup symbol records in sequence array: h i a b a b a b a b k l
+	//This gives 2 x iA, 1 x jA, 1 x Aj, 1 x Ai, 1 x Ak
+	symbol = 104;//h
+	index = 0;
+	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler1);
+
+	symbol = 105;//i
+	index = 1;
+	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler2);
+
+	symbol = 97;//a
+	index = 2;
+	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstfirst);
+
+	symbol = 98;//b
+	index = 3;
+	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(firstsecond);
+
+	symbol = 97;//a
+	index = 4;
+	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondfirst);
+
+	symbol = 98;//b
+	index = 5;
+	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(secondsecond);
+
+	symbol = 97;//a
+	index = 6;
+	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdfirst);
+
+	symbol = 98;//b
+	index = 7;
+	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(thirdsecond);
+
+	symbol = 107;//k
+	index = 8;
+	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler3);
+
+	symbol = 108;//l
+	index = 9;
+	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
+	sequenceArray.push_back(filler4);
+
+	//Thread pairs
+	firstfirst->next = secondfirst;
+	secondfirst->previous = firstfirst;
+	secondfirst->next = thirdfirst;
+	thirdfirst->previous = secondfirst;
+
+	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+
+	ASSERT_TRUE(activePairs[65][65].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][65].pairRecord);
+
+	ASSERT_TRUE(activePairs[105][65].seenOnce);
+	ASSERT_EQ(NULL, activePairs[105][65].pairRecord);
+
+	ASSERT_TRUE(activePairs[65][107].seenOnce);
+	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
+}
