@@ -21,15 +21,15 @@ void Huffman::getFrequencies(
 	}
 }
 
-bool Huffman::compareNode()
-{
-
-}
+//bool Huffman::compareNode()
+//{
+//
+//}
 
 void Huffman::encode(vector<SymbolRecord*> & sequenceArray)
 {
 	unordered_map<unsigned int, int> frequencies;
-	priority_queue<
+	//priority_queue<
 
-	getFrequencies(sequenceArray, frequencies);
+	//getFrequencies(sequenceArray, frequencies);
 }
