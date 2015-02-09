@@ -19,7 +19,7 @@
 #include <memory>
 #include <climits>
 #include <chrono>
-
+#include <queue>
 
 
 // TODO: reference additional headers your program requires here
@@ -35,3 +35,4 @@
 #include "Algorithm.h"
 #include "AlgorithmP.h"
 #include "Huffman.h"
+#include "HuffmanNode.h"
