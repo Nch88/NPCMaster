@@ -29,6 +29,9 @@ public:
 	void moveDownInPriorityQueue(
 		PairTracker *& tracker,
 		vector<PairRecord*>& priorityQueue);
+	void AlgorithmP::moveUpInPriorityQueue(
+		PairTracker *& tracker,
+		vector<PairRecord*>& priorityQueue);
 	void decrementCount(
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
@@ -50,6 +53,23 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,
+		Conditions& c);
+	void incrementCountLeft(
+		long & indexSymbolPrevious,
+		long & indexSymbolLeft,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		bool &skip,
+		Conditions& c);
+	void incrementCountRight(
+		long & indexSymbolLeft,
+		long & indexSymbolNext,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*>& priorityQueue, 
+		unsigned int & Symbols,
 		Conditions& c);
 	void threadEmptySymbols(
 		SymbolRecord *& leftSymbolRecord,
