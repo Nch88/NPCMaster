@@ -82,6 +82,7 @@
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AlgorithmP.h" />
     <ClInclude Include="Conditions.h" />
+    <ClInclude Include="Huffman.h" />
     <ClInclude Include="Initializer.h" />
     <ClInclude Include="MyTest.h" />
     <ClInclude Include="MyTimer.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="AlgorithmP.cpp" />
     <ClCompile Include="Conditions.cpp" />
+    <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="MyTest.cpp" />
     <ClCompile Include="MyTimer.cpp" />

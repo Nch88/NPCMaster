@@ -34,3 +34,4 @@
 #include "MyTest.h"
 #include "Algorithm.h"
 #include "AlgorithmP.h"
+#include "Huffman.h"
