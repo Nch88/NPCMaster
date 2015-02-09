@@ -8,6 +8,10 @@ public:
 	void removeSymbolThreadingPointers(
 		long & indexSymbolLeft,
 		vector<SymbolRecord*> & sequenceArray);
+	void AlgorithmP::deletePairRecord(
+		unsigned int & symbolLeft,
+		unsigned int & symbolRight,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs);
 	void updatePairRecord(
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
@@ -39,7 +43,6 @@ public:
 	void decrementCountLeft(
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
-		long & indexSymbolRight,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,
@@ -66,6 +69,20 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue, 
+		unsigned int & Symbols,
+		Conditions& c);
+	void threadEmptySymbols(
+		SymbolRecord *& leftSymbolRecord,
+		SymbolRecord *& rightSymbolRecord,
+		SymbolRecord *& nextSymbolRecord,
+		vector<SymbolRecord*> & sequenceArray);
+	void replacePair(
+		long & indexSymbolLeft,
+		long & indexSymbolRight,
+		long & indexSymbolNext,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
 		unsigned int & Symbols,
 		Conditions& c);
 	void replaceInstanceOfPair(

@@ -35,6 +35,17 @@ void AlgorithmP::removeSymbolThreadingPointers(
 	sequenceArray[indexSymbolLeft]->next = nullptr;
 }
 
+void AlgorithmP::deletePairRecord(
+	unsigned int & symbolLeft,
+	unsigned int & symbolRight,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+{
+	delete activePairs[symbolLeft][symbolRight].pairRecord;
+	activePairs[symbolLeft][symbolRight].pairRecord = nullptr;
+	activePairs[symbolLeft][symbolRight].seenOnce = false;
+	activePairs[symbolLeft][symbolRight].indexFirst = -1;
+}
+
 void AlgorithmP::updatePairRecord(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
@@ -44,15 +55,15 @@ void AlgorithmP::updatePairRecord(
 {
 	tracker->pairRecord->count--;
 
-	long symbolleft = sequenceArray[indexSymbolLeft]->symbol;
-	long symbolRight = sequenceArray[indexSymbolRight]->symbol;
+	unsigned int symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
+	unsigned int symbolRight = sequenceArray[indexSymbolRight]->symbol;
 
 	if (tracker->pairRecord->count < 2) //Delete pair record
 	{
-		delete activePairs[symbolleft][symbolRight].pairRecord;
-		activePairs[symbolleft][symbolRight].pairRecord = nullptr;
-		activePairs[symbolleft][symbolRight].seenOnce = false;
-		activePairs[symbolleft][symbolRight].indexFirst = -1;
+		deletePairRecord(
+			symbolLeft,
+			symbolRight,
+			activePairs);
 		tracker->pairRecord = nullptr;
 		tracker = nullptr;
 	}
@@ -163,9 +174,6 @@ void AlgorithmP::decrementCount(
 	PairTracker *& tracker,
 	Conditions& c)
 {
-	
-	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);
-
 	moveDownInPriorityQueue(tracker, priorityQueue);
 
 	updatePairRecord(
@@ -174,12 +182,13 @@ void AlgorithmP::decrementCount(
 		activePairs,
 		sequenceArray,
 		tracker);
+
+	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);	
 }
 
 void AlgorithmP::decrementCountLeft(
 	long & indexSymbolPrevious, 
 	long & indexSymbolLeft, 
-	long & indexSymbolRight,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
@@ -205,6 +214,11 @@ void AlgorithmP::decrementCountLeft(
 				tracker,
 				c);
 		}
+		else
+		{
+			tracker->seenOnce = false;
+			tracker->indexFirst = -1;
+		}
 	}
 }
 
@@ -216,7 +230,103 @@ void AlgorithmP::decrementCountRight(
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
 {
+	if (indexSymbolNext >= 0)
+	{
+		PairTracker * tracker;
+		tracker =
+			&activePairs[sequenceArray[indexSymbolRight]->symbol]
+			[sequenceArray[indexSymbolNext]->symbol];
 
+		if (tracker &&
+			tracker->pairRecord &&
+			(sequenceArray[indexSymbolRight]->next ||
+			sequenceArray[indexSymbolRight]->previous))
+		{
+			decrementCount(
+				indexSymbolRight,
+				indexSymbolNext,
+				activePairs,
+				sequenceArray,
+				priorityQueue,
+				tracker,
+				c);
+		}
+	}
+}
+
+void AlgorithmP::threadEmptySymbols(
+	SymbolRecord *& leftSymbolRecord,
+	SymbolRecord *& rightSymbolRecord,
+	SymbolRecord *& nextSymbolRecord,
+	vector<SymbolRecord*> & sequenceArray)
+{
+	SymbolRecord * firstEmptyRecord =
+		sequenceArray[leftSymbolRecord->index + 1];
+
+	firstEmptyRecord->previous = leftSymbolRecord;
+	firstEmptyRecord->next = nextSymbolRecord;
+
+	if (nextSymbolRecord &&
+		nextSymbolRecord->index - 1 != firstEmptyRecord->index)
+	{
+		SymbolRecord * lastEmptyRecord =
+			sequenceArray[nextSymbolRecord->index - 1];
+		lastEmptyRecord->previous = leftSymbolRecord;
+		lastEmptyRecord->next = nextSymbolRecord;
+	}
+}
+
+void AlgorithmP::replacePair(
+	long & indexSymbolLeft,
+	long & indexSymbolRight,
+	long & indexSymbolNext,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	SymbolRecord * leftSymbolRecord;
+	SymbolRecord * rightSymbolRecord;
+	SymbolRecord * nextSymbolRecord;
+	PairRecord * oldPair;
+
+	leftSymbolRecord = sequenceArray[indexSymbolLeft];
+	rightSymbolRecord = sequenceArray[indexSymbolRight];
+
+	oldPair = activePairs[leftSymbolRecord->symbol][rightSymbolRecord->symbol].pairRecord;
+	
+	oldPair->count--;
+
+	if (oldPair->count == 0)
+	{
+		deletePairRecord(
+			leftSymbolRecord->symbol,
+			rightSymbolRecord->symbol,
+			activePairs);
+	}
+
+	if (indexSymbolNext >= 0)
+		nextSymbolRecord = sequenceArray[indexSymbolNext];
+	else
+		nextSymbolRecord = nullptr;
+
+	Pair pairToReplace(
+		leftSymbolRecord->symbol, 
+		rightSymbolRecord->symbol);
+	
+	dictionary[Symbols] = pairToReplace;
+	leftSymbolRecord->symbol = Symbols;
+	rightSymbolRecord->symbol = 0;
+
+	threadEmptySymbols(
+		leftSymbolRecord,
+		rightSymbolRecord,
+		nextSymbolRecord,
+		sequenceArray);
+
+	leftSymbolRecord->next = nullptr;
+	leftSymbolRecord->previous = nullptr;
 }
 
 void AlgorithmP::incrementCountLeft(
@@ -354,16 +464,34 @@ void AlgorithmP::replaceInstanceOfPair(
 	unsigned int & Symbols,
 	Conditions& c)
 {
-	////Decrement count of xa
-	//decrementCountLeft()
-	//{
+	//Decrement count of xa
+	decrementCountLeft(
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
 
-	//}
-	////Decrement count of by
-	//decrementCountRight()
-	//{
+	//Decrement count of by
+	decrementCountRight(
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
 
-	//}
+	//Replace xaby with xA_y
+	replacePair(
+		indexSymbolLeft,
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		dictionary,
+		Symbols,
+		c);
 }
 
 void AlgorithmP::establishContext(
