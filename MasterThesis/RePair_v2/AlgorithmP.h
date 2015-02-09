@@ -61,7 +61,7 @@ public:
 		bool &skip,
 		Conditions& c);
 	void incrementCountRight(
-		long & indexSymbolRight,
+		long & indexSymbolLeft,
 		long & indexSymbolNext,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray,

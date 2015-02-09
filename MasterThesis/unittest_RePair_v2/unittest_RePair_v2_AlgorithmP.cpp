@@ -3,6 +3,15 @@
 
 using namespace std;
 
+void buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		SymbolRecord * p = new SymbolRecord(numbers[i], i);
+		sequenceArray.push_back(p);
+	}
+}
+
 TEST(establishContext, adjacentSymbolsPreviousAndNext)
 {
 	long indexSymbolLeft = -1;
@@ -1172,7 +1181,7 @@ TEST(moveDownInPriorityQueue, middleOfList)
 	ASSERT_EQ(nullptr, priorityQueue[index]);
 }
 
-TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)
+TEST(incrementCountLeft, firstTimeSeen)
 {
 	AlgorithmP algo;
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
@@ -1181,98 +1190,29 @@ TEST(findAllPairs, pairsNotAdjacent_oneNewPairMatches)
 	unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols = 65;
 	Conditions c;
-	long firstIndex = 2;
+
+	long previous = 0, left = 1;
+	bool skip = false;
 
 	unsigned int symbol;
 	long index;
 
-	//Setup symbol records in sequence array: h i a b j a b i a b k l
-	//This gives 2 x iA, 1 x jA, 1 x Aj, 1 x Ai, 1 x Ak
-	symbol = 104;//h
-	index = 0;
-	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler1);
+	long a[] = { 99, 65, 0, 100};
+	buildSequenceArray(sequenceArray, a, 4);
 
-	symbol = 105;//i
-	index = 1;
-	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler2);
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
-	symbol = 97;//a
-	index = 2;
-	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstfirst);
+	//Check that new pair was counted
+	ASSERT_TRUE(activePairs[99][65].seenOnce);
 
-	symbol = 98;//b
-	index = 3;
-	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstsecond);
+	//Check that no pair record was added
+	ASSERT_EQ(NULL, activePairs[99][65].pairRecord);
 
-	symbol = 106;//j
-	index = 4;
-	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler3);
-
-	symbol = 97;//a
-	index = 5;
-	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondfirst);
-
-	symbol = 98;//b
-	index = 6;
-	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondsecond);
-
-	symbol = 105;//i
-	index = 7;
-	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler4);
-
-	symbol = 97;//a
-	index = 8;
-	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdfirst);
-
-	symbol = 98;//b
-	index = 9;
-	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdsecond);
-
-	symbol = 107;//k
-	index = 10;
-	SymbolRecord * filler5 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler5);
-
-	symbol = 108;//l
-	index = 11;
-	SymbolRecord * filler6 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler6);
-
-	//Thread pairs
-	firstfirst->next = secondfirst;
-	secondfirst->previous = firstfirst;
-	secondfirst->next = thirdfirst;
-	thirdfirst->previous = secondfirst;
-
-	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
-
-	ASSERT_FALSE(activePairs[105][65].seenOnce);
-	ASSERT_TRUE(activePairs[105][65].pairRecord != NULL);
-
-	ASSERT_TRUE(activePairs[106][65].seenOnce);
-	ASSERT_EQ(NULL, activePairs[106][65].pairRecord);
-
-	ASSERT_TRUE(activePairs[65][105].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][105].pairRecord);
-
-	ASSERT_TRUE(activePairs[65][106].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][106].pairRecord);
-
-	ASSERT_TRUE(activePairs[65][107].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
+	//Check that index of first occurrence is set
+	ASSERT_TRUE(activePairs[99][65].indexFirst = 1);
 }
 
-TEST(findAllPairs, twoPairsAdjacent_oneNewPairMatches)
+TEST(incrementCountRight, firstTimeSeen)
 {
 	AlgorithmP algo;
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
@@ -1281,86 +1221,263 @@ TEST(findAllPairs, twoPairsAdjacent_oneNewPairMatches)
 	unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols = 65;
 	Conditions c;
-	long firstIndex = 2;
+
+	long left = 1, next = 3;
 
 	unsigned int symbol;
 	long index;
 
-	//Setup symbol records in sequence array: h i a b a b i a b k l
-	//This gives 2 x iA, 1 x AA, 1 x Ai, 1 x Ak
-	symbol = 104;//h
-	index = 0;
-	SymbolRecord * filler1 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler1);
+	long a[] = { 99, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 4);
 
-	symbol = 105;//i
-	index = 1;
-	SymbolRecord * filler2 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler2);
+	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
 
-	symbol = 97;//a
-	index = 2;
-	SymbolRecord * firstfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstfirst);
+	//Check that new pair was counted
+	ASSERT_TRUE(activePairs[65][100].seenOnce);
 
-	symbol = 98;//b
-	index = 3;
-	SymbolRecord * firstsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(firstsecond);
+	//Check that no pair record was added
+	ASSERT_EQ(NULL, activePairs[65][100].pairRecord);
 
-	symbol = 97;//a
-	index = 4;
-	SymbolRecord * secondfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondfirst);
+	//Check that index of first occurrence is set
+	ASSERT_TRUE(activePairs[65][100].indexFirst = 1);
+}
 
-	symbol = 98;//b
-	index = 5;
-	SymbolRecord * secondsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(secondsecond);
+TEST(incrementCountLeft, secondTimeSeen)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue(2);
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
 
-	symbol = 105;//i
-	index = 6;
-	SymbolRecord * filler3 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler3);
+	long previous = 3, left = 4;
+	bool skip = false;
 
-	symbol = 97;//a
-	index = 7;
-	SymbolRecord * thirdfirst = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdfirst);
+	unsigned int symbol;
+	long index;
 
-	symbol = 98;//b
-	index = 8;
-	SymbolRecord * thirdsecond = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(thirdsecond);
+	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 7);
 
-	symbol = 107;//k
-	index = 9;
-	SymbolRecord * filler4 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler4);
+	activePairs[99][65].seenOnce = true;
+	activePairs[99][65].indexFirst = 0;
 
-	symbol = 108;//l
-	index = 10;
-	SymbolRecord * filler5 = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(filler5);
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
-	//Thread pairs
-	firstfirst->next = secondfirst;
-	secondfirst->previous = firstfirst;
-	secondfirst->next = thirdfirst;
-	thirdfirst->previous = secondfirst;
+	//Check that seenOnce was reset
+	ASSERT_FALSE(activePairs[99][65].seenOnce);
 
-	algo.findAllPairs(firstIndex, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+	//Check that a pair record was added
+	ASSERT_TRUE(NULL != activePairs[99][65].pairRecord);
 
-	ASSERT_FALSE(activePairs[105][65].seenOnce);
-	ASSERT_TRUE(activePairs[105][65].pairRecord != NULL);
+	//Check that index of first occurrence is not reset
+	ASSERT_TRUE(activePairs[99][65].indexFirst = 1);
 
-	ASSERT_TRUE(activePairs[65][65].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][65].pairRecord);
+	//Check that threading pointers are correctly set
+	ASSERT_TRUE(sequenceArray[0]->next == sequenceArray[3]);
+	ASSERT_TRUE(sequenceArray[3]->previous == sequenceArray[0]);
 
-	ASSERT_TRUE(activePairs[65][105].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][105].pairRecord);
+	//Check entry in priority queue
+	ASSERT_TRUE(priorityQueue[0]->count == 2);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexFirst == 0);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexLast == 3);
+}
 
-	ASSERT_TRUE(activePairs[65][107].seenOnce);
-	ASSERT_EQ(NULL, activePairs[65][107].pairRecord);
+TEST(incrementCountRight, secondTimeSeen)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue(2);
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+
+	long left = 4, next = 6;
+
+	unsigned int symbol;
+	long index;
+
+	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 7);
+
+	activePairs[65][100].seenOnce = true;
+	activePairs[65][100].indexFirst = 1;
+
+	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
+
+	//Check that seenOnce was reset
+	ASSERT_FALSE(activePairs[65][100].seenOnce);
+
+	//Check that a pair record was added
+	ASSERT_TRUE(NULL != activePairs[65][100].pairRecord);
+
+	//Check that index of first occurrence is not reset
+	ASSERT_TRUE(activePairs[65][100].indexFirst = 1);
+
+	//Check that threading pointers are correctly set
+	ASSERT_TRUE(sequenceArray[1]->next == sequenceArray[4]);
+	ASSERT_TRUE(sequenceArray[4]->previous == sequenceArray[1]);
+
+	//Check entry in priority queue
+	ASSERT_TRUE(priorityQueue[0]->count == 2);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexFirst == 1);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexLast == 4);
+}
+
+TEST(incrementCountLeft, thirdTimeSeen)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue(2);
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+
+	long previous = 6, left = 7;
+	bool skip = false;
+
+	unsigned int symbol;
+	long index;
+
+	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 10);
+
+	activePairs[99][65].seenOnce = false;
+	activePairs[99][65].indexFirst = 0;
+	activePairs[99][65].pairRecord = new PairRecord(0, 3);
+	activePairs[99][65].pairRecord->count = 2;
+
+	PairTracker* tracker = &activePairs[99][65];
+	algo.addToPriorityQueueList(0, tracker, priorityQueue);
+
+	sequenceArray[0]->next = sequenceArray[3];
+	sequenceArray[3]->previous = sequenceArray[0];
+
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+
+	//Check that seenOnce was reset
+	ASSERT_FALSE(activePairs[99][65].seenOnce);
+
+	//Check that a pair record was added
+	ASSERT_TRUE(NULL != activePairs[99][65].pairRecord);
+
+	//Check that index of first occurrence is not reset
+	ASSERT_TRUE(activePairs[99][65].indexFirst = 1);
+
+	//Check that threading pointers are correctly set
+	ASSERT_TRUE(sequenceArray[3]->next == sequenceArray[6]);
+	ASSERT_TRUE(sequenceArray[6]->previous == sequenceArray[3]);
+
+	//Check entry in priority queue
+	ASSERT_TRUE(priorityQueue[0] == nullptr);
+
+	ASSERT_TRUE(priorityQueue[1]->count == 3);
+	ASSERT_TRUE(priorityQueue[1]->arrayIndexFirst == 0);
+	ASSERT_TRUE(priorityQueue[1]->arrayIndexLast == 6);
+}
+
+TEST(incrementCountRight, thirdTimeSeen)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue(2);
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+
+	long left = 7, next = 9;
+	bool skip = false;
+
+	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 10);
+
+	activePairs[65][100].seenOnce = false;
+	activePairs[65][100].indexFirst = 0;
+	activePairs[65][100].pairRecord = new PairRecord(1, 4);
+	activePairs[65][100].pairRecord->count = 2;
+
+	PairTracker* tracker = &activePairs[65][100];
+	algo.addToPriorityQueueList(0, tracker, priorityQueue);
+
+	sequenceArray[1]->next = sequenceArray[4];
+	sequenceArray[4]->previous = sequenceArray[1];
+
+	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
+
+	//Check that seenOnce was reset
+	ASSERT_FALSE(activePairs[65][100].seenOnce);
+
+	//Check that a pair record was added
+	ASSERT_TRUE(NULL != activePairs[65][100].pairRecord);
+
+	//Check that index of first occurrence is not reset
+	ASSERT_TRUE(activePairs[65][100].indexFirst = 1);
+
+	//Check that threading pointers are correctly set
+	ASSERT_TRUE(sequenceArray[4]->next == sequenceArray[7]);
+	ASSERT_TRUE(sequenceArray[7]->previous == sequenceArray[4]);
+
+	//Check entry in priority queue
+	ASSERT_TRUE(priorityQueue[0] == nullptr);
+
+	ASSERT_TRUE(priorityQueue[1]->count == 3);
+	ASSERT_TRUE(priorityQueue[1]->arrayIndexFirst == 1);
+	ASSERT_TRUE(priorityQueue[1]->arrayIndexLast == 7);
+}
+
+TEST(incrementCountLeft, skipTest)
+{
+	AlgorithmP algo;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue(5);
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols = 65;
+	Conditions c;
+
+	bool skip = false;
+
+	unsigned int symbol;
+	long index;
+
+	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
+	buildSequenceArray(sequenceArray, a, 10);
+
+	long previous = 0, left = 1;
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+	ASSERT_FALSE(skip);
+	previous = 1; left = 3;
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+	ASSERT_TRUE(skip);
+	previous = 3; left = 5;
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+	ASSERT_FALSE(skip);
+	previous = 5; left = 7;
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+	ASSERT_TRUE(skip);
+	previous = 7; left = 9;
+	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+
+	//Check that seenOnce was set for cA
+	ASSERT_TRUE(activePairs[99][65].seenOnce);
+
+	//Check that a pair record was added for AA
+	ASSERT_FALSE(activePairs[65][65].seenOnce);
+	ASSERT_TRUE(NULL != activePairs[65][65].pairRecord);
+
+	//Check that threading pointers are correctly set
+	ASSERT_TRUE(sequenceArray[1]->next == sequenceArray[5]);
+	ASSERT_TRUE(sequenceArray[3]->next == NULL);
+	ASSERT_TRUE(sequenceArray[5]->previous == sequenceArray[1]);
+
+	//Check entry in priority queue
+	ASSERT_TRUE(priorityQueue[0]->count == 2);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexFirst == 1);
+	ASSERT_TRUE(priorityQueue[0]->arrayIndexLast == 5);
 }
 
