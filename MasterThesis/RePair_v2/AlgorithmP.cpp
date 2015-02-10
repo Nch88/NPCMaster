@@ -645,3 +645,181 @@ void AlgorithmP::replaceAllPairs(
 		
 	} while (nextSymbol);
 }
+
+void AlgorithmP::newSymbol(unsigned int & Symbols)
+{
+	if (Symbols == UINT_MAX - 1)
+	{
+		cout << "Ran out of symbols, aborting compression" << endl;
+		exit;
+	}
+	Symbols++;
+}
+
+void AlgorithmP::manageOneEntryOnList(
+	long i,
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	PairRecord * tmpPairRecord;
+	long sequenceIndex;
+
+	tmpPairRecord = priorityQueue[i];
+	sequenceIndex = tmpPairRecord->arrayIndexFirst;
+
+	//Remove current pair from priority queue
+	if (tmpPairRecord->nextPair)
+	{
+		priorityQueue[i] = tmpPairRecord->nextPair;
+		priorityQueue[i]->previousPair = nullptr;
+	}
+	else
+		priorityQueue[i] = nullptr;
+	tmpPairRecord->previousPair = nullptr;
+	tmpPairRecord->nextPair = nullptr;
+
+	//Pick new symbol
+	newSymbol(Symbols);
+
+	replaceAllPairs(
+		sequenceIndex,
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		Symbols,
+		c);
+}
+
+void AlgorithmP::manageOneList(
+	long i,
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	while (priorityQueue[i])
+	{
+		manageOneEntryOnList(
+			i,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			Symbols,
+			c);
+	}
+}
+
+void AlgorithmP::manageLowerPriorityLists(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	{		
+		manageOneList(
+			i,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			Symbols,
+			c);
+	}
+}
+
+void AlgorithmP::manageHighPriorityList(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	PairRecord * tmpPairRecord;
+	PairRecord * tmpPairRecordSelected;
+	long sequenceIndex = 0;
+	long last = priorityQueue.size() - 1;
+
+	while (priorityQueue[last])
+	{
+		tmpPairRecordSelected = priorityQueue[last];
+		tmpPairRecord = priorityQueue[last];
+
+		//Find pair with most occurences
+		while (tmpPairRecord->nextPair)
+		{
+			tmpPairRecord = tmpPairRecord->nextPair;
+			if (tmpPairRecord->count > tmpPairRecordSelected->count)
+				tmpPairRecordSelected = tmpPairRecord;
+		}
+		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+
+		//Remove current pair from priority queue
+		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
+			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
+		}
+		else if (tmpPairRecordSelected->previousPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = nullptr;
+		}
+		else if (tmpPairRecordSelected->nextPair)
+		{
+			priorityQueue[last] = tmpPairRecordSelected->nextPair;
+			priorityQueue[last]->previousPair = nullptr;
+		}
+		else
+			priorityQueue[last] = nullptr;
+		tmpPairRecordSelected->previousPair = nullptr;
+		tmpPairRecordSelected->nextPair = nullptr;
+
+		//Pick new symbol
+		newSymbol(Symbols);
+
+		replaceAllPairs(
+			sequenceIndex,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			Symbols,
+			c);
+	}
+}
+
+void AlgorithmP::run(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	manageHighPriorityList(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		Symbols,
+		c);
+
+	manageLowerPriorityLists(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		Symbols,
+		c);
+}

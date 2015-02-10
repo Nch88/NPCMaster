@@ -86,6 +86,7 @@
     <ClCompile Include="..\RePair_v2\AlgorithmP.cpp" />
     <ClCompile Include="..\RePair_v2\Conditions.cpp" />
     <ClCompile Include="..\RePair_v2\Initializer.cpp" />
+    <ClCompile Include="..\RePair_v2\MyTest.cpp" />
     <ClCompile Include="..\RePair_v2\MyTimer.cpp" />
     <ClCompile Include="..\RePair_v2\Pair.cpp" />
     <ClCompile Include="..\RePair_v2\PairRecord.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="..\RePair_v2\AlgorithmP.h" />
     <ClInclude Include="..\RePair_v2\Conditions.h" />
     <ClInclude Include="..\RePair_v2\Initializer.h" />
+    <ClInclude Include="..\RePair_v2\MyTest.h" />
     <ClInclude Include="..\RePair_v2\MyTimer.h" />
     <ClInclude Include="..\RePair_v2\Pair.h" />
     <ClInclude Include="..\RePair_v2\PairRecord.h" />

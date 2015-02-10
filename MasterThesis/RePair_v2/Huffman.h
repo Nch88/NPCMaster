@@ -1,5 +1,23 @@
 #include "stdafx.h"
 #pragma once
+
+class compareNodes
+{
+	bool reverse;
+public:
+	compareNodes(const bool& revparam = false)
+	{
+		reverse = revparam;
+	}
+	bool operator() (const HuffmanNode& leftnode, const HuffmanNode& rightnode) const
+	{
+		if (reverse)
+			return (leftnode.frequency > rightnode.frequency);
+		else
+			return (leftnode.frequency < rightnode.frequency);
+	}
+};
+
 class Huffman
 {
 public:
@@ -15,19 +33,3 @@ public:
 	void encode(vector<SymbolRecord*> & sequenceArray);
 };
 
-class compareNodes
-{
-	bool reverse;
-	public:
-	compareNodes(const bool& revparam = false)
-	{
-		reverse = revparam;
-	}
-	bool operator() (const HuffmanNode& leftnode, const HuffmanNode& rightnode) const
-	{
-		if (reverse) 
-			return (leftnode.frequency > rightnode.frequency);
-		else 
-			return (leftnode.frequency < rightnode.frequency);
-	}
-};
