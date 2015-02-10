@@ -93,6 +93,7 @@
     <ClCompile Include="..\RePair_v2\PairTracker.cpp" />
     <ClCompile Include="..\RePair_v2\SymbolRecord.cpp" />
     <ClCompile Include="unittest_RePair_v2_AlgorithmP.cpp" />
+    <ClCompile Include="unittest_RePair_v2_AlgorithmP_Nicolai.cpp" />
     <ClCompile Include="unittest_RePair_v2_Initializer.cpp" />
   </ItemGroup>
   <ItemGroup>

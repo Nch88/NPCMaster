@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 	unsigned int symbols(256);
 
 	Algorithm algorithm;
+	AlgorithmP algP;
 	Initializer init;
 	Conditions c;
 	c.timing = false;
@@ -43,11 +44,14 @@ int main(int argc, char* argv[])
 			file,
 			c,
 			init,
+			algP,
 			t,
 			blockSize,
 			activePairs,
 			sequenceArray,
-			priorityQueue);
+			priorityQueue,
+			dictionary,
+			symbols);
 	}
 	else
 	{

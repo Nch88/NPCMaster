@@ -32,7 +32,7 @@
 #include "Initializer.h"
 #include "Outputter.h"
 #include "MyTest.h"
-#include "Algorithm.h"
 #include "AlgorithmP.h"
+#include "Algorithm.h"
 #include "HuffmanNode.h"
 #include "Huffman.h"

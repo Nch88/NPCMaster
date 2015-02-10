@@ -342,7 +342,7 @@ void AlgorithmP::incrementCountLeft(
 	unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
 	//Check if we need to skip
-	if (!symbolPrevious == Symbols)
+	if (symbolPrevious != Symbols)
 		skip = false;
 
 	if (!skip && indexSymbolPrevious > -1)
@@ -553,53 +553,6 @@ void AlgorithmP::establishContext(
 	}
 }
 
-void AlgorithmP::establishContext(
-	long & indexSymbolLeft,
-	long & indexSymbolRight,
-	long & indexSymbolBeforePrevious,
-	long & indexSymbolPrevious,
-	long & indexSymbolNext,
-	long sequenceIndex,
-	vector<SymbolRecord*> & sequenceArray)
-{
-	indexSymbolLeft = sequenceIndex;
-
-	//Right
-	indexSymbolRight = sequenceArray[sequenceIndex + 1]->index;
-
-	if (sequenceArray[indexSymbolRight]->symbol == 0)
-	{
-		indexSymbolRight = sequenceArray[indexSymbolRight]->next->index;
-	}
-
-	//Previous
-	if (sequenceIndex > 0)
-	{
-		if (sequenceArray[indexSymbolLeft - 1]->symbol != 0)
-			indexSymbolPrevious = sequenceArray[indexSymbolLeft - 1]->index;
-		else
-			indexSymbolPrevious = sequenceArray[indexSymbolLeft - 1]->previous->index;
-	}
-
-	//BeforePrevious
-	if (indexSymbolPrevious > 0)
-	{
-		if (sequenceArray[indexSymbolPrevious - 1]->symbol != 0)
-			indexSymbolBeforePrevious = sequenceArray[indexSymbolPrevious - 1]->index;
-		else
-			indexSymbolBeforePrevious = sequenceArray[indexSymbolPrevious - 1]->previous->index;
-	}
-
-	//Next
-	if (indexSymbolRight < sequenceArray.size() - 1)
-	{
-		if (sequenceArray[indexSymbolRight + 1]->symbol != 0)
-			indexSymbolNext = sequenceArray[indexSymbolRight + 1]->index;
-		else if (sequenceArray[indexSymbolRight + 1]->next)
-			indexSymbolNext = sequenceArray[indexSymbolRight + 1]->next->index;
-	}
-}
-
 void AlgorithmP::replaceAllPairs(
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
@@ -615,7 +568,7 @@ void AlgorithmP::replaceAllPairs(
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
-	bool skip;
+	bool skip = false;
 
 	do
 	{
@@ -681,10 +634,7 @@ void AlgorithmP::manageOneEntryOnList(
 		priorityQueue[i] = nullptr;
 	tmpPairRecord->previousPair = nullptr;
 	tmpPairRecord->nextPair = nullptr;
-
-	//Pick new symbol
-	newSymbol(Symbols);
-
+	
 	replaceAllPairs(
 		sequenceIndex,
 		sequenceArray,
@@ -693,6 +643,9 @@ void AlgorithmP::manageOneEntryOnList(
 		priorityQueue,
 		Symbols,
 		c);
+
+	//Pick new symbol
+	newSymbol(Symbols);
 }
 
 void AlgorithmP::manageOneList(

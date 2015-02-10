@@ -17,11 +17,14 @@ int Algorithm::run(
 	ifstream & file,
 	Conditions c,
 	Initializer init,
+	AlgorithmP algP,
 	MyTimer t,
 	int blockSize,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*> & priorityQueue)
+	vector<PairRecord*> & priorityQueue,
+	unordered_map<unsigned int, Pair> & dictionary,
+	unsigned int & symbols)
 {
 	int priorityQueueSize;
 	cout << "Compressing file: " << filename << endl;
@@ -47,6 +50,15 @@ int Algorithm::run(
 		priorityQueueSize = sqrt(sequenceArray.size());
 		priorityQueue.resize(priorityQueueSize);
 		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+		algP.run(
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			symbols,
+			c);
+
 		if (c.timing)
 		{
 			t.start();
@@ -64,6 +76,6 @@ int Algorithm::run(
 		}
 	}
 	cout << "Completed compression of file: " << filename << endl;
-	//init.resetCompleted(activePairs, sequenceArray, blockSize);
+	
 	return 0;
 }
