@@ -11,15 +11,36 @@ MyTest::~MyTest()
 {
 }
 
-string MyTest::SequenceToString(vector<SymbolRecord>& sequenceArray)
+void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, char input[], int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		long number = (long)input[i];
+		SymbolRecord * p = new SymbolRecord(number, i);
+		sequence.push_back(p);
+	}
+}
+
+string MyTest::SequenceToCompleteString(vector<SymbolRecord*> & sequenceArray)
+{
+	string s;
+
+	for (int i = 0; i < sequenceArray.size(); i++)
+	{
+		s += (char)sequenceArray[i]->symbol;
+	}
+	return s;
+}
+
+string MyTest::SequenceToString(vector<SymbolRecord*> & sequenceArray)
 {
 	//Test
 	string s;
 
 	for (int i = 0; i < sequenceArray.size(); i++)
 	{
-		if (sequenceArray[i].symbol != (char)0)
-			s += (char)sequenceArray[i].symbol;
+		if (sequenceArray[i]->symbol != (char)0)
+			s += (char)sequenceArray[i]->symbol;
 	}
 	return s;
 	//End Test

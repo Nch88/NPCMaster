@@ -462,6 +462,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unsigned int & Symbols,
+	bool& skip,
 	Conditions& c)
 {
 	//Decrement count of xa
@@ -491,6 +492,27 @@ void AlgorithmP::replaceInstanceOfPair(
 		sequenceArray,
 		dictionary,
 		Symbols,
+		c);
+
+	//Increment count of xA
+	incrementCountLeft(
+		indexSymbolPrevious, 
+		indexSymbolLeft, 
+		activePairs, 
+		sequenceArray, 
+		priorityQueue, 
+		Symbols, 
+		skip, 
+		c);
+
+	//Increment count of Ay
+	incrementCountRight(
+		indexSymbolLeft, 
+		indexSymbolNext, 
+		activePairs, 
+		sequenceArray, 
+		priorityQueue, 
+		Symbols, 
 		c);
 }
 
@@ -592,9 +614,8 @@ void AlgorithmP::replaceAllPairs(
 	long indexSymbolPrevious = -1;
 	long indexSymbolNext = -1;
 
-	
-
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+	bool skip;
 
 	do
 	{
@@ -607,7 +628,20 @@ void AlgorithmP::replaceAllPairs(
 			indexSymbolPrevious,
 			indexSymbolNext,
 			sequenceIndex,
-			sequenceArray);		
+			sequenceArray);	
+
+		replaceInstanceOfPair(
+			indexSymbolLeft,
+			indexSymbolRight,
+			indexSymbolPrevious,
+			indexSymbolNext,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			Symbols,
+			skip,
+			c);
 		
 	} while (nextSymbol);
 }

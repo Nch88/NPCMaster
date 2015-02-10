@@ -2395,6 +2395,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	unsigned int symbol;
 	long index;
 
+	bool skip = false;
+
 	//Setup symbol records in sequence array
 	symbol = 1;
 	index = 0;
@@ -2466,6 +2468,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 		activePairs,
 		priorityQueue,
 		symbols,
+		skip,
 		c);
 
 	ASSERT_EQ(symbols, scdPairLeft->symbol);
@@ -2492,6 +2495,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	AlgorithmP algP;
 
 	string input1 = "diddy.txt";
+
+	bool skip = false;
 
 	int priorityQueueSize;
 	int blockSize;
@@ -2563,6 +2568,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 		activePairs,
 		priorityQueue,
 		symbols,
+		skip,
 		c);
 
 	left = false;
@@ -2595,4 +2601,48 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	ASSERT_EQ(sequenceArray[indexSymbolNext], sequenceArray[indexSymbolNext - 1]->next);
 	ASSERT_EQ(sequenceArray[indexSymbolLeft], sequenceArray[indexSymbolNext - 1]->previous);
 	ASSERT_EQ(0, sequenceArray[indexSymbolNext - 1]->symbol);
+}
+
+TEST(replaceAllInstancesOfPair, diddy)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+
+	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '\0', 'o', '.', 'w', 'a', 'h', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'u', 'm', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'o'};
+
+	MyTest mytest;
+	string result = mytest.SequenceToCompleteString(sequenceArray);
+
+	ASSERT_EQ(expected, result);	
 }

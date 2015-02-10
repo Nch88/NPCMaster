@@ -95,6 +95,7 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
+		bool& skip,
 		Conditions& c);
 	void establishContext(
 		long & indexSymbolLeft,
@@ -111,14 +112,6 @@ public:
 		long & indexSymbolNext,
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray);
-	void findAllPairs(
-		long sequenceIndex,
-		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
-		unsigned int& Symbols,
-		Conditions& c);
 	void replaceAllPairs(
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray,
