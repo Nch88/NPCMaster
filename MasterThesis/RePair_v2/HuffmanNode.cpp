@@ -4,11 +4,29 @@
 
 HuffmanNode::HuffmanNode()
 {
+	this->symbol = 0;
+	this->frequency = 0;
+	this->leftChild = nullptr;
+	this->rightChild = nullptr;
 }
 
-HuffmanNode::HuffmanNode(unsigned int symbol, int frequncy)
+HuffmanNode::HuffmanNode(unsigned int symbol, int frequency)
 {
-
+	this->symbol = symbol;
+	this->frequency = frequency;
+	this->leftChild = nullptr;
+	this->rightChild = nullptr;
+}
+HuffmanNode::HuffmanNode(
+	unsigned int symbol,
+	int frequency,
+	HuffmanNode *& leftChild,
+	HuffmanNode *& rightChild)
+{
+	this->symbol = symbol;
+	this->frequency = frequency;
+	this->leftChild = leftChild;
+	this->rightChild = rightChild;
 }
 
 HuffmanNode::~HuffmanNode()
