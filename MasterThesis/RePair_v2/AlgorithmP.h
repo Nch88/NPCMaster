@@ -120,7 +120,43 @@ public:
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
 		Conditions& c);
-
-
+	void AlgorithmP::newSymbol(unsigned int & Symbols);
+	void AlgorithmP::manageOneEntryOnList(
+		long i,
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
+	void AlgorithmP::manageOneList(
+		long i,
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
+	void AlgorithmP::manageLowerPriorityLists(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
+	void AlgorithmP::manageHighPriorityList(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
+	void AlgorithmP::run(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unsigned int & Symbols,
+		Conditions& c);
 };
 
