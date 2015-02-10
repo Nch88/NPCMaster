@@ -11,6 +11,15 @@ MyTest::~MyTest()
 {
 }
 
+void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		SymbolRecord * p = new SymbolRecord(numbers[i], i);
+		sequenceArray.push_back(p);
+	}
+}
+
 void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, char input[], int size)
 {
 	for (int i = 0; i < size; i++)

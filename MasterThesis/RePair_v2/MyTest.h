@@ -5,6 +5,7 @@ public:
 	MyTest();
 	~MyTest();
 
+	void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count);
 	void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, char input[], int size);
 	string MyTest::SequenceToString(vector<SymbolRecord*> & sequenceArray);
 	string MyTest::SequenceToCompleteString(vector<SymbolRecord*> & sequenceArray);
