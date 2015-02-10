@@ -3,14 +3,7 @@
 
 using namespace std;
 
-void buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count)
-{
-	for (int i = 0; i < count; i++)
-	{
-		SymbolRecord * p = new SymbolRecord(numbers[i], i);
-		sequenceArray.push_back(p);
-	}
-}
+MyTest mytest;
 
 TEST(establishContext, adjacentSymbolsPreviousAndNext)
 {
@@ -1171,7 +1164,7 @@ TEST(incrementCountLeft, firstTimeSeen)
 	long index;
 
 	long a[] = { 99, 65, 0, 100};
-	buildSequenceArray(sequenceArray, a, 4);
+	mytest.buildSequenceArray(sequenceArray, a, 4);
 
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
@@ -1201,7 +1194,7 @@ TEST(incrementCountRight, firstTimeSeen)
 	long index;
 
 	long a[] = { 99, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 4);
+	mytest.buildSequenceArray(sequenceArray, a, 4);
 
 	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
 
@@ -1232,7 +1225,7 @@ TEST(incrementCountLeft, secondTimeSeen)
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 7);
+	mytest.buildSequenceArray(sequenceArray, a, 7);
 
 	activePairs[99][65].seenOnce = true;
 	activePairs[99][65].indexFirst = 0;
@@ -1274,7 +1267,7 @@ TEST(incrementCountRight, secondTimeSeen)
 	long index;
 
 	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 7);
+	mytest.buildSequenceArray(sequenceArray, a, 7);
 
 	activePairs[65][100].seenOnce = true;
 	activePairs[65][100].indexFirst = 1;
@@ -1317,7 +1310,7 @@ TEST(incrementCountLeft, thirdTimeSeen)
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 10);
+	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 	activePairs[99][65].seenOnce = false;
 	activePairs[99][65].indexFirst = 0;
@@ -1367,7 +1360,7 @@ TEST(incrementCountRight, thirdTimeSeen)
 	bool skip = false;
 
 	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 10);
+	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 	activePairs[65][100].seenOnce = false;
 	activePairs[65][100].indexFirst = 0;
@@ -1419,7 +1412,7 @@ TEST(incrementCountLeft, skipTest)
 	long index;
 
 	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
-	buildSequenceArray(sequenceArray, a, 10);
+	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 	long previous = 0, left = 1;
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
