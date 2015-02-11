@@ -75,6 +75,8 @@ void Initializer::resetForNextBlock(
 		for each (auto rightSymbol in leftSymbol.second)
 		{
 			delete rightSymbol.second.pairRecord;
+			rightSymbol.second.indexFirst = -1;
+			rightSymbol.second.seenOnce = false;
 		}
 	}
 	activePairs.clear();
@@ -175,11 +177,11 @@ int Initializer::SequenceArray(
 	bool skippedPair = false;
 	MyTimer t;
 	c.timing = false;
-	if (file >> noskipws >> previousSymbol)
+	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
 		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount);
 
-		if (file >> noskipws >> leftSymbol)
+		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
 			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount);
 			
@@ -191,7 +193,7 @@ int Initializer::SequenceArray(
 				sequenceArray);
 			
 		}
-		while (symbolCount < blockSize && file >> noskipws >> rightSymbol)
+		while (symbolCount < blockSize && file >> noskipws >> rightSymbol && rightSymbol)
 		{
 			if (c.timing)
 			{

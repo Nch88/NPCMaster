@@ -67,3 +67,43 @@ void MyTest::ActivePairs(string msg, unordered_map<unsigned int, unordered_map<u
 	}
 	cout << endl << endl;
 }
+
+bool MyTest::inPriorityQueue(
+	PairRecord * pairRecord,
+	vector<PairRecord*> & priorityQueue)
+{
+	PairRecord * tmpPairRecord;
+
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		tmpPairRecord = priorityQueue[i];
+
+		while (tmpPairRecord)
+		{
+			if (pairRecord == tmpPairRecord)
+				return true;
+			tmpPairRecord = tmpPairRecord->nextPair;
+		}
+	}
+	return false;
+}
+
+bool MyTest::inPriorityQueueAtPosition(
+	PairRecord * pairRecord,
+	vector<PairRecord*> & priorityQueue,
+	long index)
+{
+	PairRecord * tmpPairRecord;
+
+	
+	tmpPairRecord = priorityQueue[index];
+
+	while (tmpPairRecord)
+	{
+		if (pairRecord == tmpPairRecord)
+			return true;
+		tmpPairRecord = tmpPairRecord->nextPair;
+	}
+	
+	return false;
+}

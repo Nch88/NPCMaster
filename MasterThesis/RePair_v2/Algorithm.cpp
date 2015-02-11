@@ -69,6 +69,7 @@ int Algorithm::run(
 			cout << "Resetting for next block" << endl;
 		}
 		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+		symbols = 256;//DEBUG
 		if (c.timing)
 		{
 			t.stop();

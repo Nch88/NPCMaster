@@ -339,60 +339,63 @@ void AlgorithmP::incrementCountLeft(
 	bool &skip,
 	Conditions& c)
 {
-	unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
-
-	//Check if we need to skip
-	if (symbolPrevious != Symbols)
-		skip = false;
-
-	if (!skip && indexSymbolPrevious > -1)
-	//Don't do this for the first pair, or if we need to skip a pair
+	if (indexSymbolPrevious > -1)
 	{
-		if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord == NULL)
-			//This is exactly the first time we see this
-		{
-			activePairs[symbolPrevious][Symbols].seenOnce = true;
-			activePairs[symbolPrevious][Symbols].indexFirst = indexSymbolPrevious;
-		}
+		unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
-		else if (activePairs[symbolPrevious][Symbols].seenOnce)
-			//This is if we se it the second time
-		{
-			activePairs[symbolPrevious][Symbols].seenOnce = false;
-			activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord(activePairs[symbolPrevious][Symbols].indexFirst, indexSymbolPrevious);
-			activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
+		//Check if we need to skip
+		if (symbolPrevious != Symbols)
+			skip = false;
 
-			//Add to priority queue
-			PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
-			addToPriorityQueueList(0, tracker, priorityQueue);
+		if (!skip)
+			//Don't do this for the first pair, or if we need to skip a pair
+		{
+			if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord == NULL)
+				//This is exactly the first time we see this
+			{
+				activePairs[symbolPrevious][Symbols].seenOnce = true;
+				activePairs[symbolPrevious][Symbols].indexFirst = indexSymbolPrevious;
+			}
+
+			else if (activePairs[symbolPrevious][Symbols].seenOnce)
+				//This is if we se it the second time
+			{
+				activePairs[symbolPrevious][Symbols].seenOnce = false;
+				activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord(activePairs[symbolPrevious][Symbols].indexFirst, indexSymbolPrevious);
+				activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
+
+				//Add to priority queue
+				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
+				addToPriorityQueueList(0, tracker, priorityQueue);
 
 			//Update threading pointers
 			sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
 			sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst];
 		}
 
-		else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
-			//This is if we see it after the second time
-		{
-			//Raise priority
-			PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
-			moveUpInPriorityQueue(tracker, priorityQueue);
+			else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
+				//This is if we see it after the second time
+			{
+				//Raise priority
+				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
+				moveUpInPriorityQueue(tracker, priorityQueue);
 
-			//Update count
-			activePairs[symbolPrevious][Symbols].pairRecord->count++;
+				//Update count
+				activePairs[symbolPrevious][Symbols].pairRecord->count++;
 
-			//Update threading pointers
-			sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast]->next = sequenceArray[indexSymbolPrevious];
-			sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast];
+				//Update threading pointers
+				sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast]->next = sequenceArray[indexSymbolPrevious];
+				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast];
 
-			//Update arrayIndexLast
-			activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast = indexSymbolPrevious;
+				//Update arrayIndexLast
+				activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast = indexSymbolPrevious;
+			}
 		}
-	}
 
-	//Update skip flag
-	if (symbolPrevious == Symbols)
-		skip = !skip;
+		//Update skip flag
+		if (symbolPrevious == Symbols)
+			skip = !skip;
+	}
 }
 
 void AlgorithmP::incrementCountRight(
@@ -404,11 +407,12 @@ void AlgorithmP::incrementCountRight(
 	unsigned int & Symbols,
 	Conditions& c)
 {
-	unsigned int symbolNext = sequenceArray[indexSymbolNext]->symbol;
-
+	
 	if (indexSymbolNext > -1)
 	//Only do this if there is a next symbol
 	{
+		unsigned int symbolNext = sequenceArray[indexSymbolNext]->symbol;
+
 		if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord == NULL)
 			//This is exactly the first time we see this
 		{
@@ -542,6 +546,8 @@ void AlgorithmP::establishContext(
 		else
 			indexSymbolPrevious = sequenceArray[indexSymbolLeft - 1]->previous->index;		
 	}
+	else
+		indexSymbolPrevious = -1;
 
 	//Next
 	if (indexSymbolRight < sequenceArray.size() - 1)
@@ -551,6 +557,8 @@ void AlgorithmP::establishContext(
 		else if (sequenceArray[indexSymbolRight + 1]->next)
 			indexSymbolNext = sequenceArray[indexSymbolRight + 1]->next->index;
 	}
+	else
+		indexSymbolNext = -1;
 }
 
 void AlgorithmP::replaceAllPairs(
@@ -738,9 +746,6 @@ void AlgorithmP::manageHighPriorityList(
 		tmpPairRecordSelected->previousPair = nullptr;
 		tmpPairRecordSelected->nextPair = nullptr;
 
-		//Pick new symbol
-		newSymbol(Symbols);
-
 		replaceAllPairs(
 			sequenceIndex,
 			sequenceArray,
@@ -749,6 +754,9 @@ void AlgorithmP::manageHighPriorityList(
 			priorityQueue,
 			Symbols,
 			c);
+
+		//Pick new symbol
+		newSymbol(Symbols);
 	}
 }
 
