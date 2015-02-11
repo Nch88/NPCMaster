@@ -556,6 +556,8 @@ void AlgorithmP::establishContext(
 			indexSymbolNext = sequenceArray[indexSymbolRight + 1]->index;
 		else if (sequenceArray[indexSymbolRight + 1]->next)
 			indexSymbolNext = sequenceArray[indexSymbolRight + 1]->next->index;
+		else
+			indexSymbolNext = -1;
 	}
 	else
 		indexSymbolNext = -1;
@@ -580,11 +582,6 @@ void AlgorithmP::replaceAllPairs(
 
 	do
 	{
-		long indexSymbolLeft = -1;
-		long indexSymbolRight = -1;
-		long indexSymbolPrevious = -1;
-		long indexSymbolNext = -1;
-
 		sequenceIndex = nextSymbol->index;
 		nextSymbol = nextSymbol->next;
 
