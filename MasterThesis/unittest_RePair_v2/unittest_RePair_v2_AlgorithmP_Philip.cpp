@@ -3,7 +3,7 @@
 
 using namespace std;
 
-MyTest mytest;
+MyTest mtest;
 
 TEST(setup, diddy)
 {
@@ -20,11 +20,19 @@ TEST(setup, diddy)
 	bool skip = false;
 
 	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
 
-	char a[] = { 's', 'i', 'n', 'g', 'i', 'n', 'g', '.', 'd', 'o', '.', 'w', 'a', 'h', '.', 'd', 'i', 'd', 'd', 'y', '.', 'd', 'i', 'd', 'd', 'y', '.', 'd', 'u', 'm', '.', 'd', 'i', 'd', 'd', 'y', '.', 'd', 'o' };
-	mytest.charArrayToSequence(sequenceArray, a, 200);
+	//Setup sequence array
+	long a[] = { 'a', 'b', 'a', 'b', 'a', 'b' };
+	mtest.buildSequenceArray(sequenceArray, a, 4);
+
+	//Setup threading pointers
+	sequenceArray[0]->next = sequenceArray[2];
+	sequenceArray[2]->previous = sequenceArray[0];
+	sequenceArray[2]->next = sequenceArray[4];
+	sequenceArray[4]->previous = sequenceArray[2];
+	sequenceArray[1]->next = sequenceArray[3];
+	sequenceArray[3]->previous = sequenceArray[1];
+
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -32,10 +40,9 @@ TEST(setup, diddy)
 
 	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
 
-	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '\0', 'o', '.', 'w', 'a', 'h', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'u', 'm', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'o' };
+	string expected = { 'a', 'b', 'a', 'b', 'a', 'b' };
 
-	MyTest mytest;
-	string result = mytest.SequenceToCompleteString(sequenceArray);
+	string result = mtest.SequenceToCompleteString(sequenceArray);
 
 	ASSERT_EQ(expected, result);
 }

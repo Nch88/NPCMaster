@@ -1311,7 +1311,7 @@ TEST(incrementCountLeft, thirdTimeSeen)
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
-
+	  
 	activePairs[99][65].seenOnce = false;
 	activePairs[99][65].indexFirst = 0;
 	activePairs[99][65].pairRecord = new PairRecord(0, 3);

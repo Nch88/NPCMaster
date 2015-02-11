@@ -342,7 +342,7 @@ void AlgorithmP::incrementCountLeft(
 	unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
 	//Check if we need to skip
-	if (!symbolPrevious == Symbols)
+	if (symbolPrevious != Symbols)
 		skip = false;
 
 	if (!skip && indexSymbolPrevious > -1)
@@ -615,7 +615,7 @@ void AlgorithmP::replaceAllPairs(
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
-	bool skip;
+	bool skip = false;
 
 	do
 	{
