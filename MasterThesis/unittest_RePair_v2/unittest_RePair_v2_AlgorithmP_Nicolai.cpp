@@ -147,7 +147,6 @@ TEST(replaceAllPairsThorough, diddy)
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
-	bool skip = false;
 
 	do
 	{
