@@ -367,8 +367,8 @@ void AlgorithmP::incrementCountLeft(
 			addToPriorityQueueList(0, tracker, priorityQueue);
 
 			//Update threading pointers
-			sequenceArray[activePairs[symbolPrevious][Symbols].indexFirst]->next = sequenceArray[indexSymbolPrevious];
-			sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].indexFirst];
+			sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+			sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst];
 		}
 
 		else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
@@ -428,8 +428,8 @@ void AlgorithmP::incrementCountRight(
 			addToPriorityQueueList(0, tracker, priorityQueue);
 
 			//Update threading pointers
-			sequenceArray[activePairs[Symbols][symbolNext].indexFirst]->next = sequenceArray[indexSymbolLeft];
-			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].indexFirst];
+			sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst]->next = sequenceArray[indexSymbolLeft];
+			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst];
 		}
 
 		else if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord)
