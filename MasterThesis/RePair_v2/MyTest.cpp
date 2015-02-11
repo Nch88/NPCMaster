@@ -20,14 +20,14 @@ void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numb
 	}
 }
 
-void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, char input[], int size)
+void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, string input, int size)
 {
+	long * numbers = new long[size];
 	for (int i = 0; i < size; i++)
 	{
-		long number = (long)input[i];
-		SymbolRecord * p = new SymbolRecord(number, i);
-		sequence.push_back(p);
+		numbers[i] = (long)input[i];
 	}
+	buildSequenceArray(sequence, numbers, size);
 }
 
 string MyTest::SequenceToCompleteString(vector<SymbolRecord*> & sequenceArray)
