@@ -31,8 +31,10 @@ int main(int argc, char* argv[])
 	string input1 = "diddy.txt";
 	string input2 = "E.coli";
 	string input3 = "dna.50MB";
+	string input4 = "crashtestdummy.txt";
+	
 
-	filename = input2;
+	filename = input3;
 	
 
 	ifstream file(filename);

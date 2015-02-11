@@ -696,3 +696,139 @@ TEST(testingRun, duplicatesLong3)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 }
+
+TEST(crashPossiblePointerError, 264a)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "crashtestdummy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	long count = 0;
+	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	string string2 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	string string3 = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+	string string4 = "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
+	string string5 = "DDDDDDDDDDDDDDDDC";
+	string string6 = "GGC";
+	ASSERT_EQ(16, priorityQueueSize);
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+	
+	//Manage high priority lists
+	PairRecord * tmpPairRecord;
+	PairRecord * tmpPairRecordSelected;
+	long sequenceIndex = 0;
+	long last = priorityQueue.size() - 1;
+
+	while (priorityQueue[last])
+	{
+		tmpPairRecordSelected = priorityQueue[last];
+		tmpPairRecord = priorityQueue[last];
+
+		//Find pair with most occurences
+		while (tmpPairRecord->nextPair)
+		{
+			tmpPairRecord = tmpPairRecord->nextPair;
+			if (tmpPairRecord->count > tmpPairRecordSelected->count)
+				tmpPairRecordSelected = tmpPairRecord;
+		}
+		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+
+		//Remove current pair from priority queue
+		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
+			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
+		}
+		else if (tmpPairRecordSelected->previousPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = nullptr;
+		}
+		else if (tmpPairRecordSelected->nextPair)
+		{
+			priorityQueue[last] = tmpPairRecordSelected->nextPair;
+			priorityQueue[last]->previousPair = nullptr;
+		}
+		else
+			priorityQueue[last] = nullptr;
+		tmpPairRecordSelected->previousPair = nullptr;
+		tmpPairRecordSelected->nextPair = nullptr;
+
+		algP.replaceAllPairs(
+			sequenceIndex,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			symbols,
+			c);
+
+		if (count == 0)
+		{
+			ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+		}
+		if (count == 1)
+		{
+			ASSERT_EQ(string3, t.SequenceToString(sequenceArray));
+		}
+		if (count == 2)
+		{
+			ASSERT_EQ(string4, t.SequenceToString(sequenceArray));
+		}
+		if (count == 3)
+		{
+			ASSERT_EQ(string5, t.SequenceToString(sequenceArray));
+		}
+		count++;
+		//Pick new symbol
+		algP.newSymbol(symbols);
+	}
+
+	//Manage low priority lists
+	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	{
+		while (priorityQueue[i])
+		{
+
+			algP.manageOneEntryOnList(
+				i,
+				sequenceArray,
+				dictionary,
+				activePairs,
+				priorityQueue,
+				symbols,
+				c);
+
+
+		}
+	}
+	ASSERT_EQ(string6, t.SequenceToString(sequenceArray));
+}

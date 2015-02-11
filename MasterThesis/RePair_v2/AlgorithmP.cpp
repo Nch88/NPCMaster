@@ -54,7 +54,7 @@ void AlgorithmP::updatePairRecord(
 	PairTracker *& tracker)
 {
 	tracker->pairRecord->count--;
-
+	
 	unsigned int symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
 	unsigned int symbolRight = sequenceArray[indexSymbolRight]->symbol;
 
@@ -131,6 +131,11 @@ void AlgorithmP::moveDownInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	if (tracker->pairRecord->count < 2)
+		//DEBUG
+	{
+		int x = 0;
+	}
 	if (tracker->pairRecord->count == 2)
 	{
 		removeFromPriorityQueueList(0, tracker, priorityQueue);
@@ -152,6 +157,11 @@ void AlgorithmP::moveUpInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	if (tracker->pairRecord->count < 2)
+		//DEBUG
+	{
+		int x = 0;
+	}
 	if (tracker->pairRecord->count - 1 < priorityQueue.size())
 	{
 		removeFromPriorityQueueList(
@@ -205,6 +215,11 @@ void AlgorithmP::decrementCountLeft(
 			(sequenceArray[indexSymbolPrevious]->next ||
 			sequenceArray[indexSymbolPrevious]->previous))
 		{
+			if (tracker->pairRecord->count < 2)
+				//DEBUG
+			{
+				int x = 0;
+			}
 			decrementCount(
 				indexSymbolPrevious,
 				indexSymbolLeft,
@@ -242,6 +257,11 @@ void AlgorithmP::decrementCountRight(
 			(sequenceArray[indexSymbolRight]->next ||
 			sequenceArray[indexSymbolRight]->previous))
 		{
+			if (tracker->pairRecord->count < 2)
+				//DEBUG
+			{
+				int x = 0;
+			}
 			decrementCount(
 				indexSymbolRight,
 				indexSymbolNext,
@@ -580,6 +600,11 @@ void AlgorithmP::replaceAllPairs(
 
 	do
 	{
+		indexSymbolLeft = -1;
+		indexSymbolRight = -1;
+		indexSymbolPrevious = -1;
+		indexSymbolNext = -1;
+
 		sequenceIndex = nextSymbol->index;
 		nextSymbol = nextSymbol->next;
 
