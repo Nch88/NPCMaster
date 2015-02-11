@@ -580,6 +580,11 @@ void AlgorithmP::replaceAllPairs(
 
 	do
 	{
+		long indexSymbolLeft = -1;
+		long indexSymbolRight = -1;
+		long indexSymbolPrevious = -1;
+		long indexSymbolNext = -1;
+
 		sequenceIndex = nextSymbol->index;
 		nextSymbol = nextSymbol->next;
 

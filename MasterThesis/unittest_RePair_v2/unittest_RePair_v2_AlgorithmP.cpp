@@ -2594,6 +2594,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	ASSERT_EQ(sequenceArray[indexSymbolNext], sequenceArray[indexSymbolNext - 1]->next);
 	ASSERT_EQ(sequenceArray[indexSymbolLeft], sequenceArray[indexSymbolNext - 1]->previous);
 	ASSERT_EQ(0, sequenceArray[indexSymbolNext - 1]->symbol);
+
+
 }
 
 TEST(replaceAllInstancesOfPair, diddy)
@@ -2629,6 +2631,7 @@ TEST(replaceAllInstancesOfPair, diddy)
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+	priorityQueue[4] = nullptr;
 
 	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
 
@@ -2637,5 +2640,6 @@ TEST(replaceAllInstancesOfPair, diddy)
 	MyTest mytest;
 	string result = mytest.SequenceToCompleteString(sequenceArray);
 
-	ASSERT_EQ(expected, result);	
+	ASSERT_EQ(expected, result);
+	ASSERT_EQ(0,mytest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
