@@ -49,6 +49,8 @@ TEST(manageOneList, oneEntry)
 		c);
 
 	ASSERT_EQ(nullptr, priorityQueue[index]);
+	MyTest mt;
+	ASSERT_EQ(0, mt.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(manageOneList, multipleEntries)
@@ -97,6 +99,8 @@ TEST(manageOneList, multipleEntries)
 		c);
 
 	ASSERT_EQ(nullptr, priorityQueue[index]);
+	MyTest mt;
+	ASSERT_EQ(0, mt.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(replaceAllPairsThorough, diddy)
@@ -360,6 +364,7 @@ TEST(replaceAllPairsThorough, diddy)
 		count++;
 	} while (nextSymbol);
 
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingLowerPriority, diddy)
@@ -420,14 +425,20 @@ TEST(testingLowerPriority, diddy)
 				symbols,
 				c);
 
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
 			if (i == 1 && count++ == 1)
 				ASSERT_EQ(diddy3, t.SequenceToString(sequenceArray));			
 		}
 		if (i == 4)
 			ASSERT_EQ(diddy2, t.SequenceToString(sequenceArray));
+
+		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 	}
 	string s = t.SequenceToString(sequenceArray);
 	int x = 0;
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingLowerPriority, duplicates)
@@ -492,9 +503,13 @@ TEST(testingLowerPriority, duplicates)
 
 			if (i == 1 && count++ == 1)
 				ASSERT_EQ(string3, t.SequenceToString(sequenceArray));
+
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 		}		
 	}
 	ASSERT_EQ(string3, t.SequenceToString(sequenceArray));
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingRun, duplicates2)
@@ -545,6 +560,8 @@ TEST(testingRun, duplicates2)
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingRun, duplicates3)
@@ -595,6 +612,8 @@ TEST(testingRun, duplicates3)
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingRun, duplicatesLong)
@@ -645,6 +664,8 @@ TEST(testingRun, duplicatesLong)
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(testingRun, duplicatesLong3)
@@ -695,6 +716,8 @@ TEST(testingRun, duplicatesLong3)
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
 TEST(crashPossiblePointerError, 264a)
@@ -807,6 +830,9 @@ TEST(crashPossiblePointerError, 264a)
 		{
 			ASSERT_EQ(string5, t.SequenceToString(sequenceArray));
 		}
+
+		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
 		count++;
 		//Pick new symbol
 		algP.newSymbol(symbols);
@@ -827,7 +853,7 @@ TEST(crashPossiblePointerError, 264a)
 				symbols,
 				c);
 
-
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 		}
 	}
 	ASSERT_EQ(string6, t.SequenceToString(sequenceArray));

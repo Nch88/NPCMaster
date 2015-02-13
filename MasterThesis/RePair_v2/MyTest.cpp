@@ -51,6 +51,77 @@ int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray)
 	return 0;
 }
 
+string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequenceArray)
+{
+	bool sane = true;
+	string output = "\n";
+	for (int i = 0; i < sequenceArray.size(); i++)//each (SymbolRecord* p in sequenceArray)
+	{
+		SymbolRecord* p = sequenceArray[i];
+		if (p->next)
+		{
+			if (p->next->index < p->index)
+			{
+				output += "Error in next-pointer at index ";
+				output += to_string(i);
+				output += ": index pointed to is lower than current.\n\n";
+			}
+			if (p->symbol != 0 && p->symbol != p->next->symbol)
+			{
+				output += "Error in next-pointer at index ";
+				output += to_string(i);
+				output += ": next symbol is not the same.\n\n";
+			}
+		}
+		if (p->previous)
+		{
+			if (p->previous->index > p->index)
+			{
+				output += "Error in previous-pointer at index ";
+				output += to_string(i);
+				output += ": index pointed to is higher than current.\n\n";
+			}
+			if (p->symbol != 0 && p->symbol != p->previous->symbol)
+			{
+				output += "Error in previous-pointer at index ";
+				output += to_string(i);
+				output += ": previous symbol is not the same.\n\n";
+			}
+		}
+		if (p->symbol == 0 && ((i>0 && sequenceArray[i - 1]->symbol != 0) || ((i<sequenceArray.size() - 1) && sequenceArray[i + 1]->symbol != 0)))
+			//If this is an empty symbol next to a non-empty symbol
+		{
+			if (p->next)
+			{
+				sane = sane && (p->next->symbol != 0);
+				for (int j = i + 1; j < p->next->index; j++)
+				{
+					if (sequenceArray[j]->symbol == 0)
+					{
+						output += "Error in next-pointer of empty symbol at index ";
+						output += to_string(i);
+						output += ": target is also empty.\n\n";
+					}
+				}
+			}
+			if (p->previous)
+			{
+				sane = sane && (p->previous->symbol != 0);
+				for (int j = p->previous->index + 1; j < i; j++)
+				{
+					if (sequenceArray[j]->symbol == 0)
+					{
+						output += "Error in previous-pointer of empty symbol at index ";
+						output += to_string(i);
+						output += ": target is also empty\n\n";
+					}
+				}
+			}
+		}
+	}
+	return output;
+}
+
 int MyTest::SanityCheckPairRecords(vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
 {
 	bool sane = true;
