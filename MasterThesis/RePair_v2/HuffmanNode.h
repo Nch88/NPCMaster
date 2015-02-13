@@ -4,7 +4,7 @@ class HuffmanNode
 public:
 	unsigned int symbol;
 	int frequency;
-	vector<bool> code;
+	string code;
 	HuffmanNode * leftChild;
 	HuffmanNode * rightChild;
 

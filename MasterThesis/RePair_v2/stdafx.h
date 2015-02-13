@@ -20,6 +20,7 @@
 #include <climits>
 #include <chrono>
 #include <queue>
+#include <bitset>
 
 
 // TODO: reference additional headers your program requires here
@@ -34,5 +35,6 @@
 #include "MyTest.h"
 #include "AlgorithmP.h"
 #include "Algorithm.h"
+#include "MyBitset.h"
 #include "HuffmanNode.h"
 #include "Huffman.h"

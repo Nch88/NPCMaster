@@ -85,6 +85,7 @@
     <ClInclude Include="Huffman.h" />
     <ClInclude Include="HuffmanNode.h" />
     <ClInclude Include="Initializer.h" />
+    <ClInclude Include="MyBitset.h" />
     <ClInclude Include="MyTest.h" />
     <ClInclude Include="MyTimer.h" />
     <ClInclude Include="Outputter.h" />
@@ -102,6 +103,7 @@
     <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="HuffmanNode.cpp" />
     <ClCompile Include="Initializer.cpp" />
+    <ClCompile Include="MyBitset.cpp" />
     <ClCompile Include="MyTest.cpp" />
     <ClCompile Include="MyTimer.cpp" />
     <ClCompile Include="Outputter.cpp" />

@@ -17,13 +17,27 @@ void Huffman::getFrequencies(
 {
 	for each (auto symbolRecord in sequenceArray)
 	{
-		if (frequencies[symbolRecord->symbol].symbol == 0)
-			frequencies[symbolRecord->symbol].symbol = symbolRecord->symbol;
-		frequencies[symbolRecord->symbol].frequency++;
+		if (symbolRecord->symbol != 0)
+		{
+			if (frequencies[symbolRecord->symbol].symbol == 0)
+				frequencies[symbolRecord->symbol].symbol = symbolRecord->symbol;
+			frequencies[symbolRecord->symbol].frequency++;
+		}		
 	}
 }
 
-void Huffman::collapseTree(priority_queue<HuffmanNode, vector<HuffmanNode>, compareNodes> & pq)
+void Huffman::setupPriorityQueue(
+	unordered_map<unsigned int, HuffmanNode> & frequencies,
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> & pq)
+{
+	//Setup priority queue for symbol frequencies
+	for each (auto symbol in frequencies)
+	{
+		pq.push(symbol.second);
+	}
+}
+
+void Huffman::collapseTree(priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> & pq)
 {
 	HuffmanNode * tmpLeftNode;
 	HuffmanNode * tmpRightNode;
@@ -47,9 +61,11 @@ void Huffman::collapseTree(priority_queue<HuffmanNode, vector<HuffmanNode>, comp
 
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 {
+	char zero = '0';
+	char one = '1';
 	if (leftChild->symbol == 0)
 	{
-		leftChild->code.push_back(false);
+		leftChild->code += zero;
 		leftChild->leftChild->code = leftChild->code;
 		leftChild->rightChild->code = leftChild->code;
 
@@ -58,11 +74,11 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 	}
 	else
 	{
-		leftChild->code.push_back(false);
+		leftChild->code += zero;
 	}
 	if (rightChild->symbol == 0)
 	{
-		rightChild->code.push_back(true);
+		rightChild->code += one;
 		rightChild->leftChild->code = rightChild->code;
 		rightChild->rightChild->code = rightChild->code;
 
@@ -71,21 +87,17 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 	}
 	else
 	{
-		rightChild->code.push_back(true);
+		rightChild->code += one;
 	}
 }
 
 void Huffman::encode(vector<SymbolRecord*> & sequenceArray)
 {
 	unordered_map<unsigned int, HuffmanNode> frequencies;
-	priority_queue<HuffmanNode, vector<HuffmanNode>, compareNodes> pq;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	getFrequencies(sequenceArray, frequencies);
 	
-	//Setup priority queue for symbol frequencies
-	for each (auto symbol in frequencies)
-	{		
-		pq.push(symbol.second);
-	}
+	setupPriorityQueue(frequencies, pq);
 
 	//Collapse the 'tree' until two nodes are left
 	collapseTree(pq);
@@ -97,4 +109,5 @@ void Huffman::encode(vector<SymbolRecord*> & sequenceArray)
 	pq.pop();
 
 	//TODO: Call unravel and then replace symbols with Huffman codes in sequence array
+	unravel(leftChild, rightChild);
 }

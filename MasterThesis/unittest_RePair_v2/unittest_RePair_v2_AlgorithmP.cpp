@@ -2643,3 +2643,53 @@ TEST(replaceAllInstancesOfPair, diddy)
 	ASSERT_EQ(expected, result);
 	ASSERT_EQ(0,mytest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
+
+TEST(testingRun, diddy)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		symbols,
+		c);
+	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+}

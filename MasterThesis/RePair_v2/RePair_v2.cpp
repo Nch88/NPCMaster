@@ -32,7 +32,8 @@ int main(int argc, char* argv[])
 	string input2 = "E.coli";
 	string input3 = "dna.50MB";
 	string input4 = "crashtestdummy.txt";
-	
+	string input5 = "world192.txt";
+	string input6 = "bible.txt";
 
 	filename = input3;
 	
