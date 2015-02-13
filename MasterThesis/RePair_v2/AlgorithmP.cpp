@@ -11,6 +11,41 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
+void AlgorithmP::compact(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue)
+{
+	SymbolRecord *empty = nullptr;// , *tmpnxt = nullptr, *tmppre = nullptr;
+	for (int i = 0; i < sequenceArray.size(); i++)
+	{
+		if (sequenceArray[i]->symbol == 0 && !empty)
+			empty = sequenceArray[i];
+		else if (sequenceArray[i]->symbol != 0 && i > empty->index)
+		//If we are at a non-empty record and an empty record exists before it
+		{
+			//Transfer data to next
+			empty->symbol = sequenceArray[i]->symbol;
+			empty->previous = sequenceArray[i]->previous;
+			empty->next = sequenceArray[i]->next;
+
+			//Update our previous and next if they exist
+			if (sequenceArray[i]->next)
+				sequenceArray[i]->next->previous = empty;
+			if (sequenceArray[i]->previous)
+				sequenceArray[i]->previous->next = empty;
+
+			//Update pair-record if needed
+			if (sequenceArray[i]->next && sequenceArray[i]->symbol) //This line is wrong! Fix it! Add more! Work, dammit!
+				akdnnvanva
+			//Clear this record
+			sequenceArray[i]->next = nullptr;
+			sequenceArray[i]->previous = nullptr;
+			sequenceArray[i]->symbol = 0;
+		}
+	}
+}
+
 void AlgorithmP::removeSymbolThreadingPointers(
 	long & indexSymbolLeft,
 	vector<SymbolRecord*> & sequenceArray)

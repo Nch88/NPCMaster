@@ -16,7 +16,7 @@ int MyTest::SanityCheck(
 	vector<PairRecord*>& priorityQueue, unordered_map<unsigned int,
 	unordered_map<unsigned int, PairTracker >> &activePairs)
 {
-	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(priorityQueue, activePairs);
+	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(sequenceArray, priorityQueue, activePairs);
 }
 
 int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray)
@@ -122,10 +122,11 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 	return output;
 }
 
-int MyTest::SanityCheckPairRecords(vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
 {
 	bool sane = true;
 	int result = 0;
+	SymbolRecord* sr;
 	//Check priority queue
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
@@ -135,6 +136,13 @@ int MyTest::SanityCheckPairRecords(vector<PairRecord*>& priorityQueue, unordered
 			while (current->nextPair)
 			{
 				sane = sane && current->count == i + 2 && (current->arrayIndexFirst < current->arrayIndexLast);
+
+				//Check index first & index last
+				sr = sequenceArray[current->arrayIndexFirst];
+				sane = sane && (sr->previous == nullptr) && (sr->next != nullptr);
+				sr = sequenceArray[current->arrayIndexLast];
+				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);
+
 				current = current->nextPair;
 			}
 		}
