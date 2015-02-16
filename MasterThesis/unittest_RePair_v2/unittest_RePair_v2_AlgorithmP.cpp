@@ -2635,7 +2635,7 @@ TEST(replaceAllInstancesOfPair, diddy)
 
 	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
 
-	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '\0', 'o', '.', 'w', 'a', 'h', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'u', 'm', 'A', '\0', 'i', 'd', 'd', 'y', 'A', '\0', 'o'};
+	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '_', 'o', '.', 'w', 'a', 'h', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'u', 'm', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'o'};
 
 	MyTest mytest;
 	string result = mytest.SequenceToCompleteString(sequenceArray);

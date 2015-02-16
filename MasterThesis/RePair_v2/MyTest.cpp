@@ -53,7 +53,6 @@ int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray)
 
 string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequenceArray)
 {
-	bool sane = true;
 	string output = "\n";
 	for (int i = 0; i < sequenceArray.size(); i++)//each (SymbolRecord* p in sequenceArray)
 	{
@@ -93,7 +92,12 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 		{
 			if (p->next)
 			{
-				sane = sane && (p->next->symbol != 0);
+				if (p->next->symbol == 0)
+				{
+					output += "Error in next-pointer of empty symbol at index ";
+					output += to_string(i);
+					output += ": Empty symbol next to non-empty symbol should not point to another empty as next.\n\n";
+				}
 				for (int j = i + 1; j < p->next->index; j++)
 				{
 					if (sequenceArray[j]->symbol == 0)
@@ -106,7 +110,12 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 			}
 			if (p->previous)
 			{
-				sane = sane && (p->previous->symbol != 0);
+				if (p->previous->symbol == 0)
+				{
+					output += "Error in previous-pointer of empty symbol at index ";
+					output += to_string(i);
+					output += ": Empty symbol next to non-empty symbol should not point to another empty as previous.\n\n";
+				}
 				for (int j = p->previous->index + 1; j < i; j++)
 				{
 					if (sequenceArray[j]->symbol == 0)
@@ -191,7 +200,10 @@ string MyTest::SequenceToCompleteString(vector<SymbolRecord*> & sequenceArray)
 
 	for (int i = 0; i < sequenceArray.size(); i++)
 	{
-		s += (char)sequenceArray[i]->symbol;
+		if (sequenceArray[i]->symbol != (char)0)
+			s += (char)sequenceArray[i]->symbol;
+		else
+			s += '_';
 	}
 	return s;
 }

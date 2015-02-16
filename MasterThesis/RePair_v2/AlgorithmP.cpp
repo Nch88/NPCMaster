@@ -11,6 +11,15 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
+SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  SymbolRecord* current)
+{
+	SymbolRecord* result = current;
+	int index = current->index;
+	while (result->symbol != 0)
+		result = sequenceArray[++index];
+	return result;
+}
+
 void AlgorithmP::compact(
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
@@ -21,7 +30,7 @@ void AlgorithmP::compact(
 	{
 		if (sequenceArray[i]->symbol == 0 && !empty)
 			empty = sequenceArray[i];
-		else if (sequenceArray[i]->symbol != 0 && i > empty->index)
+		else if (sequenceArray[i]->symbol != 0 && empty && i > empty->index)
 		//If we are at a non-empty record and an empty record exists before it
 		{
 			//Transfer data to next
@@ -36,14 +45,36 @@ void AlgorithmP::compact(
 				sequenceArray[i]->previous->next = empty;
 
 			//Update pair-record if needed
-			if (sequenceArray[i]->next && sequenceArray[i]->symbol) //This line is wrong! Fix it! Add more! Work, dammit!
-				akdnnvanva
+			if ((sequenceArray[i]->next || sequenceArray[i]->previous) && i < (sequenceArray.size() - 1))
+			{
+				//Figure out the pair
+				unsigned int s1 = sequenceArray[i]->symbol;
+				unsigned int s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+
+				if (activePairs[s1][s2].pairRecord->arrayIndexFirst == i)
+					activePairs[s1][s2].pairRecord->arrayIndexFirst = empty->index;
+
+				if (activePairs[s1][s2].pairRecord->arrayIndexLast == i)
+					activePairs[s1][s2].pairRecord->arrayIndexLast = empty->index;
+			}
+
 			//Clear this record
 			sequenceArray[i]->next = nullptr;
 			sequenceArray[i]->previous = nullptr;
 			sequenceArray[i]->symbol = 0;
+
+			//Update empty
+			empty = findNextEmpty(sequenceArray, empty);
 		}
 	}
+
+	//Resize the sequence array
+	int index = empty->index;
+	for (int i = empty->index; i < sequenceArray.size(); i++)
+	{
+		delete sequenceArray[i];
+	}
+	sequenceArray.resize(index);
 }
 
 void AlgorithmP::removeSymbolThreadingPointers(
