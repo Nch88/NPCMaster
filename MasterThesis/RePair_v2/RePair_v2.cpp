@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	string input5 = "world192.txt";
 	string input6 = "bible.txt";
 
-	filename = input3;
+	filename = input5;
 	
 
 	ifstream file(filename);

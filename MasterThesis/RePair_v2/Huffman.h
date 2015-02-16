@@ -9,12 +9,12 @@ public:
 	{
 		reverse = revparam;
 	}
-	bool operator() (const HuffmanNode& leftnode, const HuffmanNode& rightnode) const
+	bool operator() (HuffmanNode *& leftnode, HuffmanNode *& rightnode) const
 	{
 		if (reverse)
-			return (leftnode.frequency < rightnode.frequency);
+			return (leftnode->frequency < rightnode->frequency);
 		else
-			return (leftnode.frequency > rightnode.frequency);
+			return (leftnode->frequency > rightnode->frequency);
 	}
 };
 
@@ -27,12 +27,13 @@ public:
 
 	void Huffman::getFrequencies(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, HuffmanNode> & frequencies);
+		unordered_map<unsigned int, HuffmanNode *> & frequencies);
 	void Huffman::setupPriorityQueue(
-		unordered_map<unsigned int, HuffmanNode> & frequencies,
-		priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> & pq);
-	void Huffman::collapseTree(priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> & pq);
+		unordered_map<unsigned int, HuffmanNode *> & frequencies,
+		priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
+	void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
-	void encode(vector<SymbolRecord*> & sequenceArray);
+	void encode(vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 };
 

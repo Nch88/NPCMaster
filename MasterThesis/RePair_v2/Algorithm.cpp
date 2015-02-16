@@ -27,6 +27,10 @@ int Algorithm::run(
 	unsigned int & symbols)
 {
 	int priorityQueueSize;
+	bool firstBlock = true;
+	Huffman h;
+	Outputter out;
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())
@@ -59,6 +63,9 @@ int Algorithm::run(
 			symbols,
 			c);
 
+		//Huffman encode the sequence array
+		h.encode(sequenceArray, huffmanCodes);
+		out.huffmanEncoding(filename, sequenceArray, huffmanCodes, firstBlock);
 		if (c.timing)
 		{
 			t.start();
@@ -69,7 +76,6 @@ int Algorithm::run(
 			cout << "Resetting for next block" << endl;
 		}
 		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
-		symbols = 256;//DEBUG
 		if (c.timing)
 		{
 			t.stop();
