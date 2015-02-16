@@ -5,44 +5,132 @@ using namespace std;
 
 MyTest mtest;
 
-//TEST(setup, diddy)
-//{
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-//	vector<SymbolRecord*> sequenceArray;
-//	vector<PairRecord*> priorityQueue;
-//	unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(65);//A
-//
-//	Initializer init;
-//	Conditions c;
-//	AlgorithmP algP;
-//
-//	bool skip = false;
-//
-//	int priorityQueueSize;
-//
-//	//Setup sequence array
-//	long a[] = { 'a', 'b', 'a', 'b', 'a', 'b' };
-//	mtest.buildSequenceArray(sequenceArray, a, 4);
-//
-//	//Setup threading pointers
-//	sequenceArray[0]->next = sequenceArray[2];
-//	sequenceArray[2]->previous = sequenceArray[0];
-//	sequenceArray[2]->next = sequenceArray[4];
-//	sequenceArray[4]->previous = sequenceArray[2];
-//	sequenceArray[1]->next = sequenceArray[3];
-//	sequenceArray[3]->previous = sequenceArray[1];
-//
-//
-//	priorityQueueSize = sqrt(sequenceArray.size());
-//	priorityQueue.resize(priorityQueueSize);
-//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-//
-//	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
-//
-//	string expected = { 'a', 'b', 'a', 'b', 'a', 'b' };
-//
-//	string result = mtest.SequenceToCompleteString(sequenceArray);
-//
-//	ASSERT_EQ(expected, result);
-//}
+TEST(compaction, diddy)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+	priorityQueue[4] = nullptr;
+
+	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+
+	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '_', 'o', '.', 'w', 'a', 'h', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'u', 'm', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'o' };
+
+	string result = mtest.SequenceToCompleteString(sequenceArray);
+
+	ASSERT_EQ(expected, result);
+	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
+	//Setup complete, we can now test compaction
+	algP.compact(sequenceArray, activePairs, priorityQueue);
+
+	expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', 'o', '.', 'w', 'a', 'h', 'A', 'i', 'd', 'd', 'y', 'A', 'i', 'd', 'd', 'y', 'A', 'u', 'm', 'A', 'i', 'd', 'd', 'y', 'A', 'o'};
+	result = mtest.SequenceToCompleteString(sequenceArray);
+
+	ASSERT_EQ(expected, result);
+	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+}
+
+TEST(compactingAfterEachNewSymbol, diddy)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
+	string diddy3 = "singingAo.wahAiddBiddBumAiddBo";
+
+	ASSERT_EQ(diddy1, t.SequenceToString(sequenceArray));
+
+	int count = 0;
+
+	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	{
+		while (priorityQueue[i])
+		{
+			if (i == 1 && count++ == 0)
+				ASSERT_EQ(diddy2, t.SequenceToString(sequenceArray));
+			algP.manageOneEntryOnList(
+				i,
+				sequenceArray,
+				dictionary,
+				activePairs,
+				priorityQueue,
+				symbols,
+				c);
+
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			algP.compact(sequenceArray, activePairs, priorityQueue);
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
+			if (i == 1 && count++ == 1)
+				ASSERT_EQ(diddy3, t.SequenceToString(sequenceArray));
+		}
+		if (i == 4)
+			ASSERT_EQ(diddy2, t.SequenceToString(sequenceArray));
+
+		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+	}
+	string s = t.SequenceToString(sequenceArray);
+	int x = 0;
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+}

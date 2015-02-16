@@ -5,6 +5,13 @@ public:
 	AlgorithmP();
 	~AlgorithmP();
 
+	SymbolRecord* AlgorithmP::findNextEmpty(
+		vector<SymbolRecord*> & sequenceArray,
+		SymbolRecord* current);
+	void AlgorithmP::compact(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue);
 	void removeSymbolThreadingPointers(
 		long & indexSymbolLeft,
 		vector<SymbolRecord*> & sequenceArray);

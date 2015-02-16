@@ -16,7 +16,7 @@ int MyTest::SanityCheck(
 	vector<PairRecord*>& priorityQueue, unordered_map<unsigned int,
 	unordered_map<unsigned int, PairTracker >> &activePairs)
 {
-	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(priorityQueue, activePairs);
+	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(sequenceArray, priorityQueue, activePairs);
 }
 
 int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray)
@@ -53,7 +53,6 @@ int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray)
 
 string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequenceArray)
 {
-	bool sane = true;
 	string output = "\n";
 	for (int i = 0; i < sequenceArray.size(); i++)//each (SymbolRecord* p in sequenceArray)
 	{
@@ -93,7 +92,12 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 		{
 			if (p->next)
 			{
-				sane = sane && (p->next->symbol != 0);
+				if (p->next->symbol == 0)
+				{
+					output += "Error in next-pointer of empty symbol at index ";
+					output += to_string(i);
+					output += ": Empty symbol next to non-empty symbol should not point to another empty as next.\n\n";
+				}
 				for (int j = i + 1; j < p->next->index; j++)
 				{
 					if (sequenceArray[j]->symbol == 0)
@@ -106,7 +110,12 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 			}
 			if (p->previous)
 			{
-				sane = sane && (p->previous->symbol != 0);
+				if (p->previous->symbol == 0)
+				{
+					output += "Error in previous-pointer of empty symbol at index ";
+					output += to_string(i);
+					output += ": Empty symbol next to non-empty symbol should not point to another empty as previous.\n\n";
+				}
 				for (int j = p->previous->index + 1; j < i; j++)
 				{
 					if (sequenceArray[j]->symbol == 0)
@@ -122,10 +131,11 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 	return output;
 }
 
-int MyTest::SanityCheckPairRecords(vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
 {
 	bool sane = true;
 	int result = 0;
+	SymbolRecord* sr;
 	//Check priority queue
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
@@ -135,6 +145,13 @@ int MyTest::SanityCheckPairRecords(vector<PairRecord*>& priorityQueue, unordered
 			while (current->nextPair)
 			{
 				sane = sane && current->count == i + 2 && (current->arrayIndexFirst < current->arrayIndexLast);
+
+				//Check index first & index last
+				sr = sequenceArray[current->arrayIndexFirst];
+				sane = sane && (sr->previous == nullptr) && (sr->next != nullptr);
+				sr = sequenceArray[current->arrayIndexLast];
+				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);
+
 				current = current->nextPair;
 			}
 		}
@@ -183,7 +200,10 @@ string MyTest::SequenceToCompleteString(vector<SymbolRecord*> & sequenceArray)
 
 	for (int i = 0; i < sequenceArray.size(); i++)
 	{
-		s += (char)sequenceArray[i]->symbol;
+		if (sequenceArray[i]->symbol != (char)0)
+			s += (char)sequenceArray[i]->symbol;
+		else
+			s += '_';
 	}
 	return s;
 }
