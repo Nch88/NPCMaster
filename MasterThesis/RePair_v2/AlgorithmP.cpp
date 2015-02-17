@@ -16,7 +16,11 @@ SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  
 	SymbolRecord* result = current;
 	int index = current->index;
 	while (result->symbol != 0)
+	{
+		if ((index + 2) > sequenceArray.size())
+			return nullptr;
 		result = sequenceArray[++index];
+	}
 	return result;
 }
 

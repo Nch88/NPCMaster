@@ -59,7 +59,7 @@ TEST(compaction, diddy)
 	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
-TEST(compactingAfterEachNewSymbol, diddy)
+TEST(compaction, compactingAfterEachNewSymbol_diddy)
 {
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
@@ -70,7 +70,6 @@ TEST(compactingAfterEachNewSymbol, diddy)
 	Initializer init;
 	Conditions c;
 	AlgorithmP algP;
-	MyTest t;
 
 	string input1 = "diddy.txt";
 
@@ -113,60 +112,90 @@ TEST(compactingAfterEachNewSymbol, diddy)
 				symbols,
 				c);
 
-			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 			algP.compact(sequenceArray, activePairs, priorityQueue);
-			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 		}
 
-		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+		ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 	}
-	string s = t.SequenceToString(sequenceArray);
+	string s = mtest.SequenceToString(sequenceArray);
 	int x = 0;
 
-	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
-TEST(compactingAfterEachNewSymbol, e.coli)
+//TEST(compaction, compactingAfterEachNewSymbol_ecoli)
+//{
+//	string filename;
+//	int blockSize;
+//	blockSize = 1048576;
+//
+//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	unordered_map<unsigned int, Pair> dictionary;
+//	unsigned int symbols(256);
+//	
+//	
+//
+//	Initializer init;
+//	Conditions c;
+//	c.timing = false;
+//	AlgorithmP algP;
+//	MyTest t;
+//	int priorityQueueSize;
+//
+//	filename = "E.coli";
+//
+//	ifstream file(filename);
+//
+//	if (file.is_open())
+//	{
+//		while (file.is_open())
+//		{			
+//			init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
+//
+//			priorityQueueSize = sqrt(sequenceArray.size());
+//			priorityQueue.resize(priorityQueueSize);
+//			init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//			
+//			
+//			algP.run(sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+//
+//			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//			algP.compact(sequenceArray, activePairs, priorityQueue);
+//			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//
+//
+//			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+//		}
+//	}
+//	else
+//	{
+//		cout << "Problem opening file: " << filename << endl;
+//	}	
+//}
+
+TEST(compaction, findNextEmpty)
 {
-	string filename;
-	int blockSize;
-	blockSize = 1048576;
-
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	
-	
-
-	Initializer init;
-	Conditions c;
-	c.timing = false;
 	AlgorithmP algP;
-	MyTest t;
-	int priorityQueueSize;
 
-	filename = "E.coli";
+	long a[] = { 97, 0, 98, 0, 0, 99, 100, 0, 101, 102, 103, 0 };
+	mtest.buildSequenceArray(sequenceArray, a, 12);
+	SymbolRecord *sr = sequenceArray[0];
 
-	ifstream file(filename);
-
-	if (file.is_open())
-	{
-		while (file.is_open())
-		{			
-			init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
-
-			priorityQueueSize = sqrt(sequenceArray.size());
-			priorityQueue.resize(priorityQueueSize);
-			init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-			
-			
-			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
-		}
-	}
-	else
-	{
-		cout << "Problem opening file: " << filename << endl;
-	}	
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(1, sr->index);
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(3, sr->index);
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(4, sr->index);
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(7, sr->index);
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(11, sr->index);
+	algP.findNextEmpty(sequenceArray, sr);
+	ASSERT_EQ(nullptr, sr);
 }
