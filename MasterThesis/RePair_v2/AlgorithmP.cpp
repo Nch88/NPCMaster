@@ -15,12 +15,12 @@ SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  
 {
 	SymbolRecord* result = current;
 	int index = current->index;
-	while (result->symbol != 0)
+	do
 	{
 		if ((index + 2) > sequenceArray.size())
 			return nullptr;
 		result = sequenceArray[++index];
-	}
+	} while (result->symbol != 0);
 	return result;
 }
 
@@ -721,6 +721,7 @@ void AlgorithmP::manageOneEntryOnList(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unsigned int & Symbols,
+	CompactionData &cData,
 	Conditions& c)
 {
 	PairRecord * tmpPairRecord;
@@ -740,6 +741,15 @@ void AlgorithmP::manageOneEntryOnList(
 	tmpPairRecord->previousPair = nullptr;
 	tmpPairRecord->nextPair = nullptr;
 	
+	//Find the count of the pair to be replaced and update counter for compaction
+	if (c.compact)
+	{
+		long idx = sequenceIndex;
+		unsigned int s1 = sequenceArray[idx]->symbol;
+		unsigned int s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
+		cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+	}
+
 	replaceAllPairs(
 		sequenceIndex,
 		sequenceArray,
@@ -748,6 +758,16 @@ void AlgorithmP::manageOneEntryOnList(
 		priorityQueue,
 		Symbols,
 		c);
+
+	//Compaction
+	if (c.compact)
+	{
+		if (cData.replaceCount == cData.compactTotal)
+		{
+			compact(sequenceArray, activePairs, priorityQueue);
+			cData.updateCompactTotal();
+		}
+	}
 
 	//Pick new symbol
 	newSymbol(Symbols);
@@ -760,6 +780,7 @@ void AlgorithmP::manageOneList(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unsigned int & Symbols,
+	CompactionData &cData,
 	Conditions& c)
 {
 	while (priorityQueue[i])
@@ -771,6 +792,7 @@ void AlgorithmP::manageOneList(
 			activePairs,
 			priorityQueue,
 			Symbols,
+			cData,
 			c);
 	}
 }
@@ -781,6 +803,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unsigned int & Symbols,
+	CompactionData &cData,
 	Conditions& c)
 {
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
@@ -792,6 +815,7 @@ void AlgorithmP::manageLowerPriorityLists(
 			activePairs,
 			priorityQueue,
 			Symbols,
+			cData,
 			c);
 	}
 }
@@ -802,6 +826,7 @@ void AlgorithmP::manageHighPriorityList(
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unsigned int & Symbols,
+	CompactionData &cData,
 	Conditions& c)
 {
 	PairRecord * tmpPairRecord;
@@ -843,6 +868,15 @@ void AlgorithmP::manageHighPriorityList(
 		tmpPairRecordSelected->previousPair = nullptr;
 		tmpPairRecordSelected->nextPair = nullptr;
 
+		//Find the count of the pair to be replaced and update counter for compaction
+		if (c.compact)
+		{
+			long i = sequenceIndex;
+			unsigned int s1 = sequenceArray[i]->symbol;
+			unsigned int s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+		}
+
 		replaceAllPairs(
 			sequenceIndex,
 			sequenceArray,
@@ -851,6 +885,16 @@ void AlgorithmP::manageHighPriorityList(
 			priorityQueue,
 			Symbols,
 			c);
+
+		//Compaction
+		if (c.compact)
+		{
+			if (cData.replaceCount == cData.compactTotal)
+			{
+				compact(sequenceArray, activePairs, priorityQueue);
+				cData.updateCompactTotal();
+			}
+		}
 
 		//Pick new symbol
 		newSymbol(Symbols);
@@ -865,12 +909,15 @@ void AlgorithmP::run(
 	unsigned int & Symbols,
 	Conditions& c)
 {
+	CompactionData cData(sequenceArray.size());
+
 	manageHighPriorityList(
 		sequenceArray,
 		dictionary,
 		activePairs,
 		priorityQueue,
 		Symbols,
+		cData,
 		c);
 
 	manageLowerPriorityLists(
@@ -879,5 +926,6 @@ void AlgorithmP::run(
 		activePairs,
 		priorityQueue,
 		Symbols,
+		cData,
 		c);
 }

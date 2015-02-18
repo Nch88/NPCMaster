@@ -32,6 +32,7 @@
 #include "Conditions.h"
 #include "Initializer.h"
 #include "MyTest.h"
+#include "Compaction.h"
 #include "AlgorithmP.h"
 #include "Algorithm.h"
 #include "MyBitset.h"

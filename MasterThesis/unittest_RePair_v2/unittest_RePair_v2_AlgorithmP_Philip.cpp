@@ -99,6 +99,9 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 
 	int count = 0;
 
+	//Compaction counters
+	CompactionData cData(1);
+
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{
 		while (priorityQueue[i])
@@ -110,6 +113,7 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 				activePairs,
 				priorityQueue,
 				symbols,
+				cData,
 				c);
 
 			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
@@ -186,16 +190,25 @@ TEST(compaction, findNextEmpty)
 	mtest.buildSequenceArray(sequenceArray, a, 12);
 	SymbolRecord *sr = sequenceArray[0];
 
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(1, sr->index);
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(3, sr->index);
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(4, sr->index);
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(7, sr->index);
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(11, sr->index);
-	algP.findNextEmpty(sequenceArray, sr);
+	sr = algP.findNextEmpty(sequenceArray, sr);
 	ASSERT_EQ(nullptr, sr);
+}
+
+TEST(compaction, calculateCompactionTime)
+{
+	AlgorithmP algo;
+	long size = 100;
+	int result;
+	int count = 1;
+	CompactionData cData(size);
 }
