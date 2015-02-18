@@ -6,8 +6,8 @@ public:
 	~Outputter();
 
 	string createName(string inputFile, string addName);
-	void Outputter::writeChunk(ofstream &myfile, string chunk);
 	void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite);
+	void Outputter::writeChunkFromString(ofstream &myfile, string chunk);	
 	void Outputter::huffmanEncoding(
 		string inputFile,
 		vector<SymbolRecord *>& sequenceArray,
