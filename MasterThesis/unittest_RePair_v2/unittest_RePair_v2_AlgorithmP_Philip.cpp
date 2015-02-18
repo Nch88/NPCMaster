@@ -98,16 +98,12 @@ TEST(compactingAfterEachNewSymbol, diddy)
 	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
 	string diddy3 = "singingAo.wahAiddBiddBumAiddBo";
 
-	ASSERT_EQ(diddy1, t.SequenceToString(sequenceArray));
-
 	int count = 0;
 
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{
 		while (priorityQueue[i])
 		{
-			if (i == 1 && count++ == 0)
-				ASSERT_EQ(diddy2, t.SequenceToString(sequenceArray));
 			algP.manageOneEntryOnList(
 				i,
 				sequenceArray,
@@ -120,12 +116,7 @@ TEST(compactingAfterEachNewSymbol, diddy)
 			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 			algP.compact(sequenceArray, activePairs, priorityQueue);
 			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
-
-			if (i == 1 && count++ == 1)
-				ASSERT_EQ(diddy3, t.SequenceToString(sequenceArray));
 		}
-		if (i == 4)
-			ASSERT_EQ(diddy2, t.SequenceToString(sequenceArray));
 
 		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 	}
@@ -133,4 +124,49 @@ TEST(compactingAfterEachNewSymbol, diddy)
 	int x = 0;
 
 	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+}
+
+TEST(compactingAfterEachNewSymbol, e.coli)
+{
+	string filename;
+	int blockSize;
+	blockSize = 1048576;
+
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(256);
+	
+	
+
+	Initializer init;
+	Conditions c;
+	c.timing = false;
+	AlgorithmP algP;
+	MyTest t;
+	int priorityQueueSize;
+
+	filename = "E.coli";
+
+	ifstream file(filename);
+
+	if (file.is_open())
+	{
+		while (file.is_open())
+		{			
+			init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
+
+			priorityQueueSize = sqrt(sequenceArray.size());
+			priorityQueue.resize(priorityQueueSize);
+			init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+			
+			
+			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+		}
+	}
+	else
+	{
+		cout << "Problem opening file: " << filename << endl;
+	}	
 }
