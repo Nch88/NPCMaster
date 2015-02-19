@@ -30,27 +30,23 @@ string Outputter::createName(string inputFile, string addName)
 	return outFile;
 }
 
-void Outputter::writeChunk(ofstream &myfile, string chunk)
+void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 {
-	bitset<32> *bitsToWrite;
-	bitsToWrite = new bitset<32>(chunk);
-
-	for (size_t i = 0, n = (bitsToWrite->size() + 1) % 8; i<n; ++i) {
+	int n = bitsToWrite->size() / 8;
+	for (int i = n - 1; i>=0; --i) {
 		uint8_t byte = 0;
-		for (size_t j = 0; j<8; ++j)
+		for (int j = 7; j>=0; --j)
 			byte = (byte << 1) | (*bitsToWrite)[i * 8 + j];
 		myfile << byte;
 	}
 }
 
-void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
+void Outputter::writeChunkFromString(ofstream &myfile, string chunk)
 {
-	for (size_t i = 0, n = (bitsToWrite->size() + 1) % 8; i<n; ++i) {
-		uint8_t byte = 0;
-		for (size_t j = 0; j<8; ++j)
-			byte = (byte << 1) | (*bitsToWrite)[i * 8 + j];
-		myfile << byte;
-	}
+	bitset<32> *bitsToWrite;
+	bitsToWrite = new bitset<32>(chunk);
+
+	writeChunk(myfile, bitsToWrite);
 }
 
 void Outputter::huffmanEncoding(
@@ -107,7 +103,7 @@ void Outputter::huffmanEncoding(
 		//If last symbol the do not write yet as we need to pad the chunk
 		if (seqIndex < sequenceArray.size())
 		{
-			writeChunk(myfile, chunk);
+			writeChunkFromString(myfile, chunk);
 			chunk = "";
 		}
 	}
@@ -125,7 +121,7 @@ void Outputter::huffmanEncoding(
 	}
 
 	//Write the last actual chunk
-	writeChunk(myfile, chunk);
+	writeChunkFromString(myfile, chunk);
 	chunk = "";
 
 	//Write padding chunk

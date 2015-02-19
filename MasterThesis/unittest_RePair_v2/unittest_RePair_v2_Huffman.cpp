@@ -284,7 +284,7 @@ TEST(testingHuffman, unravel)
 	ASSERT_EQ("111", frequencies[(unsigned int)'F']->code);
 }
 
-TEST(testingHuffman, outputCode)
+TEST(testingHuffman, encodeAndOutputCode)
 {
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
