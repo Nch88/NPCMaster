@@ -40,6 +40,8 @@ TEST(compaction, diddy)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 	priorityQueue[4] = nullptr;
 
+	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
 	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
 
 	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '_', 'o', '.', 'w', 'a', 'h', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'u', 'm', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'o' };
@@ -211,4 +213,62 @@ TEST(compaction, calculateCompactionTime)
 	int result;
 	int count = 1;
 	CompactionData cData(size);
+	ASSERT_EQ(25, cData.compactTotal);
+	cData.updateCompactTotal();
+	ASSERT_EQ(44, cData.compactTotal);
+	cData.updateCompactTotal();
+	ASSERT_EQ(59, cData.compactTotal);
+	cData.updateCompactTotal();
+	ASSERT_EQ(70, cData.compactTotal);
 }
+
+//TEST(compaction, completeRunWithCompaction_world)
+//{
+//	string filename;
+//	int blockSize;
+//	blockSize = 1048576;
+//
+//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	unordered_map<unsigned int, Pair> dictionary;
+//	unsigned int symbols(256);
+//
+//	Initializer init;
+//	Conditions c;
+//	c.compact = true;
+//	c.timing = false;
+//	CompactionData cData(sequenceArray.size());
+//	AlgorithmP algP;
+//	MyTest t;
+//	int priorityQueueSize;
+//
+//	filename = "world192.txt";
+//
+//	ifstream file(filename);
+//
+//	if (file.is_open())
+//	{
+//		while (file.is_open())
+//		{
+//			init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
+//
+//			priorityQueueSize = sqrt(sequenceArray.size());
+//			priorityQueue.resize(priorityQueueSize);
+//			init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//
+//			if (t.SanityCheck(sequenceArray, priorityQueue, activePairs))
+//				cout << t.SanityCheckPairRecordsDetailed(sequenceArray, priorityQueue);
+//
+//			algP.run(sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+//
+//			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//
+//			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+//		}
+//	}
+//	else
+//	{
+//		cout << "Problem opening file: " << filename << endl;
+//	}
+//}

@@ -762,7 +762,7 @@ void AlgorithmP::manageOneEntryOnList(
 	//Compaction
 	if (c.compact)
 	{
-		if (cData.replaceCount == cData.compactTotal)
+		if (cData.replaceCount > cData.compactTotal)
 		{
 			compact(sequenceArray, activePairs, priorityQueue);
 			cData.updateCompactTotal();
@@ -889,7 +889,7 @@ void AlgorithmP::manageHighPriorityList(
 		//Compaction
 		if (c.compact)
 		{
-			if (cData.replaceCount == cData.compactTotal)
+			if (cData.replaceCount > cData.compactTotal)
 			{
 				compact(sequenceArray, activePairs, priorityQueue);
 				cData.updateCompactTotal();

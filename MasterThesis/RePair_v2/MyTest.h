@@ -10,6 +10,7 @@ public:
 		vector<PairRecord*>& priorityQueue, unordered_map<unsigned int,
 		unordered_map<unsigned int, PairTracker >> &activePairs);
 	string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequenceArray);
+	string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue);
 	int MyTest::SanityCheckThreadingPointers(vector<SymbolRecord*> & sequenceArray);
 	int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs);
 	void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count);
