@@ -131,6 +131,62 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 	return output;
 }
 
+string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue)
+{
+	SymbolRecord* sr;
+	string result = "";
+	//Check priority queue
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		if (priorityQueue[i])
+		{
+			PairRecord* current = priorityQueue[i];
+			int pairCount = 0;
+			while (current->nextPair)
+			{
+				pairCount++;
+				if ((i < priorityQueue.size() - 1 && current->count != i + 2) || current->count < i + 2)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "Count does not match queue number.";
+				}
+				if (current->arrayIndexFirst > current->arrayIndexLast)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "ArrayIndexFirst greater than ArrayIndexLast.";
+				}
+
+				//Check index first & index last
+				sr = sequenceArray[current->arrayIndexFirst];
+				if (sr->previous != nullptr)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "Element pointed to by ArrayIndexFirst has previous element.";
+				}
+				if (sr->next == nullptr)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "Element pointed to by ArrayIndexFirst has no next element.";
+				}
+				sr = sequenceArray[current->arrayIndexLast];
+				if (sr->previous == nullptr)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "Element pointed to by ArrayIndexLast has no previous element.";
+				}
+				if (sr->next != nullptr)
+				{
+					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
+					result += "Element pointed to by ArrayIndexLast has next element.";
+				}
+
+				current = current->nextPair;
+			}
+		}
+	}
+	return result + "\n\n";
+}
+
 int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
 {
 	bool sane = true;

@@ -8,7 +8,7 @@
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
-    </ProjectConfiguration>
+    </ProjectConfiguration> 
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8689738-3967-41E8-9E49-CAC84645FDA8}</ProjectGuid>
@@ -85,7 +85,6 @@
     <ClInclude Include="Huffman.h" />
     <ClInclude Include="HuffmanNode.h" />
     <ClInclude Include="Initializer.h" />
-    <ClInclude Include="MyBitset.h" />
     <ClInclude Include="MyTest.h" />
     <ClInclude Include="MyTimer.h" />
     <ClInclude Include="Outputter.h" />
@@ -103,7 +102,6 @@
     <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="HuffmanNode.cpp" />
     <ClCompile Include="Initializer.cpp" />
-    <ClCompile Include="MyBitset.cpp" />
     <ClCompile Include="MyTest.cpp" />
     <ClCompile Include="MyTimer.cpp" />
     <ClCompile Include="Outputter.cpp" />

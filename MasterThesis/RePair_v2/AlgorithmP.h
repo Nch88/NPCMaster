@@ -135,6 +135,7 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
+		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageOneList(
 		long i,
@@ -143,6 +144,7 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
+		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageLowerPriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
@@ -150,6 +152,7 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
+		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageHighPriorityList(
 		vector<SymbolRecord*> & sequenceArray,
@@ -157,6 +160,7 @@ public:
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unsigned int & Symbols,
+		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::run(
 		vector<SymbolRecord*> & sequenceArray,

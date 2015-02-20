@@ -39,6 +39,8 @@ TEST(manageOneList, oneEntry)
 
 	long index = 4;
 
+	CompactionData cData(1);
+
 	algP.manageOneList(
 		index,
 		sequenceArray,
@@ -46,6 +48,7 @@ TEST(manageOneList, oneEntry)
 		activePairs,
 		priorityQueue,
 		symbols,
+		cData,
 		c);
 
 	ASSERT_EQ(nullptr, priorityQueue[index]);
@@ -89,6 +92,8 @@ TEST(manageOneList, multipleEntries)
 
 	long index = 1;
 
+	CompactionData cData(1);
+
 	algP.manageOneList(
 		index,
 		sequenceArray,
@@ -96,6 +101,7 @@ TEST(manageOneList, multipleEntries)
 		activePairs,
 		priorityQueue,
 		symbols,
+		cData,
 		c);
 
 	ASSERT_EQ(nullptr, priorityQueue[index]);
@@ -410,6 +416,8 @@ TEST(testingLowerPriority, diddy)
 
 	int count = 0;
 
+	CompactionData cData(1);
+
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{
 		while (priorityQueue[i])
@@ -423,6 +431,7 @@ TEST(testingLowerPriority, diddy)
 				activePairs,
 				priorityQueue,
 				symbols,
+				cData,
 				c);
 
 			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
@@ -484,6 +493,8 @@ TEST(testingLowerPriority, duplicates)
 
 	int count = 0;
 
+	CompactionData cData(1);
+
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{
 		while (priorityQueue[i])
@@ -496,6 +507,7 @@ TEST(testingLowerPriority, duplicates)
 				activePairs,
 				priorityQueue,
 				symbols,
+				cData,
 				c);
 
 			if (i == 1 && count++ == 0)
@@ -838,6 +850,8 @@ TEST(crashPossiblePointerError, 264a)
 		algP.newSymbol(symbols);
 	}
 
+	CompactionData cData(1);
+
 	//Manage low priority lists
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{
@@ -851,6 +865,7 @@ TEST(crashPossiblePointerError, 264a)
 				activePairs,
 				priorityQueue,
 				symbols,
+				cData,
 				c);
 
 			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
