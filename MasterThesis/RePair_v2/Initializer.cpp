@@ -177,6 +177,7 @@ int Initializer::SequenceArray(
 	bool skippedPair = false;
 	MyTimer t;
 	c.timing = false;
+
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
 		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount);
