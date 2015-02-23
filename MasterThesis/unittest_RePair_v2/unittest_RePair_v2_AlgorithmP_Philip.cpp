@@ -28,12 +28,15 @@ TEST(compaction, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -84,12 +87,15 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);

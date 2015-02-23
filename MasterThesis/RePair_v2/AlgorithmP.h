@@ -5,6 +5,18 @@ public:
 	AlgorithmP();
 	~AlgorithmP();
 
+	void AlgorithmP::createFinalPairVector(
+		unordered_map<unsigned int, Pair>& dictionary,
+		vector<vector<CompactPair>>& generationVectors,
+		vector<CompactPair>& pairVector,
+		vector<unsigned int>& terminals);
+	void AlgorithmP::createGenerationVectors(
+		unordered_map<unsigned int, Pair>& dictionary,
+		vector<vector<CompactPair>>& generationVectors);
+	unsigned int AlgorithmP::findGeneration(
+		unordered_map<unsigned int, Pair>& dictionary, 
+		unsigned int left, 
+		unsigned int right);
 	SymbolRecord* AlgorithmP::findNextEmpty(
 		vector<SymbolRecord*> & sequenceArray,
 		SymbolRecord* current);
@@ -167,6 +179,7 @@ public:
 		unordered_map<unsigned int, Pair>& dictionary,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
+		unordered_set<unsigned int>& terminals,
 		unsigned int & Symbols,
 		Conditions& c);
 };

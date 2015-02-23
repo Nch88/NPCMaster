@@ -11,6 +11,122 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
+bool comPair(CompactPair fst, CompactPair snd)
+{
+	//compare two pairs by comparing left symbols, then right symbols
+	if (fst.leftSymbol < snd.leftSymbol)
+		return true;
+	else if (fst.leftSymbol == snd.leftSymbol)
+		return fst.rightSymbol < snd.rightSymbol;
+	else
+		return false;
+}
+
+//TODO: Make a main function for the dictionary stuff & add it to the other code + test
+
+void AlgorithmP::createFinalPairVector(
+	unordered_map<unsigned int, Pair>& dictionary,
+	vector<vector<CompactPair>>& generationVectors,
+	vector<CompactPair>& pairVector,
+	vector<unsigned int>& terminals)
+{
+	//Find the indices of the terminals
+	unordered_map<unsigned int, unsigned int> terminalIndices;
+	for (int i = 0; i < terminals.size(); ++i)
+	{
+		terminalIndices[terminals[i]] = i;
+	}
+	unordered_map<unsigned int,unordered_map<unsigned int, unsigned int>> indices;
+
+	//Generation 1
+	for (int i = 0; i < generationVectors[0].size(); ++i)
+	{
+		//Find the new indices of the two symbols in this pair
+		unsigned int left = terminalIndices[generationVectors[0][i].leftSymbol];
+		unsigned int right = terminalIndices[generationVectors[0][i].rightSymbol];
+
+		//Make a pair out of the indices we found, then push it to the vector
+		CompactPair p(left,right);
+		pairVector.push_back(p);
+
+		//Record the index of this symbol
+		indices[p.leftSymbol][p.rightSymbol] = i + terminals.size();
+	}
+
+	//Generation 2+
+	int offset = terminals.size() + generationVectors[0].size();
+	if (generationVectors.size() > 1)
+		for (int i = 1; i < generationVectors.size(); ++i)
+		{
+			for (int j = 0; j < generationVectors[i].size(); ++j)
+			{
+				//Find the new indices of the two symbols in this pair
+				unsigned int left = indices[dictionary[generationVectors[i][j].leftSymbol].leftSymbol][dictionary[generationVectors[i][j].leftSymbol].rightSymbol];
+				unsigned int right = indices[dictionary[generationVectors[i][j].rightSymbol].leftSymbol][dictionary[generationVectors[i][j].rightSymbol].rightSymbol];
+				
+				//Make a pair out of the indices we found, then push it to the vector
+				CompactPair p(left, right);
+				pairVector.push_back(p);
+
+				//Record the index of this symbol
+				indices[p.leftSymbol][p.rightSymbol] = offset + j;
+			}
+			//Update the offset
+			offset += generationVectors[i].size();
+		}
+}
+
+void AlgorithmP::createGenerationVectors(
+	unordered_map<unsigned int, Pair>& dictionary, 
+	vector<vector<CompactPair>>& generationVectors)
+{
+	//Distribute pairs in vectors
+	for each (std::pair<unsigned int, Pair> p in dictionary)
+	{
+		//Expand the outer vector if necessary
+		while (p.second.generation >= generationVectors.size())
+		{
+			vector<CompactPair> v;
+			generationVectors.push_back(v);
+		}
+
+		//Add this pair to a vector
+		CompactPair cp(p.second.leftSymbol,p.second.rightSymbol);
+		generationVectors[p.second.generation - 1].push_back(cp);
+	}
+
+	//Sort the vectors
+	for each (vector<CompactPair> v in generationVectors)
+	{
+		sort(v.begin(), v.end(), comPair);
+	}
+}
+
+unsigned int AlgorithmP::findGeneration(
+	unordered_map<unsigned int, Pair>& dictionary, 
+	unsigned int left, 
+	unsigned int right
+	)
+{
+	if (left < initialSymbolValue)
+		if (right < initialSymbolValue)
+			//Both left & right are terminals
+			return 1;
+		else
+			//Left is a terminal, right is not
+			return dictionary[right].generation + 1;
+	else if (right < initialSymbolValue)
+		//Right is a terminal, left is not
+		return dictionary[left].generation + 1;
+	else
+	{
+		//Neither are terminals, so we need to compare them
+		unsigned int genLeft = dictionary[left].generation;
+		unsigned int genRight = dictionary[right].generation;
+		return (genLeft > genRight ? genLeft : genRight) + 1;
+	}
+}
+
 SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  SymbolRecord* current)
 {
 	SymbolRecord* result = current;
@@ -403,7 +519,8 @@ void AlgorithmP::replacePair(
 
 	Pair pairToReplace(
 		leftSymbolRecord->symbol, 
-		rightSymbolRecord->symbol);
+		rightSymbolRecord->symbol,
+		findGeneration(dictionary, leftSymbolRecord->symbol, rightSymbolRecord->symbol));
 	
 	dictionary[Symbols] = pairToReplace;
 	leftSymbolRecord->symbol = Symbols;
@@ -906,6 +1023,7 @@ void AlgorithmP::run(
 	unordered_map<unsigned int, Pair>& dictionary,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
+	unordered_set<unsigned int>& terminals,
 	unsigned int & Symbols,
 	Conditions& c)
 {
