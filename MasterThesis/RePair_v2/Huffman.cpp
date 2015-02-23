@@ -13,14 +13,17 @@ Huffman::~Huffman()
 
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, HuffmanNode *> & frequencies)
+	unordered_map<unsigned int, HuffmanNode *> & frequencies,
+	int &cardinality)
 {
 	for each (auto symbolRecord in sequenceArray)
 	{
 		if (symbolRecord->symbol != 0)
 		{
-			if (!frequencies[symbolRecord->symbol])
+			if (!frequencies[symbolRecord->symbol]){
 				frequencies[symbolRecord->symbol] = new HuffmanNode(symbolRecord->symbol, 0);
+				++cardinality;
+			}
 			frequencies[symbolRecord->symbol]->frequency++;
 		}		
 	}
@@ -92,24 +95,144 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 	}
 }
 
+void Huffman::sift(int currentNodeIndex,
+	int heapSize,
+	int *codeLengths)
+{
+	
+	int leftChildIndex = ((currentNodeIndex + 1) * 2) - 1;
+	int rightChildIndex = (((currentNodeIndex + 1) * 2) + 1) - 1;
+
+	if (leftChildIndex >= heapSize) //Stop the recursion
+		return;
+
+	int parentFrequency = codeLengths[codeLengths[currentNodeIndex]];
+	int leftChildFrequency = codeLengths[codeLengths[leftChildIndex]];
+	int rightChildFrequency = codeLengths[codeLengths[rightChildIndex]];
+
+	if (rightChildIndex < heapSize &&
+		leftChildFrequency > rightChildFrequency)
+		//Right child is smaller than left
+	
+	{
+		if (parentFrequency > rightChildFrequency)
+		{
+			//Swap with right child
+			int tmpIndex = codeLengths[currentNodeIndex];
+			codeLengths[currentNodeIndex] = codeLengths[rightChildIndex];
+			codeLengths[rightChildIndex] = tmpIndex;
+
+			sift(rightChildIndex, heapSize, codeLengths);
+			
+		}
+	}
+	else if (parentFrequency > leftChildFrequency)
+		//Left is smaller than right or right does not exist, and left is smaller than parent
+	{
+		//Swap with left child
+		int tmpIndex = codeLengths[currentNodeIndex];
+		codeLengths[currentNodeIndex] = codeLengths[leftChildIndex];
+		codeLengths[leftChildIndex] = tmpIndex;
+
+		sift(leftChildIndex, heapSize, codeLengths);
+	}
+}
+
+void Huffman::initCodeLengthsArray(
+	int cardinality,
+	int *codeLengths,
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+{
+	int i = 0;
+	for each (auto node in huffmanCodes)
+	{
+		codeLengths[cardinality + i] = node.second->frequency;
+		codeLengths[i] = cardinality + i; //Index of a symbol Points to the symbol's frequency
+		++i;
+	}
+}
+
+void Huffman::initMinHeap(
+	int heapSize,
+	int *codeLengths)
+{
+	int currentNodeIndex = heapSize - 1; //Last node
+	currentNodeIndex = currentNodeIndex / 2; //Parent of last node
+
+	while (currentNodeIndex >= 0)
+	{
+		sift(currentNodeIndex, heapSize, codeLengths);
+		--currentNodeIndex;
+	}
+}
+
+void Huffman::phaseTwo(
+	int heapSize,
+	int *codeLengths)
+{
+	int m1;
+	int m2;
+
+	while (heapSize > 1)
+	{
+		//a)
+		m1 = codeLengths[0];													//Take symbol with smallest frequency
+		codeLengths[0] = codeLengths[heapSize - 1];								//Pull last element to front of heap
+		--heapSize;																
+
+		//b)
+		sift(0, heapSize, codeLengths);											//Sift the last element down through the heap
+		m2 = codeLengths[0];													//Take symbol with next smallest frequency
+
+		//c)
+		codeLengths[(heapSize - 1) + 1] = codeLengths[m1] + codeLengths[m2];	//Create new frequency for combination of two smallest frequencies
+		codeLengths[0] = (heapSize - 1) + 1;									//"Create" new symbol pointing to the new frequency
+		codeLengths[m1] = (heapSize - 1) + 1;									//Point to new symbol
+		codeLengths[m2] = (heapSize - 1) + 1;									//Point to new symbol
+
+		//d)
+		sift(0, heapSize, codeLengths);											//Sift the new element down through the heap
+	}
+}
+
+void Huffman::phaseThree(
+	int cardinality,
+	int *codeLengths)
+{
+	codeLengths[1] = 0;															//Represents the root with code length one
+
+	for (int i = 2; i < cardinality * 2; i++)
+	{
+		codeLengths[i] = codeLengths[codeLengths[i]] + 1;						//Nodes will get codes of length one greater than their parents
+	}
+}
+
+void Huffman::getCodeLengths(
+	int cardinality,
+	int *codeLengths,
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+{
+	int heapSize = cardinality;
+	//Phase 1	
+	initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
+	initMinHeap(heapSize, codeLengths);
+	//Phase 1  - end
+
+	phaseTwo(heapSize, codeLengths);
+
+	phaseThree(cardinality, codeLengths);
+}
+
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
 {	
+	int cardinality = 0;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	getFrequencies(sequenceArray, huffmanCodes);
+	getFrequencies(sequenceArray, huffmanCodes, cardinality); //+ cardinality of compressed sequence
+	int *codeLengths = new int[cardinality * 2]; //Code lengths will appear in positions [cardinality - (2*cardinality -1)]
 	
-	setupPriorityQueue(huffmanCodes, pq);
-
-	//Collapse the 'tree' until two nodes are left
-	collapseTree(pq);
-
-	//Start with children of root
-	HuffmanNode * leftChild = pq.top();
-	pq.pop();
-	HuffmanNode * rightChild = pq.top();
-	pq.pop();
-
-	//Unravel the tree and build the Huffman code
-	unravel(leftChild, rightChild);
+	getCodeLengths(cardinality, codeLengths, huffmanCodes);
+	
+	//TODO: Create actual canonical Huffman codes
 }

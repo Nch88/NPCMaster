@@ -27,12 +27,33 @@ public:
 
 	void Huffman::getFrequencies(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, HuffmanNode *> & frequencies);
+		unordered_map<unsigned int, HuffmanNode *> & frequencies,
+		int &cardinality);
 	void Huffman::setupPriorityQueue(
 		unordered_map<unsigned int, HuffmanNode *> & frequencies,
 		priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
+	void Huffman::sift(int currentNodeIndex,
+		int cardinality,
+		int *codeLengths);
+	void Huffman::initCodeLengthsArray(
+		int cardinality,
+		int *codeLengths,
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
+	void Huffman::initMinHeap(
+		int heapSize,
+		int *codeLengths);
+	void Huffman::phaseTwo(
+		int heapSize,
+		int *codeLengths);
+	void Huffman::phaseThree(
+		int cardinality,
+		int *codeLengths);
+	void Huffman::getCodeLengths(
+		int cardinality,
+		int *codeLengths,
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 	void encode(vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 };
