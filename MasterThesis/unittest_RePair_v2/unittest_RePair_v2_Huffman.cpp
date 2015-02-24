@@ -28,12 +28,14 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -49,6 +51,7 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -145,13 +148,14 @@ TEST(testingHuffman, collapseSymbols)
 
 	string filename = input1;
 	ifstream file(filename);
-
+	unordered_set<unsigned int> terminals;
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -167,6 +171,7 @@ TEST(testingHuffman, collapseSymbols)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -213,13 +218,14 @@ TEST(testingHuffman, phaseThree)
 
 	string filename = input1;
 	ifstream file(filename);
-
+	unordered_set<unsigned int> terminals;
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -235,6 +241,7 @@ TEST(testingHuffman, phaseThree)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -304,7 +311,7 @@ TEST(testingHuffman, generateCodes)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-
+	unordered_set<unsigned int> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -313,7 +320,8 @@ TEST(testingHuffman, generateCodes)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -329,6 +337,7 @@ TEST(testingHuffman, generateCodes)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
