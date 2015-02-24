@@ -333,41 +333,35 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	Pair H(305, 'g', 2);
 	dictionary[307] = H;
 
-	vector<vector<CompactPair>> generationVectors;
+	vector<vector<CompactPair*>> generationVectors = *(new vector<vector<CompactPair*>>());
 	algo.createGenerationVectors(dictionary, generationVectors);
 
-	vector<CompactPair> gen0;
-	gen0.push_back(CompactPair(46, 100));
-	gen0.push_back(CompactPair(100, 100));
-	gen0.push_back(CompactPair(105, 110));
-	vector<CompactPair> gen1;
-	gen1.push_back(CompactPair(300, 105));
-	gen1.push_back(CompactPair(301, 121));
-	gen1.push_back(CompactPair(300, 111));
-	gen1.push_back(CompactPair(305, 103));
-	vector<CompactPair> gen2;
-	gen2.push_back(CompactPair(302, 303));
-	vector<CompactPair> gen3;
+	vector<CompactPair*> gen0;
+	gen0.push_back(new CompactPair(46, 100));
+	gen0.push_back(new CompactPair(100, 100));
+	gen0.push_back(new CompactPair(105, 110));
+	vector<CompactPair*> gen1;
+	gen1.push_back(new CompactPair(300, 105));
+	gen1.push_back(new CompactPair(300, 111));
+	gen1.push_back(new CompactPair(301, 121));	
+	gen1.push_back(new CompactPair(305, 103));
+	vector<CompactPair*> gen2;
+	gen2.push_back(new CompactPair(302, 303));
 
 	for (int i = 0; i < generationVectors[0].size(); ++i)
 	{
-		ASSERT_TRUE(generationVectors[0][i].leftSymbol == gen0[i].leftSymbol);
-		ASSERT_TRUE(generationVectors[0][i].rightSymbol == gen0[i].rightSymbol);
+		ASSERT_TRUE(generationVectors[0][i]->leftSymbol == gen0[i]->leftSymbol);
+		ASSERT_TRUE(generationVectors[0][i]->rightSymbol == gen0[i]->rightSymbol);
 	}
 	for (int i = 0; i < generationVectors[1].size(); ++i)
 	{
-		ASSERT_TRUE(generationVectors[1][i].leftSymbol == gen1[i].leftSymbol);
-		ASSERT_TRUE(generationVectors[1][i].rightSymbol == gen1[i].rightSymbol);
+		ASSERT_TRUE(generationVectors[1][i]->leftSymbol == gen1[i]->leftSymbol);
+		ASSERT_TRUE(generationVectors[1][i]->rightSymbol == gen1[i]->rightSymbol);
 	}
 	for (int i = 0; i < generationVectors[2].size(); ++i)
 	{
-		ASSERT_TRUE(generationVectors[2][i].leftSymbol == gen2[i].leftSymbol);
-		ASSERT_TRUE(generationVectors[2][i].rightSymbol == gen2[i].rightSymbol);
-	}
-	for (int i = 0; i < generationVectors[3].size(); ++i)
-	{
-		ASSERT_TRUE(generationVectors[3][i].leftSymbol == gen3[i].leftSymbol);
-		ASSERT_TRUE(generationVectors[3][i].rightSymbol == gen3[i].rightSymbol);
+		ASSERT_TRUE(generationVectors[2][i]->leftSymbol == gen2[i]->leftSymbol);
+		ASSERT_TRUE(generationVectors[2][i]->rightSymbol == gen2[i]->rightSymbol);
 	}
 }
 
@@ -393,13 +387,14 @@ TEST(createCompactDictionary, createFinalPairVector)
 	Pair H(305, 'g', 2);
 	dictionary[307] = H;
 
-	vector<vector<CompactPair>> generationVectors;
+	vector<vector<CompactPair*>> generationVectors = *(new vector<vector<CompactPair*>>());
 	algo.createGenerationVectors(dictionary, generationVectors);
 
 	vector<unsigned int> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 
-	vector<CompactPair> pairs;
-	algo.createFinalPairVector(dictionary, generationVectors, pairs, terminals);
+	vector<CompactPair*> pairs = *(new vector<CompactPair*>());
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	algo.createFinalPairVector(dictionary, generationVectors, pairs, terminals, indices);
 
 	int x = 1;
 }
