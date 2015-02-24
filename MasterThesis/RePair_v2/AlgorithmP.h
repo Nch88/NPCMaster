@@ -17,6 +17,10 @@ public:
 		unordered_map<unsigned int, Pair>& dictionary, 
 		unsigned int left, 
 		unsigned int right);
+	void AlgorithmP::generateCompactDictionary(
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_set<unsigned int>& terminals,
+		vector<CompactPair>& pairVector);
 	SymbolRecord* AlgorithmP::findNextEmpty(
 		vector<SymbolRecord*> & sequenceArray,
 		SymbolRecord* current);

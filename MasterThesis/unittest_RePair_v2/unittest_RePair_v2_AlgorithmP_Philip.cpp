@@ -278,3 +278,128 @@ TEST(compaction, calculateCompactionTime)
 //		cout << "Problem opening file: " << filename << endl;
 //	}
 //}
+
+TEST(createCompactDictionary, findGeneration_diddy)
+{
+	AlgorithmP algo;
+
+	unordered_map<unsigned int, Pair> dictionary;
+	Pair A('.', 'd', 1);
+	dictionary[300] = A;
+	Pair B('d', 'd', 1);
+	dictionary[301] = B;
+	Pair C(300, 'i', 2);
+	dictionary[302] = C;
+	Pair D(301, 'y', 2);
+	dictionary[303] = D;
+	Pair E(302, 303, 3);
+	dictionary[304] = E;
+	Pair F('i', 'n', 1);
+	dictionary[305] = F;
+	Pair G(300, 'o', 2);
+	dictionary[306] = G;
+	Pair H(305, 'g', 2);
+	dictionary[307] = H;
+
+	ASSERT_EQ(1, algo.findGeneration(dictionary, '.', 'd'));//A
+	ASSERT_EQ(1, algo.findGeneration(dictionary, 'd', 'd'));//B
+	ASSERT_EQ(2, algo.findGeneration(dictionary, 300, 'i'));//C
+	ASSERT_EQ(2, algo.findGeneration(dictionary, 301, 'y'));//D
+	ASSERT_EQ(3, algo.findGeneration(dictionary, 302, 303));//E
+	ASSERT_EQ(1, algo.findGeneration(dictionary, 'i', 'n'));//F
+	ASSERT_EQ(2, algo.findGeneration(dictionary, 300, 'o'));//G
+	ASSERT_EQ(2, algo.findGeneration(dictionary, 305, 'g'));//H
+}
+
+TEST(createCompactDictionary, createGenerationVectors_diddy)
+{
+	AlgorithmP algo;
+
+	unordered_map<unsigned int, Pair> dictionary;
+	Pair A('.', 'd', 1);
+	dictionary[300] = A;
+	Pair B('d', 'd', 1);
+	dictionary[301] = B;
+	Pair C(300, 'i', 2);
+	dictionary[302] = C;
+	Pair D(301, 'y', 2);
+	dictionary[303] = D;
+	Pair E(302, 303, 3);
+	dictionary[304] = E;
+	Pair F('i', 'n', 1);
+	dictionary[305] = F;
+	Pair G(300, 'o', 2);
+	dictionary[306] = G;
+	Pair H(305, 'g', 2);
+	dictionary[307] = H;
+
+	vector<vector<CompactPair>> generationVectors;
+	algo.createGenerationVectors(dictionary, generationVectors);
+
+	vector<CompactPair> gen0;
+	gen0.push_back(CompactPair(46, 100));
+	gen0.push_back(CompactPair(100, 100));
+	gen0.push_back(CompactPair(105, 110));
+	vector<CompactPair> gen1;
+	gen1.push_back(CompactPair(300, 105));
+	gen1.push_back(CompactPair(301, 121));
+	gen1.push_back(CompactPair(300, 111));
+	gen1.push_back(CompactPair(305, 103));
+	vector<CompactPair> gen2;
+	gen2.push_back(CompactPair(302, 303));
+	vector<CompactPair> gen3;
+
+	for (int i = 0; i < generationVectors[0].size(); ++i)
+	{
+		ASSERT_TRUE(generationVectors[0][i].leftSymbol == gen0[i].leftSymbol);
+		ASSERT_TRUE(generationVectors[0][i].rightSymbol == gen0[i].rightSymbol);
+	}
+	for (int i = 0; i < generationVectors[1].size(); ++i)
+	{
+		ASSERT_TRUE(generationVectors[1][i].leftSymbol == gen1[i].leftSymbol);
+		ASSERT_TRUE(generationVectors[1][i].rightSymbol == gen1[i].rightSymbol);
+	}
+	for (int i = 0; i < generationVectors[2].size(); ++i)
+	{
+		ASSERT_TRUE(generationVectors[2][i].leftSymbol == gen2[i].leftSymbol);
+		ASSERT_TRUE(generationVectors[2][i].rightSymbol == gen2[i].rightSymbol);
+	}
+	for (int i = 0; i < generationVectors[3].size(); ++i)
+	{
+		ASSERT_TRUE(generationVectors[3][i].leftSymbol == gen3[i].leftSymbol);
+		ASSERT_TRUE(generationVectors[3][i].rightSymbol == gen3[i].rightSymbol);
+	}
+}
+
+TEST(createCompactDictionary, createFinalPairVector)
+{
+	AlgorithmP algo;
+
+	unordered_map<unsigned int, Pair> dictionary;
+	Pair A('.', 'd', 1);
+	dictionary[300] = A;
+	Pair B('d', 'd', 1);
+	dictionary[301] = B;
+	Pair C(300, 'i', 2);
+	dictionary[302] = C;
+	Pair D(301, 'y', 2);
+	dictionary[303] = D;
+	Pair E(302, 303, 3);
+	dictionary[304] = E;
+	Pair F('i', 'n', 1);
+	dictionary[305] = F;
+	Pair G(300, 'o', 2);
+	dictionary[306] = G;
+	Pair H(305, 'g', 2);
+	dictionary[307] = H;
+
+	vector<vector<CompactPair>> generationVectors;
+	algo.createGenerationVectors(dictionary, generationVectors);
+
+	vector<unsigned int> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+
+	vector<CompactPair> pairs;
+	algo.createFinalPairVector(dictionary, generationVectors, pairs, terminals);
+
+	int x = 1;
+}

@@ -22,7 +22,21 @@ bool comPair(CompactPair fst, CompactPair snd)
 		return false;
 }
 
-//TODO: Make a main function for the dictionary stuff & add it to the other code + test
+//This is the main dictionary function. It fills the pair vector based on dictionary + terminals.
+void AlgorithmP::generateCompactDictionary(
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_set<unsigned int>& terminals,
+	vector<CompactPair>& pairVector)
+{
+	vector<unsigned int> terminalVector;
+	terminalVector.assign(terminals.begin(), terminals.end());
+
+	//Split dictionary by generation
+	vector<vector<CompactPair>> generationVectors;
+	createGenerationVectors(dictionary, generationVectors);
+
+	createFinalPairVector(dictionary, generationVectors, pairVector, terminalVector);
+}
 
 void AlgorithmP::createFinalPairVector(
 	unordered_map<unsigned int, Pair>& dictionary,
@@ -39,23 +53,26 @@ void AlgorithmP::createFinalPairVector(
 	unordered_map<unsigned int,unordered_map<unsigned int, unsigned int>> indices;
 
 	//Generation 1
-	for (int i = 0; i < generationVectors[0].size(); ++i)
+	for (int xyz = 0; xyz < generationVectors[0].size(); ++xyz)
 	{
 		//Find the new indices of the two symbols in this pair
-		unsigned int left = terminalIndices[generationVectors[0][i].leftSymbol];
-		unsigned int right = terminalIndices[generationVectors[0][i].rightSymbol];
+		unsigned int left = terminalIndices[generationVectors[0][xyz].leftSymbol];
+		unsigned int right = terminalIndices[generationVectors[0][xyz].rightSymbol];
 
 		//Make a pair out of the indices we found, then push it to the vector
 		CompactPair p(left,right);
 		pairVector.push_back(p);
 
 		//Record the index of this symbol
-		indices[p.leftSymbol][p.rightSymbol] = i + terminals.size();
+		indices[p.leftSymbol][p.rightSymbol] = xyz + terminals.size();
 	}
+
+	int x = 0;
 
 	//Generation 2+
 	int offset = terminals.size() + generationVectors[0].size();
-	if (generationVectors.size() > 1)
+	//if (generationVectors.size() > 1)
+	//{
 		for (int i = 1; i < generationVectors.size(); ++i)
 		{
 			for (int j = 0; j < generationVectors[i].size(); ++j)
@@ -63,7 +80,7 @@ void AlgorithmP::createFinalPairVector(
 				//Find the new indices of the two symbols in this pair
 				unsigned int left = indices[dictionary[generationVectors[i][j].leftSymbol].leftSymbol][dictionary[generationVectors[i][j].leftSymbol].rightSymbol];
 				unsigned int right = indices[dictionary[generationVectors[i][j].rightSymbol].leftSymbol][dictionary[generationVectors[i][j].rightSymbol].rightSymbol];
-				
+
 				//Make a pair out of the indices we found, then push it to the vector
 				CompactPair p(left, right);
 				pairVector.push_back(p);
@@ -74,6 +91,7 @@ void AlgorithmP::createFinalPairVector(
 			//Update the offset
 			offset += generationVectors[i].size();
 		}
+	//}
 }
 
 void AlgorithmP::createGenerationVectors(
