@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
+	unsigned int symbols(initialSymbolValue);
 
 	Algorithm algorithm;
 	AlgorithmP algP;

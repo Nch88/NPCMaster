@@ -22,13 +22,15 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		char & symbol,
 		long & index,
-		int & symbolCount);
+		int & symbolCount,
+		unordered_set<unsigned int>& terminals);
 	int SequenceArray(
 		Conditions c,
 		ifstream & file,
 		int & blockSize,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
-		vector<SymbolRecord*> & sequenceArray);
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_set<unsigned int>& terminals);
 	void setupPairRecord(
 		unsigned int leftSymbol,
 		unsigned int rightSymbol,

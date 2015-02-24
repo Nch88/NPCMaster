@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include <climits>
 #include <chrono>
@@ -23,13 +24,13 @@
 #include <bitset>
 
 
-// TODO: reference additional headers your program requires here
 #include "MyTimer.h"
 #include "PairRecord.h"
 #include "SymbolRecord.h"
 #include "PairTracker.h"
 #include "Pair.h"
 #include "Conditions.h"
+#include "CompactPair.h"
 #include "Initializer.h"
 #include "MyTest.h"
 #include "Compaction.h"
@@ -39,3 +40,6 @@
 #include "HuffmanNode.h"
 #include "Huffman.h"
 #include "Outputter.h"
+
+//Constants
+const int initialSymbolValue = 256;

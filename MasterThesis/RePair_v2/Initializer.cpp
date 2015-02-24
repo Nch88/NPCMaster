@@ -148,8 +148,10 @@ void Initializer::addToSequenceArray(
 	vector<SymbolRecord*> & sequenceArray,
 	char & symbol,
 	long & index,
-	int & symbolCount)
+	int & symbolCount,
+	unordered_set<unsigned int>& terminals)
 {
+	terminals.emplace(symbol);
 	if (index < sequenceArray.size())
 	{
 		sequenceArray[index]->symbol = (unsigned int)symbol;
@@ -167,7 +169,8 @@ int Initializer::SequenceArray(
 	ifstream & file,
 	int & blockSize,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_set<unsigned int>& terminals)
 {
 	char previousSymbol;
 	char leftSymbol;
@@ -180,11 +183,11 @@ int Initializer::SequenceArray(
 
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
-		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount);
+		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount, terminals);
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
-			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount);
+			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount, terminals);
 			
 			setupPairRecord(
 				(unsigned int)previousSymbol,
@@ -201,7 +204,7 @@ int Initializer::SequenceArray(
 				t.start();
 				cout << "	Timing push back onto Sequence array" << endl;
 			}
-			addToSequenceArray(sequenceArray, rightSymbol, index, symbolCount);
+			addToSequenceArray(sequenceArray, rightSymbol, index, symbolCount, terminals);
 			if (c.timing)
 			{
 				t.stop();

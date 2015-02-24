@@ -26,12 +26,15 @@ TEST(manageOneList, oneEntry)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -79,12 +82,15 @@ TEST(manageOneList, multipleEntries)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -133,12 +139,15 @@ TEST(replaceAllPairsThorough, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -397,12 +406,15 @@ TEST(testingLowerPriority, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -474,12 +486,15 @@ TEST(testingLowerPriority, duplicates)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -548,12 +563,15 @@ TEST(testingRun, duplicates2)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -569,6 +587,7 @@ TEST(testingRun, duplicates2)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -600,12 +619,15 @@ TEST(testingRun, duplicates3)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -621,6 +643,7 @@ TEST(testingRun, duplicates3)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -652,12 +675,15 @@ TEST(testingRun, duplicatesLong)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -673,6 +699,7 @@ TEST(testingRun, duplicatesLong)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -704,12 +731,15 @@ TEST(testingRun, duplicatesLong3)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -725,6 +755,7 @@ TEST(testingRun, duplicatesLong3)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -756,12 +787,15 @@ TEST(crashPossiblePointerError, 264a)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);

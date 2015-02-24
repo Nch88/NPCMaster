@@ -2078,7 +2078,8 @@ TEST(replacePair, middleOfSequence)
 	sequenceArray.push_back(trdPairRight);
 
 	Pair pair(scdPairLeft->symbol,
-		scdPairRight->symbol);
+		scdPairRight->symbol, 
+		0);
 
 	PairRecord * pairRecord = activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
@@ -2146,7 +2147,8 @@ TEST(replacePair, endOfSequence)
 	sequenceArray.push_back(trdPairRight);
 
 	Pair pair(trdPairLeft->symbol,
-		trdPairRight->symbol);
+		trdPairRight->symbol,
+		0);
 
 	long noNext = -1;
 
@@ -2214,7 +2216,8 @@ TEST(replacePair, severalEmptySymbols)
 	sequenceArray.push_back(trdPairRight);
 
 	Pair pair(fstPairLeft->symbol,
-		trdPairLeft->symbol);
+		trdPairLeft->symbol,
+		0);
 
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][trdPairLeft->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
@@ -2282,7 +2285,8 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	sequenceArray.push_back(trdPairRight);
 
 	Pair pair(fstPairLeft->symbol,
-		scdPairRight->symbol);
+		scdPairRight->symbol,
+		0);
 
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
@@ -2350,7 +2354,8 @@ TEST(replacePair, deletingPairRecord)
 	sequenceArray.push_back(trdPairRight);
 
 	Pair pair(fstPairLeft->symbol,
-		scdPairRight->symbol);
+		scdPairRight->symbol,
+		0);
 
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 1;
@@ -2434,7 +2439,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	scdPairRight->next = nullptr;
 
 	Pair pair(scdPairLeft->symbol,
-		scdPairRight->symbol);
+		scdPairRight->symbol,
+		0);
 
 	priorityQueue.resize(sqrt(sequenceArray.size()));
 
@@ -2498,12 +2504,15 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -2621,12 +2630,15 @@ TEST(replaceAllInstancesOfPair, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -2668,12 +2680,15 @@ TEST(testingRun, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
+	unordered_set<unsigned int> terminals;
+
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray);
+		sequenceArray,
+		terminals);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -2689,6 +2704,7 @@ TEST(testingRun, diddy)
 		dictionary,
 		activePairs,
 		priorityQueue,
+		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));

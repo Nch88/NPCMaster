@@ -31,6 +31,7 @@ int Algorithm::run(
 	Huffman h;
 	Outputter out;
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_set<unsigned int> terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())
@@ -44,7 +45,7 @@ int Algorithm::run(
 			t.start();
 			cout << "Timing init of Sequence array and active pairs" << endl;
 		}
-		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
+		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
 
 		if (c.timing)
 		{
@@ -60,6 +61,7 @@ int Algorithm::run(
 			dictionary,
 			activePairs,
 			priorityQueue,
+			terminals,
 			symbols,
 			c);
 
