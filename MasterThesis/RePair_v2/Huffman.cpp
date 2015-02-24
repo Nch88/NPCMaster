@@ -33,7 +33,7 @@ void Huffman::setupPriorityQueue(
 	unordered_map<unsigned int, HuffmanNode *> & frequencies,
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq)
 {
-	//Setup priority queue for symbol frequencies
+																				//Setup priority queue for symbol frequencies
 	for each (auto symbol in frequencies)
 	{
 		pq.push(symbol.second);
@@ -103,7 +103,7 @@ void Huffman::sift(int currentNodeIndex,
 	int leftChildIndex = ((currentNodeIndex + 1) * 2) - 1;
 	int rightChildIndex = (((currentNodeIndex + 1) * 2) + 1) - 1;
 
-	if (leftChildIndex >= heapSize) //Stop the recursion
+	if (leftChildIndex >= heapSize)												//Stop the recursion
 		return;
 
 	int parentFrequency = codeLengths[codeLengths[currentNodeIndex]];
@@ -112,12 +112,12 @@ void Huffman::sift(int currentNodeIndex,
 
 	if (rightChildIndex < heapSize &&
 		leftChildFrequency > rightChildFrequency)
-		//Right child is smaller than left
+																				//Right child is smaller than left
 	
 	{
 		if (parentFrequency > rightChildFrequency)
 		{
-			//Swap with right child
+																				//Swap with right child
 			int tmpIndex = codeLengths[currentNodeIndex];
 			codeLengths[currentNodeIndex] = codeLengths[rightChildIndex];
 			codeLengths[rightChildIndex] = tmpIndex;
@@ -127,9 +127,10 @@ void Huffman::sift(int currentNodeIndex,
 		}
 	}
 	else if (parentFrequency > leftChildFrequency)
-		//Left is smaller than right or right does not exist, and left is smaller than parent
+																				//Left is smaller than right or right does not exist, 
+																				//and left is smaller than parent
 	{
-		//Swap with left child
+																				//Swap with left child
 		int tmpIndex = codeLengths[currentNodeIndex];
 		codeLengths[currentNodeIndex] = codeLengths[leftChildIndex];
 		codeLengths[leftChildIndex] = tmpIndex;
@@ -147,7 +148,7 @@ void Huffman::initCodeLengthsArray(
 	for each (auto node in huffmanCodes)
 	{
 		codeLengths[cardinality + i] = node.second->frequency;
-		codeLengths[i] = cardinality + i; //Index of a symbol Points to the symbol's frequency
+		codeLengths[i] = cardinality + i;										//Index of a symbol Points to the symbol's frequency
 		++i;
 	}
 }
@@ -156,8 +157,8 @@ void Huffman::initMinHeap(
 	int heapSize,
 	int *codeLengths)
 {
-	int currentNodeIndex = heapSize - 1; //Last node
-	currentNodeIndex = currentNodeIndex / 2; //Parent of last node
+	int currentNodeIndex = heapSize - 1;										//Last node
+	currentNodeIndex = currentNodeIndex / 2;									//Parent of last node
 
 	while (currentNodeIndex >= 0)
 	{
@@ -166,7 +167,7 @@ void Huffman::initMinHeap(
 	}
 }
 
-void Huffman::phaseTwo(
+void Huffman::collapseHuffmanTree(
 	int heapSize,
 	int *codeLengths)
 {
@@ -195,22 +196,26 @@ void Huffman::phaseTwo(
 	}
 }
 
-void Huffman::phaseThree(
+void Huffman::expandHuffmanTree(
 	int cardinality,
-	int *codeLengths)
+	int *codeLengths,
+	int &maxLength)
 {
 	codeLengths[1] = 0;															//Represents the root with code length one
-
+	maxLength = 0;
 	for (int i = 2; i < cardinality * 2; i++)
 	{
 		codeLengths[i] = codeLengths[codeLengths[i]] + 1;						//Nodes will get codes of length one greater than their parents
+		if (codeLengths[i] > maxLength)
+			maxLength = codeLengths[i];
 	}
 }
 
 void Huffman::getCodeLengths(
 	int cardinality,
 	int *codeLengths,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	int &maxLength)																//Assigns a value to maxLength as an output
 {
 	int heapSize = cardinality;
 	//Phase 1	
@@ -218,9 +223,44 @@ void Huffman::getCodeLengths(
 	initMinHeap(heapSize, codeLengths);
 	//Phase 1  - end
 
-	phaseTwo(heapSize, codeLengths);
+	collapseHuffmanTree(heapSize, codeLengths);
 
-	phaseThree(cardinality, codeLengths);
+	expandHuffmanTree(cardinality, codeLengths, maxLength);
+}
+
+void Huffman::generateCanonicalHuffmanCodes(
+	int cardinality,
+	int maxLength,
+	int *codeLengths,
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+{
+	int *numl = new int[maxLength];
+
+	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
+		numl[i] = 0;
+	
+	for (int i = cardinality; i < cardinality * 2; i++)						//Count number of codes with same length
+		++numl[codeLengths[i] - 1];
+	
+	int *firstCode = new int[maxLength];
+	firstCode[maxLength - 1] = 0;
+
+	for (int i = maxLength - 2; i >= 0; --i)									//Calculates value of first code for each code length
+		firstCode[i] = (firstCode[i + 1] + numl[i + 1]) / 2;
+	
+	int *nextCode = new int[maxLength];
+
+	for (int i = 0; i < maxLength; i++)			
+		nextCode[i] = firstCode[i];
+
+	int i = 0;
+	for each (auto huffmanNode in huffmanCodes)
+	{
+		int codeLength = codeLengths[cardinality + i];
+		huffmanNode.second->code = nextCode[codeLength - 1];
+		++nextCode[codeLength - 1];
+		++i;
+	}
 }
 
 void Huffman::encode(
@@ -229,10 +269,10 @@ void Huffman::encode(
 {	
 	int cardinality = 0;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	getFrequencies(sequenceArray, huffmanCodes, cardinality); //+ cardinality of compressed sequence
-	int *codeLengths = new int[cardinality * 2]; //Code lengths will appear in positions [cardinality - (2*cardinality -1)]
+	getFrequencies(sequenceArray, huffmanCodes, cardinality);					//+ cardinality of compressed sequence
+	int *codeLengths = new int[cardinality * 2];								//Code lengths will appear in positions [cardinality - (2*cardinality -1)]
+	int maxLength = 0;
+	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
 	
-	getCodeLengths(cardinality, codeLengths, huffmanCodes);
-	
-	//TODO: Create actual canonical Huffman codes
+	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, huffmanCodes);
 }

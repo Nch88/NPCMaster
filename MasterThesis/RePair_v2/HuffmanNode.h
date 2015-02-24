@@ -4,7 +4,7 @@ class HuffmanNode
 public:
 	unsigned int symbol;
 	int frequency;
-	string code;
+	int code;
 	HuffmanNode * leftChild;
 	HuffmanNode * rightChild;
 

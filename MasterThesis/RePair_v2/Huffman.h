@@ -44,14 +44,21 @@ public:
 	void Huffman::initMinHeap(
 		int heapSize,
 		int *codeLengths);
-	void Huffman::phaseTwo(
+	void Huffman::collapseHuffmanTree(
 		int heapSize,
 		int *codeLengths);
-	void Huffman::phaseThree(
+	void Huffman::expandHuffmanTree(
 		int cardinality,
-		int *codeLengths);
+		int *codeLengths,
+		int &maxLength);
 	void Huffman::getCodeLengths(
 		int cardinality,
+		int *codeLengths,
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+		int &maxLength);
+	void Huffman::generateCanonicalHuffmanCodes(
+		int cardinality,
+		int maxLength,
 		int *codeLengths,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 	void encode(vector<SymbolRecord*> & sequenceArray,
