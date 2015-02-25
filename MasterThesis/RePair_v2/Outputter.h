@@ -13,6 +13,11 @@ public:
 		vector<SymbolRecord *>& sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 		bool firstBlock);
+	void Outputter::canonicalHuffmanEncoding(
+		string inputFile,
+		vector<SymbolRecord *>& sequenceArray,
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+		bool firstBlock);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
