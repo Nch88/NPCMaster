@@ -31,6 +31,7 @@ void AlgorithmP::generateCompactDictionary(
 {
 	vector<unsigned int> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
+	sort(terminalVector.begin(), terminalVector.end());
 
 	//Split dictionary by generation
 	vector<vector<CompactPair*>> generationVectors = *(new vector<vector<CompactPair*>>());

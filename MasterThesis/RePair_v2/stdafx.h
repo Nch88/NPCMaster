@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <math.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,6 +32,7 @@
 #include "Pair.h"
 #include "Conditions.h"
 #include "CompactPair.h"
+#include "GammaCode.h"
 #include "Initializer.h"
 #include "MyTest.h"
 #include "Compaction.h"
