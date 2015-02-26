@@ -278,7 +278,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	int *&firstCode)
 {	
 	int cardinality = 0;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
@@ -287,7 +288,7 @@ void Huffman::encode(
 	int maxLength = 0;
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
 
-	int *firstCode = new int[maxLength];
+	firstCode = new int[maxLength];
 	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
 }
 
@@ -303,17 +304,42 @@ void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)
 	}
 }
 
+void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk)
+{	
+	char rawChunk = rawChunk4;
+	
+	for (int i = 0; i < 32; i++)
+	{
+		if (i == 8)
+			rawChunk = rawChunk3;
+		if (i == 16)
+			rawChunk = rawChunk2;
+		if (i == 24)
+			rawChunk = rawChunk1;
+
+		int v = rawChunk & (1 << (i % 8));					//Read one bit from the current char sized chunk
+		if (v == 0)
+			chunk->set(i, false);
+		else
+			chunk->set(i, true);
+	}	
+}
+
 void Huffman::decode(
 	int *firstCode,
-	ifstream &bitstream,
+	string filename,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
 	vector<unsigned int> &symbolIndexSequence)
 {
+	ifstream bitstream(filename, ios::binary);
 	if (bitstream.is_open())
 	{
-		int length = 1;
+		int length = 0;
 		int value;
-		int rawChunk = 0;
+		char rawChunk1 = 0;
+		char rawChunk2 = 0;
+		char rawChunk3 = 0;
+		char rawChunk4 = 0;
 		bitset<32> *chunk = new bitset<32>();
 		bitset<32> *nextChunk = new bitset<32>();
 		int bitIndexMax = 30;		
@@ -321,33 +347,46 @@ void Huffman::decode(
 		int padding = 0;
 		bool endOfBlock = false;
 
-		bitstream >> rawChunk;														//Read first chunk
-		fillBitset(rawChunk, nextChunk);
+		bitstream.get(rawChunk1);													//Read first chunk
+		bitstream.get(rawChunk2);
+		bitstream.get(rawChunk3);
+		bitstream.get(rawChunk4);
+		fillBitset(rawChunk1, rawChunk2, rawChunk3, rawChunk4, nextChunk);
 
 		while (!endOfBlock)
 		{
 			//Read chunks of data from file
-			chunk = nextChunk;
-			bitstream >> rawChunk;
-			fillBitset(rawChunk, nextChunk);
+			for (int i = 0; i < 32; i++)
+			{
+				chunk->set(i, nextChunk->test(i));
+			}
+			
+			bitstream.get(rawChunk1);													
+			bitstream.get(rawChunk2);
+			bitstream.get(rawChunk3);
+			bitstream.get(rawChunk4);
+			fillBitset(rawChunk1, rawChunk2, rawChunk3, rawChunk4, nextChunk);
 
 			currentBitIndex = bitIndexMax;
 
-			if (nextChunk[bitIndexMax + 1] == 1)									//Last chunk
+			if (nextChunk->test(bitIndexMax + 1))									//Last chunk
 			{
 				endOfBlock = true;
 
 				//read number of padding bits from last block
-				nextChunk[bitIndexMax + 1] = 0;
+				nextChunk->set(bitIndexMax + 1, false);
 				padding = nextChunk->to_ulong();
 			}
 			
 			while (currentBitIndex >= padding)
 			{
 				//Canonical Huffman decoding, init for new symbol
-				length = 1;
-				value = (*chunk)[currentBitIndex];
-				--currentBitIndex;
+				if (length == 0)
+				{
+					length = 1;
+					value = (*chunk)[currentBitIndex];
+					--currentBitIndex;
+				}				
 
 				while (value < firstCode[length - 1] && currentBitIndex >= padding)		//Read bits until we find a symbol
 				{
@@ -360,6 +399,8 @@ void Huffman::decode(
 				{
 					unsigned int symbolIndex = (*symbolIndices)[length][value];
 					symbolIndexSequence.push_back(symbolIndex);
+					length = 0;
+					value = 0;
 				}
 			}
 		}

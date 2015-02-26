@@ -64,11 +64,13 @@ public:
 		int *firstCode,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 	void encode(vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+		int *&firstCode);
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
+	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
 	void Huffman::decode(
 		int *firstCode,
-		ifstream &bitstream,
+		string filename,
 		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
 		vector<unsigned int> &symbolIndexSequence);
 };

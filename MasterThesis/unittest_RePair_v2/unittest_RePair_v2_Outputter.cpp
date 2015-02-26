@@ -57,8 +57,8 @@ TEST(outputter, diddyHuffmanCode)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-
-	h.encode(sequenceArray, huffmanCodes);
+	int *firstCode = nullptr;
+	h.encode(sequenceArray, huffmanCodes, firstCode);
 
 	out.huffmanEncoding(
 		input1,
