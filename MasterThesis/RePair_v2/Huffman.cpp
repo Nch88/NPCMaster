@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Huffman.h"
 
 
@@ -228,10 +227,25 @@ void Huffman::getCodeLengths(
 	expandHuffmanTree(cardinality, codeLengths, maxLength);
 }
 
+string Huffman::codeToString(int intCode, int length)
+{
+	string stringCode = "";
+	for (int i = length - 1; i >= 0; --i)
+	{
+		int v = intCode & (1 << i);
+		if (v == 0)
+			stringCode += "0";
+		else
+			stringCode += "1";
+	}
+	return stringCode;
+}
+
 void Huffman::generateCanonicalHuffmanCodes(
 	int cardinality,
 	int maxLength,
 	int *codeLengths,
+	int *firstCode,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
 {
 	int *numl = new int[maxLength];
@@ -239,10 +253,9 @@ void Huffman::generateCanonicalHuffmanCodes(
 	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
 	
-	for (int i = cardinality; i < cardinality * 2; i++)						//Count number of codes with same length
+	for (int i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
 		++numl[codeLengths[i] - 1];
-	
-	int *firstCode = new int[maxLength];
+
 	firstCode[maxLength - 1] = 0;
 
 	for (int i = maxLength - 2; i >= 0; --i)									//Calculates value of first code for each code length
@@ -250,14 +263,14 @@ void Huffman::generateCanonicalHuffmanCodes(
 	
 	int *nextCode = new int[maxLength];
 
-	for (int i = 0; i < maxLength; i++)			
+	for (int i = 0; i < maxLength; i++)											
 		nextCode[i] = firstCode[i];
 
 	int i = 0;
-	for each (auto huffmanNode in huffmanCodes)
+	for each (auto huffmanNode in huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 	{
 		int codeLength = codeLengths[cardinality + i];
-		huffmanNode.second->code = nextCode[codeLength - 1];
+		huffmanNode.second->code = codeToString(nextCode[codeLength - 1], codeLength);
 		++nextCode[codeLength - 1];
 		++i;
 	}
@@ -273,6 +286,84 @@ void Huffman::encode(
 	int *codeLengths = new int[cardinality * 2];								//Code lengths will appear in positions [cardinality - (2*cardinality -1)]
 	int maxLength = 0;
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
-	
-	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, huffmanCodes);
+
+	int *firstCode = new int[maxLength];
+	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+}
+
+void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)
+{
+	for (int i = 0; i < 32; i++)
+	{
+		int v = rawChunk & (1 << i);
+		if (v == 0)
+			chunk->set(i, false);
+		else
+			chunk->set(i, true);
+	}
+}
+
+void Huffman::decode(
+	int *firstCode,
+	ifstream &bitstream,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
+	vector<unsigned int> &symbolIndexSequence)
+{
+	if (bitstream.is_open())
+	{
+		int length = 1;
+		int value;
+		int rawChunk = 0;
+		bitset<32> *chunk = new bitset<32>();
+		bitset<32> *nextChunk = new bitset<32>();
+		int bitIndexMax = 30;		
+		int currentBitIndex = bitIndexMax;
+		int padding = 0;
+		bool endOfBlock = false;
+
+		bitstream >> rawChunk;														//Read first chunk
+		fillBitset(rawChunk, nextChunk);
+
+		while (!endOfBlock)
+		{
+			//Read chunks of data from file
+			chunk = nextChunk;
+			bitstream >> rawChunk;
+			fillBitset(rawChunk, nextChunk);
+
+			currentBitIndex = bitIndexMax;
+
+			if (nextChunk[bitIndexMax + 1] == 1)									//Last chunk
+			{
+				endOfBlock = true;
+
+				//read number of padding bits from last block
+				nextChunk[bitIndexMax + 1] = 0;
+				padding = nextChunk->to_ulong();
+			}
+			
+			while (currentBitIndex >= padding)
+			{
+				//Canonical Huffman decoding, init for new symbol
+				length = 1;
+				value = (*chunk)[currentBitIndex];
+				--currentBitIndex;
+
+				while (value < firstCode[length - 1] && currentBitIndex >= padding)		//Read bits until we find a symbol
+				{
+					value = 2 * value + (*chunk)[currentBitIndex];
+					--currentBitIndex;
+					++length;
+				}
+
+				if (value >= firstCode[length - 1])
+				{
+					unsigned int symbolIndex = (*symbolIndices)[length][value];
+					symbolIndexSequence.push_back(symbolIndex);
+				}
+			}
+		}
+		delete chunk;
+		delete nextChunk;
+	}
 }

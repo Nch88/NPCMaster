@@ -44,9 +44,11 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 void Outputter::writeChunkFromString(ofstream &myfile, string chunk)
 {
 	bitset<32> *bitsToWrite;
-	bitsToWrite = new bitset<32>(chunk);
+	bitsToWrite = new bitset<32>(chunk);											//!!!!!!!!!!!!!!  Dont allocate/deallocate every time! !!!!!!!!!!!!!!!
 
 	writeChunk(myfile, bitsToWrite);
+
+	delete bitsToWrite;
 }
 
 void Outputter::huffmanEncoding(

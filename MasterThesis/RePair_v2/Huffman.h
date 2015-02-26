@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
 
 class CompareNodes
 {
@@ -56,12 +56,20 @@ public:
 		int *codeLengths,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 		int &maxLength);
+	string Huffman::codeToString(int intCode, int length);
 	void Huffman::generateCanonicalHuffmanCodes(
 		int cardinality,
 		int maxLength,
 		int *codeLengths,
+		int *firstCode,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 	void encode(vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
+	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
+	void Huffman::decode(
+		int *firstCode,
+		ifstream &bitstream,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
+		vector<unsigned int> &symbolIndexSequence);
 };
 

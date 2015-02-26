@@ -11,6 +11,7 @@ Re-Pair_Compression_techniques.zip
 *.pchi
 *.vcxproj
 MasterThesis/unittest_RePair_v2/unittest_RePair_v2.vcxproj
+MasterThesis/RePair_v2/RePair_v2.vcxproj
 MasterThesis/googletest/googletest.vcxproj
 MasterThesis/googletest/googletest.vcxproj.filters
 *.manifest

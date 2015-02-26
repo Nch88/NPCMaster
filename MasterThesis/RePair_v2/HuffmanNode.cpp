@@ -8,7 +8,7 @@ HuffmanNode::HuffmanNode()
 	this->frequency = 0;
 	this->leftChild = nullptr;
 	this->rightChild = nullptr;
-	this->code = 0;
+	this->code = "";
 }
 
 HuffmanNode::HuffmanNode(unsigned int symbol, int frequency)
@@ -17,7 +17,7 @@ HuffmanNode::HuffmanNode(unsigned int symbol, int frequency)
 	this->frequency = frequency;
 	this->leftChild = nullptr;
 	this->rightChild = nullptr;
-	this->code = 0;
+	this->code = "";
 }
 HuffmanNode::HuffmanNode(
 	unsigned int symbol,
@@ -29,7 +29,7 @@ HuffmanNode::HuffmanNode(
 	this->frequency = frequency;
 	this->leftChild = leftChild;
 	this->rightChild = rightChild;
-	this->code = 0;
+	this->code = "";
 }
 
 HuffmanNode::~HuffmanNode()
