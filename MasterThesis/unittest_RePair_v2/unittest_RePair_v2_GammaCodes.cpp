@@ -3,7 +3,7 @@
 
 using namespace std;
 
-MyTest mtest;
+MyTest mtst;
 
 TEST(encoding, getBinaryCode)
 {

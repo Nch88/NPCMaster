@@ -3,8 +3,8 @@
 class GammaCode
 {
 public:
-	string getBinaryCode(unsigned int input);
-	string getGammaCode(unsigned int input);
+	std::string getBinaryCode(unsigned int input);
+	std::string getGammaCode(unsigned int input);
 	void makeFinalString(std::vector<CompactPair*>& pairs,
 		std::unordered_set<unsigned int>& terminals,
 		std::string& terminalsGamma,

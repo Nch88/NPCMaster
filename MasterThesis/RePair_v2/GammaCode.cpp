@@ -35,6 +35,7 @@ string GammaCode::getGammaCode(unsigned int input)
 	//Binary code for rest
 	int secondPart = input - pow(2.0, floor(log2(input)));
 	s += getBinaryCode(secondPart);
+	return s;
 }
 
 void GammaCode::encode(vector<CompactPair*>& pairs,
@@ -49,7 +50,7 @@ void GammaCode::encode(vector<CompactPair*>& pairs,
 	sort(terminalVector.begin(), terminalVector.end());
 
 	//Gamma code for terminals
-	for (int i = 0; i < terminalVector.size; ++i)
+	for (int i = 0; i < terminalVector.size(); ++i)
 	{
 		terminalsGamma += getGammaCode(terminalVector[i]);
 	}
@@ -67,9 +68,9 @@ void GammaCode::encode(vector<CompactPair*>& pairs,
 	for (int i = 0; i < pairs.size(); ++i)
 	{
 		s = getBinaryCode(pairs[i]->rightSymbol);
-		if (s.length > bitLengthRight)
+		if (s.length() > bitLengthRight)
 			throw new exception("Error in gamma encoding: bit length right not sufficient");
-		for (int j = 0; j < (bitLengthRight - s.length); ++j)
+		for (int j = 0; j < (bitLengthRight - s.length()); ++j)
 		{
 			rightElementsBinary += '0';
 		}
@@ -92,7 +93,7 @@ void GammaCode::makeFinalString(std::vector<CompactPair*>& pairs,
 
 	//Pad header to make the length 32 bit
 	string prefix = "";
-	while (header.length + prefix.length < 32)
+	while (header.length() + prefix.length() < 32)
 	{
 		prefix += '0';
 	}
