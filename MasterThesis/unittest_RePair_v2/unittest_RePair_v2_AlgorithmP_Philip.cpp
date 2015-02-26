@@ -396,5 +396,77 @@ TEST(createCompactDictionary, createFinalPairVector)
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
 	algo.createFinalPairVector(dictionary, generationVectors, pairs, terminals, indices);
 
-	int x = 1;
+	vector<CompactPair> expected;
+	expected.push_back(CompactPair(4, 5));
+	expected.push_back(CompactPair(5, 5));
+	expected.push_back(CompactPair(1, 2));
+	expected.push_back(CompactPair(13, 1));
+	expected.push_back(CompactPair(13, 6));
+	expected.push_back(CompactPair(14, 10));
+	expected.push_back(CompactPair(15, 3));
+	expected.push_back(CompactPair(16, 18));
+
+	for (int i = 0; i < pairs.size(); ++i)
+	{
+		ASSERT_EQ(expected[i].leftSymbol, pairs[i]->leftSymbol);
+		ASSERT_EQ(expected[i].rightSymbol, pairs[i]->rightSymbol);
+	}
+}
+
+TEST(createCompactDictionary, generateCompactDictionary)
+{
+	AlgorithmP algo;
+
+	unordered_map<unsigned int, Pair> dictionary;
+	Pair A('.', 'd', 1);
+	dictionary[300] = A;
+	Pair B('d', 'd', 1);
+	dictionary[301] = B;
+	Pair C(300, 'i', 2);
+	dictionary[302] = C;
+	Pair D(301, 'y', 2);
+	dictionary[303] = D;
+	Pair E(302, 303, 3);
+	dictionary[304] = E;
+	Pair F('i', 'n', 1);
+	dictionary[305] = F;
+	Pair G(300, 'o', 2);
+	dictionary[306] = G;
+	Pair H(305, 'g', 2);
+	dictionary[307] = H;
+
+	unordered_set<unsigned int> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+
+	vector<CompactPair*> pairs = *(new vector<CompactPair*>());
+
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+
+	algo.generateCompactDictionary(dictionary, terminals, pairs, indices);
+
+	vector<CompactPair> expected;
+	expected.push_back(CompactPair(0, 2));
+	expected.push_back(CompactPair(2, 2));
+	expected.push_back(CompactPair(5, 7));
+	expected.push_back(CompactPair(13, 5));
+	expected.push_back(CompactPair(13, 8));
+	expected.push_back(CompactPair(14, 12));
+	expected.push_back(CompactPair(15, 3));
+	expected.push_back(CompactPair(16, 18));
+
+	//Check pairs
+	for (int i = 0; i < pairs.size(); ++i)
+	{
+		ASSERT_EQ(expected[i].leftSymbol, pairs[i]->leftSymbol);
+		ASSERT_EQ(expected[i].rightSymbol, pairs[i]->rightSymbol);
+	}
+
+	//Check indices
+	ASSERT_EQ(13, (*indices['.'])['d']);
+	ASSERT_EQ(14, (*indices['d'])['d']);
+	ASSERT_EQ(15, (*indices['i'])['n']);
+	ASSERT_EQ(16, (*indices[300])['i']);
+	ASSERT_EQ(17, (*indices[300])['o']);
+	ASSERT_EQ(18, (*indices[301])['y']);
+	ASSERT_EQ(19, (*indices[305])['g']);
+	ASSERT_EQ(20, (*indices[302])[303]);
 }
