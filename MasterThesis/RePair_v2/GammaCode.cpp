@@ -188,13 +188,44 @@ void GammaCode::makeFinalString(std::vector<CompactPair*>& pairs,
 	header = prefix + header;
 
 	finalString = header + left + right;
+
+	//Pad terminalsGamma
+	header = getBinaryCode(terminals.size());
+	prefix = "";
+	while (header.length() + prefix.length() < 32)
+	{
+		prefix += '0';
+	}
+	terminalsGamma = prefix + header + terminalsGamma;
 }
 
 void GammaCode::decode(vector<CompactPair*>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& terminalsGamma,
-	string& leftElementsGamma,
-	string& rightElementsBinary)
+	string& finalString)
 {
+	string header = finalString.substr(0, 32);
+	int count = binaryToInt(header);
+	vector<unsigned int> left;
+	string prefix = "", cur;
+	decodeGammaString(prefix, finalString, left, count);
+	int rightElemSize = ceil(log2(count));
+	int i = 0;
+	while (prefix.size() > 0)
+	{
+		cur = prefix.substr(0, rightElemSize);
+		if (prefix.size() > rightElemSize)
+			prefix = prefix.substr(rightElemSize, string::npos);
+		else
+			prefix = "";
+		CompactPair *c = new CompactPair(left[i],binaryToInt(cur));
+		pairs.push_back(c);
+	}
 
+	//Terminals
+	vector<unsigned int> t;
+	header = terminalsGamma.substr(0, 32);
+	count = binaryToInt(header);
+	decodeGammaString(prefix, terminalsGamma, t, count);
+	terminals = *(new unordered_set<unsigned int>(t.begin(),t.end()));
 }
