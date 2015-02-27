@@ -397,6 +397,177 @@ TEST(testingHuffman, generateCodes)
 	ASSERT_EQ("111", huffmanCodes[109]->code);
 }
 
+TEST(testingHuffman, generateCodesExampleFromBook1)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+
+
+	bool skip = false;
+	string string2 = "";
+
+	for (int i = 0; i < 10; i++)
+	{
+		string2 += "a";
+	}
+	for (int i = 0; i < 11; i++)
+	{
+		string2 += "b";
+	}
+	for (int i = 0; i < 12; i++)
+	{
+		string2 += "c";
+	}
+	for (int i = 0; i < 13; i++)
+	{
+		string2 += "d";
+	}
+	for (int i = 0; i < 22; i++)
+	{
+		string2 += "e";
+	}
+	for (int i = 0; i < 23; i++)
+	{
+		string2 += "f";
+	}
+
+	for (int i = 0; i < string2.size(); i++)
+	{
+		sequenceArray.push_back(new SymbolRecord(string2[i], i));
+	}
+
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	int cardinality = 0;
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+
+	int *codeLengths = new int[cardinality * 2];
+	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
+
+	int heapSize = cardinality;
+	h.initMinHeap(heapSize, codeLengths);
+
+	int freqOne = 0;
+	int freqTwo = 0;
+
+	for (int i = 0; i < heapSize; i++)
+	{
+		if (codeLengths[codeLengths[i]] == 1)
+			++freqOne;
+		else if (codeLengths[codeLengths[i]] == 2)
+			++freqTwo;
+	}
+
+	h.collapseHuffmanTree(heapSize, codeLengths);
+	int maxLength = 0;
+	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
+
+	ASSERT_EQ(3, maxLength);
+
+	int *firstCode = new int[maxLength];
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+
+	ASSERT_EQ("000", huffmanCodes[97]->code);
+	ASSERT_EQ("001", huffmanCodes[98]->code);
+	ASSERT_EQ("010", huffmanCodes[99]->code);
+	ASSERT_EQ("011", huffmanCodes[100]->code);
+	ASSERT_EQ("10", huffmanCodes[101]->code);
+	ASSERT_EQ("11", huffmanCodes[102]->code);
+}
+
+TEST(testingHuffman, generateCodesExampleFromBook2)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+
+
+	bool skip = false;
+	string string2 = "aaaaabbccddeeffffffffffffffggggggggggggggghhhhhhhhhhhhhhh";
+
+	for (int i = 0; i < 5; i++)
+	{
+		string2 += "a";
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		string2 += "b";
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		string2 += "c";
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		string2 += "d";
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		string2 += "e";
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		string2 += "f";
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		string2 += "g";
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		string2 += "h";
+	}
+
+	for (int i = 0; i < string2.size(); i++)												//Setup sequence array for test
+	{
+		sequenceArray.push_back(new SymbolRecord(string2[i], i));
+	}
+
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	int cardinality = 0;
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
+
+	int *codeLengths = new int[cardinality * 2];
+	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
+
+	int heapSize = cardinality;
+	h.initMinHeap(heapSize, codeLengths);
+
+	h.collapseHuffmanTree(heapSize, codeLengths);
+	int maxLength = 0;
+	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
+
+	int *firstCode = new int[maxLength];
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+
+	ASSERT_EQ("001", huffmanCodes[97]->code);
+	ASSERT_EQ("00000", huffmanCodes[98]->code);
+	ASSERT_EQ("00001", huffmanCodes[99]->code);
+	ASSERT_EQ("00010", huffmanCodes[100]->code);
+	ASSERT_EQ("00011", huffmanCodes[101]->code);
+	ASSERT_EQ("01", huffmanCodes[102]->code);
+	ASSERT_EQ("10", huffmanCodes[103]->code);
+	ASSERT_EQ("11", huffmanCodes[104]->code);
+}
+
 TEST(testingHuffman, fillBitset)
 {
 	Huffman h;
@@ -469,8 +640,14 @@ TEST(huffman, decoder)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	int *firstCode = nullptr;
 
-	h.encode(sequenceArray, huffmanCodes);
+	h.encode(sequenceArray, huffmanCodes, firstCode);						//TODO: Return first code array
+
+	ASSERT_EQ(2, firstCode[0]);
+	ASSERT_EQ(4, firstCode[1]);
+	ASSERT_EQ(4, firstCode[2]);
+	ASSERT_EQ(0, firstCode[3]);
 
 	out.huffmanEncoding(
 		input1,
@@ -514,33 +691,31 @@ TEST(huffman, decoder)
 
 	string testTranslator[12] = { "0000", "0001", "100", "0010", "0011", "0100", "101", "110", "0101", "0110", "0111", "111" };
 
-	int firstCode[4] = { 2, 2, 4, 0 };
+	//int firstCode[4] = { 2, 4, 4, 0 };
 	
 	vector<unsigned int> *symbolIndexSequence = new vector<unsigned int>();
 
-	ifstream ifs;
-	ifs.open("Compressed_diddy.txt", ios::binary);
+	string filename2 = "Compressed_diddy.txt";
 	string result = "";
 	string totalResult = "";
 	char byte;
 	bitset<8> *bits;
 	int count = 0;
+	//sHHAo.wahFEumFo
+	
+	h.decode(firstCode, filename2, &symbolIndices, *symbolIndexSequence);
 
-	if (ifs.is_open())
+	for (int i = 0; i < symbolIndexSequence->size(); i++)
 	{
-		h.decode(firstCode, ifs, &symbolIndices, *symbolIndexSequence);
-
-		for (int i = 0; i < symbolIndexSequence->size(); i++)
+		if (i == 1 || i == 2 || i == 4 || i == 9 || i == 12 || i == 13 || i == 14)
 		{
-			if (i == 2 || i == 6 || i == 7 || i == 11)
-			{
-				totalResult += huffmanToSymbols[3][testTranslator[(*symbolIndexSequence)[i]]];
-			}
-			else
-				totalResult += huffmanToSymbols[4][testTranslator[(*symbolIndexSequence)[i]]];
+			totalResult += huffmanToSymbols[3][testTranslator[(*symbolIndexSequence)[i]]];
 		}
-		ASSERT_EQ(string2, totalResult);
+		else
+			totalResult += huffmanToSymbols[4][testTranslator[(*symbolIndexSequence)[i]]];
 	}
-	else
+	if (totalResult == "")
 		ASSERT_TRUE(false);
+	else
+		ASSERT_EQ(string2, totalResult);
 }

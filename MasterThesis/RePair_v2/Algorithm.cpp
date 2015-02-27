@@ -66,7 +66,8 @@ int Algorithm::run(
 			c);
 
 		//Huffman encode the sequence array
-		h.encode(sequenceArray, huffmanCodes);
+		int *firstCode = nullptr;
+		h.encode(sequenceArray, huffmanCodes, firstCode);
 		out.huffmanEncoding(filename, sequenceArray, huffmanCodes, firstBlock);
 		if (c.timing)
 		{
