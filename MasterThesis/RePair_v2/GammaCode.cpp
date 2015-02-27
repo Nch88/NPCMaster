@@ -1,14 +1,32 @@
 #include "stdafx.h"
 #include "GammaCode.h"
 
+unsigned int GammaCode::binaryToInt(string binary)
+{
+	if (binary == "")
+		return 0;
+	unsigned int result = 0;
+	int i = binary.size() - 1;
+	while (i >= 0)
+	{
+		if (binary[i] == '1')
+			result += pow(2, ((binary.size() - 1) - i));
+		--i;
+	}
+	return result;
+}
+
 string GammaCode::getBinaryCode(unsigned int input)
 {
 	string s = "";
 	int i = 31;
-	while (i >= 0 && (input & (1 << i)) == 0)
+
+	//Set i to index of most significant non-zero bit, or to the least significant if input = 0
+	while (i > 0 && (input & (1 << i)) == 0)
 	{
 		--i;
 	}
+
 	while (i >= 0)
 	{
 		if (input & (1 << i))
@@ -20,22 +38,92 @@ string GammaCode::getBinaryCode(unsigned int input)
 	return s;
 }
 
-string GammaCode::getGammaCode(unsigned int input)
+unsigned int GammaCode::gammaToInt(string gamma)
 {
-	string s = "";
+	int unary = 0;
+	do
+	{
+		++unary;
+	} 
+	while (gamma[unary] == '1');
+
+	unsigned int binary = binaryToInt(gamma.substr(unary, string::npos));
+
+	return pow(2, unary - 1) + binary - 1;
+}
+
+void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<unsigned int> &output, unsigned int count)
+{
+	//Start is the index of the start of the current number
+	int index = 0, start = 0;
+
+	string input = prefix + gamma, substring = "";
+	unsigned int unary, binary;
+
+	while (output.size() < count)
+	{
+		while (index < input.size() && input[index] == '1')
+		{
+			++index;
+		}
+
+		unary = index + 1 - start;
+
+		if (index + ((int)unary) > input.size())
+		{
+			//End of input, set remainder and return
+			prefix = input.substr(start, string::npos);
+			return;
+		}
+		else
+		{
+			//We have enough input left
+			if ((index + 1) > (index + ((int)unary) - 1))
+				binary = 0;
+			else
+			{
+				substring = input.substr(index + 1, (unary - 1));
+				binary = binaryToInt(substring);
+			}
+			output.push_back(pow(2, unary - 1) + binary - 1);
+		}
+		index += unary;
+		start = index;
+	}
+	if (index == input.size())
+		prefix = "";
+	else
+		prefix = input.substr(index, string::npos);
+}
+
+string GammaCode::getGammaCode(unsigned int in)
+{
+	//Adjust for 0-origin
+	unsigned int input = in + 1;
+	
+	if (input == 1)//Else we would return "00"
+		return "0";
+
+	string firstPart = "", secondPart = "", padding = "";
 
 	//Unary code for first part
-	int firstPart = floor(log2(input));
-	for (int i = 0; i < firstPart - 1; ++i)
+	int firstPartLength = floor(log2(input));
+	for (int i = 0; i < firstPartLength; ++i)
 	{
-		s += '1';
+		firstPart += '1';
 	}
-	s += '0';
+	firstPart += '0';
 
 	//Binary code for rest
-	int secondPart = input - pow(2.0, floor(log2(input)));
-	s += getBinaryCode(secondPart);
-	return s;
+	int secondPartInput = input - pow(2.0, floor(log2(input)));
+	int secondPartLength = floor(log2(input));
+
+	//Add padding to get the binary part to be the right length
+	secondPart = getBinaryCode(secondPartInput);
+	for (int i = secondPart.length(); i < secondPartLength; ++i)
+		padding += '0';
+
+	return firstPart + padding + secondPart;
 }
 
 void GammaCode::encode(vector<CompactPair*>& pairs,
