@@ -65,10 +65,7 @@ int Algorithm::run(
 			symbols,
 			c);
 
-		//Huffman encode the sequence array
-		int *firstCode = nullptr;
-		h.encode(sequenceArray, huffmanCodes, firstCode);
-		out.huffmanEncoding(filename, sequenceArray, huffmanCodes, firstBlock);
+																				//TODO: Output dictionary and compressed sequence in Huffman codes
 		if (c.timing)
 		{
 			t.start();

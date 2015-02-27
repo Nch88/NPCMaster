@@ -57,8 +57,10 @@ TEST(outputter, diddyHuffmanCode)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	int *firstCode = nullptr;
-	h.encode(sequenceArray, huffmanCodes, firstCode);
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength);
 
 	out.huffmanEncoding(
 		input1,
@@ -117,4 +119,70 @@ TEST(outputter, diddyHuffmanCode)
 		}
 	}
 	ASSERT_EQ(expected1 + expected2 +expected3, totalResult);
+}
+
+TEST(outputter, diddyHuffmanDictionary)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<unsigned int> terminals;
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength);
+
+	//TODO: Test output of Huffman dictionary
+	//out.huffmanDictionary(
+	//	"testHuffmanDictionary",
+	//	cardinality,)
+		
 }

@@ -58,7 +58,7 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -178,7 +178,7 @@ TEST(testingHuffman, collapseSymbols)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -248,7 +248,7 @@ TEST(testingHuffman, phaseThree)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -275,7 +275,7 @@ TEST(testingHuffman, phaseThree)
 
 	ASSERT_EQ(1, codeLengths[0]);
 	ASSERT_EQ(15, codeLengths[1]);
-	int maxLength = 0;
+	unsigned int maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
 	for (int i = cardinality; i < cardinality * 2; i++)
@@ -356,7 +356,7 @@ TEST(testingHuffman, generateCodes)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -377,11 +377,12 @@ TEST(testingHuffman, generateCodes)
 	}
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	int maxLength = 0;
+	unsigned int maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
-	int *firstCode = new int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+	unsigned int *firstCode = new unsigned int[maxLength];
+	unsigned int *numl = new unsigned int[maxLength];
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
 
 	ASSERT_EQ("0000", huffmanCodes[115]->code);
 	ASSERT_EQ("0001", huffmanCodes[104]->code);
@@ -447,7 +448,7 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -468,13 +469,14 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	}
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	int maxLength = 0;
+	unsigned int maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
 	ASSERT_EQ(3, maxLength);
 
-	int *firstCode = new int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+	unsigned int *firstCode = new unsigned int[maxLength];
+	unsigned int *numl = new unsigned int[maxLength];
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
 
 	ASSERT_EQ("000", huffmanCodes[97]->code);
 	ASSERT_EQ("001", huffmanCodes[98]->code);
@@ -542,7 +544,7 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
 
 	int *codeLengths = new int[cardinality * 2];
@@ -552,11 +554,12 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	h.initMinHeap(heapSize, codeLengths);
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	int maxLength = 0;
+	unsigned int maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
-	int *firstCode = new int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+	unsigned int *firstCode = new unsigned int[maxLength];
+	unsigned int *numl = new unsigned int[maxLength];
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
 
 	ASSERT_EQ("001", huffmanCodes[97]->code);
 	ASSERT_EQ("00000", huffmanCodes[98]->code);
@@ -640,9 +643,10 @@ TEST(huffman, decoder)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	int *firstCode = nullptr;
-
-	h.encode(sequenceArray, huffmanCodes, firstCode);						//TODO: Return first code array
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength);
 
 	ASSERT_EQ(2, firstCode[0]);
 	ASSERT_EQ(4, firstCode[1]);
@@ -691,7 +695,6 @@ TEST(huffman, decoder)
 
 	string testTranslator[12] = { "0000", "0001", "100", "0010", "0011", "0100", "101", "110", "0101", "0110", "0111", "111" };
 
-	//int firstCode[4] = { 2, 4, 4, 0 };
 	
 	vector<unsigned int> *symbolIndexSequence = new vector<unsigned int>();
 

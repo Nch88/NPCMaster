@@ -18,6 +18,12 @@ public:
 		vector<SymbolRecord *>& sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 		bool firstBlock);
+	void Outputter::huffmanDictionary(
+		string outFile,
+		unsigned int maxLength,
+		unsigned int *firstCode,
+		unsigned int *numl,
+		unordered_map<unsigned int, unsigned int> codeToIndex);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,

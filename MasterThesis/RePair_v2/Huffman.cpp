@@ -13,7 +13,7 @@ Huffman::~Huffman()
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_map<unsigned int, HuffmanNode *> & frequencies,
-	int &cardinality)
+	unsigned int &cardinality)
 {
 	for each (auto symbolRecord in sequenceArray)
 	{
@@ -94,7 +94,8 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 	}
 }
 
-void Huffman::sift(int currentNodeIndex,
+void Huffman::sift(
+	int currentNodeIndex,
 	int heapSize,
 	int *codeLengths)
 {
@@ -196,9 +197,9 @@ void Huffman::collapseHuffmanTree(
 }
 
 void Huffman::expandHuffmanTree(
-	int cardinality,
+	unsigned int cardinality,
 	int *codeLengths,
-	int &maxLength)
+	unsigned int &maxLength)
 {
 	codeLengths[1] = 0;															//Represents the root with code length one
 	maxLength = 0;
@@ -211,10 +212,10 @@ void Huffman::expandHuffmanTree(
 }
 
 void Huffman::getCodeLengths(
-	int cardinality,
+	unsigned int cardinality,
 	int *codeLengths,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-	int &maxLength)																//Assigns a value to maxLength as an output
+	unsigned int &maxLength)																//Assigns a value to maxLength as an output
 {
 	int heapSize = cardinality;
 	//Phase 1	
@@ -242,14 +243,13 @@ string Huffman::codeToString(int intCode, int length)
 }
 
 void Huffman::generateCanonicalHuffmanCodes(
-	int cardinality,
-	int maxLength,
+	unsigned int cardinality,
+	unsigned int maxLength,
 	int *codeLengths,
-	int *firstCode,
+	unsigned int *firstCode,
+	unsigned int *numl,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
 {
-	int *numl = new int[maxLength];
-
 	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
 	
@@ -279,17 +279,19 @@ void Huffman::generateCanonicalHuffmanCodes(
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-	int *&firstCode)
+	unsigned int *&firstCode,
+	unsigned int *&numl,
+	unsigned int &maxLength)
 {	
-	int cardinality = 0;
+	unsigned int cardinality = 0;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
 	getFrequencies(sequenceArray, huffmanCodes, cardinality);					//+ cardinality of compressed sequence
-	int *codeLengths = new int[cardinality * 2];								//Code lengths will appear in positions [cardinality - (2*cardinality -1)]
-	int maxLength = 0;
+	int *codeLengths = new int[cardinality * 2];	
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
 
-	firstCode = new int[maxLength];
-	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, huffmanCodes);
+	firstCode = new unsigned int[maxLength];
+	numl = new unsigned int[maxLength];
+	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
 }
 
 void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)
@@ -325,8 +327,106 @@ void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char ra
 	}	
 }
 
+void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk)
+{
+	char rawChunk = rawChunk4;
+
+	for (int i = 0; i < 32; i++)
+	{
+		if (i == 8)
+			rawChunk = rawChunk3;
+		if (i == 16)
+			rawChunk = rawChunk2;
+		if (i == 24)
+			rawChunk = rawChunk1;
+
+		int v = rawChunk & (1 << (i % 8));					//Read one bit from the current char sized chunk
+		if (v == 0)
+			chunk += '0';
+		else
+			chunk += '1';
+	}
+}
+
+//TODO: decodeDictionary
+
+void Huffman::decodeDictionary(
+	ifstream &bitstream,
+	unsigned int *&firstCode,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *&symbolIndices)
+{
+	GammaCode gc;
+	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<unsigned int> actual, unsigned int count);
+	if (bitstream.is_open())
+	{
+		char rawChunk1 = 0;
+		char rawChunk2 = 0;
+		char rawChunk3 = 0;
+		char rawChunk4 = 0;
+		string chunk = "";
+		string prefix = "";
+		unsigned int maxLength = 0;
+		unsigned int symbolsToRead = 0;
+		unsigned int firstCode = 0;
+		unsigned int lastCode = 0;
+		vector<unsigned int> intValues;
+		
+		bitstream.get(rawChunk1);													
+		bitstream.get(rawChunk2);
+		bitstream.get(rawChunk3);
+		bitstream.get(rawChunk4);
+		fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+		symbolsToRead = 1;
+		//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+		maxLength = intValues[0];
+		intValues.pop_back();
+
+		//symbolIndices: code length -> Huffman code -> index
+		for (unsigned int i = 0; i < maxLength; i++)
+		{
+			//Read the number of codes of length i + 1 and the first code of that length
+			symbolsToRead = 2;
+			while (intValues.size() < symbolsToRead)
+			{
+				bitstream.get(rawChunk1);
+				bitstream.get(rawChunk2);
+				bitstream.get(rawChunk3);
+				bitstream.get(rawChunk4);
+				fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+				//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+			}
+
+			symbolsToRead = intValues[0];								
+			firstCode = intValues[1];
+			lastCode = firstCode + symbolsToRead - 1;							//Find the last code for this size of code,
+																				//this is used for efficiency when resetting intValues below
+			intValues.pop_back();												//Reset the vector holding values already used
+			intValues.pop_back();
+
+			//Read the corresponding i + 1 sequence indexes
+			while (intValues.size() < symbolsToRead)
+			{
+				bitstream.get(rawChunk1);
+				bitstream.get(rawChunk2);
+				bitstream.get(rawChunk3);
+				bitstream.get(rawChunk4);
+				fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+				//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+			}
+
+			//Add sequence indexes to dictionary based on Huffman code length
+			while (intValues.size() > 0)
+			{
+				(*symbolIndices)[i + 1][lastCode] = intValues[intValues.size() - 1];
+				--lastCode;
+				intValues.pop_back();											//Remove index we already processed
+			}
+		}
+	}
+}
+
 void Huffman::decode(
-	int *firstCode,
+	unsigned int *firstCode,
 	string filename,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
 	vector<unsigned int> &symbolIndexSequence)

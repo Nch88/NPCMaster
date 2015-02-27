@@ -28,14 +28,15 @@ public:
 	void Huffman::getFrequencies(
 		vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> & frequencies,
-		int &cardinality);
+		unsigned int &cardinality);
 	void Huffman::setupPriorityQueue(
 		unordered_map<unsigned int, HuffmanNode *> & frequencies,
 		priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
-	void Huffman::sift(int currentNodeIndex,
-		int cardinality,
+	void Huffman::sift(
+		int currentNodeIndex,
+		int heapSize,
 		int *codeLengths);
 	void Huffman::initCodeLengthsArray(
 		int cardinality,
@@ -48,28 +49,36 @@ public:
 		int heapSize,
 		int *codeLengths);
 	void Huffman::expandHuffmanTree(
-		int cardinality,
+		unsigned int cardinality,
 		int *codeLengths,
-		int &maxLength);
+		unsigned int &maxLength);
 	void Huffman::getCodeLengths(
-		int cardinality,
+		unsigned int cardinality,
 		int *codeLengths,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-		int &maxLength);
+		unsigned int &maxLength);
 	string Huffman::codeToString(int intCode, int length);
 	void Huffman::generateCanonicalHuffmanCodes(
-		int cardinality,
-		int maxLength,
+		unsigned int cardinality,
+		unsigned int maxLength,
 		int *codeLengths,
-		int *firstCode,
+		unsigned int *firstCode,
+		unsigned int *numl,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
 	void encode(vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-		int *&firstCode);
+		unsigned int *&firstCode,
+		unsigned int *&numl,
+		unsigned int &maxLength);
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
+	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);
+	void Huffman::decodeDictionary(
+		ifstream &bitstream,
+		unsigned int *&firstCode,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *&symbolIndices);
 	void Huffman::decode(
-		int *firstCode,
+		unsigned int *firstCode,
 		string filename,
 		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
 		vector<unsigned int> &symbolIndexSequence);

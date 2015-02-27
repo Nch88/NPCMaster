@@ -37,7 +37,7 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 		uint8_t byte = 0;
 		for (int j = 7; j>=0; --j)
 			byte = (byte << 1) | (*bitsToWrite)[i * 8 + j];
-		myfile << byte;
+		myfile.write((char*)&byte, 1);
 	}
 }
 
@@ -135,6 +135,47 @@ void Outputter::huffmanEncoding(
 
 	if (firstBlock)
 		cout << "created compressed file: " << outFile << endl;
+}
+
+void Outputter::huffmanDictionary(
+	string outFile,
+	unsigned int maxLength,
+	unsigned int *firstCode,
+	unsigned int *numl,
+	unordered_map<unsigned int, unsigned int> codeToIndex)
+{
+	ofstream myfile;
+	myfile.open(outFile, ios::binary | ios::trunc);
+
+	GammaCode gc;
+
+	string gammaCodes = "";
+	string stringToWrite;
+
+	for (unsigned int i = 0; i < maxLength; i++)
+	{
+		gammaCodes += gc.getGammaCode(numl[i]);									//Convert number of codes of this length to gamma code
+																				//and append to the string of codes we want to write.
+		gammaCodes += gc.getGammaCode(firstCode[i]);							//Convert the value of the first code as well
+
+		for (int j = 0; j < numl[i]; j++)
+		{
+			gammaCodes += gc.getGammaCode(codeToIndex[firstCode[i] + j]);		//Write the index corresponding to a specific huffman code (as gamma code)
+		}
+
+		while (gammaCodes.size() >= 32)											//Write as much as possible to file
+		{
+			stringToWrite = gammaCodes.substr(0, 32);
+			gammaCodes = gammaCodes.substr(32, gammaCodes.size());
+
+			writeChunkFromString(myfile, stringToWrite);						//Write 4 bytes of the sequence of gamma codes
+		}
+	}			
+	while (gammaCodes.size() < 32)
+	{
+		gammaCodes += '0';
+	}
+	writeChunkFromString(myfile, gammaCodes);									//Write the last gamma codes and possibly padding
 }
 
 void Outputter::compressedFile(
