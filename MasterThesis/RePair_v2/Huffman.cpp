@@ -348,12 +348,11 @@ void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char ra
 	}
 }
 
-//TODO: decodeDictionary
-
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
 	unsigned int *&firstCode,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *&symbolIndices)
+	//Outputs symbolIndices
 {
 	GammaCode gc;
 	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<unsigned int> actual, unsigned int count);
@@ -377,7 +376,7 @@ void Huffman::decodeDictionary(
 		bitstream.get(rawChunk4);
 		fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
 		symbolsToRead = 1;
-		//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+		gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
 		maxLength = intValues[0];
 		intValues.pop_back();
 
@@ -393,7 +392,7 @@ void Huffman::decodeDictionary(
 				bitstream.get(rawChunk3);
 				bitstream.get(rawChunk4);
 				fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-				//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+				gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
 			}
 
 			symbolsToRead = intValues[0];								
@@ -411,7 +410,7 @@ void Huffman::decodeDictionary(
 				bitstream.get(rawChunk3);
 				bitstream.get(rawChunk4);
 				fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-				//gc.gammaToInt(prefix, chunk, intValues, symbolsToRead);
+				gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
 			}
 
 			//Add sequence indexes to dictionary based on Huffman code length

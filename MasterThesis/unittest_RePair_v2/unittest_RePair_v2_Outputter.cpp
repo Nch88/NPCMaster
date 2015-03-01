@@ -180,9 +180,11 @@ TEST(outputter, diddyHuffmanDictionary)
 	unsigned int maxLength = 0;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength);
 
-	//TODO: Test output of Huffman dictionary
-	//out.huffmanDictionary(
-	//	"testHuffmanDictionary",
-	//	cardinality,)
+	//TODO: Test output of Huffman dictionary (then test decoding of Huffman dictionary)
+	/*out.huffmanDictionary(
+		"testHuffmanDictionary",
+		maxLength,
+		firstCode,
+		numl,)*/
 		
 }
