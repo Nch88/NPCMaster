@@ -80,7 +80,7 @@ TEST(encoding, makeFinalString)
 	string terminalsGamma = "", finalString = "";
 	gc.makeFinalString(pairs, terminals, terminalsGamma, finalString);
 
-	ASSERT_EQ("10010111000110011101011011", terminalsGamma);
+	ASSERT_EQ("0000000000000000000000000000011010010111000110011101011011", terminalsGamma);
 	ASSERT_EQ("00000000000000000000000000000101100100100100100001010011100101", finalString);
 	
 	//Cleanup

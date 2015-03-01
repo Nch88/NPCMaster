@@ -23,6 +23,5 @@ public:
 	void decode(std::vector<CompactPair*>& pairVector,
 		std::unordered_set<unsigned int>& terminals,
 		std::string& terminalsGamma,
-		std::string& leftElementsGamma,
-		std::string& rightElementsBinary);
+		std::string& finalString);
 };
