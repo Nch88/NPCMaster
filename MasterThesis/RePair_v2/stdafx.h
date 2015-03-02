@@ -36,6 +36,7 @@
 #include "Initializer.h"
 #include "MyTest.h"
 #include "Compaction.h"
+#include "Dictionary.h"
 #include "AlgorithmP.h"
 #include "Algorithm.h"
 #include "MyBitset.h"
