@@ -63,11 +63,11 @@ unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
 unsigned int GammaCode::gammaToInt(string gamma)
 {
 	int unary = 0;
-	do
+	while (gamma[unary] == '1')
 	{
 		++unary;
 	} 
-	while (gamma[unary] == '1');
+	++unary;
 
 	unsigned int binary = binaryToInt(gamma.substr(unary, string::npos));
 

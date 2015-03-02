@@ -150,3 +150,10 @@ TEST(decode, decodeGammaString_empty)
 	ASSERT_EQ("101010101010101110100010111010100010101010101101001011", prefix);
 }
 
+TEST(decode, gammaToInt)
+{
+	GammaCode gc;
+	vector<string> gammas = { "0", "100", "101", "11000", "11001", "11010", "11011", "1110000", "1110001", "1110010", "1110011", "1110100", "1110101", "1110110", "1110111", "111100000", "111100001", "111100010", "111100011"};
+	for (int i = 0; i < gammas.size(); ++i)
+		ASSERT_EQ(i, gc.gammaToInt(gammas[i]));
+}
