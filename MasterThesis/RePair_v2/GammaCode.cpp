@@ -190,22 +190,24 @@ void GammaCode::encode(vector<CompactPair*>& pairs,
 
 void GammaCode::makeFinalString(std::vector<CompactPair*>& pairs,
 	std::unordered_set<unsigned int>& terminals,
-	std::string& terminalsGamma,
 	std::string& finalString)
 {
-	string header = "", left = "", right = "";
-	encode(pairs, terminals, terminalsGamma, left, right);
+	string *terminalsGamma = new string();
+
+	string tHeader = "", header = "", left = "", right = "";
+	encode(pairs, terminals, *terminalsGamma, left, right);
 	
 	//Current header is just the nr of pairs
 	//For the generationwise version, header should be nr of pairs in generation, then max index.
 	//This can be written as gamma codes with the padding appended instead of prepended.
-	header += getGammaCode(pairs.size());
 
-	finalString = header + left + right;
+	//Add headers
+	tHeader = getGammaCode(terminals.size());
+	header = getGammaCode(pairs.size());
 
-	//Add header to terminalsGamma
-	header = getGammaCode(terminals.size());
-	terminalsGamma = header + terminalsGamma;
+	finalString = tHeader + *terminalsGamma + header + left + right;
+
+	delete terminalsGamma;
 }
 
 void GammaCode::decode(vector<CompactPair*>& pairs,

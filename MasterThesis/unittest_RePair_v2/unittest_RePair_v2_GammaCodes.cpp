@@ -77,11 +77,10 @@ TEST(encoding, makeFinalString)
 		pairs.push_back(c);
 	}
 	unordered_set<unsigned int> terminals = { 1, 2, 3, 4, 5, 6 };
-	string terminalsGamma = "", finalString = "";
-	gc.makeFinalString(pairs, terminals, terminalsGamma, finalString);
+	string finalString = "";
+	gc.makeFinalString(pairs, terminals, finalString);
 
-	ASSERT_EQ("0000000000000000000000000000011010010111000110011101011011", terminalsGamma);
-	ASSERT_EQ("00000000000000000000000000000101100100100100100001010011100101", finalString);
+	ASSERT_EQ("110111001011100011001110101101111010100100100100100001010011100101", finalString);
 	
 	//Cleanup
 	for (int i = 0; i < 5; ++i)
@@ -150,3 +149,4 @@ TEST(decode, decodeGammaString_empty)
 	
 	ASSERT_EQ("101010101010101110100010111010100010101010101101001011", prefix);
 }
+
