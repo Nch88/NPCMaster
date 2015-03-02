@@ -64,12 +64,14 @@ public:
 		int *codeLengths,
 		unsigned int *firstCode,
 		unsigned int *numl,
-		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes);
+		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol);
 	void encode(vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 		unsigned int *&firstCode,
 		unsigned int *&numl,
-		unsigned int &maxLength);
+		unsigned int &maxLength,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol);
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
 	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);

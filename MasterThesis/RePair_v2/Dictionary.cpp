@@ -16,7 +16,8 @@ void Dictionary::generateCompactDictionary(
 	unordered_map<unsigned int, Pair>& dictionary,
 	unordered_set<unsigned int>& terminals,
 	vector<CompactPair*>& pairVector,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices)
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
+	unordered_map<unsigned int, unsigned int> *terminalIndices)
 {
 	vector<unsigned int> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
@@ -26,7 +27,7 @@ void Dictionary::generateCompactDictionary(
 	vector<vector<CompactPair*>> generationVectors = *(new vector<vector<CompactPair*>>());
 	createGenerationVectors(dictionary, generationVectors);
 
-	createFinalPairVector(dictionary, generationVectors, pairVector, terminalVector, indices);
+	createFinalPairVector(dictionary, generationVectors, pairVector, terminalVector, indices, terminalIndices);
 }
 
 void Dictionary::createFinalPairVector(
@@ -34,11 +35,9 @@ void Dictionary::createFinalPairVector(
 	vector<vector<CompactPair*>>& generationVectors,
 	vector<CompactPair*>& pairVector,
 	vector<unsigned int>& terminals,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices)
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
+	unordered_map<unsigned int, unsigned int> *terminalIndices)
 {
-	//Find the indices of the terminals
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
-
 	for (int i = 0; i < terminals.size(); ++(i))
 	{
 		(*terminalIndices)[terminals[i]] = i;
@@ -112,9 +111,6 @@ void Dictionary::createFinalPairVector(
 			offset += generationVectors[i].size();
 		}
 	}
-	//Delete stuff
-	delete terminalIndices;
-
 }
 
 void Dictionary::createGenerationVectors(

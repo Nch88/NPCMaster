@@ -142,7 +142,10 @@ void Outputter::huffmanDictionary(
 	unsigned int maxLength,
 	unsigned int *firstCode,
 	unsigned int *numl,
-	unordered_map<unsigned int, unsigned int> codeToIndex)
+	unordered_map<unsigned int, Pair> &dictionary,
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
+	unordered_map<unsigned int, unsigned int> *terminalIndices,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
 {
 	ofstream myfile;
 	myfile.open(outFile, ios::binary | ios::trunc);
@@ -152,6 +155,8 @@ void Outputter::huffmanDictionary(
 	string gammaCodes = "";
 	string stringToWrite;
 
+	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
+
 	for (unsigned int i = 0; i < maxLength; i++)
 	{
 		gammaCodes += gc.getGammaCode(numl[i]);									//Convert number of codes of this length to gamma code
@@ -160,7 +165,18 @@ void Outputter::huffmanDictionary(
 
 		for (int j = 0; j < numl[i]; j++)
 		{
-			gammaCodes += gc.getGammaCode(codeToIndex[firstCode[i] + j]);		//Write the index corresponding to a specific huffman code (as gamma code)
+			unsigned int symbol = (*huffmanToSymbol[i + 1])[firstCode[i] + j];
+			unsigned int index;
+			if (symbol >= initialSymbolValue)
+			{
+				unsigned int symbolLeft = dictionary[symbol].leftSymbol;
+				unsigned int symbolRight = dictionary[symbol].rightSymbol;
+				index = (*indices[symbolLeft])[symbolRight];
+			}
+			else
+				index = (*terminalIndices)[symbol];
+			
+			gammaCodes += gc.getGammaCode(index);								//Write the index corresponding to a specific huffman code (as gamma code)
 		}
 
 		while (gammaCodes.size() >= 32)											//Write as much as possible to file

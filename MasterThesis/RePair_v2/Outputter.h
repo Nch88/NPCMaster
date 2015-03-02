@@ -23,7 +23,10 @@ public:
 		unsigned int maxLength,
 		unsigned int *firstCode,
 		unsigned int *numl,
-		unordered_map<unsigned int, unsigned int> codeToIndex);
+		unordered_map<unsigned int, Pair> &dictionary,
+		unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
+		unordered_map<unsigned int, unsigned int> *terminalIndices,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
