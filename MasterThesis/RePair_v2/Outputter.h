@@ -29,8 +29,8 @@ public:
 		vector<SymbolRecord>& sequenceArray,
 		bool firstBlock);
 	void dictionary(
-		string inputFile,
-		unordered_map<unsigned int, Pair>& dictionary,
+		string outFile,
+		string& output,
 		bool firstBlock);
 };
 

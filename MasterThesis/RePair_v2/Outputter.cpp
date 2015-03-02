@@ -204,25 +204,36 @@ void Outputter::compressedFile(
 }
 
 void Outputter::dictionary(
-	string inputFile,
-	unordered_map<unsigned int, Pair>& dictionary,
+	string outFile,
+	string& output,
 	bool firstBlock)
 {
 	ofstream myfile;
-	string outFile = createName(inputFile, "CompressedDictionary");
-
 	if (firstBlock)
-		myfile.open(outFile, ios::trunc);
+		myfile.open(outFile, ios::binary | ios::trunc);
 	else
-		myfile.open(outFile, ios::app);
+		myfile.open(outFile, ios::binary | ios::app);
+	
+	string stringToWrite, rest = output;
 
-	for each (auto pair in dictionary)
-	{
-		myfile << pair.first << " " << pair.second.leftSymbol << "" << pair.second.rightSymbol << endl;
+	//Write as much as possible to file
+	while (rest.size() >= 32)
+	{ 
+		//Write 4 bytes of the sequence of gamma codes
+		stringToWrite = rest.substr(0, 32);
+		rest = rest.substr(32, string::npos);
+		writeChunkFromString(myfile, stringToWrite);						
 	}
-	myfile << UINT_MAX << endl;
-	myfile.close();
 
-	if (firstBlock)
-		cout << "created dictionary file: " << outFile << endl;
+	//Write the last bit, if any is left
+	if (rest != "")
+	{
+		while (rest.size() < 32)
+		{
+			rest += '0';
+		}
+		writeChunkFromString(myfile, rest);
+	}
+
+	myfile.close();
 }
