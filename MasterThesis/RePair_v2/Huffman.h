@@ -77,8 +77,7 @@ public:
 	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
-		unsigned int *&firstCode,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *&symbolIndices);
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices);
 	void Huffman::decode(
 		unsigned int *firstCode,
 		string filename,

@@ -196,7 +196,6 @@ TEST(outputter, diddyHuffmanDictionary)
 	string outstring = "testHuffmanDictionary";
 	
 
-	//TODO: Test output of Huffman dictionary (then test decoding of Huffman dictionary)
 	out.huffmanDictionary(
 		outstring,
 		maxLength,
@@ -222,8 +221,6 @@ TEST(outputter, diddyHuffmanDictionary)
 	int count = 0;
 
 	GammaCode gc;
-
-	unsigned int test = gc.gammaToInt("1111000001");
 
 	if (ifs.is_open())
 	{

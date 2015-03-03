@@ -35,5 +35,13 @@ public:
 		string outFile,
 		string& output,
 		bool firstBlock);
+	void Outputter::all(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_map<unsigned int, Pair>& dictionary,
+		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
+		unordered_set<unsigned int>& terminals,
+		unsigned int & Symbols,
+		Conditions& c);
 };
 

@@ -726,3 +726,262 @@ TEST(huffman, decoder)
 	else
 		ASSERT_EQ(string2, totalResult);
 }
+
+TEST(huffman, decodeDictionaryDiddy)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<unsigned int> terminals;
+	vector<CompactPair*> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+
+	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+
+	finalDict.generateCompactDictionary(
+		dictionary,
+		terminals,
+		pairs,
+		indices,
+		terminalIndices);
+
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+
+	string outstring = "testHuffmanDictionary2";
+
+	out.huffmanDictionary(
+		outstring,
+		maxLength,
+		firstCode,
+		numl,
+		dictionary,
+		indices,
+		terminalIndices,
+		huffmanToSymbol);
+
+	ifstream ifs;
+	ifs.open(outstring, ios::binary);
+
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices = new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>>();
+
+	h.decodeDictionary(ifs, symbolIndices);
+
+	ASSERT_EQ(4, (*symbolIndices)[3].size());
+	ASSERT_EQ(8, (*symbolIndices)[4].size());
+
+	unsigned int codeLength = 3;
+	unsigned int code = 4;
+	unsigned int symbol = (*huffmanToSymbol[3])[4];
+	unsigned int index;
+
+	//Test codes of length 3
+	
+	for (int i = 4; i < 8; i++)
+	{
+		code = i;
+		symbol = (*huffmanToSymbol[codeLength])[code];
+
+		if (symbol >= initialSymbolValue)
+			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+		else
+			index = (*terminalIndices)[symbol];
+
+		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+	}
+
+	//Test codes of length 4
+	codeLength = 4;
+
+	for (int i = 4; i < 12; i++)
+	{
+		code = i;
+		symbol = (*huffmanToSymbol[codeLength])[code];
+
+		if (symbol >= initialSymbolValue)
+			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+		else
+			index = (*terminalIndices)[symbol];
+
+		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+	}
+}
+
+TEST(huffman, decodeDictionaryDuplicates)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+
+	string input1 = "duplicatesLong.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<unsigned int> terminals;
+	vector<CompactPair*> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbb";
+	string string2 = "DDAEE"; //Actual: "259 259 256 260 260"
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+
+	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+
+	finalDict.generateCompactDictionary(
+		dictionary,
+		terminals,
+		pairs,
+		indices,
+		terminalIndices);
+
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+
+	string outstring = "testDuplicatesLongCompressed";
+	out.huffmanDictionary(
+		outstring,
+		maxLength,
+		firstCode,
+		numl,
+		dictionary,
+		indices,
+		terminalIndices,
+		huffmanToSymbol);
+
+	ifstream ifs;
+	ifs.open(outstring, ios::binary);
+
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices = new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>>();
+
+	h.decodeDictionary(ifs, symbolIndices);
+
+	ASSERT_EQ(1, (*symbolIndices)[1].size());
+	ASSERT_EQ(2, (*symbolIndices)[2].size());
+
+	unsigned int codeLength = 1;
+	unsigned int code = 1;
+	unsigned int symbol = (*huffmanToSymbol[1])[1];
+	unsigned int index;
+
+	//Test codes of length 1
+
+	for (int i = code; i < 2; i++)
+	{
+		code = i;
+		symbol = (*huffmanToSymbol[codeLength])[code];
+
+		if (symbol >= initialSymbolValue)
+			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+		else
+			index = (*terminalIndices)[symbol];
+
+		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+	}
+
+	//Test codes of length 2
+	codeLength = 2;
+
+	for (int i = 0; i < 2; i++)
+	{
+		code = i;
+		symbol = (*huffmanToSymbol[codeLength])[code];
+
+		if (symbol >= initialSymbolValue)
+			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+		else
+			index = (*terminalIndices)[symbol];
+
+		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+	}
+}
