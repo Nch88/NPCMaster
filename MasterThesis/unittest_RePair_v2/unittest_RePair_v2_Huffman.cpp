@@ -382,7 +382,8 @@ TEST(testingHuffman, generateCodes)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("0000", huffmanCodes[115]->code);
 	ASSERT_EQ("0001", huffmanCodes[104]->code);
@@ -476,7 +477,8 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("000", huffmanCodes[97]->code);
 	ASSERT_EQ("001", huffmanCodes[98]->code);
@@ -559,7 +561,8 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("001", huffmanCodes[97]->code);
 	ASSERT_EQ("00000", huffmanCodes[98]->code);
@@ -646,7 +649,8 @@ TEST(huffman, decoder)
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength);
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	ASSERT_EQ(2, firstCode[0]);
 	ASSERT_EQ(4, firstCode[1]);

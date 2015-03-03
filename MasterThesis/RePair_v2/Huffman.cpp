@@ -248,7 +248,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 	int *codeLengths,
 	unsigned int *firstCode,
 	unsigned int *numl,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
 {
 	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
@@ -270,7 +271,11 @@ void Huffman::generateCanonicalHuffmanCodes(
 	for each (auto huffmanNode in huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 	{
 		int codeLength = codeLengths[cardinality + i];
-		huffmanNode.second->code = codeToString(nextCode[codeLength - 1], codeLength);
+		string code = codeToString(nextCode[codeLength - 1], codeLength);
+		huffmanNode.second->code = code;
+		if (!huffmanToSymbol[codeLength])
+			huffmanToSymbol[codeLength] = new unordered_map<unsigned int, unsigned int>();
+		(*huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
 		++nextCode[codeLength - 1];
 		++i;
 	}
@@ -281,7 +286,8 @@ void Huffman::encode(
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 	unsigned int *&firstCode,
 	unsigned int *&numl,
-	unsigned int &maxLength)
+	unsigned int &maxLength,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
 {	
 	unsigned int cardinality = 0;
 	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
@@ -291,7 +297,7 @@ void Huffman::encode(
 
 	firstCode = new unsigned int[maxLength];
 	numl = new unsigned int[maxLength];
-	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes);
+	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 }
 
 void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)
