@@ -41,10 +41,11 @@ string GammaCode::getBinaryCode(unsigned int input)
 unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
 {
 	int unary = 0;
-	do
+	while (gamma[unary] == '1')
 	{
 		++unary;
-	} while (gamma[unary] == '1');
+	} 
+	++unary;
 
 	unsigned int binary;
 	if (unary == 1)
@@ -55,6 +56,7 @@ unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
 		binary = binaryToInt(substring);
 	}
 
+	//Set i to the index of the start of the next number
 	i = unary + unary - 1;
 
 	return pow(2, unary - 1) + binary - 1;
@@ -166,14 +168,14 @@ void GammaCode::encode(vector<CompactPair*>& pairs,
 	}
 
 	//Gamma code for left elements
-	leftElementsGamma += getGammaCode(pairs[1]->leftSymbol);
+	leftElementsGamma += getGammaCode(pairs[0]->leftSymbol);
 	for (int i = 0; i < pairs.size() - 1; ++i)
 	{
 		leftElementsGamma += getGammaCode(pairs[i + 1]->leftSymbol - pairs[i]->leftSymbol);
 	}
 
 	//Binary code for right elements
-	int bitLengthRight = ceil(log2(pairs.size()));//This won't work for one generation at a time
+	int bitLengthRight = floor(log2(pairs.size())) + 1;//This won't work for one generation at a time
 	string s;
 	for (int i = 0; i < pairs.size(); ++i)
 	{
@@ -229,16 +231,21 @@ void GammaCode::decode(vector<CompactPair*>& pairs,
 	vector<unsigned int> left;
 	string prefix = "", cur;
 	decodeGammaString(prefix, pairString.substr(startIndex,string::npos), left, count);
-	int rightElemSize = ceil(log2(count));
+	int rightElemSize = floor(log2(count)) + 1;
 	int i = 0;
+	unsigned int leftVal = 0;
 	while (prefix.size() > 0)
 	{
+		leftVal += left[i];
+
 		cur = prefix.substr(0, rightElemSize);
 		if (prefix.size() > rightElemSize)
 			prefix = prefix.substr(rightElemSize, string::npos);
 		else
 			prefix = "";
-		CompactPair *c = new CompactPair(left[i],binaryToInt(cur));
+		CompactPair *c = new CompactPair(leftVal,binaryToInt(cur));
 		pairs.push_back(c);
+
+		++i;
 	}
 }
