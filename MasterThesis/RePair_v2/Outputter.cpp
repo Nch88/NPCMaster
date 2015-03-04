@@ -30,6 +30,12 @@ string Outputter::createName(string inputFile, string addName)
 	return outFile;
 }
 
+string Outputter::addFilenameEnding(string inputFile, string addName)
+{
+	inputFile += addName;
+	return inputFile;
+}
+
 void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 {
 	int n = bitsToWrite->size() / 8;
@@ -41,25 +47,27 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 	}
 }
 
-void Outputter::writeChunkFromString(ofstream &myfile, string chunk)
-{
-	bitset<32> *bitsToWrite;
-	bitsToWrite = new bitset<32>(chunk);											//!!!!!!!!!!!!!!  Dont allocate/deallocate every time! !!!!!!!!!!!!!!!
+void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite)
+{											
+	for (int i = 0; i < 32; i++)
+	{
+		if (chunk[i] == '1')
+			bitsToWrite->set(31 - i, true);
+		else
+			bitsToWrite->set(31 - i, false);
+	}
 
 	writeChunk(myfile, bitsToWrite);
-
-	delete bitsToWrite;
 }
 
 void Outputter::huffmanEncoding(
-	string inputFile,
+	string outFile,
 	vector<SymbolRecord *>& sequenceArray,
 	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 	bool firstBlock)
 {
 	ofstream myfile;
-	string outFile = createName(inputFile, "Compressed");	
-	bitset<32> *bitsToWrite;
+	bitset<32> *bitsToWrite = new bitset<32>();
 	short chunkSize = sizeof(bitset<32>) * CHAR_BIT; //Bitset outputs a certain minimum nr of bytes
 	string chunk = "";
 	string specialBit = "0";
@@ -105,7 +113,7 @@ void Outputter::huffmanEncoding(
 		//If last symbol the do not write yet as we need to pad the chunk
 		if (seqIndex < sequenceArray.size())
 		{
-			writeChunkFromString(myfile, chunk);
+			writeChunkFromString(myfile, chunk, bitsToWrite);
 			chunk = "";
 		}
 	}
@@ -123,13 +131,15 @@ void Outputter::huffmanEncoding(
 	}
 
 	//Write the last actual chunk
-	writeChunkFromString(myfile, chunk);
+	writeChunkFromString(myfile, chunk, bitsToWrite);
 	chunk = "";
 
 	//Write padding chunk
+	delete bitsToWrite;
 	bitsToWrite = new bitset<32>(paddingBits);
 	bitsToWrite->set(bitsToWrite->size() - 1, true);
 	writeChunk(myfile, bitsToWrite);
+	delete bitsToWrite;
 
 	myfile.close();
 
@@ -148,8 +158,8 @@ void Outputter::huffmanDictionary(
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
 {
 	ofstream myfile;
-	myfile.open(outFile, ios::binary | ios::trunc);
-
+	myfile.open(outFile, ios::binary | ios::app);
+	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
 
 	string gammaCodes = "";
@@ -184,15 +194,17 @@ void Outputter::huffmanDictionary(
 			stringToWrite = gammaCodes.substr(0, 32);
 			gammaCodes = gammaCodes.substr(32, gammaCodes.size());
 
-			writeChunkFromString(myfile, stringToWrite);						//Write 4 bytes of the sequence of gamma codes
+			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
 		}
 	}			
 	while (gammaCodes.size() < 32)
 	{
 		gammaCodes += '0';
 	}
-	writeChunkFromString(myfile, gammaCodes);									//Write the last gamma codes and possibly padding
+	writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
 	myfile.close();
+
+	delete bitsToWrite;
 }
 
 void Outputter::compressedFile(
@@ -225,6 +237,7 @@ void Outputter::dictionary(
 	string& output,
 	bool firstBlock)
 {
+	bitset<32> *bitsToWrite = new bitset<32>();
 	ofstream myfile;
 	if (firstBlock)
 		myfile.open(outFile, ios::binary | ios::trunc);
@@ -239,7 +252,7 @@ void Outputter::dictionary(
 		//Write 4 bytes of the sequence of gamma codes
 		stringToWrite = rest.substr(0, 32);
 		rest = rest.substr(32, string::npos);
-		writeChunkFromString(myfile, stringToWrite);						
+		writeChunkFromString(myfile, stringToWrite, bitsToWrite);
 	}
 
 	//Write the last bit, if any is left
@@ -249,21 +262,28 @@ void Outputter::dictionary(
 		{
 			rest += '0';
 		}
-		writeChunkFromString(myfile, rest);
+		writeChunkFromString(myfile, rest, bitsToWrite);
 	}
 
 	myfile.close();
+
+	delete bitsToWrite;
 }
 
 void Outputter::all(
+	string filename,
+	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_map<unsigned int, Pair>& dictionary,
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unordered_set<unsigned int>& terminals,
-	unsigned int & Symbols,
 	Conditions& c)
 {
+	//Create names for output files
+	string compressedFilename = this->addFilenameEnding(filename, ".NPC");
+	string compressedDictionaryName = this->addFilenameEnding(filename, ".dict.NPC");
+
 	//Do Huffman encoding
 	Huffman h;
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes = 
@@ -277,27 +297,74 @@ void Outputter::all(
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	//Write Huffman encoded sequence to file
-	/*huffmanEncoding(
-		input1,
+	this->huffmanEncoding(
+		compressedFilename,
 		sequenceArray,
 		huffmanCodes,
-		true);*/
+		true);
 
 	//Encode generations for dictionary
+	Dictionary finalDict;
+	vector<CompactPair*> pairs = *new vector<CompactPair*>();
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices
+		= *new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*>();
+	unordered_map<unsigned int, unsigned int> *terminalIndices =
+		new unordered_map<unsigned int, unsigned int>();
 
-	//Encode Huffman dictionary
+	finalDict.generateCompactDictionary(
+		dictionary,
+		terminals,
+		pairs,
+		indices,
+		terminalIndices);	
 
 	//Write dictionary to file
+	GammaCode gc;
+	string output = "";
+
+	gc.makeFinalString(
+		pairs,
+		terminals,
+		output);
+
+	this->dictionary(
+		compressedDictionaryName,		
+		output,
+		firstBlock);
 
 	//Write Huffman dictionary to file
-
+	this->huffmanDictionary(
+		compressedDictionaryName,
+		maxLength,
+		firstCode,
+		numl,
+		dictionary,
+		indices,
+		terminalIndices,
+		huffmanToSymbol);
 
 
 	//Clean up
+	for each (auto entry in huffmanCodes)
+	{
+		delete entry.second;
+	}
 	delete &huffmanCodes;
 	for each (auto entry in huffmanToSymbol)
 	{
 		delete entry.second;
 	}
 	delete &huffmanToSymbol;
+	for each (auto entry in pairs)
+	{
+		delete entry;
+	}
+	delete &pairs;
+	for each (auto entry in indices)
+	{
+		delete entry.second;
+	}
+	delete &indices;
+	delete &terminalIndices;
+	//TODO: delete generationVectors
 }

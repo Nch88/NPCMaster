@@ -658,7 +658,7 @@ TEST(huffman, decoder)
 	ASSERT_EQ(0, firstCode[3]);
 
 	out.huffmanEncoding(
-		input1,
+		out.addFilenameEnding(input1, ".NPC"),
 		sequenceArray,
 		huffmanCodes,
 		true);

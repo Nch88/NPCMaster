@@ -65,7 +65,16 @@ int Algorithm::run(
 			symbols,
 			c);
 
-																				//TODO: Output dictionary and compressed sequence in Huffman codes
+		out.all(
+			filename,
+			firstBlock,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			terminals,
+			c);
+
 		if (c.timing)
 		{
 			t.start();

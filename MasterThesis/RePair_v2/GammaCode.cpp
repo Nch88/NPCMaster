@@ -162,16 +162,16 @@ void GammaCode::encode(vector<CompactPair*>& pairs,
 	sort(terminalVector.begin(), terminalVector.end());
 
 	//Gamma code for terminals
-	for (int i = 0; i < terminalVector.size(); ++i)
+	for (int iP1 = 0; iP1 < terminalVector.size(); ++iP1)
 	{
-		terminalsGamma += getGammaCode(terminalVector[i]);
+		terminalsGamma += getGammaCode(terminalVector[iP1]);
 	}
 
 	//Gamma code for left elements
 	leftElementsGamma += getGammaCode(pairs[0]->leftSymbol);
-	for (int i = 0; i < pairs.size() - 1; ++i)
+	for (int iP2 = 0; iP2 < pairs.size() - 1; ++iP2)
 	{
-		leftElementsGamma += getGammaCode(pairs[i + 1]->leftSymbol - pairs[i]->leftSymbol);
+		leftElementsGamma += getGammaCode(pairs[iP2 + 1]->leftSymbol - pairs[iP2]->leftSymbol);
 	}
 
 	//Binary code for right elements

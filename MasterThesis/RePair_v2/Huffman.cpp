@@ -28,40 +28,6 @@ void Huffman::getFrequencies(
 	}
 }
 
-void Huffman::setupPriorityQueue(
-	unordered_map<unsigned int, HuffmanNode *> & frequencies,
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq)
-{
-																				//Setup priority queue for symbol frequencies
-	for each (auto symbol in frequencies)
-	{
-		pq.push(symbol.second);
-	}
-}
-
-void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq)
-{
-	HuffmanNode * tmpLeftNode;
-	HuffmanNode * tmpRightNode;
-	unsigned int symbol = 0;
-	while (pq.size() > 2)
-	{
-		tmpLeftNode = pq.top();
-		pq.pop();
-		tmpRightNode = pq.top();
-		pq.pop();
-
-		HuffmanNode * newNode =
-			new HuffmanNode(
-			symbol,
-			tmpLeftNode->frequency + tmpRightNode->frequency,
-			tmpLeftNode,
-			tmpRightNode);
-
-		pq.push(newNode);
-	}
-}
-
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 {
 	char zero = '0';
@@ -279,6 +245,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 		++nextCode[codeLength - 1];
 		++i;
 	}
+
+	delete[] nextCode;
 }
 
 void Huffman::encode(
@@ -298,6 +266,8 @@ void Huffman::encode(
 	firstCode = new unsigned int[maxLength];
 	numl = new unsigned int[maxLength];
 	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+
+	delete[] codeLengths;
 }
 
 void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)

@@ -29,10 +29,6 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> & frequencies,
 		unsigned int &cardinality);
-	void Huffman::setupPriorityQueue(
-		unordered_map<unsigned int, HuffmanNode *> & frequencies,
-		priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
-	void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
 	void Huffman::sift(
 		int currentNodeIndex,
