@@ -17,14 +17,14 @@ void Dictionary::generateCompactDictionary(
 	unordered_set<unsigned int>& terminals,
 	vector<CompactPair*>& pairVector,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
-	unordered_map<unsigned int, unsigned int> *terminalIndices)
+	unordered_map<unsigned int, unsigned int> *terminalIndices,
+	vector<vector<CompactPair*>> generationVectors)
 {
 	vector<unsigned int> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
 
 	//Split map by generation
-	vector<vector<CompactPair*>> generationVectors = *(new vector<vector<CompactPair*>>());
 	createGenerationVectors(dictionary, generationVectors);
 
 	createFinalPairVector(dictionary, generationVectors, pairVector, terminalVector, indices, terminalIndices);

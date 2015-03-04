@@ -14,12 +14,14 @@ public:
 	std::string getGammaCode(unsigned int input);
 	void makeFinalString(std::vector<CompactPair*>& pairVector,
 		std::unordered_set<unsigned int>& terminals,
-		std::string& finalString);
-	void encode(std::vector<CompactPair*>& pairVector, 
-		std::unordered_set<unsigned int>& terminals, 
-		std::string& terminalsGamma, 
-		std::string& leftElementsGamma,
-		std::string& rightElementsBinary);
+		std::string& finalString,
+		std::vector<std::vector<CompactPair*>> generationVectors);
+	void encode(std::vector<CompactPair*>& pairVector,
+		std::unordered_set<unsigned int>& terminals,
+		std::string& terminalsGamma,
+		std::vector<std::string>& leftElementsGammas,
+		std::vector<std::string>& rightElementsBinaries,
+		std::vector<std::vector<CompactPair*>> generationVectors);
 	void decode(std::vector<CompactPair*>& pairVector,
 		std::unordered_set<unsigned int>& terminals,
 		std::string& inputString);

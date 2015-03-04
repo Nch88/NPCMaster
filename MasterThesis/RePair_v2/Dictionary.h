@@ -10,7 +10,8 @@ public:
 		std::unordered_set<unsigned int>& terminals,
 		std::vector<CompactPair*>& pairVector,
 		std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>*> &indices,
-		std::unordered_map<unsigned int, unsigned int> *terminalIndices);
+		std::unordered_map<unsigned int, unsigned int> *terminalIndices,
+		vector<vector<CompactPair*>> generationVectors);
 	void Dictionary::createFinalPairVector(
 		std::unordered_map<unsigned int, Pair>& dictionary,
 		std::vector<vector<CompactPair*>>& generationVectors,
