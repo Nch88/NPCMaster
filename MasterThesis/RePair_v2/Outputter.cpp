@@ -192,6 +192,7 @@ void Outputter::huffmanDictionary(
 		gammaCodes += '0';
 	}
 	writeChunkFromString(myfile, gammaCodes);									//Write the last gamma codes and possibly padding
+	myfile.close();
 }
 
 void Outputter::compressedFile(
@@ -252,4 +253,51 @@ void Outputter::dictionary(
 	}
 
 	myfile.close();
+}
+
+void Outputter::all(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	vector<PairRecord*>& priorityQueue,
+	unordered_set<unsigned int>& terminals,
+	unsigned int & Symbols,
+	Conditions& c)
+{
+	//Do Huffman encoding
+	Huffman h;
+	unordered_map<unsigned int, HuffmanNode *> huffmanCodes = 
+		*new unordered_map<unsigned int, HuffmanNode *>();
+	unsigned int *firstCode = nullptr;
+	unsigned int *numl = nullptr;
+	unsigned int maxLength = 0;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol
+		= *new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*>();
+
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+
+	//Write Huffman encoded sequence to file
+	/*huffmanEncoding(
+		input1,
+		sequenceArray,
+		huffmanCodes,
+		true);*/
+
+	//Encode generations for dictionary
+
+	//Encode Huffman dictionary
+
+	//Write dictionary to file
+
+	//Write Huffman dictionary to file
+
+
+
+	//Clean up
+	delete &huffmanCodes;
+	for each (auto entry in huffmanToSymbol)
+	{
+		delete entry.second;
+	}
+	delete &huffmanToSymbol;
 }
