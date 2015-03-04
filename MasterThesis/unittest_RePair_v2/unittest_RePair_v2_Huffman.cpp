@@ -658,7 +658,7 @@ TEST(huffman, decoder)
 	ASSERT_EQ(0, firstCode[3]);
 
 	out.huffmanEncoding(
-		input1,
+		out.addFilenameEnding(input1, ".NPC"),
 		sequenceArray,
 		huffmanCodes,
 		true);
@@ -751,7 +751,7 @@ TEST(huffman, decodeDictionaryDiddy)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
+	vector<vector<CompactPair*>*> pairs;
 	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
 	string filename = input1;
 	ifstream file(filename);
@@ -783,13 +783,15 @@ TEST(huffman, decodeDictionaryDiddy)
 		c);
 
 	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair*>*> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices,
+		generationVectors);
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	unsigned int *firstCode = nullptr;
@@ -881,7 +883,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
+	vector<vector<CompactPair*>*> pairs;
 	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
 	string filename = input1;
 	ifstream file(filename);
@@ -913,13 +915,15 @@ TEST(huffman, decodeDictionaryDuplicates)
 		c);
 
 	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair*>*> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices,
+		generationVectors);
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	unsigned int *firstCode = nullptr;

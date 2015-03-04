@@ -1,5 +1,4 @@
-#include "Huffman.h"
-
+#include "stdafx.h"
 
 Huffman::Huffman()
 {
@@ -25,40 +24,6 @@ void Huffman::getFrequencies(
 			}
 			frequencies[symbolRecord->symbol]->frequency++;
 		}		
-	}
-}
-
-void Huffman::setupPriorityQueue(
-	unordered_map<unsigned int, HuffmanNode *> & frequencies,
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq)
-{
-																				//Setup priority queue for symbol frequencies
-	for each (auto symbol in frequencies)
-	{
-		pq.push(symbol.second);
-	}
-}
-
-void Huffman::collapseTree(priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> & pq)
-{
-	HuffmanNode * tmpLeftNode;
-	HuffmanNode * tmpRightNode;
-	unsigned int symbol = 0;
-	while (pq.size() > 2)
-	{
-		tmpLeftNode = pq.top();
-		pq.pop();
-		tmpRightNode = pq.top();
-		pq.pop();
-
-		HuffmanNode * newNode =
-			new HuffmanNode(
-			symbol,
-			tmpLeftNode->frequency + tmpRightNode->frequency,
-			tmpLeftNode,
-			tmpRightNode);
-
-		pq.push(newNode);
 	}
 }
 
@@ -279,6 +244,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 		++nextCode[codeLength - 1];
 		++i;
 	}
+
+	delete[] nextCode;
 }
 
 void Huffman::encode(
@@ -298,6 +265,8 @@ void Huffman::encode(
 	firstCode = new unsigned int[maxLength];
 	numl = new unsigned int[maxLength];
 	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+
+	delete[] codeLengths;
 }
 
 void Huffman::fillBitset(int rawChunk, bitset<32> *chunk)
@@ -377,7 +346,7 @@ void Huffman::decodeDictionary(
 		vector<unsigned int> intValues;
 		symbolsToRead = 1;
 		
-		while (intValues.size() < symbolsToRead)
+		while (intValues.size() < symbolsToRead)									//TODO: move this to helper function!!!!!!!!!!!!!!!!!!!!!11
 		{
 			if (!bitstream.eof())
 			{
@@ -394,7 +363,7 @@ void Huffman::decodeDictionary(
 		}
 
 		maxLength = intValues[0];
-		intValues.pop_back();
+		intValues.clear();													
 
 		//symbolIndices: code length -> Huffman code -> index
 		for (unsigned int i = 0; i < maxLength; i++)
@@ -422,8 +391,7 @@ void Huffman::decodeDictionary(
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
 																				//this is used for efficiency when resetting intValues below
-			intValues.pop_back();												//Reset the vector holding values already used
-			intValues.pop_back();
+			intValues.clear();													//Reset the vector holding values already used
 
 			//Read the corresponding i + 1 sequence indexes
 			while (intValues.size() < symbolsToRead)

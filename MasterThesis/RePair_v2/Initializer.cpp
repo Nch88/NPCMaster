@@ -55,16 +55,6 @@ void Initializer::resetForNextBlock(
 		}
 	}
 
-	/*for (int i = 0; i < sequenceArray.size(); i++)
-	{
-		if (sequenceArray[i])
-		{
-			delete sequenceArray[i];
-			sequenceArray[i] = nullptr;
-		}
-	}
-	sequenceArray.clear();*/
-
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
 		priorityQueue[i] = nullptr;

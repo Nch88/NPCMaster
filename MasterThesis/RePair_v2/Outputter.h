@@ -6,15 +6,11 @@ public:
 	~Outputter();
 
 	string createName(string inputFile, string addName);
+	string Outputter::addFilenameEnding(string inputFile, string addName);
 	void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite);
-	void Outputter::writeChunkFromString(ofstream &myfile, string chunk);	
+	void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite);
 	void Outputter::huffmanEncoding(
-		string inputFile,
-		vector<SymbolRecord *>& sequenceArray,
-		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-		bool firstBlock);
-	void Outputter::canonicalHuffmanEncoding(
-		string inputFile,
+		string outFile,
 		vector<SymbolRecord *>& sequenceArray,
 		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
 		bool firstBlock);
@@ -36,12 +32,13 @@ public:
 		string& output,
 		bool firstBlock);
 	void Outputter::all(
+		string filename,
+		bool firstBlock,
 		vector<SymbolRecord*> & sequenceArray,
 		unordered_map<unsigned int, Pair>& dictionary,
 		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unordered_set<unsigned int>& terminals,
-		unsigned int & Symbols,
 		Conditions& c);
 };
 

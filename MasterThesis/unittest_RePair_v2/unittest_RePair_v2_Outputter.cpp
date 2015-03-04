@@ -64,7 +64,7 @@ TEST(outputter, diddyHuffmanCode)
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	out.huffmanEncoding(
-		input1,
+		out.addFilenameEnding(input1, ".NPC"),
 		sequenceArray,
 		huffmanCodes,
 		true);
@@ -146,7 +146,7 @@ TEST(outputter, diddyHuffmanDictionary)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
+	vector<vector<CompactPair*>*> pairs;
 	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
 	string filename = input1;
 	ifstream file(filename);
@@ -178,13 +178,15 @@ TEST(outputter, diddyHuffmanDictionary)
 		c);
 
 	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair*>*> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices,
+		generationVectors);
 
 	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
 	unsigned int *firstCode = nullptr;
@@ -296,4 +298,81 @@ TEST(outputter, diddyHuffmanDictionary)
 	ASSERT_EQ(10, resultVector[20]);
 		
 	delete terminalIndices;
+}
+
+TEST(outputter, diddyAll)
+{
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+
+	string input1 = "diddy.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<unsigned int> terminals;
+	vector<CompactPair*> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	string filename = input1;
+	ifstream file(filename);
+	bool firstBlock = true;
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+																		//Can't test yet
+	//out.all(
+	//	filename,
+	//	firstBlock,
+	//	sequenceArray,
+	//	dictionary,
+	//	activePairs,
+	//	priorityQueue,
+	//	terminals,
+	//	c);
+
+	//string compressedFile = out.addFilenameEnding(filename, ".NPC");
+	//string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+
+	//ifstream ifs;
+	//ifs.open(compressedFile, ios::binary);
+	//ASSERT_TRUE(ifs.is_open());
+	//ifs.close();
+
+	//ifs.open(compressedDictionary, ios::binary);
+	//ASSERT_TRUE(ifs.is_open());
+	//ifs.close();
 }
