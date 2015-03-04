@@ -364,7 +364,7 @@ void Huffman::decodeDictionary(
 		}
 
 		maxLength = intValues[0];
-		intValues.pop_back();													//TODO: maybe use clear() instead??
+		intValues.clear();													
 
 		//symbolIndices: code length -> Huffman code -> index
 		for (unsigned int i = 0; i < maxLength; i++)
@@ -392,8 +392,7 @@ void Huffman::decodeDictionary(
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
 																				//this is used for efficiency when resetting intValues below
-			intValues.pop_back();												//Reset the vector holding values already used
-			intValues.pop_back();
+			intValues.clear();													//Reset the vector holding values already used
 
 			//Read the corresponding i + 1 sequence indexes
 			while (intValues.size() < symbolsToRead)
