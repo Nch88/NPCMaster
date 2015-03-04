@@ -325,6 +325,36 @@ void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char ra
 	}
 }
 
+void Huffman::readFromGammaCodes(
+	unsigned int symbolsToRead,
+	ifstream &bitstream,
+	GammaCode &gc,
+	string &chunk,
+	string &prefix,
+	vector<unsigned int> &intValues)
+{
+	char rawChunk1 = 0;
+	char rawChunk2 = 0;
+	char rawChunk3 = 0;
+	char rawChunk4 = 0;
+
+	while (intValues.size() < symbolsToRead)
+	{
+		if (!bitstream.eof())
+		{
+			bitstream.get(rawChunk1);
+			bitstream.get(rawChunk2);
+			bitstream.get(rawChunk3);
+			bitstream.get(rawChunk4);
+			fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+		}
+		else
+			chunk = "";
+
+		gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
+	}
+}
+
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices)
@@ -347,21 +377,13 @@ void Huffman::decodeDictionary(
 		vector<unsigned int> intValues;
 		symbolsToRead = 1;
 		
-		while (intValues.size() < symbolsToRead)									//TODO: move this to helper function!!!!!!!!!!!!!!!!!!!!!11
-		{
-			if (!bitstream.eof())
-			{
-				bitstream.get(rawChunk1);
-				bitstream.get(rawChunk2);
-				bitstream.get(rawChunk3);
-				bitstream.get(rawChunk4);
-				fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-			}
-			else
-				chunk = "";
-
-			gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
-		}
+		readFromGammaCodes(
+			symbolsToRead,
+			bitstream,
+			gc,
+			chunk,
+			prefix,
+			intValues);
 
 		maxLength = intValues[0];
 		intValues.clear();													
@@ -371,21 +393,13 @@ void Huffman::decodeDictionary(
 		{
 			//Read the number of codes of length i + 1 and the first code of that length
 			symbolsToRead = 2;
-			while (intValues.size() < symbolsToRead)
-			{
-				if (!bitstream.eof())
-				{
-					bitstream.get(rawChunk1);
-					bitstream.get(rawChunk2);
-					bitstream.get(rawChunk3);
-					bitstream.get(rawChunk4);
-					fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-				}
-				else
-					chunk = "";
-				
-				gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
-			}
+			readFromGammaCodes(
+				symbolsToRead,
+				bitstream,
+				gc,
+				chunk,
+				prefix,
+				intValues);
 
 			symbolsToRead = intValues[0];								
 			firstCode = intValues[1];
@@ -395,20 +409,13 @@ void Huffman::decodeDictionary(
 			intValues.clear();													//Reset the vector holding values already used
 
 			//Read the corresponding i + 1 sequence indexes
-			while (intValues.size() < symbolsToRead)
-			{
-				if (!bitstream.eof())
-				{
-					bitstream.get(rawChunk1);
-					bitstream.get(rawChunk2);
-					bitstream.get(rawChunk3);
-					bitstream.get(rawChunk4);
-					fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-				}
-				else
-					chunk = "";
-				gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
-			}
+			readFromGammaCodes(
+				symbolsToRead,
+				bitstream,
+				gc,
+				chunk,
+				prefix,
+				intValues);
 
 			//Add sequence indexes to dictionary based on Huffman code length
 			while (intValues.size() > 0)

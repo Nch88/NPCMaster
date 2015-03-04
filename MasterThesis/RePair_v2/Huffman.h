@@ -71,6 +71,13 @@ public:
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
 	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);
+	void Huffman::readFromGammaCodes(
+		unsigned int symbolsToRead,
+		ifstream &bitstream,
+		GammaCode &gc,
+		string &chunk,
+		string &prefix,
+		vector<unsigned int> &intValues);
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
 		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices);
