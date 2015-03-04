@@ -23,4 +23,8 @@ public:
 	void decode(std::vector<CompactPair*>& pairVector,
 		std::unordered_set<unsigned int>& terminals,
 		std::string& inputString);
+	void GammaCode::decodeDictionaryFile(std::vector<CompactPair*>& pairs,
+		std::unordered_set<unsigned int>& terminals,
+		std::string& inputString,
+		std::ifstream &bitstream);
 };
