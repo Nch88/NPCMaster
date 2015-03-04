@@ -347,7 +347,7 @@ void Huffman::decodeDictionary(
 		vector<unsigned int> intValues;
 		symbolsToRead = 1;
 		
-		while (intValues.size() < symbolsToRead)
+		while (intValues.size() < symbolsToRead)									//TODO: move this to helper function!!!!!!!!!!!!!!!!!!!!!11
 		{
 			if (!bitstream.eof())
 			{
@@ -364,7 +364,7 @@ void Huffman::decodeDictionary(
 		}
 
 		maxLength = intValues[0];
-		intValues.pop_back();
+		intValues.pop_back();													//TODO: maybe use clear() instead??
 
 		//symbolIndices: code length -> Huffman code -> index
 		for (unsigned int i = 0; i < maxLength; i++)
