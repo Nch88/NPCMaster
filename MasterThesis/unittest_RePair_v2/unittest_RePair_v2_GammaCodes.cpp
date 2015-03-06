@@ -39,35 +39,72 @@ TEST(gammaCodes, getGammaCode)
 	}
 }
 
-TEST(gammaCodes, encode_simplePairs)
+TEST(gammaCodes, encode_diddy)
 {
-	//GammaCode gc;
-	//Dictionary dict;
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
+	unsigned int symbols(initialSymbolValue);
 
-	////This should be (0,1)(1,2)...(4,5)
-	//vector<CompactPair*> pairs;
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	CompactPair *c = new CompactPair(i, i + 1);
-	//	pairs.push_back(c);
-	//}
-	//unordered_set<unsigned int> terminals = { 1, 2, 3, 4, 5, 6 };
-	//string terminalsGamma = "";
-	//vector<string> leftElementsGamma, rightElementsBinary;
-	//vector<vector<CompactPair*>> generationVectors;
-	//dict.createGenerationVectors()
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	GammaCode gc;
+	Dictionary dict;
 
-	//gc.encode(pairs, terminals, terminalsGamma, leftElementsGamma, rightElementsBinary, generationVectors);
-	//
-	//ASSERT_EQ("10010111000110011101011011", terminalsGamma);
-	//ASSERT_EQ("0100100100100", leftElementsGamma);
-	//ASSERT_EQ("001010011100101", rightElementsBinary);
-	//
-	////Cleanup
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	delete pairs[i];
-	//}
+	string input1 = "diddy.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<unsigned int> terminals;
+	string filename = input1;
+	ifstream file(filename);
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+
+	vector<vector<CompactPair*>*> generationVectors;
+	vector<vector<CompactPair*>*> pairs;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+
+	string terminalsGamma = "";
+	vector<string> leftElementsGamma;
+	vector<string> rightElementsBinary;
+
+	gc.encode(pairs, terminals, terminalsGamma, leftElementsGamma, rightElementsBinary, generationVectors);
+
+	ASSERT_TRUE(true);
 }
 
 TEST(gammaCodes, encode_makeFinalString)

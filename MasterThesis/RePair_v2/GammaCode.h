@@ -21,7 +21,7 @@ public:
 		std::string& terminalsGamma,
 		std::vector<std::string>& leftElementsGammas,
 		std::vector<std::string>& rightElementsBinaries,
-		std::vector<std::vector<CompactPair*>*> generationVectors);
+		std::vector<std::vector<CompactPair*>*>& generationVectors);
 	void decode(std::vector<std::vector<CompactPair*>*>& pairVector,
 		std::unordered_set<unsigned int>& terminals,
 		std::string& inputString);

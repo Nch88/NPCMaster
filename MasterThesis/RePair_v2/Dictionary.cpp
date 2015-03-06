@@ -18,7 +18,7 @@ void Dictionary::generateCompactDictionary(
 	vector<vector<CompactPair*>*>& pairVectors,
 	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
 	unordered_map<unsigned int, unsigned int> *terminalIndices,
-	vector<vector<CompactPair*>*> generationVectors)
+	vector<vector<CompactPair*>*> &generationVectors)
 {
 	vector<unsigned int> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());

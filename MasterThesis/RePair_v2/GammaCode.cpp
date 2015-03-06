@@ -155,9 +155,10 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	string& terminalsGamma,
 	vector<string>& leftElementsGammas,
 	vector<string>& rightElementsBinaries,
-	vector<vector<CompactPair*>*> generationVectors)
+	vector<vector<CompactPair*>*>& generationVectors)
 {
 	int generations = generationVectors.size();
+	int genP1 = 0;
 
 	//Sort terminals
 	vector<unsigned int> terminalVector;
@@ -171,11 +172,12 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	}
 
 	//For each generation
-	for (int genP1 = 0; genP1 < generations; ++genP1)
+	for (genP1 = 0; genP1 < generations; ++genP1)
 	{
 
 		//Gamma code for left elements
-		leftElementsGammas[genP1] += getGammaCode((*pairs[genP1])[0]->leftSymbol);
+		unsigned int firstElement = (*pairs[genP1])[0]->leftSymbol;
+		leftElementsGammas[genP1] += getGammaCode(firstElement);
 		for (int i = 0; i < pairs.size() - 1; ++i)
 		{
 			leftElementsGammas[genP1] += getGammaCode((*pairs[genP1])[i + 1]->leftSymbol - (*pairs[genP1])[i]->leftSymbol);
