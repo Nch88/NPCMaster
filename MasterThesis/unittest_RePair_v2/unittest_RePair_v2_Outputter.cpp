@@ -376,3 +376,39 @@ TEST(outputter, diddyAll)
 	//ASSERT_TRUE(ifs.is_open());
 	//ifs.close();
 }
+
+TEST(outputter, writeAndReadDictionary)
+{
+	GammaCode gc;
+	Outputter out;
+
+	string outstring = "testWriteDictionary";
+
+	//String is ".do.diddy.dodd" -> "AoAiByAoB" -> "CAiddyCB"
+	//Dictionary is A -> (.,d), B -> (d,d), C -> (A,o)
+	//Index pairs are (0,1), (1,1) and (5,2)
+	//Terminals: [.,d,o,i,y]
+
+	string tHeader = gc.getGammaCode(5);
+	string terminals = gc.getGammaCode('.') + gc.getGammaCode('d') + gc.getGammaCode('o') + gc.getGammaCode('i') + gc.getGammaCode('y');
+	string pHeader = gc.getGammaCode(2);
+	string gen1Header = gc.getGammaCode(2) + gc.getGammaCode(4);
+	string gen1Left = gc.getGammaCode(0) + gc.getGammaCode(1);
+	string gen1Right = "001001";
+	string gen2Header = gc.getGammaCode(1) + gc.getGammaCode(6);;
+	string gen2Left = gc.getGammaCode(5);
+	string gen2Right = "010";
+
+	string output = tHeader + terminals + pHeader + gen1Header + gen1Left + gen1Right + gen2Header + gen2Left + gen2Right;
+
+	//Write file
+	out.dictionary(outstring, output, true);
+
+	vector<CompactPair*> pairs;
+	unordered_set<unsigned int> termSet;
+	ifstream bitstream(outstring, ios::binary);
+
+	//Read file
+	gc.decodeDictionaryFile(pairs, termSet, bitstream);
+	int x = 0;
+}

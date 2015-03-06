@@ -157,6 +157,7 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	vector<string>& rightElementsBinaries,
 	vector<vector<CompactPair*>*>& generationVectors)
 {
+	return;
 	int generations = generationVectors.size();
 	int genP1 = 0;
 
@@ -279,9 +280,12 @@ void GammaCode::makeFinalString(vector<vector<CompactPair*>*>& pairs,
 
 void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
 {
+	string emptyString = "";
+	this->decodeGammaString(prefix, emptyString, values, n);
+	if (values.size() == n)
+		return;
 	if (bitstream.is_open())
 	{
-		int originalSize = values.size();
 		char rawChunk1 = 0;
 		char rawChunk2 = 0;
 		char rawChunk3 = 0;
@@ -289,7 +293,7 @@ void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &b
 		Huffman huff;
 		string chunk = "";
 
-		while (values.size() - originalSize < n)
+		while (values.size() < n)
 		{
 			if (!bitstream.eof())
 			{
@@ -308,11 +312,10 @@ void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &b
 	}
 }
 
-void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
+void GammaCode::readNextBinaries(int binarySize, int count, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
 {
 	if (bitstream.is_open())
 	{
-		int originalSize = values.size();
 		char rawChunk1 = 0;
 		char rawChunk2 = 0;
 		char rawChunk3 = 0;
@@ -332,12 +335,16 @@ void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, i
 		else
 			chunk = "";
 
-		int i;
-		//Add as many binary numbers as possible
-		for (i = 0; i + binarySize < chunk.size(); i += binarySize)
+		//Prepend prefix
+		chunk = prefix + chunk;
+
+		int i = 0;
+		//Add as many binary numbers as possible until we run out of data or reach count
+		while (i + binarySize < chunk.size() && values.size() < count)
 		{
 			subString = chunk.substr(i, binarySize);
 			values.push_back(this->binaryToInt(subString));
+			i += binarySize;
 		}
 
 		//If anything is left of the chunk, save it as prefix
@@ -350,7 +357,6 @@ void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, i
 
 void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
 	unordered_set<unsigned int>& terminals,
-	string& inputString,
 	ifstream &bitstream)
 {
 	vector<unsigned int> *values = new vector<unsigned int>();
@@ -371,7 +377,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
 	int generationCount = (*values)[0];
 	values->clear();
 
-	int binarySize, rightElemSize, i;
+	int binarySize, i;
 	unsigned int leftVal;
 	vector<unsigned int> *left = new vector<unsigned int>();
 	for (int g = 0; g < generationCount; ++g)
@@ -379,19 +385,18 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
 		//Read generation header
 		readNextNumbers(2, *values, bitstream, prefix);
 		count = (*values)[0];
-		binarySize = (*values)[1];
+		binarySize = 1 + floor(log2((*values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
 		values->clear();
 
 		//Read left values and store them in 'left'
 		readNextNumbers(count, *left, bitstream, prefix);
 
 		//Read right element binaries and write pairs
-		rightElemSize = floor(log2(count)) + 1;
 		leftVal = 0;
 		i = 0;
-		while (pairs.size() < left->size())
+		while (i < count)
 		{
-			readNextBinaries(rightElemSize, *values, bitstream, prefix);
+			readNextBinaries(binarySize, count, *values, bitstream, prefix);
 			for (int j = 0; j < values->size(); ++j)
 			{
 				leftVal += (*left)[i];
@@ -399,7 +404,9 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
 				pairs.push_back(c);
 				++i;
 			}
+			values->clear();
 		}
+		left->clear();
 	}
 
 	delete values;

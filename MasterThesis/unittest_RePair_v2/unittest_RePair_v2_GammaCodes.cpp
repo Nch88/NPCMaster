@@ -39,73 +39,73 @@ TEST(gammaCodes, getGammaCode)
 	}
 }
 
-TEST(gammaCodes, encode_diddy)
-{
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
-
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	MyTest t;
-	Huffman h;
-	GammaCode gc;
-	Dictionary dict;
-
-	string input1 = "diddy.txt";
-
-	bool skip = false;
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
-	string filename = input1;
-	ifstream file(filename);
-
-	init.SequenceArray(
-		c,
-		file,
-		blockSize,
-		activePairs,
-		sequenceArray,
-		terminals);
-
-	priorityQueueSize = sqrt(sequenceArray.size());
-	priorityQueue.resize(priorityQueueSize);
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-
-	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahFEumFo";
-
-	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		terminals,
-		symbols,
-		c);
-
-	vector<vector<CompactPair*>*> generationVectors;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
-
-	string terminalsGamma = "";
-	vector<string> leftElementsGamma;
-	vector<string> rightElementsBinary;
-
-	gc.encode(pairs, terminals, terminalsGamma, leftElementsGamma, rightElementsBinary, generationVectors);
-
-	ASSERT_TRUE(true);
-}
+//TEST(gammaCodes, encode_diddy)
+//{
+//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	unordered_map<unsigned int, Pair> dictionary;
+//	unsigned int symbols(initialSymbolValue);
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//	MyTest t;
+//	Huffman h;
+//	GammaCode gc;
+//	Dictionary dict;
+//
+//	string input1 = "diddy.txt";
+//
+//	bool skip = false;
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//	unordered_set<unsigned int> terminals;
+//	string filename = input1;
+//	ifstream file(filename);
+//
+//	init.SequenceArray(
+//		c,
+//		file,
+//		blockSize,
+//		activePairs,
+//		sequenceArray,
+//		terminals);
+//
+//	priorityQueueSize = sqrt(sequenceArray.size());
+//	priorityQueue.resize(priorityQueueSize);
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//
+//	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+//	string string2 = "sHHAo.wahFEumFo";
+//
+//	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		dictionary,
+//		activePairs,
+//		priorityQueue,
+//		terminals,
+//		symbols,
+//		c);
+//
+//	vector<vector<CompactPair*>*> generationVectors;
+//	vector<vector<CompactPair*>*> pairs;
+//	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+//	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+//	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+//
+//	string terminalsGamma = "";
+//	vector<string> leftElementsGamma;
+//	vector<string> rightElementsBinary;
+//
+//	gc.encode(pairs, terminals, terminalsGamma, leftElementsGamma, rightElementsBinary, generationVectors);
+//
+//	ASSERT_TRUE(true);
+//}
 
 TEST(gammaCodes, encode_makeFinalString)
 {
