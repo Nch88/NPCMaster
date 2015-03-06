@@ -150,6 +150,7 @@ string GammaCode::getGammaCode(unsigned int in)
 	return firstPart + padding + secondPart;
 }
 
+//TODO: Figure out why right elements vector is too long
 void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& terminalsGamma,
@@ -157,47 +158,61 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	vector<string>& rightElementsBinaries,
 	vector<vector<CompactPair*>*>& generationVectors)
 {
-	return;
 	int generations = generationVectors.size();
 	int genP1 = 0;
+	unsigned int firstElement = 0;
+	string fstElmtGamma = "";
 
 	//Sort terminals
 	vector<unsigned int> terminalVector;
-	terminalVector.assign(terminals.begin(), terminals.end());
+	//terminalVector.resize(terminals.size());
+	//terminalVector.assign(terminals.begin(), terminals.end());
+	for each (auto entry in terminals)
+	{
+		terminalVector.push_back(entry);
+	}
 	sort(terminalVector.begin(), terminalVector.end());
-
+	string tmpGammaCode = "";
 	//Gamma code for terminals
 	for (int iP1 = 0; iP1 < terminalVector.size(); ++iP1)
 	{
-		terminalsGamma += getGammaCode(terminalVector[iP1]);
+		tmpGammaCode.assign(getGammaCode(terminalVector[iP1]));
+		terminalsGamma += tmpGammaCode;
 	}
+
+	long bitLengthRightValue = terminalVector.size();
+	long bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Generation 1 can point to any terminal
 
 	//For each generation
 	for (genP1 = 0; genP1 < generations; ++genP1)
 	{
 
 		//Gamma code for left elements
-		unsigned int firstElement = (*pairs[genP1])[0]->leftSymbol;
-		leftElementsGammas[genP1] += getGammaCode(firstElement);
-		for (int i = 0; i < pairs.size() - 1; ++i)
+		firstElement = (*pairs[genP1])[0]->leftSymbol;
+		fstElmtGamma = getGammaCode(firstElement);
+		leftElementsGammas.push_back(fstElmtGamma);
+		for (int i = 0; i < (*pairs[genP1]).size() - 1; ++i)
 		{
-			leftElementsGammas[genP1] += getGammaCode((*pairs[genP1])[i + 1]->leftSymbol - (*pairs[genP1])[i]->leftSymbol);
+			tmpGammaCode.assign(getGammaCode((*pairs[genP1])[i + 1]->leftSymbol - (*pairs[genP1])[i]->leftSymbol));
+			leftElementsGammas[genP1] += tmpGammaCode;
 		}
 
 		//Binary code for right elements
-		int bitLengthRight = floor(log2(generationVectors[genP1]->size())) + 1;
-		string s;
-		for (int i = 0; i < pairs.size(); ++i)
-		{
-			s = getBinaryCode((*pairs[genP1])[i]->rightSymbol);
-			if (s.length() > bitLengthRight)
-				throw new exception("Error in gamma encoding: bit length right not sufficient");
+		string s = "";
+		for (int i = 0; i < (*pairs[genP1]).size(); ++i)
+		{			
+			s.assign(getBinaryCode((*pairs[genP1])[i]->rightSymbol));
+
+			rightElementsBinaries.push_back("");
 			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
 			{
 				rightElementsBinaries[genP1] += '0';
 			}
 			rightElementsBinaries[genP1] += s;
 		}
+
+		bitLengthRightValue += generationVectors[genP1]->size();
+		bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Size of all generation below
 	}
 }
 
@@ -206,7 +221,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair*>*>& pairs,
 	string& finalString,
 	vector<vector<CompactPair*>*> generationVectors)
 {
-	string *terminalsGamma = new string();
+	string *terminalsGamma = new string("");
 
 	vector<string> *lefts = new vector<string>();
 	vector<string> *rights = new vector<string>();
@@ -229,10 +244,13 @@ void GammaCode::makeFinalString(vector<vector<CompactPair*>*>& pairs,
 		//Header is size of generation + max possible index found in that generation
 		header = getGammaCode(generationVectors[i]->size()) + getGammaCode(maxIndex);
 		
-		finalString += (header + (*lefts)[i] + (*rights)[i]);
+		string leftPart = ((*lefts)[i]);
+		string rightPart = ((*rights)[i]);
+
+		finalString += (header + leftPart + rightPart);
 
 		//Increase maxindex by the size of the generation
-		maxIndex += (*lefts)[i].size();
+		maxIndex += generationVectors[i]->size();
 	}
 
 	delete terminalsGamma;
