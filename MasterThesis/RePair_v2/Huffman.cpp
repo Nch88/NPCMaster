@@ -11,18 +11,16 @@ Huffman::~Huffman()
 
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, HuffmanNode *> & frequencies,
+	unordered_map<unsigned int, HuffmanNode> & frequencies,
 	unsigned int &cardinality)
 {
 	for each (auto symbolRecord in sequenceArray)
 	{
 		if (symbolRecord->symbol != 0)
 		{
-			if (!frequencies[symbolRecord->symbol]){
-				frequencies[symbolRecord->symbol] = new HuffmanNode(symbolRecord->symbol, 0);
+			frequencies[symbolRecord->symbol].frequency++;
+			if (frequencies[symbolRecord->symbol].frequency == 1)
 				++cardinality;
-			}
-			frequencies[symbolRecord->symbol]->frequency++;
 		}		
 	}
 }
@@ -107,12 +105,12 @@ void Huffman::sift(
 void Huffman::initCodeLengthsArray(
 	int cardinality,
 	int *codeLengths,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes)
+	unordered_map<unsigned int, HuffmanNode> &huffmanCodes)
 {
 	int i = 0;
 	for each (auto node in huffmanCodes)
 	{
-		codeLengths[cardinality + i] = node.second->frequency;
+		codeLengths[cardinality + i] = node.second.frequency;
 		codeLengths[i] = cardinality + i;										//Index of a symbol Points to the symbol's frequency
 		++i;
 	}
@@ -179,7 +177,7 @@ void Huffman::expandHuffmanTree(
 void Huffman::getCodeLengths(
 	unsigned int cardinality,
 	int *codeLengths,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
 	unsigned int &maxLength)																//Assigns a value to maxLength as an output
 {
 	int heapSize = cardinality;
@@ -213,8 +211,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 	int *codeLengths,
 	unsigned int *firstCode,
 	unsigned int *numl,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
+	unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol)
 {
 	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
@@ -233,14 +231,12 @@ void Huffman::generateCanonicalHuffmanCodes(
 		nextCode[i] = firstCode[i];
 
 	int i = 0;
-	for each (auto huffmanNode in huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
+	for(auto &huffmanNode : huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 	{
 		int codeLength = codeLengths[cardinality + i];
 		string code = codeToString(nextCode[codeLength - 1], codeLength);
-		huffmanNode.second->code = code;
-		if (!huffmanToSymbol[codeLength])
-			huffmanToSymbol[codeLength] = new unordered_map<unsigned int, unsigned int>();
-		(*huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
+		huffmanNode.second.code = code;
+		(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
 		++nextCode[codeLength - 1];
 		++i;
 	}
@@ -250,14 +246,13 @@ void Huffman::generateCanonicalHuffmanCodes(
 
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
 	unsigned int *&firstCode,
 	unsigned int *&numl,
 	unsigned int &maxLength,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol)
 {	
 	unsigned int cardinality = 0;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
 	getFrequencies(sequenceArray, huffmanCodes, cardinality);					//+ cardinality of compressed sequence
 	int *codeLengths = new int[cardinality * 2];	
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
@@ -356,7 +351,7 @@ void Huffman::readFromGammaCodes(
 
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices)
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &symbolIndices)
 	//Outputs symbolIndices
 {
 	GammaCode gc;
@@ -419,7 +414,7 @@ void Huffman::decodeDictionary(
 			//Add sequence indexes to dictionary based on Huffman code length
 			while (intValues.size() > 0)
 			{
-				(*symbolIndices)[i + 1][lastCode] = intValues[intValues.size() - 1];
+				(symbolIndices)[i + 1][lastCode] = intValues[intValues.size() - 1];
 				--lastCode;
 				intValues.pop_back();											//Remove index we already processed
 			}
@@ -430,7 +425,7 @@ void Huffman::decodeDictionary(
 void Huffman::decode(
 	unsigned int *firstCode,
 	string filename,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &symbolIndices,
 	vector<unsigned int> &symbolIndexSequence)
 {
 	ifstream bitstream(filename, ios::binary);
@@ -499,7 +494,7 @@ void Huffman::decode(
 
 				if (value >= firstCode[length - 1])
 				{
-					unsigned int symbolIndex = (*symbolIndices)[length][value];
+					unsigned int symbolIndex = (symbolIndices)[length][value];
 					symbolIndexSequence.push_back(symbolIndex);
 					length = 0;
 					value = 0;

@@ -63,7 +63,7 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 void Outputter::huffmanEncoding(
 	string outFile,
 	vector<SymbolRecord *>& sequenceArray,
-	unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+	unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
 	bool firstBlock)
 {
 	ofstream myfile;
@@ -95,7 +95,7 @@ void Outputter::huffmanEncoding(
 				
 				if (seqIndex < sequenceArray.size())
 				{
-					code = huffmanCodes[sequenceArray[seqIndex++]->symbol]->code;
+					code = huffmanCodes[sequenceArray[seqIndex++]->symbol].code;
 					codeIndex = 0;
 				}				
 			}
@@ -153,9 +153,9 @@ void Outputter::huffmanDictionary(
 	unsigned int *firstCode,
 	unsigned int *numl,
 	unordered_map<unsigned int, Pair> &dictionary,
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
-	unordered_map<unsigned int, unsigned int> *terminalIndices,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol)
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
+	unordered_map<unsigned int, unsigned int> &terminalIndices,
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol)
 {
 	ofstream myfile;
 	myfile.open(outFile, ios::binary | ios::app);
@@ -175,16 +175,16 @@ void Outputter::huffmanDictionary(
 
 		for (int j = 0; j < numl[i]; j++)
 		{
-			unsigned int symbol = (*huffmanToSymbol[i + 1])[firstCode[i] + j];
+			unsigned int symbol = (huffmanToSymbol[i + 1])[firstCode[i] + j];
 			unsigned int index;
 			if (symbol >= initialSymbolValue)
 			{
 				unsigned int symbolLeft = dictionary[symbol].leftSymbol;
 				unsigned int symbolRight = dictionary[symbol].rightSymbol;
-				index = (*indices[symbolLeft])[symbolRight];
+				index = (indices[symbolLeft])[symbolRight];
 			}
 			else
-				index = (*terminalIndices)[symbol];
+				index = (terminalIndices)[symbol];
 			
 			gammaCodes += gc.getGammaCode(index);								//Write the index corresponding to a specific huffman code (as gamma code)
 		}
@@ -286,13 +286,11 @@ void Outputter::all(
 
 	//Do Huffman encoding
 	Huffman h;
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes = 
-		*new unordered_map<unsigned int, HuffmanNode *>();
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol
-		= *new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*>();
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
@@ -305,12 +303,10 @@ void Outputter::all(
 
 	//Encode generations for dictionary
 	Dictionary finalDict;
-	vector<vector<CompactPair*>*> pairs = *new vector<vector<CompactPair*>*>();
-	vector<vector<CompactPair*>*> generationVectors = *new vector<vector<CompactPair*>*>();
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices
-		= *new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*>();
-	unordered_map<unsigned int, unsigned int> *terminalIndices =
-		new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair>> pairs;
+	vector<vector<CompactPair>> generationVectors;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
@@ -348,39 +344,6 @@ void Outputter::all(
 
 
 	//Clean up
-	for each (auto entry in huffmanCodes)
-	{
-		delete entry.second;
-	}
-	delete &huffmanCodes;
-	for each (auto entry in huffmanToSymbol)
-	{
-		delete entry.second;
-	}
-	delete &huffmanToSymbol;
-	for each (auto entry in pairs)
-	{
-		for each (auto element in (*entry))
-		{
-			delete element;
-		}
-		delete entry;
-	}
-	delete &pairs;
-	for each (auto entry in generationVectors)
-	{
-		for each (auto element in (*entry))
-		{
-			delete element;
-		}
-		delete entry;
-	}
-	delete &generationVectors;
-	for each (auto entry in indices)
-	{
-		delete entry.second;
-	}
-	delete &indices;
-	delete &terminalIndices;
-	//TODO: delete generationVectors
+	delete[] firstCode;
+	delete[] numl;
 }

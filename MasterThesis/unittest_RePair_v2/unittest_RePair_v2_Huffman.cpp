@@ -56,8 +56,8 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
@@ -176,8 +176,8 @@ TEST(testingHuffman, collapseSymbols)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
@@ -246,8 +246,8 @@ TEST(testingHuffman, phaseThree)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
@@ -354,8 +354,8 @@ TEST(testingHuffman, generateCodes)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
@@ -382,21 +382,21 @@ TEST(testingHuffman, generateCodes)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
-	ASSERT_EQ("0000", huffmanCodes[115]->code);
-	ASSERT_EQ("0001", huffmanCodes[104]->code);
-	ASSERT_EQ("100", huffmanCodes[72]->code);
-	ASSERT_EQ("0010", huffmanCodes[97]->code);
-	ASSERT_EQ("0011", huffmanCodes[65]->code);
-	ASSERT_EQ("0100", huffmanCodes[119]->code);
-	ASSERT_EQ("101", huffmanCodes[111]->code);
-	ASSERT_EQ("110", huffmanCodes[70]->code);
-	ASSERT_EQ("0101", huffmanCodes[46]->code);
-	ASSERT_EQ("0110", huffmanCodes[69]->code);
-	ASSERT_EQ("0111", huffmanCodes[117]->code);
-	ASSERT_EQ("111", huffmanCodes[109]->code);
+	ASSERT_EQ("0000", huffmanCodes[115].code);
+	ASSERT_EQ("0001", huffmanCodes[104].code);
+	ASSERT_EQ("100", huffmanCodes[72].code);
+	ASSERT_EQ("0010", huffmanCodes[97].code);
+	ASSERT_EQ("0011", huffmanCodes[65].code);
+	ASSERT_EQ("0100", huffmanCodes[119].code);
+	ASSERT_EQ("101", huffmanCodes[111].code);
+	ASSERT_EQ("110", huffmanCodes[70].code);
+	ASSERT_EQ("0101", huffmanCodes[46].code);
+	ASSERT_EQ("0110", huffmanCodes[69].code);
+	ASSERT_EQ("0111", huffmanCodes[117].code);
+	ASSERT_EQ("111", huffmanCodes[109].code);
 }
 
 TEST(testingHuffman, generateCodesExampleFromBook1)
@@ -447,8 +447,8 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 		sequenceArray.push_back(new SymbolRecord(string2[i], i));
 	}
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
@@ -477,15 +477,15 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
-	ASSERT_EQ("000", huffmanCodes[97]->code);
-	ASSERT_EQ("001", huffmanCodes[98]->code);
-	ASSERT_EQ("010", huffmanCodes[99]->code);
-	ASSERT_EQ("011", huffmanCodes[100]->code);
-	ASSERT_EQ("10", huffmanCodes[101]->code);
-	ASSERT_EQ("11", huffmanCodes[102]->code);
+	ASSERT_EQ("000", huffmanCodes[97].code);
+	ASSERT_EQ("001", huffmanCodes[98].code);
+	ASSERT_EQ("010", huffmanCodes[99].code);
+	ASSERT_EQ("011", huffmanCodes[100].code);
+	ASSERT_EQ("10", huffmanCodes[101].code);
+	ASSERT_EQ("11", huffmanCodes[102].code);
 }
 
 TEST(testingHuffman, generateCodesExampleFromBook2)
@@ -544,8 +544,8 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 		sequenceArray.push_back(new SymbolRecord(string2[i], i));
 	}
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	priority_queue<HuffmanNode *, vector<HuffmanNode *>, CompareNodes> pq;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	unsigned int cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
 
@@ -561,17 +561,17 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 
 	unsigned int *firstCode = new unsigned int[maxLength];
 	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
-	ASSERT_EQ("001", huffmanCodes[97]->code);
-	ASSERT_EQ("00000", huffmanCodes[98]->code);
-	ASSERT_EQ("00001", huffmanCodes[99]->code);
-	ASSERT_EQ("00010", huffmanCodes[100]->code);
-	ASSERT_EQ("00011", huffmanCodes[101]->code);
-	ASSERT_EQ("01", huffmanCodes[102]->code);
-	ASSERT_EQ("10", huffmanCodes[103]->code);
-	ASSERT_EQ("11", huffmanCodes[104]->code);
+	ASSERT_EQ("001", huffmanCodes[97].code);
+	ASSERT_EQ("00000", huffmanCodes[98].code);
+	ASSERT_EQ("00001", huffmanCodes[99].code);
+	ASSERT_EQ("00010", huffmanCodes[100].code);
+	ASSERT_EQ("00011", huffmanCodes[101].code);
+	ASSERT_EQ("01", huffmanCodes[102].code);
+	ASSERT_EQ("10", huffmanCodes[103].code);
+	ASSERT_EQ("11", huffmanCodes[104].code);
 }
 
 TEST(testingHuffman, fillBitset)
@@ -645,11 +645,11 @@ TEST(huffman, decoder)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	ASSERT_EQ(2, firstCode[0]);
@@ -700,7 +700,7 @@ TEST(huffman, decoder)
 	string testTranslator[12] = { "0000", "0001", "100", "0010", "0011", "0100", "101", "110", "0101", "0110", "0111", "111" };
 
 	
-	vector<unsigned int> *symbolIndexSequence = new vector<unsigned int>();
+	vector<unsigned int> symbolIndexSequence;
 
 	string filename2 = "Compressed_diddy.txt";
 	string result = "";
@@ -710,16 +710,16 @@ TEST(huffman, decoder)
 	int count = 0;
 	//sHHAo.wahFEumFo
 	
-	h.decode(firstCode, filename2, &symbolIndices, *symbolIndexSequence);
+	h.decode(firstCode, filename2, symbolIndices, symbolIndexSequence);
 
-	for (int i = 0; i < symbolIndexSequence->size(); i++)
+	for (int i = 0; i < symbolIndexSequence.size(); i++)
 	{
 		if (i == 1 || i == 2 || i == 4 || i == 9 || i == 12 || i == 13 || i == 14)
 		{
-			totalResult += huffmanToSymbols[3][testTranslator[(*symbolIndexSequence)[i]]];
+			totalResult += huffmanToSymbols[3][testTranslator[(symbolIndexSequence)[i]]];
 		}
 		else
-			totalResult += huffmanToSymbols[4][testTranslator[(*symbolIndexSequence)[i]]];
+			totalResult += huffmanToSymbols[4][testTranslator[(symbolIndexSequence)[i]]];
 	}
 	if (totalResult == "")
 		ASSERT_TRUE(false);
@@ -751,8 +751,8 @@ TEST(huffman, decodeDictionaryDiddy)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<vector<CompactPair>> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -782,8 +782,8 @@ TEST(huffman, decodeDictionaryDiddy)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
-	vector<vector<CompactPair*>*> generationVectors;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
+	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
@@ -793,11 +793,11 @@ TEST(huffman, decodeDictionaryDiddy)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary2";
@@ -815,16 +815,16 @@ TEST(huffman, decodeDictionaryDiddy)
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices = new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>>();
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> symbolIndices;
 
 	h.decodeDictionary(ifs, symbolIndices);
 
-	ASSERT_EQ(4, (*symbolIndices)[3].size());
-	ASSERT_EQ(8, (*symbolIndices)[4].size());
+	ASSERT_EQ(4, (symbolIndices)[3].size());
+	ASSERT_EQ(8, (symbolIndices)[4].size());
 
 	unsigned int codeLength = 3;
 	unsigned int code = 4;
-	unsigned int symbol = (*huffmanToSymbol[3])[4];
+	unsigned int symbol = (huffmanToSymbol[3])[4];
 	unsigned int index;
 
 	//Test codes of length 3
@@ -832,14 +832,14 @@ TEST(huffman, decodeDictionaryDiddy)
 	for (int i = 4; i < 8; i++)
 	{
 		code = i;
-		symbol = (*huffmanToSymbol[codeLength])[code];
+		symbol = (huffmanToSymbol[codeLength])[code];
 
 		if (symbol >= initialSymbolValue)
-			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
 		else
-			index = (*terminalIndices)[symbol];
+			index = (terminalIndices)[symbol];
 
-		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
 
 	//Test codes of length 4
@@ -848,14 +848,14 @@ TEST(huffman, decodeDictionaryDiddy)
 	for (int i = 4; i < 12; i++)
 	{
 		code = i;
-		symbol = (*huffmanToSymbol[codeLength])[code];
+		symbol = (huffmanToSymbol[codeLength])[code];
 
 		if (symbol >= initialSymbolValue)
-			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
 		else
-			index = (*terminalIndices)[symbol];
+			index = (terminalIndices)[symbol];
 
-		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
 }
 
@@ -883,8 +883,8 @@ TEST(huffman, decodeDictionaryDuplicates)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<vector<CompactPair>> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -914,8 +914,8 @@ TEST(huffman, decodeDictionaryDuplicates)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
-	vector<vector<CompactPair*>*> generationVectors;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
+	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
@@ -925,11 +925,11 @@ TEST(huffman, decodeDictionaryDuplicates)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testDuplicatesLongCompressed";
@@ -946,16 +946,16 @@ TEST(huffman, decodeDictionaryDuplicates)
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> *symbolIndices = new unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>>();
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> symbolIndices;
 
 	h.decodeDictionary(ifs, symbolIndices);
 
-	ASSERT_EQ(1, (*symbolIndices)[1].size());
-	ASSERT_EQ(2, (*symbolIndices)[2].size());
+	ASSERT_EQ(1, (symbolIndices)[1].size());
+	ASSERT_EQ(2, (symbolIndices)[2].size());
 
 	unsigned int codeLength = 1;
 	unsigned int code = 1;
-	unsigned int symbol = (*huffmanToSymbol[1])[1];
+	unsigned int symbol = (huffmanToSymbol[1])[1];
 	unsigned int index;
 
 	//Test codes of length 1
@@ -963,14 +963,14 @@ TEST(huffman, decodeDictionaryDuplicates)
 	for (int i = code; i < 2; i++)
 	{
 		code = i;
-		symbol = (*huffmanToSymbol[codeLength])[code];
+		symbol = (huffmanToSymbol[codeLength])[code];
 
 		if (symbol >= initialSymbolValue)
-			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
 		else
-			index = (*terminalIndices)[symbol];
+			index = (terminalIndices)[symbol];
 
-		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
 
 	//Test codes of length 2
@@ -979,13 +979,13 @@ TEST(huffman, decodeDictionaryDuplicates)
 	for (int i = 0; i < 2; i++)
 	{
 		code = i;
-		symbol = (*huffmanToSymbol[codeLength])[code];
+		symbol = (huffmanToSymbol[codeLength])[code];
 
 		if (symbol >= initialSymbolValue)
-			index = (*indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
 		else
-			index = (*terminalIndices)[symbol];
+			index = (terminalIndices)[symbol];
 
-		ASSERT_EQ(index, (*symbolIndices)[codeLength][code]);
+		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
 }
