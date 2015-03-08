@@ -199,11 +199,12 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 
 		//Binary code for right elements
 		string s = "";
+		rightElementsBinaries.push_back("");
 		for (int i = 0; i < (*pairs[genP1]).size(); ++i)
 		{			
 			s.assign(getBinaryCode((*pairs[genP1])[i]->rightSymbol));
 
-			rightElementsBinaries.push_back("");
+			
 			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
 			{
 				rightElementsBinaries[genP1] += '0';

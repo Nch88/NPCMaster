@@ -452,8 +452,6 @@ TEST(gammaCodes, encode_diddy)
 	}
 }
 
-//TODO: test diddy_makeFinalString explicit, halfway through something does not work correctly
-
 TEST(gammaCodes, diddy_makeFinalString)
 {
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
