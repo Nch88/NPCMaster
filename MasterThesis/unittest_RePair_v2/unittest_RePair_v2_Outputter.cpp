@@ -56,11 +56,11 @@ TEST(outputter, diddyHuffmanCode)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	out.huffmanEncoding(
@@ -146,8 +146,8 @@ TEST(outputter, diddyHuffmanDictionary)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<vector<CompactPair>> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -177,20 +177,22 @@ TEST(outputter, diddyHuffmanDictionary)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	unordered_map<unsigned int, unsigned int> terminalIndices;
+	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices,
+		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary";
@@ -294,8 +296,6 @@ TEST(outputter, diddyHuffmanDictionary)
 	ASSERT_EQ(1, resultVector[18]);
 	ASSERT_EQ(19, resultVector[19]);
 	ASSERT_EQ(10, resultVector[20]);
-		
-	delete terminalIndices;
 }
 
 TEST(outputter, diddyAll)
@@ -320,8 +320,8 @@ TEST(outputter, diddyAll)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<CompactPair> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -351,26 +351,62 @@ TEST(outputter, diddyAll)
 		terminals,
 		symbols,
 		c);
-																		//Can't test yet
-	//out.all(
-	//	filename,
-	//	firstBlock,
-	//	sequenceArray,
-	//	dictionary,
-	//	activePairs,
-	//	priorityQueue,
-	//	terminals,
-	//	c);
+																		
+	out.all(
+		filename,
+		firstBlock,
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		c);
 
-	//string compressedFile = out.addFilenameEnding(filename, ".NPC");
-	//string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
 
-	//ifstream ifs;
-	//ifs.open(compressedFile, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifstream ifs;
+	ifs.open(compressedFile, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
 
-	//ifs.open(compressedDictionary, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifs.open(compressedDictionary, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
+}
+
+TEST(outputter, writeAndReadDictionary)
+{
+	GammaCode gc;
+	Outputter out;
+
+	string outstring = "testWriteDictionary";
+
+	//String is ".do.diddy.dodd" -> "AoAiByAoB" -> "CAiddyCB"
+	//Dictionary is A -> (.,d), B -> (d,d), C -> (A,o)
+	//Index pairs are (0,1), (1,1) and (5,2)
+	//Terminals: [.,d,o,i,y]
+
+	string tHeader = gc.getGammaCode(5);
+	string terminals = gc.getGammaCode('.') + gc.getGammaCode('d') + gc.getGammaCode('o') + gc.getGammaCode('i') + gc.getGammaCode('y');
+	string pHeader = gc.getGammaCode(2);
+	string gen1Header = gc.getGammaCode(2) + gc.getGammaCode(4);
+	string gen1Left = gc.getGammaCode(0) + gc.getGammaCode(1);
+	string gen1Right = "001001";
+	string gen2Header = gc.getGammaCode(1) + gc.getGammaCode(6);;
+	string gen2Left = gc.getGammaCode(5);
+	string gen2Right = "010";
+
+	string output = tHeader + terminals + pHeader + gen1Header + gen1Left + gen1Right + gen2Header + gen2Left + gen2Right;
+
+	//Write file
+	out.dictionary(outstring, output, true);
+
+	vector<CompactPair> pairs;
+	unordered_set<unsigned int> termSet;
+	ifstream bitstream(outstring, ios::binary);
+
+	//Read file
+	gc.decodeDictionaryFile(pairs, termSet, bitstream);
+	int x = 0;
 }

@@ -150,111 +150,158 @@ string GammaCode::getGammaCode(unsigned int in)
 	return firstPart + padding + secondPart;
 }
 
-void GammaCode::encode(vector<CompactPair*>& pairs,
+void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& terminalsGamma,
-	string& leftElementsGamma,
-	string& rightElementsBinary)
+	vector<string>& leftElementsGammas,
+	vector<string>& rightElementsBinaries,
+	vector<vector<CompactPair>>& generationVectors)
 {
+	int generations = generationVectors.size();
+	int genP1 = 0;
+	unsigned int firstElement = 0;
+	string fstElmtGamma = "";
+
 	//Sort terminals
 	vector<unsigned int> terminalVector;
-	terminalVector.assign(terminals.begin(), terminals.end());
+	//terminalVector.resize(terminals.size());
+	//terminalVector.assign(terminals.begin(), terminals.end());
+	for each (auto entry in terminals)
+	{
+		terminalVector.push_back(entry);
+	}
 	sort(terminalVector.begin(), terminalVector.end());
-
+	string tmpGammaCode = "";
 	//Gamma code for terminals
 	for (int iP1 = 0; iP1 < terminalVector.size(); ++iP1)
 	{
-		terminalsGamma += getGammaCode(terminalVector[iP1]);
+		tmpGammaCode.assign(getGammaCode(terminalVector[iP1]));
+		terminalsGamma += tmpGammaCode;
 	}
 
-	//Gamma code for left elements
-	leftElementsGamma += getGammaCode(pairs[0]->leftSymbol);
-	for (int iP2 = 0; iP2 < pairs.size() - 1; ++iP2)
-	{
-		leftElementsGamma += getGammaCode(pairs[iP2 + 1]->leftSymbol - pairs[iP2]->leftSymbol);
-	}
+	long bitLengthRightValue = terminalVector.size();
+	long bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Generation 1 can point to any terminal
 
-	//Binary code for right elements
-	int bitLengthRight = floor(log2(pairs.size())) + 1;//This won't work for one generation at a time
-	string s;
-	for (int i = 0; i < pairs.size(); ++i)
+	//For each generation
+	for (genP1 = 0; genP1 < generations; ++genP1)
 	{
-		s = getBinaryCode(pairs[i]->rightSymbol);
-		if (s.length() > bitLengthRight)
-			throw new exception("Error in gamma encoding: bit length right not sufficient");
-		for (int j = 0; j < (bitLengthRight - s.length()); ++j)
+
+		//Gamma code for left elements
+		firstElement = (pairs[genP1])[0].leftSymbol;
+		fstElmtGamma = getGammaCode(firstElement);
+		leftElementsGammas.push_back(fstElmtGamma);
+		for (int i = 0; i < (pairs[genP1]).size() - 1; ++i)
 		{
-			rightElementsBinary += '0';
+			tmpGammaCode.assign(getGammaCode((pairs[genP1])[i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
+			leftElementsGammas[genP1] += tmpGammaCode;
 		}
-		rightElementsBinary += s;
+
+		//Binary code for right elements
+		string s = "";
+		rightElementsBinaries.push_back("");
+		for (int i = 0; i < (pairs[genP1]).size(); ++i)
+		{			
+			s.assign(getBinaryCode((pairs[genP1])[i].rightSymbol));
+
+			
+			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
+			{
+				rightElementsBinaries[genP1] += '0';
+			}
+			rightElementsBinaries[genP1] += s;
+		}
+
+		bitLengthRightValue += generationVectors[genP1].size();
+		bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Size of all generation below
 	}
 }
 
-void GammaCode::makeFinalString(std::vector<CompactPair*>& pairs,
-	std::unordered_set<unsigned int>& terminals,
-	std::string& finalString)
+void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
+	unordered_set<unsigned int>& terminals,
+	string& finalString,
+	vector<vector<CompactPair>> generationVectors)
 {
-	string *terminalsGamma = new string();
+	string *terminalsGamma = new string("");
 
-	string tHeader = "", header = "", left = "", right = "";
-	encode(pairs, terminals, *terminalsGamma, left, right);
-	
-	//Current header is just the nr of pairs
-	//For the generationwise version, header should be nr of pairs in generation, then max index.
-	//This can be written as gamma codes with the padding appended instead of prepended.
+	vector<string> lefts;
+	vector<string> rights;
+	string tHeader = "", header = "";
+	encode(pairs, terminals, *terminalsGamma, lefts, rights, generationVectors);
 
-	//Add headers
+	//Set terminal header
 	tHeader = getGammaCode(terminals.size());
-	header = getGammaCode(pairs.size());
 
-	finalString = tHeader + *terminalsGamma + header + left + right;
+	//First we add terminals to the final output
+	finalString = tHeader + *terminalsGamma;
+
+	//Then a header w/ number of generations
+	finalString += getGammaCode(generationVectors.size());
+
+	//Then for each generation
+	int maxIndex = terminals.size() - 1;
+	for (int i = 0; i < generationVectors.size(); ++i)
+	{
+		//Header is size of generation + max possible index found in that generation
+		header = getGammaCode(generationVectors[i].size()) + getGammaCode(maxIndex);
+		
+		string leftPart = ((lefts)[i]);
+		string rightPart = ((rights)[i]);
+
+		finalString += (header + leftPart + rightPart);
+
+		//Increase maxindex by the size of the generation
+		maxIndex += generationVectors[i].size();
+	}
 
 	delete terminalsGamma;
 }
 
-void GammaCode::decode(vector<CompactPair*>& pairs,
-	unordered_set<unsigned int>& terminals,
-	string& inputString)
-{
-	//Terminals
-	vector<unsigned int> t;
-	int startIndex = 0;
-	int count = readGammaCodeHeader(inputString, startIndex);
-	string pairString = "";
-	decodeGammaString(pairString, inputString.substr(startIndex, string::npos), t, count);
-	terminals = *(new unordered_set<unsigned int>(t.begin(), t.end()));
-
-	//Read header
-	startIndex = 0;
-	count = readGammaCodeHeader(pairString, startIndex);
-
-	vector<unsigned int> left;
-	string prefix = "", cur;
-	decodeGammaString(prefix, pairString.substr(startIndex,string::npos), left, count);
-	int rightElemSize = floor(log2(count)) + 1;
-	int i = 0;
-	unsigned int leftVal = 0;
-	while (prefix.size() > 0)
-	{
-		leftVal += left[i];
-
-		cur = prefix.substr(0, rightElemSize);
-		if (prefix.size() > rightElemSize)
-			prefix = prefix.substr(rightElemSize, string::npos);
-		else
-			prefix = "";
-		CompactPair *c = new CompactPair(leftVal,binaryToInt(cur));
-		pairs.push_back(c);
-
-		++i;
-	}
-}
+//void GammaCode::decode(vector<CompactPair*>& pairs,
+//	unordered_set<unsigned int>& terminals,
+//	string& inputString)
+//{
+//	//Terminals
+//	vector<unsigned int> t;
+//	int startIndex = 0;
+//	int count = readGammaCodeHeader(inputString, startIndex);
+//	string pairString = "";
+//	decodeGammaString(pairString, inputString.substr(startIndex, string::npos), t, count);
+//	terminals = *(new unordered_set<unsigned int>(t.begin(), t.end()));
+//
+//	//Read header
+//	startIndex = 0;
+//	count = readGammaCodeHeader(pairString, startIndex);
+//
+//	vector<unsigned int> left;
+//	string prefix = "", cur;
+//	decodeGammaString(prefix, pairString.substr(startIndex,string::npos), left, count);
+//	int rightElemSize = floor(log2(count)) + 1;
+//	int i = 0;
+//	unsigned int leftVal = 0;
+//	while (prefix.size() > 0)
+//	{
+//		leftVal += left[i];
+//
+//		cur = prefix.substr(0, rightElemSize);
+//		if (prefix.size() > rightElemSize)
+//			prefix = prefix.substr(rightElemSize, string::npos);
+//		else
+//			prefix = "";
+//		CompactPair *c = new CompactPair(leftVal,binaryToInt(cur));
+//		pairs.push_back(c);
+//
+//		++i;
+//	}
+//}
 
 void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
 {
+	string emptyString = "";
+	this->decodeGammaString(prefix, emptyString, values, n);
+	if (values.size() == n)
+		return;
 	if (bitstream.is_open())
 	{
-		int originalSize = values.size();
 		char rawChunk1 = 0;
 		char rawChunk2 = 0;
 		char rawChunk3 = 0;
@@ -262,7 +309,7 @@ void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &b
 		Huffman huff;
 		string chunk = "";
 
-		while (values.size() - originalSize < n)
+		while (values.size() < n)
 		{
 			if (!bitstream.eof())
 			{
@@ -275,24 +322,23 @@ void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &b
 			}
 			else
 				chunk = "";
-			
+
 			this->decodeGammaString(prefix, chunk, values, n);
 		}
 	}
 }
 
-void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
+void GammaCode::readNextBinaries(int binarySize, int count, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
 {
 	if (bitstream.is_open())
 	{
-		int originalSize = values.size();
 		char rawChunk1 = 0;
 		char rawChunk2 = 0;
 		char rawChunk3 = 0;
 		char rawChunk4 = 0;
 		Huffman huff;
 		string chunk = "", subString = "";
-		
+
 		if (!bitstream.eof())
 		{
 			bitstream.get(rawChunk1);
@@ -305,12 +351,16 @@ void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, i
 		else
 			chunk = "";
 
-		int i;
-		//Add as many binary numbers as possible
-		for (i = 0; i + binarySize < chunk.size(); i += binarySize)
+		//Prepend prefix
+		chunk = prefix + chunk;
+
+		int i = 0;
+		//Add as many binary numbers as possible until we run out of data or reach count
+		while (i + binarySize < chunk.size() && values.size() < count)
 		{
 			subString = chunk.substr(i, binarySize);
 			values.push_back(this->binaryToInt(subString));
+			i += binarySize;
 		}
 
 		//If anything is left of the chunk, save it as prefix
@@ -321,50 +371,59 @@ void GammaCode::readNextBinaries(int binarySize, vector<unsigned int> &values, i
 	}
 }
 
-void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
+void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	unordered_set<unsigned int>& terminals,
-	string& inputString,
 	ifstream &bitstream)
 {
-	vector<unsigned int> *values = new vector<unsigned int>();
+	vector<unsigned int> values;
 	string prefix = "";
 
 	//Read header for terminals
-	readNextNumbers(1, *values, bitstream, prefix);
-	int count = (*values)[0];
-	values->clear();
+	readNextNumbers(1, values, bitstream, prefix);
+	int count = (values)[0];
+	values.clear();
 
 	//Read terminals
-	readNextNumbers(count, *values, bitstream, prefix);
+	readNextNumbers(count, values, bitstream, prefix);
+	for (auto entry : values)	
+		terminals.insert(entry);
+	
+	values.clear();
 
-	terminals = *(new unordered_set<unsigned int>(values->begin(), values->end()));
-	values->clear();
+	//Read number of generations
+	readNextNumbers(1, values, bitstream, prefix);
+	int generationCount = (values)[0];
+	values.clear();
 
-	//Read header for pairs
-	readNextNumbers(1, *values, bitstream, prefix);
-	count = (*values)[0];
-	values->clear();
-
-	//Read left values
-	vector<unsigned int> *left = new vector<unsigned int>();
-	readNextNumbers(count, *left, bitstream, prefix);
-
-	//Read right element binaries and write pairs
-	int rightElemSize = floor(log2(count)) + 1;
-	unsigned int leftVal = 0;
-	int i = 0;
-	while (pairs.size() < left->size())
+	int binarySize, i;
+	unsigned int leftVal;
+	vector<unsigned int> left;
+	for (int g = 0; g < generationCount; ++g)
 	{
-		readNextBinaries(rightElemSize, *values, bitstream, prefix);
-		for (int j = 0; j < values->size(); ++j)
-		{
-			leftVal += (*left)[i];
-			CompactPair *c = new CompactPair(leftVal, (*values)[j]);
-			pairs.push_back(c);
-			++i;
-		}
-	}
+		//Read generation header
+		readNextNumbers(2, values, bitstream, prefix);
+		count = (values)[0];
+		binarySize = 1 + floor(log2((values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
+		values.clear();
 
-	delete values;
-	delete left;
+		//Read left values and store them in 'left'
+		readNextNumbers(count, left, bitstream, prefix);
+
+		//Read right element binaries and write pairs
+		leftVal = 0;
+		i = 0;
+		while (i < count)
+		{
+			readNextBinaries(binarySize, count, values, bitstream, prefix);
+			for (int j = 0; j < values.size(); ++j)
+			{
+				leftVal += (left)[i];
+				CompactPair c(leftVal, (values)[j]);
+				pairs.push_back(c);
+				++i;
+			}
+			values.clear();
+		}
+		left.clear();
+	}
 }
