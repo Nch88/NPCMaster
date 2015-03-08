@@ -351,28 +351,28 @@ TEST(outputter, diddyAll)
 		terminals,
 		symbols,
 		c);
-																		//Can't test yet
-	//out.all(
-	//	filename,
-	//	firstBlock,
-	//	sequenceArray,
-	//	dictionary,
-	//	activePairs,
-	//	priorityQueue,
-	//	terminals,
-	//	c);
+																		
+	out.all(
+		filename,
+		firstBlock,
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		c);
 
-	//string compressedFile = out.addFilenameEnding(filename, ".NPC");
-	//string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
 
-	//ifstream ifs;
-	//ifs.open(compressedFile, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifstream ifs;
+	ifs.open(compressedFile, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
 
-	//ifs.open(compressedDictionary, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifs.open(compressedDictionary, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
 }
 
 TEST(outputter, writeAndReadDictionary)

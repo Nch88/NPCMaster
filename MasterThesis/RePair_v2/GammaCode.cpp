@@ -150,7 +150,6 @@ string GammaCode::getGammaCode(unsigned int in)
 	return firstPart + padding + secondPart;
 }
 
-//TODO: Figure out why right elements vector is too long
 void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& terminalsGamma,
@@ -376,56 +375,55 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	unordered_set<unsigned int>& terminals,
 	ifstream &bitstream)
 {
-	vector<unsigned int> *values = new vector<unsigned int>();
+	vector<unsigned int> values;
 	string prefix = "";
 
 	//Read header for terminals
-	readNextNumbers(1, *values, bitstream, prefix);
-	int count = (*values)[0];
-	values->clear();
+	readNextNumbers(1, values, bitstream, prefix);
+	int count = (values)[0];
+	values.clear();
 
 	//Read terminals
-	readNextNumbers(count, *values, bitstream, prefix);
-	terminals = *(new unordered_set<unsigned int>(values->begin(), values->end()));
-	values->clear();
+	readNextNumbers(count, values, bitstream, prefix);
+	for (auto entry : values)	
+		terminals.insert(entry);
+	
+	values.clear();
 
 	//Read number of generations
-	readNextNumbers(1, *values, bitstream, prefix);
-	int generationCount = (*values)[0];
-	values->clear();
+	readNextNumbers(1, values, bitstream, prefix);
+	int generationCount = (values)[0];
+	values.clear();
 
 	int binarySize, i;
 	unsigned int leftVal;
-	vector<unsigned int> *left = new vector<unsigned int>();
+	vector<unsigned int> left;
 	for (int g = 0; g < generationCount; ++g)
 	{
 		//Read generation header
-		readNextNumbers(2, *values, bitstream, prefix);
-		count = (*values)[0];
-		binarySize = 1 + floor(log2((*values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
-		values->clear();
+		readNextNumbers(2, values, bitstream, prefix);
+		count = (values)[0];
+		binarySize = 1 + floor(log2((values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
+		values.clear();
 
 		//Read left values and store them in 'left'
-		readNextNumbers(count, *left, bitstream, prefix);
+		readNextNumbers(count, left, bitstream, prefix);
 
 		//Read right element binaries and write pairs
 		leftVal = 0;
 		i = 0;
 		while (i < count)
 		{
-			readNextBinaries(binarySize, count, *values, bitstream, prefix);
-			for (int j = 0; j < values->size(); ++j)
+			readNextBinaries(binarySize, count, values, bitstream, prefix);
+			for (int j = 0; j < values.size(); ++j)
 			{
-				leftVal += (*left)[i];
-				CompactPair c(leftVal, (*values)[j]);
+				leftVal += (left)[i];
+				CompactPair c(leftVal, (values)[j]);
 				pairs.push_back(c);
 				++i;
 			}
-			values->clear();
+			values.clear();
 		}
-		left->clear();
+		left.clear();
 	}
-
-	delete values;
-	delete left;
 }
