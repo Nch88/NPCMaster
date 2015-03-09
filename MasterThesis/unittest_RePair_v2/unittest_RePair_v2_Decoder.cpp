@@ -71,8 +71,24 @@ TEST(decoder, diddyAll)
 	string compressedFile = out.addFilenameEnding(filename, ".NPC");
 	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
 
+	//Read dictionary
 	ifstream bitstreamDict(compressedDictionary, ios::binary);
+	vector<CompactPair> decodedPairs;
+	vector<long> decodedTerms;
+	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
 
+	//Read huffman dictionary
+	unordered_map<long, unordered_map<long, long>> symbolIndices;
+	long *firstCodes;
+	h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
 
-	//TODO: test decoding of everything at once
+	//Read file
+	vector<long> symbolIndexSequence;
+	h.decode(firstCodes, compressedFile, symbolIndices, symbolIndexSequence);
+	string finalOutput = "";
+	for (int i = 0; i < symbolIndexSequence.size(); ++i)
+	{
+		finalDict.decodeSymbol(symbolIndexSequence[i], decodedPairs, decodedTerms, finalOutput);
+	}
+	ASSERT_EQ(string1,finalOutput);
 }

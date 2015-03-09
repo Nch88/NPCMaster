@@ -28,6 +28,6 @@ public:
 	void GammaCode::readNextNumbers(int n, std::vector<long> &values, std::ifstream &bitstream, std::string &prefix);
 	void GammaCode::readNextBinaries(int binarySize, int count, std::vector<long> &values, std::ifstream &bitstream, std::string &prefix);
 	void GammaCode::decodeDictionaryFile(std::vector<CompactPair>& pairs,
-		std::unordered_set<long>& terminals,
+		std::vector<long>& terminals,
 		std::ifstream &bitstream);
 };

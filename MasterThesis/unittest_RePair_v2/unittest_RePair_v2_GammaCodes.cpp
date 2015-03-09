@@ -699,53 +699,6 @@ TEST(gammaCodes, decode_gammaToInt)
 		ASSERT_EQ(i, gc.gammaToInt(gammas[i]));
 }
 
-TEST(gammaCodes, decode_simple)
-{
-	//GammaCode gc;
-	//string gamma = "1001001001001";//T = {1} and P = {(1,1)}
-	//vector<CompactPair*> decodedPairs;
-	//unordered_set<long> decodedTerminals;
-	//gc.decode(decodedPairs, decodedTerminals, gamma);
-	//ASSERT_EQ(1, decodedPairs.size());
-	//ASSERT_EQ(1, decodedPairs[0]->leftSymbol);
-	//ASSERT_EQ(1, decodedPairs[0]->rightSymbol);
-	//ASSERT_EQ(1, decodedTerminals.size());
-	//ASSERT_EQ(1, decodedTerminals.count(1));
-}
-
-TEST(gammaCodes, encodeThenDecode_simplePairs)
-{
-	//GammaCode gc;
-
-	////This should be (0,1)(1,2)...(4,5)
-	//vector<CompactPair*> pairs;
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	CompactPair *c = new CompactPair(i, i + 1);
-	//	pairs.push_back(c);
-	//}
-	//unordered_set<long> terminals = { 1, 2, 3, 4, 5, 6 };
-	//string encodedString;
-
-	//gc.makeFinalString(pairs, terminals, encodedString);
-
-	//vector<CompactPair*> decodedPairs;
-	//unordered_set<long> decodedTerminals;
-
-	//gc.decode(decodedPairs, decodedTerminals, encodedString);
-	//for (int i = 0; i < pairs.size(); ++i)
-	//{
-	//	ASSERT_EQ(pairs[i]->leftSymbol, decodedPairs[i]->leftSymbol);
-	//	ASSERT_EQ(pairs[i]->rightSymbol, decodedPairs[i]->rightSymbol);
-	//}
-	//ASSERT_EQ(terminals, decodedTerminals);
-
-	////Cleanup
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	delete pairs[i];
-	//}
-}
 
 TEST(gammaCodes, writeToFile)
 {

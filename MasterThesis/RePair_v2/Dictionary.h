@@ -22,4 +22,9 @@ public:
 	void Dictionary::createGenerationVectors(
 		std::unordered_map<long, Pair>& dictionary,
 		std::vector<std::vector<CompactPair>>& generationVectors);
+	void Dictionary::decodeSymbol(
+		long &symbolIndex,
+		vector<CompactPair> &decodedPairs,
+		vector<long> &decodedTerms,
+		string &finalOutput);
 };
