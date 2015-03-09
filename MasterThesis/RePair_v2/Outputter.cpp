@@ -63,7 +63,7 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 void Outputter::huffmanEncoding(
 	string outFile,
 	vector<SymbolRecord *>& sequenceArray,
-	unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
+	unordered_map<long, HuffmanNode> &huffmanCodes,
 	bool firstBlock)
 {
 	ofstream myfile;
@@ -72,8 +72,8 @@ void Outputter::huffmanEncoding(
 	string chunk = "";
 	string specialBit = "0";
 	string code = "";
-	unsigned int seqIndex = 0;
-	unsigned int codeIndex = 0;
+	long seqIndex = 0;
+	long codeIndex = 0;
 	short paddingBits = 0;
 
 	if (firstBlock)
@@ -149,13 +149,13 @@ void Outputter::huffmanEncoding(
 
 void Outputter::huffmanDictionary(
 	string outFile,
-	unsigned int maxLength,
-	unsigned int *firstCode,
-	unsigned int *numl,
-	unordered_map<unsigned int, Pair> &dictionary,
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
-	unordered_map<unsigned int, unsigned int> &terminalIndices,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol)
+	long maxLength,
+	long *firstCode,
+	long *numl,
+	unordered_map<long, Pair> &dictionary,
+	unordered_map <long, unordered_map<long, long>> &indices,
+	unordered_map<long, long> &terminalIndices,
+	unordered_map<long, unordered_map<long, long>> &huffmanToSymbol)
 {
 	ofstream myfile;
 	myfile.open(outFile, ios::binary | ios::app);
@@ -167,7 +167,7 @@ void Outputter::huffmanDictionary(
 
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
 
-	for (unsigned int i = 0; i < maxLength; i++)
+	for (long i = 0; i < maxLength; i++)
 	{
 		gammaCodes += gc.getGammaCode(numl[i]);									//Convert number of codes of this length to gamma code
 																				//and append to the string of codes we want to write.
@@ -175,12 +175,12 @@ void Outputter::huffmanDictionary(
 
 		for (int j = 0; j < numl[i]; j++)
 		{
-			unsigned int symbol = (huffmanToSymbol[i + 1])[firstCode[i] + j];
-			unsigned int index;
+			long symbol = (huffmanToSymbol[i + 1])[firstCode[i] + j];
+			long index;
 			if (symbol >= initialSymbolValue)
 			{
-				unsigned int symbolLeft = dictionary[symbol].leftSymbol;
-				unsigned int symbolRight = dictionary[symbol].rightSymbol;
+				long symbolLeft = dictionary[symbol].leftSymbol;
+				long symbolRight = dictionary[symbol].rightSymbol;
 				index = (indices[symbolLeft])[symbolRight];
 			}
 			else
@@ -277,10 +277,10 @@ void Outputter::all(
 	string filename,
 	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unordered_set<unsigned int>& terminals,
+	unordered_set<long>& terminals,
 	Conditions& c)
 {
 	//Create names for output files
@@ -289,11 +289,11 @@ void Outputter::all(
 
 	//Do Huffman encoding
 	Huffman h;
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	unordered_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
@@ -308,8 +308,8 @@ void Outputter::all(
 	Dictionary finalDict;
 	vector<vector<CompactPair>> pairs;
 	vector<vector<CompactPair>> generationVectors;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, unordered_map<long, long>> indices;
+	unordered_map<long, long> terminalIndices;
 
 	finalDict.generateCompactDictionary(
 		dictionary,

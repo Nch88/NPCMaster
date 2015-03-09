@@ -13,18 +13,18 @@ int main(int argc, char* argv[])
 	int blockSize;
 	blockSize = 1048576;
 
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);
 
 	Algorithm algorithm;
 	AlgorithmP algP;
 	Initializer init;
 	Conditions c;
 	c.timing = false;
-	c.verbose = true;
+	c.verbose = false;
 	MyTimer t;
 	int r = 0;
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	string input5 = "world192.txt";
 	string input6 = "bible.txt";
 
-	filename = input2;
+	filename = input5;
 	
 
 	ifstream file(filename);

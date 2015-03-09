@@ -11,10 +11,10 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
-unsigned int AlgorithmP::findGeneration(
-	unordered_map<unsigned int, Pair>& dictionary, 
-	unsigned int left, 
-	unsigned int right
+long AlgorithmP::findGeneration(
+	unordered_map<long, Pair>& dictionary, 
+	long left, 
+	long right
 	)
 {
 	if (left < initialSymbolValue)
@@ -30,8 +30,8 @@ unsigned int AlgorithmP::findGeneration(
 	else
 	{
 		//Neither are terminals, so we need to compare them
-		unsigned int genLeft = dictionary[left].generation;
-		unsigned int genRight = dictionary[right].generation;
+		long genLeft = dictionary[left].generation;
+		long genRight = dictionary[right].generation;
 		return (genLeft > genRight ? genLeft : genRight) + 1;
 	}
 }
@@ -51,7 +51,7 @@ SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  
 
 void AlgorithmP::compact(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue)
 {
 	SymbolRecord *empty = nullptr;// , *tmpnxt = nullptr, *tmppre = nullptr;
@@ -77,8 +77,8 @@ void AlgorithmP::compact(
 			if ((sequenceArray[i]->next || sequenceArray[i]->previous) && i < (sequenceArray.size() - 1))
 			{
 				//Figure out the pair
-				unsigned int s1 = sequenceArray[i]->symbol;
-				unsigned int s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+				long s1 = sequenceArray[i]->symbol;
+				long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
 
 				if (activePairs[s1][s2].pairRecord->arrayIndexFirst == i)
 					activePairs[s1][s2].pairRecord->arrayIndexFirst = empty->index;
@@ -131,9 +131,9 @@ void AlgorithmP::removeSymbolThreadingPointers(
 }
 
 void AlgorithmP::deletePairRecord(
-	unsigned int & symbolLeft,
-	unsigned int & symbolRight,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+	long & symbolLeft,
+	long & symbolRight,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs)
 {
 	delete activePairs[symbolLeft][symbolRight].pairRecord;
 	activePairs[symbolLeft][symbolRight].pairRecord = nullptr;
@@ -144,14 +144,14 @@ void AlgorithmP::deletePairRecord(
 void AlgorithmP::updatePairRecord(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	PairTracker *& tracker)
 {
 	tracker->pairRecord->count--;
 	
-	unsigned int symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
-	unsigned int symbolRight = sequenceArray[indexSymbolRight]->symbol;
+	long symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
+	long symbolRight = sequenceArray[indexSymbolRight]->symbol;
 
 	if (tracker->pairRecord->count < 2) //Delete pair record
 	{
@@ -273,7 +273,7 @@ void AlgorithmP::moveUpInPriorityQueue(
 void AlgorithmP::decrementCount(
 	long & indexSymbolLeft,
 	long & indexSymbolRight, 
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
 	PairTracker *& tracker,
@@ -294,7 +294,7 @@ void AlgorithmP::decrementCount(
 void AlgorithmP::decrementCountLeft(
 	long & indexSymbolPrevious, 
 	long & indexSymbolLeft, 
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
@@ -335,7 +335,7 @@ void AlgorithmP::decrementCountLeft(
 void AlgorithmP::decrementCountRight(
 	long & indexSymbolRight,
 	long & indexSymbolNext,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
@@ -395,10 +395,10 @@ void AlgorithmP::replacePair(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
 	long & indexSymbolNext,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unsigned int & Symbols,
+	unordered_map<long, Pair>& dictionary,
+	long & Symbols,
 	Conditions& c)
 {
 	SymbolRecord * leftSymbolRecord;
@@ -448,16 +448,16 @@ void AlgorithmP::replacePair(
 void AlgorithmP::incrementCountLeft(
 	long & indexSymbolPrevious,
 	long & indexSymbolLeft,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	bool &skip,
 	Conditions& c)
 {
 	if (indexSymbolPrevious > -1)
 	{
-		unsigned int symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
+		long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
 		//Check if we need to skip
 		if (symbolPrevious != Symbols)
@@ -517,17 +517,17 @@ void AlgorithmP::incrementCountLeft(
 void AlgorithmP::incrementCountRight(
 	long & indexSymbolLeft,
 	long & indexSymbolNext,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	Conditions& c)
 {
 	
 	if (indexSymbolNext > -1)
 	//Only do this if there is a next symbol
 	{
-		unsigned int symbolNext = sequenceArray[indexSymbolNext]->symbol;
+		long symbolNext = sequenceArray[indexSymbolNext]->symbol;
 
 		if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord == NULL)
 			//This is exactly the first time we see this
@@ -578,10 +578,10 @@ void AlgorithmP::replaceInstanceOfPair(
 	long & indexSymbolPrevious,
 	long & indexSymbolNext,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	bool& skip,
 	Conditions& c)
 {
@@ -682,10 +682,10 @@ void AlgorithmP::establishContext(
 void AlgorithmP::replaceAllPairs(
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	Conditions& c)
 {
 	long indexSymbolLeft = -1;
@@ -730,7 +730,7 @@ void AlgorithmP::replaceAllPairs(
 	} while (nextSymbol);
 }
 
-void AlgorithmP::newSymbol(unsigned int & Symbols)
+void AlgorithmP::newSymbol(long & Symbols)
 {
 	if (Symbols == UINT_MAX - 1)
 	{
@@ -743,10 +743,10 @@ void AlgorithmP::newSymbol(unsigned int & Symbols)
 void AlgorithmP::manageOneEntryOnList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -771,8 +771,8 @@ void AlgorithmP::manageOneEntryOnList(
 	if (c.compact)
 	{
 		long idx = sequenceIndex;
-		unsigned int s1 = sequenceArray[idx]->symbol;
-		unsigned int s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
+		long s1 = sequenceArray[idx]->symbol;
+		long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
 		cData.replaceCount += activePairs[s1][s2].pairRecord->count;
 	}
 
@@ -802,10 +802,10 @@ void AlgorithmP::manageOneEntryOnList(
 void AlgorithmP::manageOneList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -825,10 +825,10 @@ void AlgorithmP::manageOneList(
 
 void AlgorithmP::manageLowerPriorityLists(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -848,10 +848,10 @@ void AlgorithmP::manageLowerPriorityLists(
 
 void AlgorithmP::manageHighPriorityList(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unsigned int & Symbols,
+	long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -898,8 +898,8 @@ void AlgorithmP::manageHighPriorityList(
 		if (c.compact)
 		{
 			long i = sequenceIndex;
-			unsigned int s1 = sequenceArray[i]->symbol;
-			unsigned int s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+			long s1 = sequenceArray[i]->symbol;
+			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
 			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
 		}
 
@@ -929,11 +929,11 @@ void AlgorithmP::manageHighPriorityList(
 
 void AlgorithmP::run(
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+	unordered_map<long, Pair>& dictionary,
+	unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unordered_set<unsigned int>& terminals,
-	unsigned int & Symbols,
+	unordered_set<long>& terminals,
+	long & Symbols,
 	Conditions& c)
 {
 	CompactionData cData(sequenceArray.size());

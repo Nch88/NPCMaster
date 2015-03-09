@@ -13,14 +13,14 @@ bool comPair(CompactPair fst, CompactPair snd)
 
 //This is the main dictionary function. It fills the pair vector based on dictionary + terminals.
 void Dictionary::generateCompactDictionary(
-	unordered_map<unsigned int, Pair>& dictionary,
-	unordered_set<unsigned int>& terminals,
+	unordered_map<long, Pair>& dictionary,
+	unordered_set<long>& terminals,
 	vector<vector<CompactPair>>& pairVectors,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
-	unordered_map<unsigned int, unsigned int> &terminalIndices,
+	unordered_map<long, unordered_map<long, long>> &indices,
+	unordered_map<long, long> &terminalIndices,
 	vector<vector<CompactPair>> &generationVectors)
 {
-	vector<unsigned int> terminalVector;
+	vector<long> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
 
@@ -31,12 +31,12 @@ void Dictionary::generateCompactDictionary(
 }
 
 void Dictionary::createFinalPairVectors(
-	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<long, Pair>& dictionary,
 	vector<vector<CompactPair>>& generationVectors,
 	vector<vector<CompactPair>>& pairVectors,
-	vector<unsigned int>& terminals,
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
-	unordered_map<unsigned int, unsigned int> &terminalIndices)
+	vector<long>& terminals,
+	unordered_map<long, unordered_map<long, long>> &indices,
+	unordered_map<long, long> &terminalIndices)
 {
 	for (int i = 0; i < terminals.size(); ++(i))
 	{
@@ -48,8 +48,8 @@ void Dictionary::createFinalPairVectors(
 	for (int i = 0; i < generationVectors[0].size(); ++(i))
 	{
 		//Find the new indices of the two symbols in this pair
-		unsigned int leftIndex = ((terminalIndices)[(generationVectors[0])[i].leftSymbol]);
-		unsigned int rightIndex = ((terminalIndices)[(generationVectors[0])[i].rightSymbol]);
+		long leftIndex = ((terminalIndices)[(generationVectors[0])[i].leftSymbol]);
+		long rightIndex = ((terminalIndices)[(generationVectors[0])[i].rightSymbol]);
 
 		//Make a pair out of the indices we found, then push it to the vector
 		CompactPair p(leftIndex, rightIndex);
@@ -69,9 +69,9 @@ void Dictionary::createFinalPairVectors(
 			for (int j = 0; j < generationVectors[i].size(); ++j)
 			{
 				//Find the new indices of the two symbols in this pair
-				unsigned int leftSymbol = (generationVectors[i])[j].leftSymbol;
+				long leftSymbol = (generationVectors[i])[j].leftSymbol;
 
-				unsigned int leftIndex;
+				long leftIndex;
 
 				//Check for terminal symbol or composite symbol
 				if (leftSymbol < initialSymbolValue) //Terminal
@@ -80,13 +80,13 @@ void Dictionary::createFinalPairVectors(
 				}
 				else //Composite
 				{
-					unsigned int leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
-					unsigned int leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
+					long leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
+					long leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
 					leftIndex = ((indices)[leftSymbolLeftPart])[leftSymbolRightPart];
 				}
 
-				unsigned int rightSymbol = (generationVectors[i])[j].rightSymbol;
-				unsigned int rightIndex;
+				long rightSymbol = (generationVectors[i])[j].rightSymbol;
+				long rightIndex;
 
 				//Check for terminal symbol or composite symbol
 				if (rightSymbol < initialSymbolValue) //Terminal
@@ -95,8 +95,8 @@ void Dictionary::createFinalPairVectors(
 				}
 				else //Composite
 				{
-					unsigned int rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
-					unsigned int rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
+					long rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
+					long rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
 					rightIndex = ((indices)[rightSymbolLeftPart])[rightSymbolRightPart];
 				}
 
@@ -114,11 +114,11 @@ void Dictionary::createFinalPairVectors(
 }
 
 void Dictionary::createGenerationVectors(
-	unordered_map<unsigned int, Pair>& dictionary,
+	unordered_map<long, Pair>& dictionary,
 	vector<vector<CompactPair>>& generationVectors)
 {
 	//Distribute pairs in vectors
-	for each (std::pair<const unsigned int, Pair> p in dictionary)
+	for each (std::pair<const long, Pair> p in dictionary)
 	{
 		//Expand the outer vector if necessary
 		while (p.second.generation > generationVectors.size())

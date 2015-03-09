@@ -5,11 +5,11 @@ using namespace std;
 
 TEST(testingHuffman, getFrequenciesAndCodeLengths)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -28,7 +28,7 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	init.SequenceArray(
 		c,
 		file,
@@ -56,9 +56,9 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -126,11 +126,11 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 
 TEST(testingHuffman, collapseSymbols)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -148,7 +148,7 @@ TEST(testingHuffman, collapseSymbols)
 
 	string filename = input1;
 	ifstream file(filename);
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	init.SequenceArray(
 		c,
 		file,
@@ -176,9 +176,9 @@ TEST(testingHuffman, collapseSymbols)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -196,11 +196,11 @@ TEST(testingHuffman, collapseSymbols)
 
 TEST(testingHuffman, phaseThree)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -218,7 +218,7 @@ TEST(testingHuffman, phaseThree)
 
 	string filename = input1;
 	ifstream file(filename);
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	init.SequenceArray(
 		c,
 		file,
@@ -246,9 +246,9 @@ TEST(testingHuffman, phaseThree)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -275,7 +275,7 @@ TEST(testingHuffman, phaseThree)
 
 	ASSERT_EQ(1, codeLengths[0]);
 	ASSERT_EQ(15, codeLengths[1]);
-	unsigned int maxLength = 0;
+	long maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
 	for (int i = cardinality; i < cardinality * 2; i++)
@@ -304,11 +304,11 @@ TEST(testingHuffman, codeToString)
 
 TEST(testingHuffman, generateCodes)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -323,7 +323,7 @@ TEST(testingHuffman, generateCodes)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -354,9 +354,9 @@ TEST(testingHuffman, generateCodes)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -377,12 +377,12 @@ TEST(testingHuffman, generateCodes)
 	}
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	unsigned int maxLength = 0;
+	long maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
-	unsigned int *firstCode = new unsigned int[maxLength];
-	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	long *firstCode = new long[maxLength];
+	long *numl = new long[maxLength];
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("0000", huffmanCodes[115].code);
@@ -401,11 +401,11 @@ TEST(testingHuffman, generateCodes)
 
 TEST(testingHuffman, generateCodesExampleFromBook1)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -447,9 +447,9 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 		sequenceArray.push_back(new SymbolRecord(string2[i], i));
 	}
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
 
 	int *codeLengths = new int[cardinality * 2];
@@ -470,14 +470,14 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	}
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	unsigned int maxLength = 0;
+	long maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
 	ASSERT_EQ(3, maxLength);
 
-	unsigned int *firstCode = new unsigned int[maxLength];
-	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	long *firstCode = new long[maxLength];
+	long *numl = new long[maxLength];
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("000", huffmanCodes[97].code);
@@ -490,11 +490,11 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 
 TEST(testingHuffman, generateCodesExampleFromBook2)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -544,9 +544,9 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 		sequenceArray.push_back(new SymbolRecord(string2[i], i));
 	}
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
+	unordered_map<long, HuffmanNode> huffmanCodes;
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
-	unsigned int cardinality = 0;
+	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
 
 	int *codeLengths = new int[cardinality * 2];
@@ -556,12 +556,12 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	h.initMinHeap(heapSize, codeLengths);
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
-	unsigned int maxLength = 0;
+	long maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
-	unsigned int *firstCode = new unsigned int[maxLength];
-	unsigned int *numl = new unsigned int[maxLength];
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	long *firstCode = new long[maxLength];
+	long *numl = new long[maxLength];
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("001", huffmanCodes[97].code);
@@ -594,11 +594,11 @@ TEST(testingHuffman, fillBitset)
 
 TEST(huffman, decoder)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -614,7 +614,7 @@ TEST(huffman, decoder)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -645,11 +645,11 @@ TEST(huffman, decoder)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	unordered_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	ASSERT_EQ(2, firstCode[0]);
@@ -683,7 +683,7 @@ TEST(huffman, decoder)
 	huffmanToSymbols[4]["0111"] = "u";
 	huffmanToSymbols[3]["111"]  = "m";
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> symbolIndices;
+	unordered_map<long, unordered_map<long, long>> symbolIndices;
 	symbolIndices[4][0] = 0;
 	symbolIndices[4][1] = 1;
 	symbolIndices[4][2] = 3;
@@ -700,7 +700,7 @@ TEST(huffman, decoder)
 	string testTranslator[12] = { "0000", "0001", "100", "0010", "0011", "0100", "101", "110", "0101", "0110", "0111", "111" };
 
 	
-	vector<unsigned int> symbolIndexSequence;
+	vector<long> symbolIndexSequence;
 
 	string filename2 = "Compressed_diddy.txt";
 	string result = "";
@@ -729,11 +729,11 @@ TEST(huffman, decoder)
 
 TEST(huffman, decodeDictionaryDiddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);//256
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -750,9 +750,9 @@ TEST(huffman, decodeDictionaryDiddy)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map <long, unordered_map<long, long>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -782,7 +782,7 @@ TEST(huffman, decodeDictionaryDiddy)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, long> terminalIndices;
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -793,11 +793,11 @@ TEST(huffman, decodeDictionaryDiddy)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	unordered_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary2";
@@ -815,17 +815,18 @@ TEST(huffman, decodeDictionaryDiddy)
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> symbolIndices;
+	unordered_map<long, unordered_map<long, long>> symbolIndices;
+	long *firstCodes;
 
-	h.decodeDictionary(ifs, symbolIndices);
+	h.decodeDictionary(ifs, firstCodes, symbolIndices);
 
 	ASSERT_EQ(4, (symbolIndices)[3].size());
 	ASSERT_EQ(8, (symbolIndices)[4].size());
 
-	unsigned int codeLength = 3;
-	unsigned int code = 4;
-	unsigned int symbol = (huffmanToSymbol[3])[4];
-	unsigned int index;
+	long codeLength = 3;
+	long code = 4;
+	long symbol = (huffmanToSymbol[3])[4];
+	long index;
 
 	//Test codes of length 3
 	
@@ -861,11 +862,11 @@ TEST(huffman, decodeDictionaryDiddy)
 
 TEST(huffman, decodeDictionaryDuplicates)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);//256
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -882,9 +883,9 @@ TEST(huffman, decodeDictionaryDuplicates)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map <long, unordered_map<long, long>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -914,7 +915,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, long> terminalIndices;
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -925,11 +926,11 @@ TEST(huffman, decodeDictionaryDuplicates)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	unordered_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	unordered_map<long, unordered_map<long, long>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testDuplicatesLongCompressed";
@@ -946,17 +947,18 @@ TEST(huffman, decodeDictionaryDuplicates)
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> symbolIndices;
+	unordered_map<long, unordered_map<long, long>> symbolIndices;
+	long *firstCodes;
 
-	h.decodeDictionary(ifs, symbolIndices);
+	h.decodeDictionary(ifs, firstCodes, symbolIndices);
 
 	ASSERT_EQ(1, (symbolIndices)[1].size());
 	ASSERT_EQ(2, (symbolIndices)[2].size());
 
-	unsigned int codeLength = 1;
-	unsigned int code = 1;
-	unsigned int symbol = (huffmanToSymbol[1])[1];
-	unsigned int index;
+	long codeLength = 1;
+	long code = 1;
+	long symbol = (huffmanToSymbol[1])[1];
+	long index;
 
 	//Test codes of length 1
 

@@ -20,42 +20,57 @@ int Algorithm::run(
 	AlgorithmP algP,
 	MyTimer t,
 	int blockSize,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	unordered_map<unsigned int, Pair> & dictionary,
-	unsigned int & symbols)
+	unordered_map<long, Pair> & dictionary,
+	long & symbols)
 {
 	int priorityQueueSize;
 	bool firstBlock = true;
 	Huffman h;
 	Outputter out;
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	unordered_set<unsigned int> terminals;
+	unordered_map<long, HuffmanNode *> huffmanCodes;
+	unordered_set<long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())
 	{
 		if (c.verbose)
 		{
-			cout << "Initializing block" << endl;
+			cout << " - Verbose: Initializing block" << endl;
 		}
 		if (c.timing)
 		{
 			t.start();
-			cout << "Timing init of Sequence array and active pairs" << endl;
+			cout << " - Timing: init of Sequence array and active pairs" << endl;
 		}
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
 
 		if (c.timing)
 		{
 			t.stop();
-			cout << "Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
+			cout << " - Timing: Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
 		priorityQueueSize = sqrt(sequenceArray.size());
 		priorityQueue.resize(priorityQueueSize);
+		if (c.timing)
+		{
+			t.start();
+			cout << " - Timing: init of priority queue" << endl;
+		}
 		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+		if (c.timing)
+		{
+			t.stop();
+			cout << " - Timing: priority queue initialized in " << t.getTime() << " ms" << endl;
+		}
 
+		if (c.timing)
+		{
+			t.start();
+			cout << " - Timing: repair compression" << endl;
+		}
 		algP.run(
 			sequenceArray,
 			dictionary,
@@ -64,7 +79,17 @@ int Algorithm::run(
 			terminals,
 			symbols,
 			c);
+		if (c.timing)
+		{
+			t.stop();
+			cout << " - Timing: repair compression done in " << t.getTime() << " ms" << endl;
+		}
 
+		if (c.timing)
+		{
+			t.start();
+			cout << " - Timing: Huffman encoding and outputting files" << endl;
+		}
 		out.all(
 			filename,
 			firstBlock,
@@ -74,21 +99,27 @@ int Algorithm::run(
 			priorityQueue,
 			terminals,
 			c);
+		if (c.timing)
+		{
+			t.stop();
+			cout << " - Timing: Huffman encoding and outputting files done in " << t.getTime() << " ms" << endl;
+		}
+
 		firstBlock = false;
 		if (c.timing)
 		{
 			t.start();
-			cout << "Timing reset of Sequence array and active pairs" << endl;
+			cout << " - Timing: reset of Sequence array and active pairs" << endl;
 		}
 		if (c.verbose)
 		{
-			cout << "Resetting for next block" << endl;
+			cout << " - Verbose: Resetting for next block" << endl;
 		}
 		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
 		if (c.timing)
 		{
 			t.stop();
-			cout << "Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
+			cout << " - Timing: Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
 	}
 	cout << "Completed compression of file: " << filename << endl;

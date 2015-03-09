@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "GammaCode.h"
 
-unsigned int GammaCode::binaryToInt(string binary)
+long GammaCode::binaryToInt(string binary)
 {
 	if (binary == "")
 		return 0;
-	unsigned int result = 0;
+	long result = 0;
 	int i = binary.size() - 1;
 	while (i >= 0)
 	{
@@ -16,7 +16,7 @@ unsigned int GammaCode::binaryToInt(string binary)
 	return result;
 }
 
-string GammaCode::getBinaryCode(unsigned int input)
+string GammaCode::getBinaryCode(long input)
 {
 	string s = "";
 	int i = 31;
@@ -38,7 +38,7 @@ string GammaCode::getBinaryCode(unsigned int input)
 	return s;
 }
 
-unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
+long GammaCode::readGammaCodeHeader(string& gamma, int& i)
 {
 	int unary = 0;
 	while (gamma[unary] == '1')
@@ -47,7 +47,7 @@ unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
 	} 
 	++unary;
 
-	unsigned int binary;
+	long binary;
 	if (unary == 1)
 		binary = 0;
 	else
@@ -62,7 +62,7 @@ unsigned int GammaCode::readGammaCodeHeader(string& gamma, int& i)
 	return pow(2, unary - 1) + binary - 1;
 }
 
-unsigned int GammaCode::gammaToInt(string gamma)
+long GammaCode::gammaToInt(string gamma)
 {
 	int unary = 0;
 	while (gamma[unary] == '1')
@@ -71,18 +71,18 @@ unsigned int GammaCode::gammaToInt(string gamma)
 	} 
 	++unary;
 
-	unsigned int binary = binaryToInt(gamma.substr(unary, string::npos));
+	long binary = binaryToInt(gamma.substr(unary, string::npos));
 
 	return pow(2, unary - 1) + binary - 1;
 }
 
-void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<unsigned int> &output, unsigned int count)
+void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<long> &output, long count)
 {
 	//Start is the index of the start of the current number
 	int index = 0, start = 0;
 
 	string input = prefix + gamma, substring = "";
-	unsigned int unary, binary;
+	long unary, binary;
 
 	while (output.size() < count)
 	{
@@ -120,10 +120,10 @@ void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<unsigned
 		prefix = input.substr(index, string::npos);
 }
 
-string GammaCode::getGammaCode(unsigned int in)
+string GammaCode::getGammaCode(long in)
 {
 	//Adjust for 0-origin
-	unsigned int input = in + 1;
+	long input = in + 1;
 	
 	if (input == 1)//Else we would return "00"
 		return "0";
@@ -151,7 +151,7 @@ string GammaCode::getGammaCode(unsigned int in)
 }
 
 void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
-	unordered_set<unsigned int>& terminals,
+	unordered_set<long>& terminals,
 	string& terminalsGamma,
 	vector<string>& leftElementsGammas,
 	vector<string>& rightElementsBinaries,
@@ -159,11 +159,11 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 {
 	int generations = generationVectors.size();
 	int genP1 = 0;
-	unsigned int firstElement = 0;
+	long firstElement = 0;
 	string fstElmtGamma = "";
 
 	//Sort terminals
-	vector<unsigned int> terminalVector;
+	vector<long> terminalVector;
 	//terminalVector.resize(terminals.size());
 	//terminalVector.assign(terminals.begin(), terminals.end());
 	for each (auto entry in terminals)
@@ -217,7 +217,7 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 }
 
 void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
-	unordered_set<unsigned int>& terminals,
+	unordered_set<long>& terminals,
 	string& finalString,
 	vector<vector<CompactPair>> generationVectors)
 {
@@ -257,27 +257,27 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 }
 
 //void GammaCode::decode(vector<CompactPair*>& pairs,
-//	unordered_set<unsigned int>& terminals,
+//	unordered_set<long>& terminals,
 //	string& inputString)
 //{
 //	//Terminals
-//	vector<unsigned int> t;
+//	vector<long> t;
 //	int startIndex = 0;
 //	int count = readGammaCodeHeader(inputString, startIndex);
 //	string pairString = "";
 //	decodeGammaString(pairString, inputString.substr(startIndex, string::npos), t, count);
-//	terminals = *(new unordered_set<unsigned int>(t.begin(), t.end()));
+//	terminals = *(new unordered_set<long>(t.begin(), t.end()));
 //
 //	//Read header
 //	startIndex = 0;
 //	count = readGammaCodeHeader(pairString, startIndex);
 //
-//	vector<unsigned int> left;
+//	vector<long> left;
 //	string prefix = "", cur;
 //	decodeGammaString(prefix, pairString.substr(startIndex,string::npos), left, count);
 //	int rightElemSize = floor(log2(count)) + 1;
 //	int i = 0;
-//	unsigned int leftVal = 0;
+//	long leftVal = 0;
 //	while (prefix.size() > 0)
 //	{
 //		leftVal += left[i];
@@ -294,7 +294,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 //	}
 //}
 
-void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
+void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream, string &prefix)
 {
 	string emptyString = "";
 	this->decodeGammaString(prefix, emptyString, values, n);
@@ -328,7 +328,7 @@ void GammaCode::readNextNumbers(int n, vector<unsigned int> &values, ifstream &b
 	}
 }
 
-void GammaCode::readNextBinaries(int binarySize, int count, vector<unsigned int> &values, ifstream &bitstream, string &prefix)
+void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values, ifstream &bitstream, string &prefix)
 {
 	if (bitstream.is_open())
 	{
@@ -372,10 +372,10 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<unsigned int>
 }
 
 void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
-	unordered_set<unsigned int>& terminals,
+	unordered_set<long>& terminals,
 	ifstream &bitstream)
 {
-	vector<unsigned int> values;
+	vector<long> values;
 	string prefix = "";
 
 	//Read header for terminals
@@ -396,8 +396,8 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	values.clear();
 
 	int binarySize, i;
-	unsigned int leftVal;
-	vector<unsigned int> left;
+	long leftVal;
+	vector<long> left;
 	for (int g = 0; g < generationCount; ++g)
 	{
 		//Read generation header

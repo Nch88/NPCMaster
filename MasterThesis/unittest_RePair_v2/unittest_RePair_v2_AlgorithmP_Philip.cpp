@@ -7,11 +7,11 @@ MyTest mtest;
 
 TEST(compaction, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -28,7 +28,7 @@ TEST(compaction, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -66,11 +66,11 @@ TEST(compaction, diddy)
 
 TEST(compaction, compactingAfterEachNewSymbol_diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -87,7 +87,7 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -143,11 +143,11 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //	
 //	
 //
@@ -234,11 +234,11 @@ TEST(compaction, calculateCompactionTime)
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;
@@ -283,7 +283,7 @@ TEST(createCompactDictionary, findGeneration_diddy)
 {
 	AlgorithmP algo;
 
-	unordered_map<unsigned int, Pair> dictionary;
+	unordered_map<long, Pair> dictionary;
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
