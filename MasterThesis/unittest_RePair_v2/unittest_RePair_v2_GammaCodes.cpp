@@ -699,6 +699,7 @@ TEST(gammaCodes, decode_gammaToInt)
 		ASSERT_EQ(i, gc.gammaToInt(gammas[i]));
 }
 
+
 TEST(gammaCodes, writeToFile)
 {
 	GammaCode gc;

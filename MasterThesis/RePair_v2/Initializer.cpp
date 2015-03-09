@@ -257,16 +257,12 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
 	PairRecord * tmpRecord;
-	MyTimer t;
 
 	if (c.verbose)
 	{
-		cout << "Initializing priority queue" << endl;
+		cout << " - Verbose: Initializing priority queue" << endl;
 	}
-	if (c.timing)
-	{
-		t.start();
-	}
+	
 
 	for each (auto leftSymbol in activePairs)
 	{
@@ -298,14 +294,9 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 		}
 	}
 
-	if (c.timing)
-	{
-		t.stop();
-		cout << "priority queue initialized in " << t.getTime() << " ms" << endl;
-	}
 	if (c.verbose)
 	{
-		cout << "Initialized priority queue" << endl;
+		cout << " - Verbose: Initialized priority queue" << endl;
 	}
 
 }
