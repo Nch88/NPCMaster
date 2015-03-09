@@ -15,3 +15,6 @@ MasterThesis/RePair_v2/RePair_v2.vcxproj
 MasterThesis/googletest/googletest.vcxproj
 MasterThesis/googletest/googletest.vcxproj.filters
 *.manifest
+/MasterThesis/unittest_RePair_v2/testDuplicatesLongCompressed
+/MasterThesis/unittest_RePair_v2/testHuffmanDictionary
+/MasterThesis/unittest_RePair_v2/testHuffmanDictionary2
