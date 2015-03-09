@@ -5,10 +5,10 @@ class Pair
 {
 public:
 	Pair();
-	Pair(unsigned int leftSymbol, unsigned int rightSymbol);
+	Pair(long leftSymbol, long rightSymbol);
 	~Pair();
 
-	unsigned int leftSymbol;
-	unsigned int rightSymbol;
+	long leftSymbol;
+	long rightSymbol;
 };
 

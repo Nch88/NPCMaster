@@ -13,11 +13,11 @@ Initializer::~Initializer()
 }
 
 void Initializer::setupPairRecord(
-	unsigned int leftSymbol,
-	unsigned int rightSymbol,
+	long leftSymbol,
+	long rightSymbol,
 	int offset,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs)
 {
 	shared_ptr<PairTracker> currentTracker;
 	shared_ptr<SymbolRecord> previousOccurence;
@@ -90,10 +90,10 @@ int Initializer::SequenceArray(string filename,
 	Outputter out;
 	Conditions c(verbose, extraVerbose, timer);
 
-	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-	auto Symbols = make_unique<unsigned int>(256);
+	auto Symbols = make_unique<long>(256);
 	
 	ifstream file(filename);
 
@@ -112,17 +112,17 @@ int Initializer::SequenceArray(string filename,
 
 			if (file >> noskipws >> previousSymbol)
 			{
-				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)previousSymbol, index++));
+				sequenceArray->push_back(make_shared<SymbolRecord>((long)previousSymbol, index++));
 				symbolCount++;
 
 				if (file >> noskipws >> leftSymbol)
 				{
-					sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)leftSymbol, index++));
+					sequenceArray->push_back(make_shared<SymbolRecord>((long)leftSymbol, index++));
 					symbolCount++;
 
 					setupPairRecord(
-						(unsigned int)previousSymbol,
-						(unsigned int)leftSymbol,
+						(long)previousSymbol,
+						(long)leftSymbol,
 						2,
 						sequenceArray,
 						activePairs);
@@ -131,7 +131,7 @@ int Initializer::SequenceArray(string filename,
 
 			while (symbolCount < blockSize && file >> noskipws >> rightSymbol)
 			{
-				sequenceArray->push_back(make_shared<SymbolRecord>((unsigned int)rightSymbol, index++));
+				sequenceArray->push_back(make_shared<SymbolRecord>((long)rightSymbol, index++));
 				symbolCount++;
 
 				if (leftSymbol == rightSymbol &&
@@ -144,8 +144,8 @@ int Initializer::SequenceArray(string filename,
 					continue;
 				}
 				setupPairRecord(
-					(unsigned int)leftSymbol,
-					(unsigned int)rightSymbol,
+					(long)leftSymbol,
+					(long)rightSymbol,
 					2,
 					sequenceArray,
 					activePairs);
@@ -228,10 +228,10 @@ int Initializer::SequenceArray(string filename,
 				activePairs.release();
 				sequenceArray.release();
 				priorityQueue.release();
-				dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-				activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+				dictionary = make_unique<dense_hash_map<long, Pair>>();
+				activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 				sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-				//Symbols = make_unique<unsigned int>(256);
+				//Symbols = make_unique<long>(256);
 			}
 			else
 				file.close();
@@ -249,7 +249,7 @@ int Initializer::SequenceArray(string filename,
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	Conditions& c)
 {

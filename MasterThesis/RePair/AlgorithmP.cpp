@@ -132,7 +132,7 @@ void AlgorithmP::manageSequenceDecrement(
 void AlgorithmP::decrementCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 	shared_ptr<PairRecord>& tmpPairRecordAdjacent)
 {
@@ -180,14 +180,14 @@ void AlgorithmP::replacePair(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolNext,
-	unique_ptr<unsigned int>& Symbols,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<long>& Symbols,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 	Conditions& c)
 {
 	Pair tmpPair;
-	unsigned int newSymbol = (*Symbols);
+	long newSymbol = (*Symbols);
 	tmpPair.leftSymbol = symbolLeft->symbol;
 	tmpPair.rightSymbol = symbolRight->symbol;
 
@@ -227,7 +227,7 @@ void AlgorithmP::increaseCount(
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<PairRecord>& tmpPairRecord,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs)
 {
 	tmpPairRecord = (*activePairs)[symbolLeft->symbol][symbolRight->symbol]->pairRecord;
 	tmpPairRecord->count++;	
@@ -279,10 +279,10 @@ void AlgorithmP::updatePairSequence(
 
 void AlgorithmP::checkActivePair(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolPrevious,
@@ -292,7 +292,7 @@ void AlgorithmP::checkActivePair(
 
 	shared_ptr<PairRecord> tmpPairRecord;
 	shared_ptr<PairTracker> tmpPairTracker;
-	unsigned int newSymbol = (*Symbols);
+	long newSymbol = (*Symbols);
 
 	if (symbolPrevious) //xA
 	{
@@ -363,10 +363,10 @@ void AlgorithmP::checkActivePair(
 
 void AlgorithmP::replaceInstanceOfPair(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	shared_ptr<SymbolRecord>& symbolLeft,
 	shared_ptr<SymbolRecord>& symbolRight,
 	shared_ptr<SymbolRecord>& symbolPrevious,
@@ -377,7 +377,7 @@ void AlgorithmP::replaceInstanceOfPair(
 	shared_ptr<PairRecord> tmpPairRecord;
 	shared_ptr<PairRecord> tmpPairRecordAdjacent;
 	shared_ptr<PairTracker> tmpPairTracker;
-	unsigned int newSymbol;
+	long newSymbol;
 	MyTimer t;
 	int empty = 0;
 
@@ -542,7 +542,7 @@ void AlgorithmP::establishContext(
 	Conditions& c)
 {
 	SymbolRecord tmpSymbol;
-	unsigned int empty = 0;
+	long empty = 0;
 
 	symbolLeft = (*sequenceArray)[sequenceIndex];
 	symbolRight = (*sequenceArray)[sequenceIndex + 1];
@@ -584,10 +584,10 @@ void AlgorithmP::establishContext(
 void AlgorithmP::checkActivePairs(
 	int sequenceIndex,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	Conditions& c)
 {
 	auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
@@ -644,10 +644,10 @@ void AlgorithmP::checkActivePairs(
 void AlgorithmP::replaceAllPairs(
 	int sequenceIndex,
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	Conditions& c)
 {
 	auto symbolLeft = make_shared<SymbolRecord>(); //Left symbol of the pair to be replaced, a
@@ -737,7 +737,7 @@ void AlgorithmP::replaceAllPairs(
 }
 
 void AlgorithmP::newSymbol(
-	unique_ptr<unsigned int>& Symbols)
+	unique_ptr<long>& Symbols)
 {	
 	bool badSymbol = true;
 
@@ -752,10 +752,10 @@ void AlgorithmP::newSymbol(
 
 void AlgorithmP::manageHighPriorityList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	Conditions& c)
 {
 	auto tmpPairRecord = make_shared<PairRecord>();
@@ -825,10 +825,10 @@ void AlgorithmP::manageHighPriorityList(
 
 void AlgorithmP::manageOneEntryOnList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	int i,
 	Conditions& c)
 {
@@ -874,10 +874,10 @@ void AlgorithmP::manageOneEntryOnList(
 
 void AlgorithmP::manageOneList(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	int i,
 	Conditions& c)
 {
@@ -901,10 +901,10 @@ void AlgorithmP::manageOneList(
 
 void AlgorithmP::manageLowerPriorityLists(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	Conditions& c)
 {
 	
@@ -927,10 +927,10 @@ void AlgorithmP::manageLowerPriorityLists(
 
 void AlgorithmP::run(
 	unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-	unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-	unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+	unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+	unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 	unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-	unique_ptr<unsigned int>& Symbols,
+	unique_ptr<long>& Symbols,
 	Conditions& c)
 {
 	MyTimer t;

@@ -6,20 +6,20 @@ class Dictionary
 {
 public:
 	void generateCompactDictionary(
-		std::unordered_map<unsigned int, Pair>& dictionary,
-		std::unordered_set<unsigned int>& terminals,
+		google::dense_hash_map<long, Pair>& dictionary,
+		std::unordered_set<long>& terminals,
 		std::vector<vector<CompactPair>>& pairVectors,
-		std::unordered_map<unsigned int, std::unordered_map<unsigned int, unsigned int>> &indices,
-		std::unordered_map<unsigned int, unsigned int> &terminalIndices,
+		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
+		google::dense_hash_map<long, long> &terminalIndices,
 		std::vector<std::vector<CompactPair>> &generationVectors);
 	void Dictionary::createFinalPairVectors(
-		std::unordered_map<unsigned int, Pair>& dictionary,
+		google::dense_hash_map<long, Pair>& dictionary,
 		std::vector<std::vector<CompactPair>>& generationVectors,
 		std::vector<std::vector<CompactPair>>& pairVectors,
-		std::vector<unsigned int>& terminals,
-		std::unordered_map<unsigned int,std::unordered_map<unsigned int, unsigned int>> &indices,
-		std::unordered_map<unsigned int, unsigned int> &terminalIndices);
+		std::vector<long>& terminals,
+		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
+		google::dense_hash_map<long, long> &terminalIndices);
 	void Dictionary::createGenerationVectors(
-		std::unordered_map<unsigned int, Pair>& dictionary,
+		google::dense_hash_map<long, Pair>& dictionary,
 		std::vector<std::vector<CompactPair>>& generationVectors);
 };

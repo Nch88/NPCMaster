@@ -15,7 +15,7 @@ public:
 		bool firstBlock);
 	void dictionary(
 		string inputFile,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
 		bool firstBlock);
 };
 

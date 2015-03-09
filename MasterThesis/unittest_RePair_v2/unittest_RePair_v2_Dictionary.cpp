@@ -8,7 +8,7 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	AlgorithmP algo;
 	Dictionary dc;
 
-	unordered_map<unsigned int, Pair> dictionary;
+	dense_hash_map<long, Pair> dictionary;
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -63,7 +63,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	AlgorithmP algo;
 	Dictionary dc;
 
-	unordered_map<unsigned int, Pair> dictionary;
+	dense_hash_map<long, Pair> dictionary;
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -84,11 +84,11 @@ TEST(createCompactDictionary, createFinalPairVector)
 	vector<vector<CompactPair>> generationVectors;
 	dc.createGenerationVectors(dictionary, generationVectors);
 
-	vector<unsigned int> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 
 	vector<vector<CompactPair>> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> tIndices;
+	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	dense_hash_map<long, long> tIndices;
 	dc.createFinalPairVectors(dictionary, generationVectors, pairs, terminals, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
@@ -121,7 +121,7 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	AlgorithmP algo;
 	Dictionary dc;
 
-	unordered_map<unsigned int, Pair> dictionary;
+	dense_hash_map<long, Pair> dictionary;
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -139,12 +139,12 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	Pair H(305, 'g', 2);
 	dictionary[307] = H;
 
-	unordered_set<unsigned int> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+	unordered_set<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 
 	vector<vector<CompactPair>> pairs;
 
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> tIndices;
+	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	dense_hash_map<long, long> tIndices;
 
 	vector<vector<CompactPair>> generationVectors;
 	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices ,generationVectors);

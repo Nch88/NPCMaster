@@ -2,11 +2,11 @@
 class CompactPair
 {
 public:
-	unsigned int leftSymbol;
-	unsigned int rightSymbol;
+	long leftSymbol;
+	long rightSymbol;
 
 	CompactPair();
-	CompactPair(unsigned int leftSymbol, unsigned int rightSymbol);
+	CompactPair(long leftSymbol, long rightSymbol);
 	CompactPair::CompactPair(Pair &p);
 	~CompactPair();
 };

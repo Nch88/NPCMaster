@@ -15,10 +15,10 @@
 #include <ctime>
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <memory>
 #include <climits>
 #include <chrono>
+#include <sparsehash/dense_hash_map>
 
 
 // TODO: reference additional headers your program requires here

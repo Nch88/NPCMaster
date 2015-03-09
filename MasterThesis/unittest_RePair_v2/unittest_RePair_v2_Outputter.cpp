@@ -5,11 +5,14 @@ using namespace std;
 
 TEST(outputter, diddyHuffmanCode)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -25,7 +28,7 @@ TEST(outputter, diddyHuffmanCode)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -56,11 +59,11 @@ TEST(outputter, diddyHuffmanCode)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	out.huffmanEncoding(
@@ -124,11 +127,14 @@ TEST(outputter, diddyHuffmanCode)
 
 TEST(outputter, diddyHuffmanDictionary)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);//256
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -145,9 +151,9 @@ TEST(outputter, diddyHuffmanDictionary)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -177,7 +183,7 @@ TEST(outputter, diddyHuffmanDictionary)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	dense_hash_map<long, long> terminalIndices;
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -188,11 +194,11 @@ TEST(outputter, diddyHuffmanDictionary)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
-	unsigned int *firstCode = nullptr;
-	unsigned int *numl = nullptr;
-	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
+	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary";
@@ -269,7 +275,7 @@ TEST(outputter, diddyHuffmanDictionary)
 		}
 	}
 	ASSERT_EQ(expected1 + expected2 + expected3 + expected4, totalResult);
-	vector<unsigned int> resultVector;
+	vector<long> resultVector;
 	string prefix = "";
 	gc.decodeGammaString(prefix, totalResult, resultVector, 21);
 
@@ -300,11 +306,14 @@ TEST(outputter, diddyHuffmanDictionary)
 
 TEST(outputter, diddyAll)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);//256
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -319,9 +328,9 @@ TEST(outputter, diddyAll)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	vector<CompactPair> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -403,7 +412,7 @@ TEST(outputter, writeAndReadDictionary)
 	out.dictionary(outstring, output, true);
 
 	vector<CompactPair> pairs;
-	unordered_set<unsigned int> termSet;
+	unordered_set<long> termSet;
 	ifstream bitstream(outstring, ios::binary);
 
 	//Read file

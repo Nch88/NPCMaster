@@ -13,8 +13,8 @@ MyTest::~MyTest()
 
 int MyTest::SanityCheck(
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*>& priorityQueue, unordered_map<unsigned int,
-	unordered_map<unsigned int, PairTracker >> &activePairs)
+	vector<PairRecord*>& priorityQueue, dense_hash_map<long,
+	dense_hash_map<long, PairTracker >> &activePairs)
 {
 	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(sequenceArray, priorityQueue, activePairs);
 }
@@ -187,7 +187,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 	return result + "\n\n";
 }
 
-int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs)
 {
 	bool sane = true;
 	int result = 0;
@@ -216,8 +216,8 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 		result = 10;
 	sane = true;
 	//Check active pairs
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>::iterator iterone;
-	unordered_map<unsigned int, PairTracker>::iterator itertwo;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>>::iterator iterone;
+	dense_hash_map<long, PairTracker>::iterator itertwo;
 	for (iterone = activePairs.begin(); iterone != activePairs.end(); iterone++)
 	{
 		for (itertwo = iterone->second.begin(); itertwo != iterone->second.end(); itertwo++)
@@ -278,7 +278,7 @@ string MyTest::SequenceToString(vector<SymbolRecord*> & sequenceArray)
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs)
+void MyTest::ActivePairs(string msg, dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in activePairs)

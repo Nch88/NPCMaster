@@ -2,6 +2,7 @@
 #include "Algorithm.h"
 
 using namespace std;
+using namespace google;
 
 Algorithm::Algorithm()
 {
@@ -20,18 +21,18 @@ int Algorithm::run(
 	AlgorithmP algP,
 	MyTimer t,
 	int blockSize,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	unordered_map<unsigned int, Pair> & dictionary,
-	unsigned int & symbols)
+	dense_hash_map<long, Pair> & dictionary,
+	long & symbols)
 {
 	int priorityQueueSize;
 	bool firstBlock = true;
 	Huffman h;
 	Outputter out;
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	unordered_set<unsigned int> terminals;
+	dense_hash_map<long, HuffmanNode *> huffmanCodes;
+	unordered_set<long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())

@@ -10,8 +10,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //	
@@ -44,8 +44,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -78,8 +78,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -111,8 +111,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -148,8 +148,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -180,8 +180,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -226,8 +226,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -272,8 +272,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -325,8 +325,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -382,8 +382,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -439,8 +439,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -513,8 +513,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -571,8 +571,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -618,8 +618,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -665,8 +665,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -712,8 +712,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -760,8 +760,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -807,8 +807,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -854,8 +854,8 @@
 //	Initializer init;
 //	AlgorithmP algP;
 //
-//	auto dictionary = make_unique<unordered_map<char, string>>();
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto dictionary = make_unique<dense_hash_map<char, string>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //	auto Symbols = make_unique<int>(65);
 //
@@ -1154,10 +1154,10 @@
 //	Outputter out;
 //	Conditions c(true, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "diddy.txt";
 //
@@ -1198,10 +1198,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicates.txt";
 //
@@ -1239,10 +1239,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicates3.txt";
 //
@@ -1280,10 +1280,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicates2.txt";
 //
@@ -1321,10 +1321,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicatesLong.txt";
 //
@@ -1362,10 +1362,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicatesLong2.txt";
 //
@@ -1403,10 +1403,10 @@
 //	AlgorithmP algP;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(64);
+//	auto Symbols = make_unique<long>(64);
 //
 //	string input = "duplicatesLong3.txt";
 //
@@ -1445,10 +1445,10 @@
 //	Outputter out;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(127);
+//	auto Symbols = make_unique<long>(127);
 //
 //	string input = "diddyFancy.txt";
 //
@@ -1490,10 +1490,10 @@
 //	Outputter out;
 //	Conditions c(false, false);
 //
-//	auto dictionary = make_unique<unordered_map<unsigned int, Pair>>();
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto dictionary = make_unique<dense_hash_map<long, Pair>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
-//	auto Symbols = make_unique<unsigned int>(127);
+//	auto Symbols = make_unique<long>(127);
 //
 //	string input = "diddyFancy2.txt";
 //

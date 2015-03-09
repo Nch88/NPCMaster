@@ -17,7 +17,7 @@ TEST(establishContext, adjacentSymbolsPreviousAndNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -67,7 +67,7 @@ TEST(establishContext, adjacentSymbolsNoPrevious)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -117,7 +117,7 @@ TEST(establishContext, adjacentSymbolsNoNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -167,7 +167,7 @@ TEST(establishContext, notAdjacentSymbols)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -240,7 +240,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGap)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -335,7 +335,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGaps)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -476,7 +476,7 @@ TEST(removeSymbolThreadingPointers, bothPreviousAndNextPointers)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -538,7 +538,7 @@ TEST(removeSymbolThreadingPointers, onlyPreviousPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -601,7 +601,7 @@ TEST(removeSymbolThreadingPointers, onlyNextPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -654,6 +654,7 @@ TEST(removeSymbolThreadingPointers, onlyNextPointer)
 
 TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 {
+	using namespace google;
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
@@ -666,8 +667,10 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 	
@@ -734,6 +737,7 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 
 TEST(updatePairRecord, countMoreThanTwoFirstPair)
 {
+	using namespace google;
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
@@ -746,8 +750,10 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -814,6 +820,7 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 
 TEST(updatePairRecord, countMoreThanTwoLastPair)
 {
+	using namespace google;
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
@@ -826,8 +833,10 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -894,6 +903,7 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 
 TEST(updatePairRecord, countTwoFirstPair)
 {
+	using namespace google;
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
@@ -906,8 +916,10 @@ TEST(updatePairRecord, countTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -1149,18 +1161,21 @@ TEST(addToPriorityQueueList, largeFrequency)
 
 TEST(incrementCountLeft, firstTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 0, left = 1;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100};
@@ -1180,17 +1195,20 @@ TEST(incrementCountLeft, firstTimeSeen)
 
 TEST(incrementCountRight, firstTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 1, next = 3;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100 };
@@ -1210,18 +1228,21 @@ TEST(incrementCountRight, firstTimeSeen)
 
 TEST(incrementCountLeft, secondTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 3, left = 4;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
@@ -1253,17 +1274,20 @@ TEST(incrementCountLeft, secondTimeSeen)
 
 TEST(incrementCountRight, secondTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 4, next = 6;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
@@ -1295,18 +1319,21 @@ TEST(incrementCountRight, secondTimeSeen)
 
 TEST(incrementCountLeft, thirdTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 6, left = 7;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
@@ -1348,12 +1375,15 @@ TEST(incrementCountLeft, thirdTimeSeen)
 
 TEST(incrementCountRight, thirdTimeSeen)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 7, next = 9;
@@ -1398,17 +1428,20 @@ TEST(incrementCountRight, thirdTimeSeen)
 
 TEST(incrementCountLeft, skipTest)
 {
+	using namespace google;
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(5);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	dense_hash_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
@@ -1530,6 +1563,7 @@ TEST(moveDownInPriorityQueue, lastInListLargeFrequency)
 
 TEST(decrementCount, threePairsRemoveMiddle)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<PairRecord*> priorityQueue(3);
@@ -1543,8 +1577,10 @@ TEST(decrementCount, threePairsRemoveMiddle)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -1629,6 +1665,7 @@ TEST(decrementCount, threePairsRemoveMiddle)
 
 TEST(decrementCountLeft, hasPrevious)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<PairRecord*> priorityQueue(3);
@@ -1642,8 +1679,10 @@ TEST(decrementCountLeft, hasPrevious)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -1729,6 +1768,7 @@ TEST(decrementCountLeft, hasPrevious)
 
 TEST(decrementCountLeft, hasPreviousNotActivePair)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<PairRecord*> priorityQueue(3);
@@ -1742,8 +1782,10 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -1829,6 +1871,7 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 
 TEST(decrementCountRight, hasNext)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<PairRecord*> priorityQueue(3);
@@ -1842,8 +1885,10 @@ TEST(decrementCountRight, hasNext)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 
@@ -1928,11 +1973,14 @@ TEST(decrementCountRight, hasNext)
 
 TEST(threadEmptySymbols, singleEmptySymbol)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -1985,11 +2033,14 @@ TEST(threadEmptySymbols, singleEmptySymbol)
 
 TEST(threadEmptySymbols, sequenceOfEmptySymbols)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2037,13 +2088,16 @@ TEST(threadEmptySymbols, sequenceOfEmptySymbols)
 
 TEST(replacePair, middleOfSequence)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2106,13 +2160,16 @@ TEST(replacePair, middleOfSequence)
 
 TEST(replacePair, endOfSequence)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2175,13 +2232,16 @@ TEST(replacePair, endOfSequence)
 
 TEST(replacePair, severalEmptySymbols)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2244,13 +2304,16 @@ TEST(replacePair, severalEmptySymbols)
 
 TEST(replacePair, emptySymbolsAroundRightSymbol)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2313,13 +2376,16 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 
 TEST(replacePair, deletingPairRecord)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2383,14 +2449,17 @@ TEST(replacePair, deletingPairRecord)
 
 TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 {
+	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	dense_hash_map<long, Pair> dictionary;
 	vector<PairRecord*> priorityQueue;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	bool skip = false;
@@ -2483,11 +2552,14 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 
 TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(256);
 
 	Initializer init;
 	Conditions c;
@@ -2504,7 +2576,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -2609,11 +2681,14 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 
 TEST(replaceAllInstancesOfPair, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -2630,7 +2705,7 @@ TEST(replaceAllInstancesOfPair, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -2658,11 +2733,14 @@ TEST(replaceAllInstancesOfPair, diddy)
 
 TEST(testingRun, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	dense_hash_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -2680,7 +2758,7 @@ TEST(testingRun, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,

@@ -5,23 +5,23 @@ using namespace std;
 class SymbolRecord
 {	
 public:
-	unsigned int symbol;
+	long symbol;
 	long index;
 	shared_ptr<SymbolRecord> previous;
 	shared_ptr<SymbolRecord> next;
 
 
 	SymbolRecord();
-	SymbolRecord(unsigned int s);
-	SymbolRecord(unsigned int s, long index);
-	SymbolRecord(unsigned int s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
-	SymbolRecord(unsigned int s, long index, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
+	SymbolRecord(long s);
+	SymbolRecord(long s, long index);
+	SymbolRecord(long s, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
+	SymbolRecord(long s, long index, shared_ptr<SymbolRecord> p, shared_ptr<SymbolRecord> n);
 	~SymbolRecord();
 
 	void setPrevious(shared_ptr<SymbolRecord> p);
 	void setNext(shared_ptr<SymbolRecord> n);
 
-	unsigned int getSymbol();
+	long getSymbol();
 	shared_ptr<SymbolRecord> getPrevious();
 	shared_ptr<SymbolRecord> getNext();
 };

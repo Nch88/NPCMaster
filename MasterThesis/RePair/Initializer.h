@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 using namespace std;
+using namespace google;
 
 #pragma once
 class Initializer
@@ -14,14 +15,14 @@ public:
 		bool extraVerbose,
 		bool timer);
 	void PriorityQueue(int priorityQueueSize,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		Conditions& c);
 	void setupPairRecord(
-		unsigned int leftSymbol,
-		unsigned int rightSymbol,
+		long leftSymbol,
+		long rightSymbol,
 		int offset,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs);
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs);
 };
 

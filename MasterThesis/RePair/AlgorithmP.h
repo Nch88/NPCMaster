@@ -29,7 +29,7 @@ public:
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<PairRecord>& tmpPairRecord,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs);
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs);
 	void threadEmptySymbols(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
@@ -39,9 +39,9 @@ public:
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolNext,
-		unique_ptr<unsigned int>& Symbols,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<long>& Symbols,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
 		Conditions& c);
 	void insertIntoListInPriorityQueue(int index, shared_ptr<PairRecord>& tmpPairRecordAdjacent, unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue);
@@ -53,15 +53,15 @@ public:
 	void decrementCount(
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
 		shared_ptr<PairRecord>& tmpPairRecordAdjacent);
 	void checkActivePair(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolPrevious,
@@ -70,10 +70,10 @@ public:
 	void checkActivePairs(
 		int sequenceIndex,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		Conditions& c);
 	void establishContext(
 		shared_ptr<SymbolRecord>& symbolLeft,
@@ -85,10 +85,10 @@ public:
 		Conditions& c);
 	void replaceInstanceOfPair(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		shared_ptr<SymbolRecord>& symbolLeft,
 		shared_ptr<SymbolRecord>& symbolRight,
 		shared_ptr<SymbolRecord>& symbolPrevious,
@@ -97,48 +97,48 @@ public:
 	void replaceAllPairs(
 		int sequenceIndex,
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		Conditions& c);
 	void newSymbol(
-		unique_ptr<unsigned int>& Symbols);
+		unique_ptr<long>& Symbols);
 	void manageOneEntryOnList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		int i,
 		Conditions& c);
 	void manageOneList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		int i,
 		Conditions& c);
 	void manageHighPriorityList(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		Conditions& c);
 	void AlgorithmP::manageLowerPriorityLists(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		Conditions& c);
 	void run(
 		unique_ptr<vector<shared_ptr<SymbolRecord>>>& sequenceArray,
-		unique_ptr<unordered_map<unsigned int, Pair>>& dictionary,
-		unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs,
+		unique_ptr<dense_hash_map<long, Pair>>& dictionary,
+		unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs,
 		unique_ptr<vector<shared_ptr<PairRecord>>>& priorityQueue,
-		unique_ptr<unsigned int>& Symbols,
+		unique_ptr<long>& Symbols,
 		Conditions& c);
 };

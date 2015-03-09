@@ -13,21 +13,18 @@ int main(int argc, char* argv[])
 	int blockSize;
 	blockSize = 1048576;
 
-	dense_hash_map<unsigned int, dense_hash_map<unsigned int, PairTracker>> activePairs2;
-	activePairs2.set_empty_key(-1);
-	activePairs2.set_deleted_key(-2);
 
-	dense_hash_map<unsigned int, PairTracker> x = activePairs2[42];
-	if (x.empty())
-		x.set_empty_key(-1);
-	int y = x.empty_key();
-	x[1] = PairTracker();
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+
+	long symbols(initialSymbolValue);
 
 	Algorithm algorithm;
 	AlgorithmP algP;
@@ -45,7 +42,7 @@ int main(int argc, char* argv[])
 	string input5 = "world192.txt";
 	string input6 = "bible.txt";
 
-	filename = input5;
+	filename = input1;
 	
 
 	ifstream file(filename);

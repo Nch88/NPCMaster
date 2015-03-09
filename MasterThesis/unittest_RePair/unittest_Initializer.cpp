@@ -7,7 +7,7 @@
 //TEST(testInitializer, initSequenceArrayDuplicates)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("duplicates.txt", sequenceArray, activePairs);
@@ -20,7 +20,7 @@
 //TEST(testInitializer, initSequenceArrayDuplicates2)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("duplicates2.txt", sequenceArray, activePairs);
@@ -34,7 +34,7 @@
 //TEST(testInitializer, initSequenceArrayDuplicates3)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("duplicates3.txt", sequenceArray, activePairs);
@@ -49,7 +49,7 @@
 //TEST(testInitializer, initSequenceArrayDuplicatesLong)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("duplicatesLong.txt", sequenceArray, activePairs);
@@ -62,7 +62,7 @@
 //TEST(testInitializer, initPriorityQueueDuplicates)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("duplicatesLong.txt", sequenceArray, activePairs);
@@ -83,7 +83,7 @@
 //TEST(testInitializer, initSequenceArray)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>();
+//	auto activePairs = make_unique<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("diddy.txt", sequenceArray, activePairs);
@@ -97,7 +97,7 @@
 //TEST(testInitializer, initPriorityQueue)
 //{
 //	Initializer init;
-//	auto activePairs = make_unique<unordered_map<string, shared_ptr<PairRecord>>>();
+//	auto activePairs = make_unique<dense_hash_map<string, shared_ptr<PairRecord>>>();
 //	auto sequenceArray = make_unique<vector<shared_ptr<SymbolRecord>>>();
 //
 //	init.SequenceArray("diddy.txt", sequenceArray, activePairs);

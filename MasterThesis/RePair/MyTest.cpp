@@ -60,7 +60,7 @@ void MyTest::SequenceWithIndex(string msg, unique_ptr<vector<shared_ptr<SymbolRe
 	//End Test
 }
 
-void MyTest::Dictionary(string msg, unique_ptr<unordered_map<unsigned int, Pair>>& dictionary)
+void MyTest::Dictionary(string msg, unique_ptr<dense_hash_map<long, Pair>>& dictionary)
 {
 	//Test
 	stringstream ss;
@@ -75,7 +75,7 @@ void MyTest::Dictionary(string msg, unique_ptr<unordered_map<unsigned int, Pair>
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
+void MyTest::ActivePairs(string msg, unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))
@@ -88,7 +88,7 @@ void MyTest::ActivePairs(string msg, unique_ptr<unordered_map<unsigned int, unor
 	cout << endl << endl;
 }
 
-void MyTest::ActivePairsDetails(string msg, unique_ptr<unordered_map<unsigned int, unordered_map<unsigned int, shared_ptr<PairTracker>>>>& activePairs)
+void MyTest::ActivePairsDetails(string msg, unique_ptr<dense_hash_map<long, dense_hash_map<long, shared_ptr<PairTracker>>>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in (*activePairs))

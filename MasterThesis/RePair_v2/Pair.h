@@ -2,12 +2,12 @@
 class Pair
 {
 public:
-	unsigned int leftSymbol;
-	unsigned int rightSymbol;
-	unsigned int generation;
+	long leftSymbol;
+	long rightSymbol;
+	long generation;
 
 	Pair();
-	Pair(unsigned int leftSymbol, unsigned int rightSymbol, unsigned int gen);
+	Pair(long leftSymbol, long rightSymbol, long gen);
 	~Pair();
 };
 

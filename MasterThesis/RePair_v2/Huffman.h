@@ -27,8 +27,8 @@ public:
 
 	void Huffman::getFrequencies(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, HuffmanNode> & frequencies,
-		unsigned int &cardinality);
+		dense_hash_map<long, HuffmanNode> & frequencies,
+		long &cardinality);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
 	void Huffman::sift(
 		int currentNodeIndex,
@@ -37,7 +37,7 @@ public:
 	void Huffman::initCodeLengthsArray(
 		int cardinality,
 		int *codeLengths,
-		unordered_map<unsigned int, HuffmanNode> &huffmanCodes);
+		dense_hash_map<long, HuffmanNode> &huffmanCodes);
 	void Huffman::initMinHeap(
 		int heapSize,
 		int *codeLengths);
@@ -45,46 +45,46 @@ public:
 		int heapSize,
 		int *codeLengths);
 	void Huffman::expandHuffmanTree(
-		unsigned int cardinality,
+		long cardinality,
 		int *codeLengths,
-		unsigned int &maxLength);
+		long &maxLength);
 	void Huffman::getCodeLengths(
-		unsigned int cardinality,
+		long cardinality,
 		int *codeLengths,
-		unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
-		unsigned int &maxLength);
+		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		long &maxLength);
 	string Huffman::codeToString(int intCode, int length);
 	void Huffman::generateCanonicalHuffmanCodes(
-		unsigned int cardinality,
-		unsigned int maxLength,
+		long cardinality,
+		long maxLength,
 		int *codeLengths,
-		unsigned int *firstCode,
-		unsigned int *numl,
-		unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol);
+		long *firstCode,
+		long *numl,
+		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol);
 	void encode(vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
-		unsigned int *&firstCode,
-		unsigned int *&numl,
-		unsigned int &maxLength,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol);
+		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		long *&firstCode,
+		long *&numl,
+		long &maxLength,
+		dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol);
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
 	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);
 	void Huffman::readFromGammaCodes(
-		unsigned int symbolsToRead,
+		long symbolsToRead,
 		ifstream &bitstream,
 		GammaCode &gc,
 		string &chunk,
 		string &prefix,
-		vector<unsigned int> &intValues);
+		vector<long> &intValues);
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &symbolIndices);
+		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices);
 	void Huffman::decode(
-		unsigned int *firstCode,
+		long *firstCode,
 		string filename,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &symbolIndices,
-		vector<unsigned int> &symbolIndexSequence);
+		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
+		vector<long> &symbolIndexSequence);
 };
 

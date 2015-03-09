@@ -13,10 +13,10 @@ public:
 		AlgorithmP algP,
 		MyTimer t,
 		int blockSize,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue,
-		unordered_map<unsigned int, Pair> & dictionary,
-		unsigned int & symbols);
+		dense_hash_map<long, Pair> & dictionary,
+		long & symbols);
 };
 

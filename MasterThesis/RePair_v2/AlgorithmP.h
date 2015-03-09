@@ -1,32 +1,34 @@
 #pragma once
+
+using namespace google;
 class AlgorithmP
 {
 public:
 	AlgorithmP();
 	~AlgorithmP();
 
-	unsigned int AlgorithmP::findGeneration(
-		unordered_map<unsigned int, Pair>& dictionary, 
-		unsigned int left, 
-		unsigned int right);
+	long AlgorithmP::findGeneration(
+		dense_hash_map<long, Pair>& dictionary, 
+		long left, 
+		long right);
 	SymbolRecord* AlgorithmP::findNextEmpty(
 		vector<SymbolRecord*> & sequenceArray,
 		SymbolRecord* current);
 	void AlgorithmP::compact(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue);
 	void removeSymbolThreadingPointers(
 		long & indexSymbolLeft,
 		vector<SymbolRecord*> & sequenceArray);
 	void AlgorithmP::deletePairRecord(
-		unsigned int & symbolLeft,
-		unsigned int & symbolRight,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs);
+		long & symbolLeft,
+		long & symbolRight,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs);
 	void updatePairRecord(
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		PairTracker *& tracker);
 	void removeFromPriorityQueueList(
@@ -46,7 +48,7 @@ public:
 	void decrementCount(
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue,
 		PairTracker *& tracker,
@@ -54,33 +56,33 @@ public:
 	void decrementCountLeft(
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,
 		Conditions& c);
 	void decrementCountRight(
 		long & indexSymbolRight,
 		long & indexSymbolNext,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
 		vector<PairRecord*>& priorityQueue,
 		Conditions& c);
 	void incrementCountLeft(
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		bool &skip,
 		Conditions& c);
 	void incrementCountRight(
 		long & indexSymbolLeft,
 		long & indexSymbolNext,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue, 
-		unsigned int & Symbols,
+		long & Symbols,
 		Conditions& c);
 	void threadEmptySymbols(
 		SymbolRecord *& leftSymbolRecord,
@@ -91,10 +93,10 @@ public:
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
 		long & indexSymbolNext,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unsigned int & Symbols,
+		dense_hash_map<long, Pair>& dictionary,
+		long & Symbols,
 		Conditions& c);
 	void replaceInstanceOfPair(
 		long & indexSymbolLeft,
@@ -102,10 +104,10 @@ public:
 		long & indexSymbolPrevious,
 		long & indexSymbolNext,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		bool& skip,
 		Conditions& c);
 	void establishContext(
@@ -126,53 +128,53 @@ public:
 	void replaceAllPairs(
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		Conditions& c);
-	void AlgorithmP::newSymbol(unsigned int & Symbols);
+	void AlgorithmP::newSymbol(long & Symbols);
 	void AlgorithmP::manageOneEntryOnList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageOneList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageLowerPriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::manageHighPriorityList(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unsigned int & Symbols,
+		long & Symbols,
 		CompactionData &cData,
 		Conditions& c);
 	void AlgorithmP::run(
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		dense_hash_map<long, Pair>& dictionary,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unordered_set<unsigned int>& terminals,
-		unsigned int & Symbols,
+		unordered_set<long>& terminals,
+		long & Symbols,
 		Conditions& c);
 };
 
