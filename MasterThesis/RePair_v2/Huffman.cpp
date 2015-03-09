@@ -68,10 +68,20 @@ void Huffman::sift(
 
 	if (leftChildIndex >= heapSize)												//Stop the recursion
 		return;
+	if (heapSize == 2)
+		int x = 0;
 
-	int parentFrequency = codeLengths[codeLengths[currentNodeIndex]];
-	int leftChildFrequency = codeLengths[codeLengths[leftChildIndex]];
-	int rightChildFrequency = codeLengths[codeLengths[rightChildIndex]];
+	int frequencyIndex = codeLengths[currentNodeIndex];
+	int parentFrequency = codeLengths[frequencyIndex];
+	frequencyIndex = codeLengths[leftChildIndex];
+	int leftChildFrequency = codeLengths[frequencyIndex];
+	int rightChildFrequency = leftChildFrequency;
+	if (rightChildIndex < heapSize)
+	{
+		frequencyIndex = codeLengths[rightChildIndex];
+		rightChildFrequency = codeLengths[frequencyIndex];
+	}
+		
 
 	if (rightChildIndex < heapSize &&
 		leftChildFrequency > rightChildFrequency)

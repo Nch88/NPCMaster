@@ -267,6 +267,9 @@ void Outputter::dictionary(
 
 	myfile.close();
 
+	if (firstBlock)
+		cout << "created dictionary file: " << outFile << endl;
+
 	delete bitsToWrite;
 }
 
@@ -299,7 +302,7 @@ void Outputter::all(
 		compressedFilename,
 		sequenceArray,
 		huffmanCodes,
-		true);
+		firstBlock);
 
 	//Encode generations for dictionary
 	Dictionary finalDict;

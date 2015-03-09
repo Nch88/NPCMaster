@@ -74,7 +74,7 @@ int Algorithm::run(
 			priorityQueue,
 			terminals,
 			c);
-
+		firstBlock = false;
 		if (c.timing)
 		{
 			t.start();
