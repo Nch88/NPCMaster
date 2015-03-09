@@ -12,6 +12,8 @@ TEST(outputter, diddyHuffmanCode)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -60,10 +62,14 @@ TEST(outputter, diddyHuffmanCode)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	out.huffmanEncoding(
@@ -134,6 +140,8 @@ TEST(outputter, diddyHuffmanDictionary)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);//256
 
 	Initializer init;
@@ -154,6 +162,8 @@ TEST(outputter, diddyHuffmanDictionary)
 	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	string filename = input1;
 	ifstream file(filename);
 
@@ -184,6 +194,8 @@ TEST(outputter, diddyHuffmanDictionary)
 		c);
 
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -195,10 +207,14 @@ TEST(outputter, diddyHuffmanDictionary)
 		generationVectors);
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary";
@@ -313,6 +329,8 @@ TEST(outputter, diddyAll)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);//256
 
 	Initializer init;
@@ -331,6 +349,8 @@ TEST(outputter, diddyAll)
 	unordered_set<long> terminals;
 	vector<CompactPair> pairs;
 	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -384,38 +404,108 @@ TEST(outputter, diddyAll)
 	ifs.close();
 }
 
-TEST(outputter, writeAndReadDictionary)
+TEST(outputter, readAndWriteDictionary_diddy)
 {
-	GammaCode gc;
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
 	Outputter out;
+	Dictionary finalDict;
+	GammaCode gc;
 
-	string outstring = "testWriteDictionary";
+	string input1 = "diddy.txt";
+	string outstring = "testWriteDictionaryDiddy";
 
-	//String is ".do.diddy.dodd" -> "AoAiByAoB" -> "CAiddyCB"
-	//Dictionary is A -> (.,d), B -> (d,d), C -> (A,o)
-	//Index pairs are (0,1), (1,1) and (5,2)
-	//Terminals: [.,d,o,i,y]
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<long> terminals;
+	vector<vector<CompactPair>> pairs;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
+	dense_hash_map <long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
+	vector<vector<CompactPair>> generationVectors;
+	string filename = input1;
+	ifstream file(filename);
+	bool firstBlock = true;
 
-	string tHeader = gc.getGammaCode(5);
-	string terminals = gc.getGammaCode('.') + gc.getGammaCode('d') + gc.getGammaCode('o') + gc.getGammaCode('i') + gc.getGammaCode('y');
-	string pHeader = gc.getGammaCode(2);
-	string gen1Header = gc.getGammaCode(2) + gc.getGammaCode(4);
-	string gen1Left = gc.getGammaCode(0) + gc.getGammaCode(1);
-	string gen1Right = "001001";
-	string gen2Header = gc.getGammaCode(1) + gc.getGammaCode(6);;
-	string gen2Left = gc.getGammaCode(5);
-	string gen2Right = "010";
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
 
-	string output = tHeader + terminals + pHeader + gen1Header + gen1Left + gen1Right + gen2Header + gen2Left + gen2Right;
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
-	//Write file
-	out.dictionary(outstring, output, true);
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string string2 = "sHHAo.wahFEumFo";
 
-	vector<CompactPair> pairs;
-	unordered_set<long> termSet;
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+
+	finalDict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+
+	string finalstring = "";
+	gc.makeFinalString(pairs, terminals, finalstring, generationVectors);
+
+	out.dictionary(outstring, finalstring, true);
+
+	vector<CompactPair> decodedPairs;
+	vector<long> decodedTerms;
 	ifstream bitstream(outstring, ios::binary);
 
 	//Read file
-	gc.decodeDictionaryFile(pairs, termSet, bitstream);
-	int x = 0;
+	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstream);
+
+	bool isInOriginalPairVector;
+	for (const auto p : decodedPairs)
+	{
+		isInOriginalPairVector = false;
+		for (const vector<CompactPair> gen : pairs)
+		{
+			for (const auto p2 : gen)
+			{
+				if (p2.leftSymbol == p.leftSymbol && p2.rightSymbol == p.rightSymbol)
+					isInOriginalPairVector = true;
+			}
+		}
+		ASSERT_TRUE(isInOriginalPairVector);
+	}
+
+	int combinedSize = 0;
+	for (const vector<CompactPair> gen : pairs)
+	{
+		combinedSize += gen.size();
+	}
+	ASSERT_EQ(combinedSize, decodedPairs.size());
+
+	//ASSERT_EQ(terminals, decodedTerms);
 }

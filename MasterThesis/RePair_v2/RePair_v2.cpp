@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	string input5 = "world192.txt";
 	string input6 = "bible.txt";
 
-	filename = input5;
+	filename = input1;
 	
 
 	ifstream file(filename);

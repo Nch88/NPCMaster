@@ -372,7 +372,7 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values
 }
 
 void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
-	unordered_set<long>& terminals,
+	vector<long>& terminals,
 	ifstream &bitstream)
 {
 	vector<long> values;
@@ -386,7 +386,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	//Read terminals
 	readNextNumbers(count, values, bitstream, prefix);
 	for (auto entry : values)	
-		terminals.insert(entry);
+		terminals.push_back(entry);
 	
 	values.clear();
 

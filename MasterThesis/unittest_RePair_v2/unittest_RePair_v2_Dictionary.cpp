@@ -9,6 +9,8 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	Dictionary dc;
 
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -64,6 +66,8 @@ TEST(createCompactDictionary, createFinalPairVector)
 	Dictionary dc;
 
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -88,7 +92,11 @@ TEST(createCompactDictionary, createFinalPairVector)
 
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> tIndices;
+	tIndices.set_empty_key(-1);
+	tIndices.set_deleted_key(-2);
 	dc.createFinalPairVectors(dictionary, generationVectors, pairs, terminals, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
@@ -122,6 +130,8 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	Dictionary dc;
 
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);
@@ -144,7 +154,11 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	vector<vector<CompactPair>> pairs;
 
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> tIndices;
+	tIndices.set_empty_key(-1);
+	tIndices.set_deleted_key(-2);
 
 	vector<vector<CompactPair>> generationVectors;
 	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices ,generationVectors);

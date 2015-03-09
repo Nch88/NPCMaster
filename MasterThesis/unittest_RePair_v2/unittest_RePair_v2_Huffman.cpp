@@ -12,6 +12,8 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -60,6 +62,8 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
@@ -136,6 +140,8 @@ TEST(testingHuffman, collapseSymbols)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -183,6 +189,8 @@ TEST(testingHuffman, collapseSymbols)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
@@ -209,6 +217,8 @@ TEST(testingHuffman, phaseThree)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -256,6 +266,8 @@ TEST(testingHuffman, phaseThree)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
@@ -320,6 +332,8 @@ TEST(testingHuffman, generateCodes)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -367,6 +381,8 @@ TEST(testingHuffman, generateCodes)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
@@ -395,6 +411,8 @@ TEST(testingHuffman, generateCodes)
 	long *firstCode = new long[maxLength];
 	long *numl = new long[maxLength];
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("0000", huffmanCodes[115].code);
@@ -420,6 +438,8 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -463,6 +483,8 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	}
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
@@ -493,6 +515,8 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	long *firstCode = new long[maxLength];
 	long *numl = new long[maxLength];
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("000", huffmanCodes[97].code);
@@ -512,6 +536,8 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -563,6 +589,8 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	}
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
 	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
@@ -580,6 +608,8 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	long *firstCode = new long[maxLength];
 	long *numl = new long[maxLength];
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	ASSERT_EQ("001", huffmanCodes[97].code);
@@ -619,6 +649,8 @@ TEST(huffman, decoder)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -667,10 +699,14 @@ TEST(huffman, decoder)
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	ASSERT_EQ(2, firstCode[0]);
@@ -690,6 +726,12 @@ TEST(huffman, decoder)
 	string expected3 = "10000000000000000000000000001001";
 
 	dense_hash_map<int, dense_hash_map<string, string>> huffmanToSymbols;
+	huffmanToSymbols.set_empty_key(-1);
+	huffmanToSymbols.set_deleted_key(-2);
+	huffmanToSymbols[3].set_empty_key("empty");
+	huffmanToSymbols[3].set_deleted_key("deleted");
+	huffmanToSymbols[4].set_empty_key("empty");
+	huffmanToSymbols[4].set_deleted_key("deleted");
 	//Huffman dictionary
 	huffmanToSymbols[4]["0000"] = "s";
 	huffmanToSymbols[4]["0001"] = "h";
@@ -705,6 +747,13 @@ TEST(huffman, decoder)
 	huffmanToSymbols[3]["111"]  = "m";
 
 	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+	symbolIndices.set_empty_key(-1);
+	symbolIndices.set_deleted_key(-2);
+	symbolIndices[3].set_empty_key(-1);
+	symbolIndices[3].set_deleted_key(-2);
+	symbolIndices[4].set_empty_key(-1);
+	symbolIndices[4].set_deleted_key(-2);
+
 	symbolIndices[4][0] = 0;
 	symbolIndices[4][1] = 1;
 	symbolIndices[4][2] = 3;
@@ -757,6 +806,8 @@ TEST(huffman, decodeDictionaryDiddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);//256
 
 	Initializer init;
@@ -777,6 +828,8 @@ TEST(huffman, decodeDictionaryDiddy)
 	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	string filename = input1;
 	ifstream file(filename);
 
@@ -807,6 +860,8 @@ TEST(huffman, decodeDictionaryDiddy)
 		c);
 
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -818,10 +873,14 @@ TEST(huffman, decodeDictionaryDiddy)
 		generationVectors);
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary2";
@@ -840,8 +899,11 @@ TEST(huffman, decodeDictionaryDiddy)
 	ifs.open(outstring, ios::binary);
 
 	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+	symbolIndices.set_empty_key(-1);
+	symbolIndices.set_deleted_key(-2);
+	long *firstCodes;
 
-	h.decodeDictionary(ifs, symbolIndices);
+	h.decodeDictionary(ifs, firstCodes, symbolIndices);
 
 	ASSERT_EQ(4, (symbolIndices)[3].size());
 	ASSERT_EQ(8, (symbolIndices)[4].size());
@@ -892,6 +954,8 @@ TEST(huffman, decodeDictionaryDuplicates)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);//256
 
 	Initializer init;
@@ -912,6 +976,8 @@ TEST(huffman, decodeDictionaryDuplicates)
 	unordered_set<long> terminals;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	string filename = input1;
 	ifstream file(filename);
 
@@ -942,6 +1008,8 @@ TEST(huffman, decodeDictionaryDuplicates)
 		c);
 
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
@@ -953,10 +1021,14 @@ TEST(huffman, decodeDictionaryDuplicates)
 		generationVectors);
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testDuplicatesLongCompressed";
@@ -974,8 +1046,11 @@ TEST(huffman, decodeDictionaryDuplicates)
 	ifs.open(outstring, ios::binary);
 
 	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+	symbolIndices.set_empty_key(-1);
+	symbolIndices.set_deleted_key(-2);
+	long *firstCodes;
 
-	h.decodeDictionary(ifs, symbolIndices);
+	h.decodeDictionary(ifs, firstCodes, symbolIndices);
 
 	ASSERT_EQ(1, (symbolIndices)[1].size());
 	ASSERT_EQ(2, (symbolIndices)[2].size());

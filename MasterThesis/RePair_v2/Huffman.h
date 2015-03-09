@@ -80,6 +80,7 @@ public:
 		vector<long> &intValues);
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
+		long *&firstCodes,
 		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices);
 	void Huffman::decode(
 		long *firstCode,

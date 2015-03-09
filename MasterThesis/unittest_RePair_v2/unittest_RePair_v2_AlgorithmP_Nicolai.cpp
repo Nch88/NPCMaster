@@ -12,6 +12,8 @@ TEST(manageOneList, oneEntry)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -71,6 +73,8 @@ TEST(manageOneList, multipleEntries)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -130,6 +134,8 @@ TEST(replaceAllPairsThorough, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long Symbols(65);//A
 
 	Initializer init;
@@ -405,6 +411,8 @@ TEST(testingLowerPriority, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -488,6 +496,8 @@ TEST(testingLowerPriority, duplicates)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -522,7 +532,7 @@ TEST(testingLowerPriority, duplicates)
 
 	string string1 = "aaaabbbb";
 	string string2 = "aaaaAA";
-	string string3 = "BBAA";
+	string string3 = "AABB";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -554,7 +564,8 @@ TEST(testingLowerPriority, duplicates)
 			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 		}		
 	}
-	ASSERT_EQ(string3, t.SequenceToString(sequenceArray));
+	string result = t.SequenceToString(sequenceArray);
+	ASSERT_EQ(string3, result);
 
 	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
@@ -568,6 +579,8 @@ TEST(testingRun, duplicates2)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -601,7 +614,7 @@ TEST(testingRun, duplicates2)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "aaaaabbbb";
-	string string2 = "BBaAA";
+	string string2 = "AAaBB";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -627,6 +640,8 @@ TEST(testingRun, duplicates3)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -660,7 +675,7 @@ TEST(testingRun, duplicates3)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "aabbbbaa";
-	string string2 = "BAAB";
+	string string2 = "ABBA";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -672,7 +687,8 @@ TEST(testingRun, duplicates3)
 		terminals,
 		symbols,
 		c);
-	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+	string result = t.SequenceToString(sequenceArray);
+	ASSERT_EQ(string2, result);
 
 	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
@@ -686,6 +702,8 @@ TEST(testingRun, duplicatesLong)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -745,6 +763,8 @@ TEST(testingRun, duplicatesLong3)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -778,7 +798,7 @@ TEST(testingRun, duplicatesLong3)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbcccccccccccccccccccccccccccccccccc";
-	string string2 = "GGBaIIHHA";
+	string string2 = "HHAaIIGGB";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -790,7 +810,8 @@ TEST(testingRun, duplicatesLong3)
 		terminals,
 		symbols,
 		c);
-	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+	string result = t.SequenceToString(sequenceArray);
+	ASSERT_EQ(string2, result);
 
 	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
@@ -804,6 +825,8 @@ TEST(crashPossiblePointerError, 264a)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;

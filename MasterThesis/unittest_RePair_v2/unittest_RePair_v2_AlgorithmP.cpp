@@ -713,6 +713,11 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 	trdPairLeft->next = nullptr;
 
 	//Setup active pair
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord = 
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
@@ -796,6 +801,11 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 	trdPairLeft->next = nullptr;
 
 	//Setup active pair
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
@@ -879,6 +889,11 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 	trdPairLeft->next = nullptr;
 
 	//Setup active pair
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 3;
@@ -950,6 +965,11 @@ TEST(updatePairRecord, countTwoFirstPair)
 	scdPairLeft->next = nullptr;
 
 	//Setup active pair
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex);
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 2;
@@ -1169,6 +1189,8 @@ TEST(incrementCountLeft, firstTimeSeen)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1184,6 +1206,11 @@ TEST(incrementCountLeft, firstTimeSeen)
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
 	//Check that new pair was counted
+	if (activePairs[99].empty())
+	{
+		activePairs[99].set_empty_key(-1);
+		activePairs[99].set_deleted_key(-2);
+	}
 	ASSERT_TRUE(activePairs[99][65].seenOnce);
 
 	//Check that no pair record was added
@@ -1202,7 +1229,9 @@ TEST(incrementCountRight, firstTimeSeen)
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<long, Pair> dictionary; 
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1215,7 +1244,11 @@ TEST(incrementCountRight, firstTimeSeen)
 	mytest.buildSequenceArray(sequenceArray, a, 4);
 
 	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
-
+	if (activePairs[65].empty())
+	{
+		activePairs[65].set_empty_key(-1);
+		activePairs[65].set_deleted_key(-2);
+	}
 	//Check that new pair was counted
 	ASSERT_TRUE(activePairs[65][100].seenOnce);
 
@@ -1236,6 +1269,8 @@ TEST(incrementCountLeft, secondTimeSeen)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1247,7 +1282,11 @@ TEST(incrementCountLeft, secondTimeSeen)
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 7);
-
+	if (activePairs[99].empty())
+	{
+		activePairs[99].set_empty_key(-1);
+		activePairs[99].set_deleted_key(-2);
+	}
 	activePairs[99][65].seenOnce = true;
 	activePairs[99][65].indexFirst = 0;
 
@@ -1282,6 +1321,8 @@ TEST(incrementCountRight, secondTimeSeen)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1293,6 +1334,11 @@ TEST(incrementCountRight, secondTimeSeen)
 	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 7);
 
+	if (activePairs[65].empty())
+	{
+		activePairs[65].set_empty_key(-1);
+		activePairs[65].set_deleted_key(-2);
+	}
 	activePairs[65][100].seenOnce = true;
 	activePairs[65][100].indexFirst = 1;
 
@@ -1327,6 +1373,8 @@ TEST(incrementCountLeft, thirdTimeSeen)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1338,7 +1386,11 @@ TEST(incrementCountLeft, thirdTimeSeen)
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
-	  
+	if (activePairs[99].empty())
+	{
+		activePairs[99].set_empty_key(-1);
+		activePairs[99].set_deleted_key(-2);
+	}
 	activePairs[99][65].seenOnce = false;
 	activePairs[99][65].indexFirst = 0;
 	activePairs[99][65].pairRecord = new PairRecord(0, 3);
@@ -1383,6 +1435,8 @@ TEST(incrementCountRight, thirdTimeSeen)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1392,6 +1446,11 @@ TEST(incrementCountRight, thirdTimeSeen)
 	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 
+	if (activePairs[65].empty())
+	{
+		activePairs[65].set_empty_key(-1);
+		activePairs[65].set_deleted_key(-2);
+	}
 	activePairs[65][100].seenOnce = false;
 	activePairs[65][100].indexFirst = 0;
 	activePairs[65][100].pairRecord = new PairRecord(1, 4);
@@ -1436,6 +1495,8 @@ TEST(incrementCountLeft, skipTest)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(5);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols = 65;
 	Conditions c;
 
@@ -1462,6 +1523,11 @@ TEST(incrementCountLeft, skipTest)
 	previous = 7; left = 9;
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
+	if (activePairs[99].empty())
+	{
+		activePairs[99].set_empty_key(-1);
+		activePairs[99].set_deleted_key(-2);
+	}
 	//Check that seenOnce was set for cA
 	ASSERT_TRUE(activePairs[99][65].seenOnce);
 
@@ -1622,6 +1688,11 @@ TEST(decrementCount, threePairsRemoveMiddle)
 	trdPairLeft->previous = scdPairLeft;
 	trdPairLeft->next = nullptr;
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	//Setup active pair
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
@@ -1724,6 +1795,11 @@ TEST(decrementCountLeft, hasPrevious)
 	trdPairLeft->previous = scdPairLeft;
 	trdPairLeft->next = nullptr;
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	//Setup active pair
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
@@ -1827,6 +1903,11 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	trdPairLeft->previous = fstPairLeft;
 	trdPairLeft->next = nullptr;
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	//Setup active pair
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
@@ -1930,6 +2011,11 @@ TEST(decrementCountRight, hasNext)
 	trdPairLeft->previous = scdPairLeft;
 	trdPairLeft->next = nullptr;
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	//Setup active pair
 	activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord =
 		new PairRecord(sequenceIndex - 2, sequenceIndex + 2);
@@ -2096,6 +2182,8 @@ TEST(replacePair, middleOfSequence)
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(256);
 	long symbol;
 	long index;
@@ -2135,6 +2223,11 @@ TEST(replacePair, middleOfSequence)
 		scdPairRight->symbol, 
 		0);
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord = activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
@@ -2168,6 +2261,8 @@ TEST(replacePair, endOfSequence)
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(256);
 	long symbol;
 	long index;
@@ -2209,6 +2304,11 @@ TEST(replacePair, endOfSequence)
 
 	long noNext = -1;
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord = activePairs[trdPairLeft->symbol][trdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
@@ -2240,6 +2340,8 @@ TEST(replacePair, severalEmptySymbols)
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(256);
 	long symbol;
 	long index;
@@ -2279,6 +2381,11 @@ TEST(replacePair, severalEmptySymbols)
 		trdPairLeft->symbol,
 		0);
 
+	if (activePairs[fstPairLeft->symbol].empty())
+	{
+		activePairs[fstPairLeft->symbol].set_empty_key(-1);
+		activePairs[fstPairLeft->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][trdPairLeft->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
@@ -2312,6 +2419,8 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(256);
 	long symbol;
 	long index;
@@ -2351,6 +2460,11 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 		scdPairRight->symbol,
 		0);
 
+	if (activePairs[fstPairLeft->symbol].empty())
+	{
+		activePairs[fstPairLeft->symbol].set_empty_key(-1);
+		activePairs[fstPairLeft->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
@@ -2374,78 +2488,85 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
 }
 
-TEST(replacePair, deletingPairRecord)
-{
-	using namespace google;
-	AlgorithmP algP;
-	Conditions c;
-	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	long symbols(256);
-	long symbol;
-	long index;
-
-	//Setup symbol records in sequence array
-	symbol = 1;
-	index = 0;
-	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(fstPairLeft);
-
-	symbol = 0;
-	index = 1;
-	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(fstPairRight);
-
-	symbol = 0;
-	index = 2;
-	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(scdPairLeft);
-
-	symbol = 2;
-	index = 3;
-	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(scdPairRight);
-
-	symbol = 0;
-	index = 4;
-	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(trdPairLeft);
-
-	symbol = 2;
-	index = 5;
-	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
-	sequenceArray.push_back(trdPairRight);
-
-	Pair pair(fstPairLeft->symbol,
-		scdPairRight->symbol,
-		0);
-
-	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
-	pairRecord->count = 1;
-
-	algP.replacePair(
-		fstPairLeft->index,
-		scdPairRight->index,
-		trdPairRight->index,
-		activePairs,
-		sequenceArray,
-		dictionary,
-		symbols,
-		c);
-
-	ASSERT_EQ(symbols, fstPairLeft->symbol);
-	ASSERT_EQ(0, scdPairRight->symbol);
-	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
-	ASSERT_EQ(trdPairRight, trdPairLeft->next);
-	ASSERT_EQ(fstPairLeft, fstPairRight->previous);
-	ASSERT_EQ(trdPairRight, fstPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
-	ASSERT_EQ(nullptr, activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord);
-}
+//TEST(replacePair, deletingPairRecord)
+//{
+//	using namespace google;
+//	AlgorithmP algP;
+//	Conditions c;
+//	vector<SymbolRecord*> sequenceArray;
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols(256);
+//	long symbol;
+//	long index;
+//
+//	//Setup symbol records in sequence array
+//	symbol = 1;
+//	index = 0;
+//	SymbolRecord * fstPairLeft = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(fstPairLeft);
+//
+//	symbol = 0;
+//	index = 1;
+//	SymbolRecord * fstPairRight = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(fstPairRight);
+//
+//	symbol = 0;
+//	index = 2;
+//	SymbolRecord * scdPairLeft = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(scdPairLeft);
+//
+//	symbol = 2;
+//	index = 3;
+//	SymbolRecord * scdPairRight = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(scdPairRight);
+//
+//	symbol = 0;
+//	index = 4;
+//	SymbolRecord * trdPairLeft = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(trdPairLeft);
+//
+//	symbol = 2;
+//	index = 5;
+//	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
+//	sequenceArray.push_back(trdPairRight);
+//
+//	Pair pair(fstPairLeft->symbol,
+//		scdPairRight->symbol,
+//		0);
+//
+//	if (activePairs[fstPairLeft->symbol].empty())
+//	{
+//		activePairs[fstPairLeft->symbol].set_empty_key(-1);
+//		activePairs[fstPairLeft->symbol].set_deleted_key(-2);
+//	}
+//	activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
+//	activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord->count = 1;
+//
+//	algP.replacePair(
+//		fstPairLeft->index,
+//		scdPairRight->index,
+//		trdPairRight->index,
+//		activePairs,
+//		sequenceArray,
+//		dictionary,
+//		symbols,
+//		c);
+//
+//	ASSERT_EQ(symbols, fstPairLeft->symbol);
+//	ASSERT_EQ(0, scdPairRight->symbol);
+//	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
+//	ASSERT_EQ(trdPairRight, trdPairLeft->next);
+//	ASSERT_EQ(fstPairLeft, fstPairRight->previous);
+//	ASSERT_EQ(trdPairRight, fstPairRight->next);
+//	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
+//	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
+//	ASSERT_EQ(nullptr, activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord);
+//}
 
 TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 {
@@ -2457,6 +2578,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	vector<PairRecord*> priorityQueue;
 	long symbols(256);
 	long symbol;
@@ -2513,13 +2636,27 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 
 	priorityQueue.resize(sqrt(sequenceArray.size()));
 
+	
+
 	//Setup pair record for pair 12
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord1 = activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord1->count = 3;
 	pairRecord1->arrayIndexFirst = 0;
 	pairRecord1->arrayIndexLast = 4;
 
+	
+
 	//Setup pair record for pair 21
+	if (activePairs[scdPairRight->symbol].empty())
+	{
+		activePairs[scdPairRight->symbol].set_empty_key(-1);
+		activePairs[scdPairRight->symbol].set_deleted_key(-2);
+	}
 	PairRecord * pairRecord2 = activePairs[scdPairRight->symbol][trdPairLeft->symbol].pairRecord = new PairRecord();
 	pairRecord2->count = 2;
 	pairRecord2->arrayIndexFirst = 1;
@@ -2559,6 +2696,8 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(256);
 
 	Initializer init;
@@ -2595,6 +2734,21 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	long indexSymbolPrevious = 19;
 	long indexSymbolNext = 22;
 
+	if (activePairs[sequenceArray[indexSymbolLeft]->symbol].empty())
+	{
+		activePairs[sequenceArray[indexSymbolLeft]->symbol].set_empty_key(-1);
+		activePairs[sequenceArray[indexSymbolLeft]->symbol].set_deleted_key(-2);
+	}
+	if (activePairs[sequenceArray[indexSymbolPrevious]->symbol].empty())
+	{
+		activePairs[sequenceArray[indexSymbolPrevious]->symbol].set_empty_key(-1);
+		activePairs[sequenceArray[indexSymbolPrevious]->symbol].set_deleted_key(-2);
+	}
+	if (activePairs[sequenceArray[indexSymbolRight]->symbol].empty())
+	{
+		activePairs[sequenceArray[indexSymbolRight]->symbol].set_empty_key(-1);
+		activePairs[sequenceArray[indexSymbolRight]->symbol].set_deleted_key(-2);
+	}
 	PairRecord * currentPair = activePairs[sequenceArray[indexSymbolLeft]->symbol]
 		[sequenceArray[indexSymbolRight]->symbol].pairRecord;
 	PairRecord * leftPair = activePairs[sequenceArray[indexSymbolPrevious]->symbol]
@@ -2688,6 +2842,8 @@ TEST(replaceAllInstancesOfPair, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -2740,6 +2896,8 @@ TEST(testingRun, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;

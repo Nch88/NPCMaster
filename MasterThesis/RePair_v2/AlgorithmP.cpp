@@ -464,6 +464,12 @@ void AlgorithmP::incrementCountLeft(
 	{
 		long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
+		if (activePairs[symbolPrevious].empty())
+		{
+			activePairs[symbolPrevious].set_empty_key(-1);
+			activePairs[symbolPrevious].set_deleted_key(-2);
+		}
+
 		//Check if we need to skip
 		if (symbolPrevious != Symbols)
 			skip = false;

@@ -44,7 +44,6 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.start();
-			cout << " - Timing: init of Sequence array and active pairs" << endl;
 		}
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
 
@@ -58,7 +57,6 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.start();
-			cout << " - Timing: init of priority queue" << endl;
 		}
 		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 		if (c.timing)
@@ -70,7 +68,10 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.start();
-			cout << " - Timing: repair compression" << endl;
+		}
+		if (c.verbose)
+		{
+			cout << " - Verbose: Starting repair compression" << endl;
 		}
 		algP.run(
 			sequenceArray,
@@ -89,7 +90,10 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.start();
-			cout << " - Timing: Huffman encoding and outputting files" << endl;
+		}
+		if (c.verbose)
+		{
+			cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
 		}
 		out.all(
 			filename,
@@ -110,7 +114,6 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.start();
-			cout << " - Timing: reset of Sequence array and active pairs" << endl;
 		}
 		if (c.verbose)
 		{

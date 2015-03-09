@@ -48,6 +48,8 @@ TEST(gammaCodes, encode_diddy_explicit)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);
 
 	Initializer init;
@@ -99,7 +101,11 @@ TEST(gammaCodes, encode_diddy_explicit)
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -110,9 +116,8 @@ TEST(gammaCodes, encode_diddy_explicit)
 	string terminalsGammaResult = ""; 
 	vector<string> terminalsGammaResults;
 
-	//gc.encode(pairs, terminals, terminalsGamma, leftElementsGamma, rightElementsBinary, generationVectors);
 
-	//This is encode explicit
+	//!!!!!!!!!!!!!!!! This is encode explicit !!!!!!!!!!!!!!!!!!!
 	int generations = generationVectors.size();
 	int genP1 = 0;
 	long firstElement = 0;
@@ -167,10 +172,15 @@ TEST(gammaCodes, encode_diddy_explicit)
 		terminalsGammaResult += terminalsGammaResults[i];
 		
 	}
+	
 
 	ASSERT_EQ(terminalsGammaResult, terminalsGamma);
 	long bitLengthRightValue = terminalVector.size();
 	long bitLengthRight = floor(log2(bitLengthRightValue)) + 1;
+
+	string gam1 = "";
+	string gam2 = "";
+	string gamRes = "";
 
 	//For each generation
 	for (genP1 = 0; genP1 < generations; ++genP1)
@@ -188,41 +198,41 @@ TEST(gammaCodes, encode_diddy_explicit)
 
 		if (genP1 == 0) //Test
 		{
-			string gam1 = gc.getGammaCode(0);
-			string gam2 = gc.getGammaCode(7);
-			string gamRes = gam1 + gam2;
+			gam1 = gc.getGammaCode(0);
+			gam2 = gc.getGammaCode(5);
+			gamRes = gam1 + gam2;
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);			
 		}
 		if (genP1 == 1) //Test
 		{
-			string gam1 = gc.getGammaCode(5);
-			string gam2 = gc.getGammaCode(7);
-			string gamRes = gam1 + gam2;
+			gam1 = gc.getGammaCode(12);
+			gam2 = gc.getGammaCode(2);
+			gamRes = gam1 + gam2;
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);
 		}
 		if (genP1 == 2) //Test
 		{
-			string gamRes = gc.getGammaCode(2);
+			gamRes = gc.getGammaCode(2);
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);
 		}
 		if (genP1 == 3) //Test
 		{
-			string gamRes = gc.getGammaCode(2);
+			gamRes = gc.getGammaCode(2);
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);
 		}
 		if (genP1 == 4) //Test
 		{
-			string gamRes = gc.getGammaCode(5);
+			gamRes = gc.getGammaCode(5);
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);
 		}
 		if (genP1 == 5) //Test
 		{
-			string gamRes = gc.getGammaCode(13);
+			gamRes = gc.getGammaCode(13);
 
 			ASSERT_EQ(gamRes, leftElementsGammas[genP1]);
 		}
@@ -247,17 +257,17 @@ TEST(gammaCodes, encode_diddy_explicit)
 		if (genP1 == 0) //Test
 		{
 			ASSERT_EQ(4, bitLengthRight);
-			ASSERT_EQ("00100011", rightElementsBinaries[genP1]);
+			ASSERT_EQ("00100111", rightElementsBinaries[genP1]);
 		}
 		if (genP1 == 1) //Test
 		{
 			ASSERT_EQ(4, bitLengthRight);
-			ASSERT_EQ("11101101", rightElementsBinaries[genP1]);
+			ASSERT_EQ("11010011", rightElementsBinaries[genP1]);
 		}
 		if (genP1 == 2) //Test
 		{
 			ASSERT_EQ(5, bitLengthRight);
-			ASSERT_EQ("10000", rightElementsBinaries[genP1]);
+			ASSERT_EQ("01111", rightElementsBinaries[genP1]);
 		}
 		if (genP1 == 3) //Test
 		{
@@ -290,6 +300,8 @@ TEST(gammaCodes, encode_diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);
 
 	Initializer init;
@@ -341,7 +353,11 @@ TEST(gammaCodes, encode_diddy)
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -467,6 +483,8 @@ TEST(gammaCodes, diddy_makeFinalString)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);
 
 	Initializer init;
@@ -518,7 +536,11 @@ TEST(gammaCodes, diddy_makeFinalString)
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	//Test variables
@@ -708,53 +730,6 @@ TEST(gammaCodes, decode_gammaToInt)
 		ASSERT_EQ(i, gc.gammaToInt(gammas[i]));
 }
 
-TEST(gammaCodes, decode_simple)
-{
-	//GammaCode gc;
-	//string gamma = "1001001001001";//T = {1} and P = {(1,1)}
-	//vector<CompactPair*> decodedPairs;
-	//unordered_set<long> decodedTerminals;
-	//gc.decode(decodedPairs, decodedTerminals, gamma);
-	//ASSERT_EQ(1, decodedPairs.size());
-	//ASSERT_EQ(1, decodedPairs[0]->leftSymbol);
-	//ASSERT_EQ(1, decodedPairs[0]->rightSymbol);
-	//ASSERT_EQ(1, decodedTerminals.size());
-	//ASSERT_EQ(1, decodedTerminals.count(1));
-}
-
-TEST(gammaCodes, encodeThenDecode_simplePairs)
-{
-	//GammaCode gc;
-
-	////This should be (0,1)(1,2)...(4,5)
-	//vector<CompactPair*> pairs;
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	CompactPair *c = new CompactPair(i, i + 1);
-	//	pairs.push_back(c);
-	//}
-	//unordered_set<long> terminals = { 1, 2, 3, 4, 5, 6 };
-	//string encodedString;
-
-	//gc.makeFinalString(pairs, terminals, encodedString);
-
-	//vector<CompactPair*> decodedPairs;
-	//unordered_set<long> decodedTerminals;
-
-	//gc.decode(decodedPairs, decodedTerminals, encodedString);
-	//for (int i = 0; i < pairs.size(); ++i)
-	//{
-	//	ASSERT_EQ(pairs[i]->leftSymbol, decodedPairs[i]->leftSymbol);
-	//	ASSERT_EQ(pairs[i]->rightSymbol, decodedPairs[i]->rightSymbol);
-	//}
-	//ASSERT_EQ(terminals, decodedTerminals);
-
-	////Cleanup
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	delete pairs[i];
-	//}
-}
 
 TEST(gammaCodes, writeToFile)
 {

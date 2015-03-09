@@ -14,6 +14,8 @@ TEST(compaction, diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -76,6 +78,8 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(65);//A
 
 	Initializer init;
@@ -290,6 +294,8 @@ TEST(createCompactDictionary, findGeneration_diddy)
 	AlgorithmP algo;
 
 	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	Pair A('.', 'd', 1);
 	dictionary[300] = A;
 	Pair B('d', 'd', 1);

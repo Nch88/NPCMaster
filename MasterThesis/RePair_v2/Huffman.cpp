@@ -369,6 +369,7 @@ void Huffman::readFromGammaCodes(
 
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
+	long *&firstCodes,
 	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices)
 	//Outputs symbolIndices
 {
@@ -399,7 +400,7 @@ void Huffman::decodeDictionary(
 
 		maxLength = intValues[0];
 		intValues.clear();													
-
+		firstCodes = new long[maxLength];
 		//symbolIndices: code length -> Huffman code -> index
 		for (long i = 0; i < maxLength; i++)
 		{
@@ -415,6 +416,7 @@ void Huffman::decodeDictionary(
 
 			symbolsToRead = intValues[0];								
 			firstCode = intValues[1];
+			firstCodes[i] = firstCode;
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
 																				//this is used for efficiency when resetting intValues below
