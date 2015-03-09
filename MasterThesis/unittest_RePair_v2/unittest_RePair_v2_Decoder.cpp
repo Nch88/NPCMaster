@@ -47,8 +47,6 @@ TEST(decoder, diddyAll)
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
 	string string2 = "sHHAo.wahFEumFo";
 
-	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
-
 	algP.run(
 		sequenceArray,
 		dictionary,
@@ -77,6 +75,8 @@ TEST(decoder, diddyAll)
 	vector<long> decodedTerms;
 	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
 
+	int location = bitstreamDict.tellg();
+
 	//Read huffman dictionary
 	unordered_map<long, unordered_map<long, long>> symbolIndices;
 	long *firstCodes;
@@ -85,7 +85,8 @@ TEST(decoder, diddyAll)
 	//Read file
 	vector<long> symbolIndexSequence;
 	h.decode(firstCodes, compressedFile, symbolIndices, symbolIndexSequence);
-	string finalOutput = "";
+	string finalOutput;
+	finalOutput.assign("");
 	for (int i = 0; i < symbolIndexSequence.size(); ++i)
 	{
 		finalDict.decodeSymbol(symbolIndexSequence[i], decodedPairs, decodedTerms, finalOutput);

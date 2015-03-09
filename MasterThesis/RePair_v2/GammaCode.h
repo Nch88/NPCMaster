@@ -26,6 +26,7 @@ public:
 		std::unordered_set<long>& terminals,
 		std::string& inputString);
 	void GammaCode::readNextNumbers(int n, std::vector<long> &values, std::ifstream &bitstream, std::string &prefix);
+	void GammaCode::processBinary(int binarySize, int count, std::string chunk, std::vector<long> &values, std::string &prefix);
 	void GammaCode::readNextBinaries(int binarySize, int count, std::vector<long> &values, std::ifstream &bitstream, std::string &prefix);
 	void GammaCode::decodeDictionaryFile(std::vector<CompactPair>& pairs,
 		std::vector<long>& terminals,
