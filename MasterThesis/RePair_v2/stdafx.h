@@ -23,7 +23,7 @@
 #include <chrono>
 #include <queue>
 #include <bitset>
-
+#include <sparsehash/dense_hash_map>
 
 #include "MyTimer.h"
 #include "PairRecord.h"

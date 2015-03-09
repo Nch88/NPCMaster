@@ -56,7 +56,7 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 		rightChild->code += one;
 	}
 }
-
+//TODO: fix sift, something is wrong when heapsize is 2
 void Huffman::sift(
 	int currentNodeIndex,
 	int heapSize,
