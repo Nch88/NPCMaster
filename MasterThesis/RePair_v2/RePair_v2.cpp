@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	Initializer init;
 	Conditions c;
 	c.timing = false;
-	c.verbose = false;
+	c.verbose = true;
 	MyTimer t;
 	int r = 0;
 

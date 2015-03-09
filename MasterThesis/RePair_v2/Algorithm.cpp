@@ -71,6 +71,10 @@ int Algorithm::run(
 			t.start();
 			cout << " - Timing: repair compression" << endl;
 		}
+		if (c.verbose)
+		{
+			cout << " - Verbose: Starting repair compression" << endl;
+		}
 		algP.run(
 			sequenceArray,
 			dictionary,
@@ -89,6 +93,10 @@ int Algorithm::run(
 		{
 			t.start();
 			cout << " - Timing: Huffman encoding and outputting files" << endl;
+		}
+		if (c.verbose)
+		{
+			cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
 		}
 		out.all(
 			filename,
