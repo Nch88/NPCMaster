@@ -13,14 +13,10 @@ int main(int argc, char* argv[])
 	int blockSize;
 	blockSize = 1048576;
 
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs
-		= *new unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>();
-	vector<SymbolRecord*> sequenceArray
-		= *new vector<SymbolRecord*>();
-	vector<PairRecord*> priorityQueue
-		= *new vector<PairRecord*>();
-	unordered_map<unsigned int, Pair> dictionary
-		= *new unordered_map<unsigned int, Pair>();
+	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<unsigned int, Pair> dictionary;
 	unsigned int symbols(initialSymbolValue);
 
 	Algorithm algorithm;

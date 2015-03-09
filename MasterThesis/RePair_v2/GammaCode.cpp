@@ -150,13 +150,12 @@ string GammaCode::getGammaCode(unsigned int in)
 	return firstPart + padding + secondPart;
 }
 
-//TODO: Figure out why right elements vector is too long
-void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
+void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& terminalsGamma,
 	vector<string>& leftElementsGammas,
 	vector<string>& rightElementsBinaries,
-	vector<vector<CompactPair*>*>& generationVectors)
+	vector<vector<CompactPair>>& generationVectors)
 {
 	int generations = generationVectors.size();
 	int genP1 = 0;
@@ -188,22 +187,23 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 	{
 
 		//Gamma code for left elements
-		firstElement = (*pairs[genP1])[0]->leftSymbol;
+		firstElement = (pairs[genP1])[0].leftSymbol;
 		fstElmtGamma = getGammaCode(firstElement);
 		leftElementsGammas.push_back(fstElmtGamma);
-		for (int i = 0; i < (*pairs[genP1]).size() - 1; ++i)
+		for (int i = 0; i < (pairs[genP1]).size() - 1; ++i)
 		{
-			tmpGammaCode.assign(getGammaCode((*pairs[genP1])[i + 1]->leftSymbol - (*pairs[genP1])[i]->leftSymbol));
+			tmpGammaCode.assign(getGammaCode((pairs[genP1])[i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
 			leftElementsGammas[genP1] += tmpGammaCode;
 		}
 
 		//Binary code for right elements
 		string s = "";
-		for (int i = 0; i < (*pairs[genP1]).size(); ++i)
+		rightElementsBinaries.push_back("");
+		for (int i = 0; i < (pairs[genP1]).size(); ++i)
 		{			
-			s.assign(getBinaryCode((*pairs[genP1])[i]->rightSymbol));
+			s.assign(getBinaryCode((pairs[genP1])[i].rightSymbol));
 
-			rightElementsBinaries.push_back("");
+			
 			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
 			{
 				rightElementsBinaries[genP1] += '0';
@@ -211,22 +211,22 @@ void GammaCode::encode(std::vector<vector<CompactPair*>*>& pairs,
 			rightElementsBinaries[genP1] += s;
 		}
 
-		bitLengthRightValue += generationVectors[genP1]->size();
+		bitLengthRightValue += generationVectors[genP1].size();
 		bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Size of all generation below
 	}
 }
 
-void GammaCode::makeFinalString(vector<vector<CompactPair*>*>& pairs,
+void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	unordered_set<unsigned int>& terminals,
 	string& finalString,
-	vector<vector<CompactPair*>*> generationVectors)
+	vector<vector<CompactPair>> generationVectors)
 {
 	string *terminalsGamma = new string("");
 
-	vector<string> *lefts = new vector<string>();
-	vector<string> *rights = new vector<string>();
+	vector<string> lefts;
+	vector<string> rights;
 	string tHeader = "", header = "";
-	encode(pairs, terminals, *terminalsGamma, *lefts, *rights, generationVectors);
+	encode(pairs, terminals, *terminalsGamma, lefts, rights, generationVectors);
 
 	//Set terminal header
 	tHeader = getGammaCode(terminals.size());
@@ -242,20 +242,18 @@ void GammaCode::makeFinalString(vector<vector<CompactPair*>*>& pairs,
 	for (int i = 0; i < generationVectors.size(); ++i)
 	{
 		//Header is size of generation + max possible index found in that generation
-		header = getGammaCode(generationVectors[i]->size()) + getGammaCode(maxIndex);
+		header = getGammaCode(generationVectors[i].size()) + getGammaCode(maxIndex);
 		
-		string leftPart = ((*lefts)[i]);
-		string rightPart = ((*rights)[i]);
+		string leftPart = ((lefts)[i]);
+		string rightPart = ((rights)[i]);
 
 		finalString += (header + leftPart + rightPart);
 
 		//Increase maxindex by the size of the generation
-		maxIndex += generationVectors[i]->size();
+		maxIndex += generationVectors[i].size();
 	}
 
 	delete terminalsGamma;
-	delete lefts;
-	delete rights;
 }
 
 //void GammaCode::decode(vector<CompactPair*>& pairs,
@@ -373,60 +371,59 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<unsigned int>
 	}
 }
 
-void GammaCode::decodeDictionaryFile(vector<CompactPair*>& pairs,
+void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	unordered_set<unsigned int>& terminals,
 	ifstream &bitstream)
 {
-	vector<unsigned int> *values = new vector<unsigned int>();
+	vector<unsigned int> values;
 	string prefix = "";
 
 	//Read header for terminals
-	readNextNumbers(1, *values, bitstream, prefix);
-	int count = (*values)[0];
-	values->clear();
+	readNextNumbers(1, values, bitstream, prefix);
+	int count = (values)[0];
+	values.clear();
 
 	//Read terminals
-	readNextNumbers(count, *values, bitstream, prefix);
-	terminals = *(new unordered_set<unsigned int>(values->begin(), values->end()));
-	values->clear();
+	readNextNumbers(count, values, bitstream, prefix);
+	for (auto entry : values)	
+		terminals.insert(entry);
+	
+	values.clear();
 
 	//Read number of generations
-	readNextNumbers(1, *values, bitstream, prefix);
-	int generationCount = (*values)[0];
-	values->clear();
+	readNextNumbers(1, values, bitstream, prefix);
+	int generationCount = (values)[0];
+	values.clear();
 
 	int binarySize, i;
 	unsigned int leftVal;
-	vector<unsigned int> *left = new vector<unsigned int>();
+	vector<unsigned int> left;
 	for (int g = 0; g < generationCount; ++g)
 	{
 		//Read generation header
-		readNextNumbers(2, *values, bitstream, prefix);
-		count = (*values)[0];
-		binarySize = 1 + floor(log2((*values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
-		values->clear();
+		readNextNumbers(2, values, bitstream, prefix);
+		count = (values)[0];
+		binarySize = 1 + floor(log2((values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
+		values.clear();
 
 		//Read left values and store them in 'left'
-		readNextNumbers(count, *left, bitstream, prefix);
+		readNextNumbers(count, left, bitstream, prefix);
 
 		//Read right element binaries and write pairs
 		leftVal = 0;
 		i = 0;
 		while (i < count)
 		{
-			readNextBinaries(binarySize, count, *values, bitstream, prefix);
-			for (int j = 0; j < values->size(); ++j)
+			readNextBinaries(binarySize, count, values, bitstream, prefix);
+			for (int j = 0; j < values.size(); ++j)
 			{
-				leftVal += (*left)[i];
-				CompactPair *c = new CompactPair(leftVal, (*values)[j]);
+				leftVal += (left)[i];
+				CompactPair c(leftVal, (values)[j]);
 				pairs.push_back(c);
 				++i;
 			}
-			values->clear();
+			values.clear();
 		}
-		left->clear();
+		left.clear();
 	}
-
-	delete values;
-	delete left;
 }

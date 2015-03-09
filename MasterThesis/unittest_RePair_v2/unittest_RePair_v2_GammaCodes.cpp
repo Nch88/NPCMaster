@@ -93,10 +93,10 @@ TEST(gammaCodes, encode_diddy_explicit)
 		symbols,
 		c);
 
-	vector<vector<CompactPair*>*> generationVectors;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair>> generationVectors;
+	vector<vector<CompactPair>> pairs;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -174,12 +174,12 @@ TEST(gammaCodes, encode_diddy_explicit)
 	{
 
 		//Gamma code for left elements
-		firstElement = (*pairs[genP1])[0]->leftSymbol;
+		firstElement = (pairs[genP1])[0].leftSymbol;
 		fstElmtGamma = gc.getGammaCode(firstElement);
 		leftElementsGammas.push_back(fstElmtGamma);
-		for (int i = 0; i < (*pairs[genP1]).size() - 1; ++i)
+		for (int i = 0; i < (pairs[genP1]).size() - 1; ++i)
 		{
-			tmpGammaCode.assign(gc.getGammaCode((*pairs[genP1])[i + 1]->leftSymbol - (*pairs[genP1])[i]->leftSymbol));
+			tmpGammaCode.assign(gc.getGammaCode((pairs[genP1])[i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
 			leftElementsGammas[genP1] += tmpGammaCode;
 		}
 
@@ -227,9 +227,9 @@ TEST(gammaCodes, encode_diddy_explicit)
 		//Binary code for right elements
 		
 		string s = "";
-		for (int i = 0; i < (*pairs[genP1]).size(); ++i)
+		for (int i = 0; i < (pairs[genP1]).size(); ++i)
 		{
-			s.assign(gc.getBinaryCode((*pairs[genP1])[i]->rightSymbol));
+			s.assign(gc.getBinaryCode((pairs[genP1])[i].rightSymbol));
 
 			ASSERT_TRUE(s.length() <= bitLengthRight);
 
@@ -272,7 +272,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 			ASSERT_EQ("10011", rightElementsBinaries[genP1]);
 		}
 
-		bitLengthRightValue += generationVectors[genP1]->size();
+		bitLengthRightValue += generationVectors[genP1].size();
 		bitLengthRight = floor(log2(bitLengthRightValue)) + 1;
 	}
 	
@@ -332,10 +332,10 @@ TEST(gammaCodes, encode_diddy)
 		symbols,
 		c);
 
-	vector<vector<CompactPair*>*> generationVectors;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair>> generationVectors;
+	vector<vector<CompactPair>> pairs;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -452,8 +452,6 @@ TEST(gammaCodes, encode_diddy)
 	}
 }
 
-//TODO: test diddy_makeFinalString explicit, halfway through something does not work correctly
-
 TEST(gammaCodes, diddy_makeFinalString)
 {
 	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
@@ -508,10 +506,10 @@ TEST(gammaCodes, diddy_makeFinalString)
 		symbols,
 		c);
 
-	vector<vector<CompactPair*>*> generationVectors;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
+	vector<vector<CompactPair>> generationVectors;
+	vector<vector<CompactPair>> pairs;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	//Test variables

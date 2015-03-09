@@ -56,11 +56,11 @@ TEST(outputter, diddyHuffmanCode)
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	out.huffmanEncoding(
@@ -146,8 +146,8 @@ TEST(outputter, diddyHuffmanDictionary)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<vector<CompactPair*>*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<vector<CompactPair>> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -177,8 +177,8 @@ TEST(outputter, diddyHuffmanDictionary)
 		symbols,
 		c);
 
-	unordered_map<unsigned int, unsigned int> *terminalIndices = new unordered_map<unsigned int, unsigned int>();
-	vector<vector<CompactPair*>*> generationVectors;
+	unordered_map<unsigned int, unsigned int> terminalIndices;
+	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
@@ -188,11 +188,11 @@ TEST(outputter, diddyHuffmanDictionary)
 		terminalIndices,
 		generationVectors);
 
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
+	unordered_map<unsigned int, HuffmanNode> huffmanCodes;
 	unsigned int *firstCode = nullptr;
 	unsigned int *numl = nullptr;
 	unsigned int maxLength = 0;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> huffmanToSymbol;
+	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> huffmanToSymbol;
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary";
@@ -296,8 +296,6 @@ TEST(outputter, diddyHuffmanDictionary)
 	ASSERT_EQ(1, resultVector[18]);
 	ASSERT_EQ(19, resultVector[19]);
 	ASSERT_EQ(10, resultVector[20]);
-		
-	delete terminalIndices;
 }
 
 TEST(outputter, diddyAll)
@@ -322,8 +320,8 @@ TEST(outputter, diddyAll)
 	int blockSize;
 	blockSize = 1048576;
 	unordered_set<unsigned int> terminals;
-	vector<CompactPair*> pairs;
-	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> indices;
+	vector<CompactPair> pairs;
+	unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> indices;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -353,28 +351,28 @@ TEST(outputter, diddyAll)
 		terminals,
 		symbols,
 		c);
-																		//Can't test yet
-	//out.all(
-	//	filename,
-	//	firstBlock,
-	//	sequenceArray,
-	//	dictionary,
-	//	activePairs,
-	//	priorityQueue,
-	//	terminals,
-	//	c);
+																		
+	out.all(
+		filename,
+		firstBlock,
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		c);
 
-	//string compressedFile = out.addFilenameEnding(filename, ".NPC");
-	//string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
 
-	//ifstream ifs;
-	//ifs.open(compressedFile, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifstream ifs;
+	ifs.open(compressedFile, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
 
-	//ifs.open(compressedDictionary, ios::binary);
-	//ASSERT_TRUE(ifs.is_open());
-	//ifs.close();
+	ifs.open(compressedDictionary, ios::binary);
+	ASSERT_TRUE(ifs.is_open());
+	ifs.close();
 }
 
 TEST(outputter, writeAndReadDictionary)
@@ -404,7 +402,7 @@ TEST(outputter, writeAndReadDictionary)
 	//Write file
 	out.dictionary(outstring, output, true);
 
-	vector<CompactPair*> pairs;
+	vector<CompactPair> pairs;
 	unordered_set<unsigned int> termSet;
 	ifstream bitstream(outstring, ios::binary);
 

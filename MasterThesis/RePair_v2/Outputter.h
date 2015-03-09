@@ -12,7 +12,7 @@ public:
 	void Outputter::huffmanEncoding(
 		string outFile,
 		vector<SymbolRecord *>& sequenceArray,
-		unordered_map<unsigned int, HuffmanNode *> &huffmanCodes,
+		unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
 		bool firstBlock);
 	void Outputter::huffmanDictionary(
 		string outFile,
@@ -20,9 +20,9 @@ public:
 		unsigned int *firstCode,
 		unsigned int *numl,
 		unordered_map<unsigned int, Pair> &dictionary,
-		unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>*> &indices,
-		unordered_map<unsigned int, unsigned int> *terminalIndices,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>*> &huffmanToSymbol);
+		unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
+		unordered_map<unsigned int, unsigned int> &terminalIndices,
+		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
