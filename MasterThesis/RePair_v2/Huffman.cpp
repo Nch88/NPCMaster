@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+using namespace google;
+
 Huffman::Huffman()
 {
 }

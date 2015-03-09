@@ -290,10 +290,14 @@ void Outputter::all(
 	//Do Huffman encoding
 	Huffman h;
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
 
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
@@ -309,7 +313,11 @@ void Outputter::all(
 	vector<vector<CompactPair>> pairs;
 	vector<vector<CompactPair>> generationVectors;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	dense_hash_map<long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
 
 	finalDict.generateCompactDictionary(
 		dictionary,

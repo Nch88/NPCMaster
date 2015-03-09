@@ -197,7 +197,7 @@ int Initializer::SequenceArray(
 			if (c.timing)
 			{
 				t.start();
-				cout << "	Timing push back onto Sequence array" << endl;
+				cout << " - Timing: Timing push back onto Sequence array" << endl;
 			}
 			addToSequenceArray(sequenceArray, rightSymbol, index, symbolCount, terminals);
 			if (c.timing)
@@ -205,7 +205,7 @@ int Initializer::SequenceArray(
 				t.stop();
 				long long tmp = t.getTime();
 				if (tmp > 1)
-					cout << "	Time of push back onto Sequence array took " << tmp << " ms" << endl;
+					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
 			
 
@@ -222,7 +222,7 @@ int Initializer::SequenceArray(
 				if (c.timing)
 				{
 					t.start();
-					cout << "	Timing setup pair record" << endl;
+					cout << " - Timing: Timing setup pair record" << endl;
 				}
 				setupPairRecord(
 				(long)leftSymbol,
@@ -235,7 +235,7 @@ int Initializer::SequenceArray(
 					t.stop();
 					long long tmp = t.getTime();
 					if (tmp > 1)
-						cout << "	Time of setting up pair record took " << tmp << " ms" << endl;
+						cout << " - Timing: Time of setting up pair record took " << tmp << " ms" << endl;
 				}
 
 				skippedPair = false;
@@ -262,16 +262,12 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
 	PairRecord * tmpRecord;
-	MyTimer t;
 
 	if (c.verbose)
 	{
-		cout << "Initializing priority queue" << endl;
+		cout << " - Verbose: Initializing priority queue" << endl;
 	}
-	if (c.timing)
-	{
-		t.start();
-	}
+	
 
 	for each (auto leftSymbol in activePairs)
 	{
@@ -303,14 +299,10 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 		}
 	}
 
-	if (c.timing)
-	{
-		t.stop();
-		cout << "priority queue initialized in " << t.getTime() << " ms" << endl;
-	}
+	
 	if (c.verbose)
 	{
-		cout << "Initialized priority queue" << endl;
+		cout << " - Verbose: Initialized priority queue" << endl;
 	}
 
 }

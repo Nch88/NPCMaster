@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 	Initializer init;
 	Conditions c;
 	c.timing = true;
-	c.verbose = true;
+	c.verbose = false;
 	MyTimer t;
 	int r = 0;
 
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	string input5 = "world192.txt";
 	string input6 = "bible.txt";
 
-	filename = input1;
+	filename = input5;
 	
 
 	ifstream file(filename);

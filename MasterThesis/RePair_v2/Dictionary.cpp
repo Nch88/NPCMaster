@@ -112,7 +112,8 @@ void Dictionary::createFinalPairVectors(
 				//Record the index of this symbol
 				if (indices[leftSymbol].empty())
 				{
-					indices[leftSymbol].set_empty_key()
+					indices[leftSymbol].set_empty_key(-1);
+					indices[leftSymbol].set_deleted_key(-2);
 				}
 				((indices)[leftSymbol])[rightSymbol] = offset + j;
 			}
