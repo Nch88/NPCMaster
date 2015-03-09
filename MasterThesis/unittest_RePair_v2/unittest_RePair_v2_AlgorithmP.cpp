@@ -17,7 +17,7 @@ TEST(establishContext, adjacentSymbolsPreviousAndNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -67,7 +67,7 @@ TEST(establishContext, adjacentSymbolsNoPrevious)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -117,7 +117,7 @@ TEST(establishContext, adjacentSymbolsNoNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -167,7 +167,7 @@ TEST(establishContext, notAdjacentSymbols)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -240,7 +240,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGap)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -335,7 +335,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGaps)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -476,7 +476,7 @@ TEST(removeSymbolThreadingPointers, bothPreviousAndNextPointers)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -538,7 +538,7 @@ TEST(removeSymbolThreadingPointers, onlyPreviousPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -601,7 +601,7 @@ TEST(removeSymbolThreadingPointers, onlyNextPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -666,8 +666,8 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 	
@@ -746,8 +746,8 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -826,8 +826,8 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -906,8 +906,8 @@ TEST(updatePairRecord, countTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -1150,17 +1150,17 @@ TEST(addToPriorityQueueList, largeFrequency)
 TEST(incrementCountLeft, firstTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 0, left = 1;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100};
@@ -1181,16 +1181,16 @@ TEST(incrementCountLeft, firstTimeSeen)
 TEST(incrementCountRight, firstTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 1, next = 3;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100 };
@@ -1211,17 +1211,17 @@ TEST(incrementCountRight, firstTimeSeen)
 TEST(incrementCountLeft, secondTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 3, left = 4;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
@@ -1254,16 +1254,16 @@ TEST(incrementCountLeft, secondTimeSeen)
 TEST(incrementCountRight, secondTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 4, next = 6;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
@@ -1296,17 +1296,17 @@ TEST(incrementCountRight, secondTimeSeen)
 TEST(incrementCountLeft, thirdTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long previous = 6, left = 7;
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
@@ -1349,11 +1349,11 @@ TEST(incrementCountLeft, thirdTimeSeen)
 TEST(incrementCountRight, thirdTimeSeen)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	long left = 7, next = 9;
@@ -1399,16 +1399,16 @@ TEST(incrementCountRight, thirdTimeSeen)
 TEST(incrementCountLeft, skipTest)
 {
 	AlgorithmP algo;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(5);
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols = 65;
+	unordered_map<long, Pair> dictionary;
+	long symbols = 65;
 	Conditions c;
 
 	bool skip = false;
 
-	unsigned int symbol;
+	long symbol;
 	long index;
 
 	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
@@ -1543,8 +1543,8 @@ TEST(decrementCount, threePairsRemoveMiddle)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -1642,8 +1642,8 @@ TEST(decrementCountLeft, hasPrevious)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -1742,8 +1742,8 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -1842,8 +1842,8 @@ TEST(decrementCountRight, hasNext)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 
@@ -1931,8 +1931,8 @@ TEST(threadEmptySymbols, singleEmptySymbol)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -1988,8 +1988,8 @@ TEST(threadEmptySymbols, sequenceOfEmptySymbols)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2040,10 +2040,10 @@ TEST(replacePair, middleOfSequence)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2109,10 +2109,10 @@ TEST(replacePair, endOfSequence)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2178,10 +2178,10 @@ TEST(replacePair, severalEmptySymbols)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2247,10 +2247,10 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2316,10 +2316,10 @@ TEST(replacePair, deletingPairRecord)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2386,11 +2386,11 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
-	unordered_map<unsigned int, Pair> dictionary;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	unordered_map<long, Pair> dictionary;
 	vector<PairRecord*> priorityQueue;
-	unsigned int symbols(256);
-	unsigned int symbol;
+	long symbols(256);
+	long symbol;
 	long index;
 
 	bool skip = false;
@@ -2483,11 +2483,11 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 
 TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(256);
+	unordered_map<long, Pair> dictionary;
+	long symbols(256);
 
 	Initializer init;
 	Conditions c;
@@ -2504,7 +2504,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -2609,11 +2609,11 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 
 TEST(replaceAllInstancesOfPair, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -2630,7 +2630,7 @@ TEST(replaceAllInstancesOfPair, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -2658,11 +2658,11 @@ TEST(replaceAllInstancesOfPair, diddy)
 
 TEST(testingRun, diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(65);//A
+	unordered_map<long, Pair> dictionary;
+	long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -2680,7 +2680,7 @@ TEST(testingRun, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 
 	init.SequenceArray(
 		c,

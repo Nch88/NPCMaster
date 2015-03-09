@@ -12,17 +12,17 @@ public:
 	void Outputter::huffmanEncoding(
 		string outFile,
 		vector<SymbolRecord *>& sequenceArray,
-		unordered_map<unsigned int, HuffmanNode> &huffmanCodes,
+		unordered_map<long, HuffmanNode> &huffmanCodes,
 		bool firstBlock);
 	void Outputter::huffmanDictionary(
 		string outFile,
-		unsigned int maxLength,
-		unsigned int *firstCode,
-		unsigned int *numl,
-		unordered_map<unsigned int, Pair> &dictionary,
-		unordered_map <unsigned int, unordered_map<unsigned int, unsigned int>> &indices,
-		unordered_map<unsigned int, unsigned int> &terminalIndices,
-		unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> &huffmanToSymbol);
+		long maxLength,
+		long *firstCode,
+		long *numl,
+		unordered_map<long, Pair> &dictionary,
+		unordered_map <long, unordered_map<long, long>> &indices,
+		unordered_map<long, long> &terminalIndices,
+		unordered_map<long, unordered_map<long, long>> &huffmanToSymbol);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
@@ -35,10 +35,10 @@ public:
 		string filename,
 		bool firstBlock,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_map<unsigned int, Pair>& dictionary,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>>& activePairs,
+		unordered_map<long, Pair>& dictionary,
+		unordered_map<long, unordered_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unordered_set<unsigned int>& terminals,
+		unordered_set<long>& terminals,
 		Conditions& c);
 };
 

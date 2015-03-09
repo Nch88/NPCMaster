@@ -8,11 +8,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(65);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(65);
 //
 //	Initializer init;
 //	Conditions c;
@@ -128,11 +128,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(65);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(65);
 //
 //	Initializer init;
 //	Conditions c;
@@ -225,11 +225,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;
@@ -309,11 +309,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;
@@ -391,11 +391,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;
@@ -481,11 +481,11 @@
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;
@@ -572,11 +572,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+//	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//unordered_map<unsigned int, Pair> dictionary;
-//	unsigned int symbols(256);
+//	//unordered_map<long, Pair> dictionary;
+//	long symbols(256);
 //
 //	Initializer init;
 //	Conditions c;

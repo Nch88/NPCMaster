@@ -20,18 +20,18 @@ int Algorithm::run(
 	AlgorithmP algP,
 	MyTimer t,
 	int blockSize,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	unordered_map<unsigned int, Pair> & dictionary,
-	unsigned int & symbols)
+	unordered_map<long, Pair> & dictionary,
+	long & symbols)
 {
 	int priorityQueueSize;
 	bool firstBlock = true;
 	Huffman h;
 	Outputter out;
-	unordered_map<unsigned int, HuffmanNode *> huffmanCodes;
-	unordered_set<unsigned int> terminals;
+	unordered_map<long, HuffmanNode *> huffmanCodes;
+	unordered_set<long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())

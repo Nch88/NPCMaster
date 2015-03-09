@@ -12,7 +12,7 @@ Initializer::~Initializer()
 }
 
 void Initializer::resetCompleted(
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	int blockSize)
 {
@@ -39,7 +39,7 @@ void Initializer::resetCompleted(
 }
 
 void Initializer::resetForNextBlock(
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
 	int blockSize)
@@ -73,10 +73,10 @@ void Initializer::resetForNextBlock(
 }
 
 void Initializer::setupPairRecord(
-	unsigned int leftSymbol,
-	unsigned int rightSymbol,
+	long leftSymbol,
+	long rightSymbol,
 	int offset,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
 	PairTracker * currentTracker;
@@ -139,16 +139,16 @@ void Initializer::addToSequenceArray(
 	char & symbol,
 	long & index,
 	int & symbolCount,
-	unordered_set<unsigned int>& terminals)
+	unordered_set<long>& terminals)
 {
 	terminals.emplace(symbol);
 	if (index < sequenceArray.size())
 	{
-		sequenceArray[index]->symbol = (unsigned int)symbol;
+		sequenceArray[index]->symbol = (long)symbol;
 	}
 	else
 	{
-		sequenceArray.push_back(new SymbolRecord((unsigned int)symbol, index));
+		sequenceArray.push_back(new SymbolRecord((long)symbol, index));
 	}	
 	index++;
 	symbolCount++;
@@ -158,9 +158,9 @@ int Initializer::SequenceArray(
 	Conditions c,
 	ifstream & file,
 	int & blockSize,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_set<unsigned int>& terminals)
+	unordered_set<long>& terminals)
 {
 	char previousSymbol;
 	char leftSymbol;
@@ -180,8 +180,8 @@ int Initializer::SequenceArray(
 			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount, terminals);
 			
 			setupPairRecord(
-				(unsigned int)previousSymbol,
-				(unsigned int)leftSymbol,
+				(long)previousSymbol,
+				(long)leftSymbol,
 				0,
 				activePairs,
 				sequenceArray);
@@ -220,8 +220,8 @@ int Initializer::SequenceArray(
 					cout << "	Timing setup pair record" << endl;
 				}
 				setupPairRecord(
-				(unsigned int)leftSymbol,
-				(unsigned int)rightSymbol,
+				(long)leftSymbol,
+				(long)rightSymbol,
 				index - 2,
 				activePairs,
 				sequenceArray);
@@ -251,7 +251,7 @@ int Initializer::SequenceArray(
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+	unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 	vector<PairRecord*> & priorityQueue,
 	Conditions & c)
 {

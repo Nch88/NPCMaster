@@ -2,16 +2,16 @@
 class HuffmanNode
 {
 public:
-	unsigned int symbol;
+	long symbol;
 	int frequency;
 	string code;
 	HuffmanNode * leftChild;
 	HuffmanNode * rightChild;
 
 	HuffmanNode();
-	HuffmanNode(unsigned int symbol, int frequency);	
+	HuffmanNode(long symbol, int frequency);	
 	HuffmanNode(
-		unsigned int symbol, 
+		long symbol, 
 		int frequency, 
 		HuffmanNode *& leftChild, 
 		HuffmanNode *& rightChild);

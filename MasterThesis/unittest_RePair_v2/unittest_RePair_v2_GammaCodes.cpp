@@ -41,11 +41,11 @@ TEST(gammaCodes, getGammaCode)
 
 TEST(gammaCodes, encode_diddy_explicit)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);
 
 	Initializer init;
 	Conditions c;
@@ -63,7 +63,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -95,8 +95,8 @@ TEST(gammaCodes, encode_diddy_explicit)
 
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, unordered_map<long, long>> indices;
+	unordered_map<long, long> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -112,11 +112,11 @@ TEST(gammaCodes, encode_diddy_explicit)
 	//This is encode explicit
 	int generations = generationVectors.size();
 	int genP1 = 0;
-	unsigned int firstElement = 0;
+	long firstElement = 0;
 	string fstElmtGamma = "";
 
 	//Sort terminals
-	vector<unsigned int> terminalVector;
+	vector<long> terminalVector;
 	//terminalVector.resize(terminals.size());
 	//terminalVector.assign(terminals.begin(), terminals.end());
 	for each (auto entry in terminals)
@@ -280,11 +280,11 @@ TEST(gammaCodes, encode_diddy_explicit)
 
 TEST(gammaCodes, encode_diddy)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);
 
 	Initializer init;
 	Conditions c;
@@ -302,7 +302,7 @@ TEST(gammaCodes, encode_diddy)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -334,8 +334,8 @@ TEST(gammaCodes, encode_diddy)
 
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, unordered_map<long, long>> indices;
+	unordered_map<long, long> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	string terminalsGamma = "";
@@ -454,11 +454,11 @@ TEST(gammaCodes, encode_diddy)
 
 TEST(gammaCodes, diddy_makeFinalString)
 {
-	unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> activePairs;
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<unsigned int, Pair> dictionary;
-	unsigned int symbols(initialSymbolValue);
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);
 
 	Initializer init;
 	Conditions c;
@@ -476,7 +476,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<unsigned int> terminals;
+	unordered_set<long> terminals;
 	string filename = input1;
 	ifstream file(filename);
 
@@ -508,8 +508,8 @@ TEST(gammaCodes, diddy_makeFinalString)
 
 	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
-	unordered_map<unsigned int, unordered_map<unsigned int, unsigned int>> indices;
-	unordered_map<unsigned int, unsigned int> terminalIndices;
+	unordered_map<long, unordered_map<long, long>> indices;
+	unordered_map<long, long> terminalIndices;
 	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
 
 	//Test variables
@@ -645,10 +645,10 @@ TEST(gammaCodes, binaryToInt)
 TEST(gammaCodes, decodeGammaString_simple)
 {
 	GammaCode gc;
-	vector<unsigned int> result;
+	vector<long> result;
 	string prefix = "0100101110";
 	string gamma = "0011001110101101111100001110001111001011100111110100111010111101101110111";
-	unsigned int expected = 15;
+	long expected = 15;
 
 	gc.decodeGammaString(prefix, gamma, result, expected);
 
@@ -662,10 +662,10 @@ TEST(gammaCodes, decodeGammaString_simple)
 TEST(gammaCodes, decodeGammaString_remainder)
 {
 	GammaCode gc;
-	vector<unsigned int> result;
+	vector<long> result;
 	string prefix = "0100101110";
 	string gamma = "001100111010110111110000111000111100101110011111010011101011110110111011111010101";
-	unsigned int expected = 15;
+	long expected = 15;
 
 	gc.decodeGammaString(prefix, gamma, result, expected);
 
@@ -679,10 +679,10 @@ TEST(gammaCodes, decodeGammaString_remainder)
 TEST(gammaCodes, decodeGammaString_empty)
 {
 	GammaCode gc;
-	vector<unsigned int> result;
+	vector<long> result;
 	string prefix = "101010101010101";
 	string gamma = "110100010111010100010101010101101001011";
-	unsigned int expected = 0;
+	long expected = 0;
 
 	gc.decodeGammaString(prefix, gamma, result, expected);
 

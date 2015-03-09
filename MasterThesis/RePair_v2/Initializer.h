@@ -9,11 +9,11 @@ public:
 	~Initializer();
 
 	void Initializer::resetCompleted(
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		int blockSize);
 	void resetForNextBlock(
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue,
 		int blockSize);
@@ -22,22 +22,22 @@ public:
 		char & symbol,
 		long & index,
 		int & symbolCount,
-		unordered_set<unsigned int>& terminals);
+		unordered_set<long>& terminals);
 	int SequenceArray(
 		Conditions c,
 		ifstream & file,
 		int & blockSize,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_set<unsigned int>& terminals);
+		unordered_set<long>& terminals);
 	void setupPairRecord(
-		unsigned int leftSymbol,
-		unsigned int rightSymbol,
+		long leftSymbol,
+		long rightSymbol,
 		int offset,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 		vector<SymbolRecord*> & sequenceArray);
 	void PriorityQueue(int priorityQueueSize,
-		unordered_map<unsigned int, unordered_map<unsigned int, PairTracker>> & activePairs,
+		unordered_map<long, unordered_map<long, PairTracker>> & activePairs,
 		vector<PairRecord*> & priorityQueue,
 		Conditions & c);
 };

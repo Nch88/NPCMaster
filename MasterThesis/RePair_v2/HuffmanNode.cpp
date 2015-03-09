@@ -11,7 +11,7 @@ HuffmanNode::HuffmanNode()
 	this->code = "";
 }
 
-HuffmanNode::HuffmanNode(unsigned int symbol, int frequency)
+HuffmanNode::HuffmanNode(long symbol, int frequency)
 {
 	this->symbol = symbol;
 	this->frequency = frequency;
@@ -20,7 +20,7 @@ HuffmanNode::HuffmanNode(unsigned int symbol, int frequency)
 	this->code = "";
 }
 HuffmanNode::HuffmanNode(
-	unsigned int symbol,
+	long symbol,
 	int frequency,
 	HuffmanNode *& leftChild,
 	HuffmanNode *& rightChild)

@@ -5,7 +5,7 @@ CompactPair::CompactPair()
 {
 }
 
-CompactPair::CompactPair(unsigned int left, unsigned int right)
+CompactPair::CompactPair(long left, long right)
 {
 	leftSymbol = left;
 	rightSymbol = right;
