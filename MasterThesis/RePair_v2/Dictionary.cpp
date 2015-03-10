@@ -155,12 +155,26 @@ void Dictionary::decodeSymbol(
 	vector<long> &decodedTerms,
 	string &finalOutput)
 {
-	if (symbolIndex < initialSymbolValue)
+	if (symbolIndex < decodedTerms.size())
 		finalOutput += decodedTerms[symbolIndex];
 	else
 	{
 		//Recursively decode left and right symbol
-		decodeSymbol(decodedPairs[symbolIndex].leftSymbol, decodedPairs, decodedTerms, finalOutput);
-		decodeSymbol(decodedPairs[symbolIndex].rightSymbol, decodedPairs, decodedTerms, finalOutput);
+		decodeSymbol(decodedPairs[symbolIndex - decodedTerms.size()].leftSymbol, decodedPairs, decodedTerms, finalOutput);
+		decodeSymbol(decodedPairs[symbolIndex - decodedTerms.size()].rightSymbol, decodedPairs, decodedTerms, finalOutput);
+	}
+}
+
+void Dictionary::expandDictionary(
+	vector<CompactPair> &decodedPairs, 
+	vector<long> &decodedTerms, 
+	unordered_map<long, string> &expandedDict)
+{
+	string s;
+	for (long i = 0; i < decodedPairs.size(); ++i)
+	{
+		s.assign("");
+		decodeSymbol(i, decodedPairs, decodedTerms, s);
+		expandedDict[i].assign(s);
 	}
 }

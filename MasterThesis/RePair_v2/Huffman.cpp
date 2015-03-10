@@ -449,11 +449,10 @@ void Huffman::decodeDictionary(
 
 void Huffman::decode(
 	long *firstCode,
-	string filename,
+	ifstream &bitstream,
 	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
 	vector<long> &symbolIndexSequence)
 {
-	ifstream bitstream(filename, ios::binary);
 	if (bitstream.is_open())
 	{
 		int length = 0;

@@ -84,7 +84,7 @@ public:
 		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices);
 	void Huffman::decode(
 		long *firstCode,
-		string filename,
+		ifstream &bitstream,
 		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
 		vector<long> &symbolIndexSequence);
 };
