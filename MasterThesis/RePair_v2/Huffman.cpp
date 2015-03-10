@@ -16,7 +16,7 @@ void Huffman::getFrequencies(
 	dense_hash_map<long, HuffmanNode> & frequencies,
 	long &cardinality)
 {
-	for each (auto symbolRecord in sequenceArray)
+	for each (auto &symbolRecord in sequenceArray)
 	{
 		if (symbolRecord->symbol != 0)
 		{
@@ -58,7 +58,7 @@ void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
 		rightChild->code += one;
 	}
 }
-//TODO: fix sift, something is wrong when heapsize is 2
+
 void Huffman::sift(
 	int currentNodeIndex,
 	int heapSize,
@@ -247,7 +247,7 @@ void Huffman::generateCanonicalHuffmanCodes(
 	{
 		int codeLength = codeLengths[cardinality + i];
 		string code = codeToString(nextCode[codeLength - 1], codeLength);
-		huffmanNode.second.code = code;
+		huffmanNode.second.code.assign(code);
 
 		if (huffmanToSymbol[codeLength].empty())
 		{

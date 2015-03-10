@@ -231,11 +231,6 @@ void AlgorithmP::moveDownInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
-	if (tracker->pairRecord->count < 2)
-		//DEBUG
-	{
-		int x = 0;
-	}
 	if (tracker->pairRecord->count == 2)
 	{
 		removeFromPriorityQueueList(0, tracker, priorityQueue);
@@ -257,11 +252,6 @@ void AlgorithmP::moveUpInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
-	if (tracker->pairRecord->count < 2)
-		//DEBUG
-	{
-		int x = 0;
-	}
 	if (tracker->pairRecord->count - 1 < priorityQueue.size())
 	{
 		removeFromPriorityQueueList(
@@ -306,7 +296,7 @@ void AlgorithmP::decrementCountLeft(
 {	
 	if (indexSymbolPrevious >= 0)
 	{
-		PairTracker * tracker;
+		PairTracker * tracker = nullptr;
 		tracker = 
 			&activePairs[sequenceArray[indexSymbolPrevious]->symbol]
 						[sequenceArray[indexSymbolLeft]->symbol];
@@ -315,11 +305,6 @@ void AlgorithmP::decrementCountLeft(
 			(sequenceArray[indexSymbolPrevious]->next ||
 			sequenceArray[indexSymbolPrevious]->previous))
 		{
-			if (tracker->pairRecord->count < 2)
-				//DEBUG
-			{
-				int x = 0;
-			}
 			decrementCount(
 				indexSymbolPrevious,
 				indexSymbolLeft,
@@ -347,7 +332,7 @@ void AlgorithmP::decrementCountRight(
 {
 	if (indexSymbolNext >= 0)
 	{
-		PairTracker * tracker;
+		PairTracker * tracker = nullptr;
 		tracker =
 			&activePairs[sequenceArray[indexSymbolRight]->symbol]
 			[sequenceArray[indexSymbolNext]->symbol];
@@ -357,11 +342,6 @@ void AlgorithmP::decrementCountRight(
 			(sequenceArray[indexSymbolRight]->next ||
 			sequenceArray[indexSymbolRight]->previous))
 		{
-			if (tracker->pairRecord->count < 2)
-				//DEBUG
-			{
-				int x = 0;
-			}
 			decrementCount(
 				indexSymbolRight,
 				indexSymbolNext,
@@ -406,10 +386,10 @@ void AlgorithmP::replacePair(
 	long & Symbols,
 	Conditions& c)
 {
-	SymbolRecord * leftSymbolRecord;
-	SymbolRecord * rightSymbolRecord;
-	SymbolRecord * nextSymbolRecord;
-	PairRecord * oldPair;
+	SymbolRecord * leftSymbolRecord = nullptr;
+	SymbolRecord * rightSymbolRecord = nullptr;
+	SymbolRecord * nextSymbolRecord = nullptr;
+	PairRecord * oldPair = nullptr;
 
 	leftSymbolRecord = sequenceArray[indexSymbolLeft];
 	rightSymbolRecord = sequenceArray[indexSymbolRight];
@@ -766,8 +746,8 @@ void AlgorithmP::manageOneEntryOnList(
 	CompactionData &cData,
 	Conditions& c)
 {
-	PairRecord * tmpPairRecord;
-	long sequenceIndex;
+	PairRecord * tmpPairRecord = nullptr;
+	long sequenceIndex = -1;
 
 	tmpPairRecord = priorityQueue[i];
 	sequenceIndex = tmpPairRecord->arrayIndexFirst;
@@ -871,8 +851,8 @@ void AlgorithmP::manageHighPriorityList(
 	CompactionData &cData,
 	Conditions& c)
 {
-	PairRecord * tmpPairRecord;
-	PairRecord * tmpPairRecordSelected;
+	PairRecord * tmpPairRecord = nullptr;
+	PairRecord * tmpPairRecordSelected = nullptr;
 	long sequenceIndex = 0;
 	long last = priorityQueue.size() - 1;
 

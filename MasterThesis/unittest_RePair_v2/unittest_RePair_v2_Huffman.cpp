@@ -70,47 +70,53 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
-
-	for (int i = cardinality; i < cardinality * 2; i++)
+	int j = 0;
+	for (j = cardinality; j < cardinality * 2; j++)
 	{
-		if (i == cardinality + 2 || i == cardinality + 6 || i == cardinality + 7)
-			ASSERT_EQ(2, codeLengths[i]);
+		if (j == cardinality + 0 || j == cardinality + 3 || j == cardinality + 4)
+			ASSERT_EQ(2, codeLengths[j]);
 		else
-			ASSERT_EQ(1, codeLengths[i]);
-		ASSERT_EQ(i, codeLengths[i - cardinality]);
+			ASSERT_EQ(1, codeLengths[j]);
+		ASSERT_EQ(j, codeLengths[j - cardinality]);
 	}
 
 	int heapSize = cardinality;
 	h.initMinHeap(heapSize, codeLengths);
+	vector<int> testCodelengths;
+
+	for (int i = 0; i < cardinality * 2; i++)
+	{
+		testCodelengths.push_back(codeLengths[i]);
+	}
 
 	for (int i = 0; i < heapSize; i++)
 	{
 		if (i == 0)
-			ASSERT_EQ(12, codeLengths[i]);
-		if (i == 1)
 			ASSERT_EQ(13, codeLengths[i]);
+		if (i == 1)
+			ASSERT_EQ(19, codeLengths[i]);
 		if (i == 2)
-			ASSERT_EQ(17, codeLengths[i]);
+			ASSERT_EQ(14, codeLengths[i]);
 		if (i == 3)
-			ASSERT_EQ(15, codeLengths[i]);
+			ASSERT_EQ(20, codeLengths[i]);
 		if (i == 4)
-			ASSERT_EQ(16, codeLengths[i]);
+			ASSERT_EQ(21, codeLengths[i]);
 		if (i == 5)
-			ASSERT_EQ(23, codeLengths[i]);
+			ASSERT_EQ(17, codeLengths[i]);
 		if (i == 6)
 			ASSERT_EQ(18, codeLengths[i]);
 		if (i == 7)
-			ASSERT_EQ(19, codeLengths[i]);
+			ASSERT_EQ(15, codeLengths[i]);
 		if (i == 8)
-			ASSERT_EQ(20, codeLengths[i]);
+			ASSERT_EQ(12, codeLengths[i]);
 		if (i == 9)
-			ASSERT_EQ(21, codeLengths[i]);
+			ASSERT_EQ(16, codeLengths[i]);
 		if (i == 10)
 			ASSERT_EQ(22, codeLengths[i]);
 		if (i == 11)
-			ASSERT_EQ(14, codeLengths[i]);
+			ASSERT_EQ(23, codeLengths[i]);
 
-		if (i == 6 || i == 7 || i == 11)
+		if (i == 7 || i == 8 || i == 9)
 			ASSERT_EQ(2, codeLengths[codeLengths[i]]);
 		else
 			ASSERT_EQ(1, codeLengths[codeLengths[i]]);
@@ -203,6 +209,13 @@ TEST(testingHuffman, collapseSymbols)
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
 
+	vector<int> testCodelengths;
+
+	for (int i = 0; i < cardinality * 2; i++)
+	{
+		testCodelengths.push_back(codeLengths[i]);
+	}
+
 	ASSERT_EQ(1, codeLengths[0]);
 	ASSERT_EQ(15, codeLengths[1]);
 
@@ -238,6 +251,7 @@ TEST(testingHuffman, phaseThree)
 	string filename = input1;
 	ifstream file(filename);
 	unordered_set<long> terminals;
+	
 	init.SequenceArray(
 		c,
 		file,
@@ -245,7 +259,7 @@ TEST(testingHuffman, phaseThree)
 		activePairs,
 		sequenceArray,
 		terminals);
-
+	
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
@@ -263,6 +277,7 @@ TEST(testingHuffman, phaseThree)
 		terminals,
 		symbols,
 		c);
+	
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
@@ -294,17 +309,26 @@ TEST(testingHuffman, phaseThree)
 
 	h.collapseHuffmanTree(heapSize, codeLengths);
 
+	
+
 	ASSERT_EQ(1, codeLengths[0]);
 	ASSERT_EQ(15, codeLengths[1]);
 	long maxLength = 0;
 	h.expandHuffmanTree(cardinality, codeLengths, maxLength);
 
+	vector<int> testCodelengths;
+
+	for (int i = 0; i < cardinality * 2; i++)
+	{
+		testCodelengths.push_back(codeLengths[i]);
+	}
+
 	for (int i = cardinality; i < cardinality * 2; i++)
 	{
-		if (i == 14 ||
-			i == 18 || 
-			i == 19 || 
-			i == 23)
+		if (i == 12 ||
+			i == 15 || 
+			i == 16 || 
+			i == 18)
 			ASSERT_EQ(3, codeLengths[i]);
 		else
 			ASSERT_EQ(4, codeLengths[i]);
@@ -415,18 +439,28 @@ TEST(testingHuffman, generateCodes)
 	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
-	ASSERT_EQ("0000", huffmanCodes[115].code);
-	ASSERT_EQ("0001", huffmanCodes[104].code);
+	vector<long> testhuffmanCodessymbols;
+	vector<string> testhuffmanCodes;
+
+	for (auto &entry : huffmanCodes)
+	{
+		testhuffmanCodes.push_back(entry.second.code);
+		testhuffmanCodessymbols.push_back(entry.first);
+	}
+		
+
+	ASSERT_EQ("0011", huffmanCodes[115].code);
+	ASSERT_EQ("0000", huffmanCodes[104].code);
 	ASSERT_EQ("100", huffmanCodes[72].code);
-	ASSERT_EQ("0010", huffmanCodes[97].code);
-	ASSERT_EQ("0011", huffmanCodes[65].code);
-	ASSERT_EQ("0100", huffmanCodes[119].code);
-	ASSERT_EQ("101", huffmanCodes[111].code);
-	ASSERT_EQ("110", huffmanCodes[70].code);
+	ASSERT_EQ("111", huffmanCodes[97].code);
+	ASSERT_EQ("0010", huffmanCodes[65].code);
+	ASSERT_EQ("0110", huffmanCodes[119].code);
+	ASSERT_EQ("110", huffmanCodes[111].code);
+	ASSERT_EQ("101", huffmanCodes[70].code);
 	ASSERT_EQ("0101", huffmanCodes[46].code);
-	ASSERT_EQ("0110", huffmanCodes[69].code);
-	ASSERT_EQ("0111", huffmanCodes[117].code);
-	ASSERT_EQ("111", huffmanCodes[109].code);
+	ASSERT_EQ("0100", huffmanCodes[69].code);
+	ASSERT_EQ("0001", huffmanCodes[117].code);
+	ASSERT_EQ("0111", huffmanCodes[109].code);
 }
 
 TEST(testingHuffman, generateCodesExampleFromBook1)

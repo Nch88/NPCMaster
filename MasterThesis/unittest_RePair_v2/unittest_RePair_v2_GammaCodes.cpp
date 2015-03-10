@@ -406,15 +406,15 @@ TEST(gammaCodes, encode_diddy)
 		if (i == 0) //Test
 		{
 			string gam1 = gc.getGammaCode(0);
-			string gam2 = gc.getGammaCode(7);
+			string gam2 = gc.getGammaCode(5);
 			string gamRes = gam1 + gam2;
 
 			ASSERT_EQ(gamRes, leftElementsGammas[i]);
 		}
 		if (i == 1) //Test
 		{
-			string gam1 = gc.getGammaCode(5);
-			string gam2 = gc.getGammaCode(7);
+			string gam1 = gc.getGammaCode(12);
+			string gam2 = gc.getGammaCode(2);
 			string gamRes = gam1 + gam2;
 
 			ASSERT_EQ(gamRes, leftElementsGammas[i]);
@@ -449,15 +449,15 @@ TEST(gammaCodes, encode_diddy)
 	{
 		if (i == 0) //Test
 		{
-			ASSERT_EQ("00100011", rightElementsBinaries[i]);
+			ASSERT_EQ("00100111", rightElementsBinaries[i]);
 		}
 		if (i == 1) //Test
 		{
-			ASSERT_EQ("11101101", rightElementsBinaries[i]);
+			ASSERT_EQ("11010011", rightElementsBinaries[i]);
 		}
 		if (i == 2) //Test
 		{
-			ASSERT_EQ("10000", rightElementsBinaries[i]);
+			ASSERT_EQ("01111", rightElementsBinaries[i]);
 		}
 		if (i == 3) //Test
 		{
@@ -587,21 +587,21 @@ TEST(gammaCodes, diddy_makeFinalString)
 	finalExpectedResult += gc.getGammaCode(2);
 	finalExpectedResult += gc.getGammaCode(12);
 	finalExpectedResult += gc.getGammaCode(0);
-	finalExpectedResult += gc.getGammaCode(7);
-	finalExpectedResult += "00100011";
+	finalExpectedResult += gc.getGammaCode(5);
+	finalExpectedResult += "00100111";
 
 	//Generation 2
 	finalExpectedResult += gc.getGammaCode(2);
 	finalExpectedResult += gc.getGammaCode(14);
-	finalExpectedResult += gc.getGammaCode(5);
-	finalExpectedResult += gc.getGammaCode(7);
-	finalExpectedResult += "11101101";
+	finalExpectedResult += gc.getGammaCode(12);
+	finalExpectedResult += gc.getGammaCode(2);
+	finalExpectedResult += "11010011";
 
 	//Generation 3
 	finalExpectedResult += gc.getGammaCode(1);
 	finalExpectedResult += gc.getGammaCode(16);
 	finalExpectedResult += gc.getGammaCode(2);
-	finalExpectedResult += "10000";
+	finalExpectedResult += "01111";
 
 	//Generation 4
 	finalExpectedResult += gc.getGammaCode(1);
