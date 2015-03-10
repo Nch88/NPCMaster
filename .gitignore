@@ -21,3 +21,5 @@ MasterThesis/unittest_RePair_v2/testHuffmanDictionary
 MasterThesis/unittest_RePair_v2/testDuplicatesLongCompressed
 MasterThesis/unittest_RePair_v2/diddy.txt.dict.NPC
 *.NPC
+*.orig
+MasterThesis/unittest_RePair_v2/testWriteDictionaryDiddy
