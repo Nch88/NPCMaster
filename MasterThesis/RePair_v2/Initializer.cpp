@@ -43,7 +43,8 @@ void Initializer::resetForNextBlock(
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	int blockSize)
+	unordered_set<long> & terminals,
+	dense_hash_map<long, Pair> dictionary)
 {
 	//Reset for next block
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -71,6 +72,11 @@ void Initializer::resetForNextBlock(
 		}
 	}
 	activePairs.clear();
+
+	terminals.clear();
+	
+	dictionary.clear();
+	dictionary.resize(0);
 }
 
 void Initializer::setupPairRecord(

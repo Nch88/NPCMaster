@@ -522,3 +522,88 @@ TEST(outputter, readAndWriteDictionary_diddy)
 
 	//ASSERT_EQ(terminals, decodedTerms);
 }
+
+
+TEST(outputter, all_world192)
+{
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+	GammaCode gc;
+
+	string input1 = "world192.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<long> terminals;
+	vector<vector<CompactPair>> pairs;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
+	dense_hash_map <long, long> terminalIndices;
+	terminalIndices.set_empty_key(-1);
+	terminalIndices.set_deleted_key(-2);
+	vector<vector<CompactPair>> generationVectors;
+	string filename = input1;
+	ifstream file(filename);
+	bool firstBlock = true;
+
+	int loopcount = 1;
+
+	while (file.is_open())
+	{		
+		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
+		
+		priorityQueueSize = sqrt(sequenceArray.size());
+		priorityQueue.resize(priorityQueueSize);
+		
+		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);		
+		
+		algP.run(
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			terminals,
+			symbols,
+			c);		
+		if (loopcount == 2)
+		{
+			int x = 0;
+		}
+		out.all(
+			filename,
+			firstBlock,
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			terminals,
+			c);		
+
+		firstBlock = false;		
+		if (loopcount == 1)
+		{
+			int x = 0;
+		}
+		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);	
+		
+		++loopcount;
+	}
+}

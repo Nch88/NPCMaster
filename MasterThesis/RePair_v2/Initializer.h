@@ -13,11 +13,12 @@ public:
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		int blockSize);
-	void resetForNextBlock(
+	void Initializer::resetForNextBlock(
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue,
-		int blockSize);
+		unordered_set<long> & terminals,
+		dense_hash_map<long, Pair> dictionary);
 	void addToSequenceArray(
 		vector<SymbolRecord*> & sequenceArray,
 		char & symbol,
