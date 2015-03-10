@@ -119,7 +119,7 @@ int Algorithm::run(
 		{
 			cout << " - Verbose: Resetting for next block" << endl;
 		}
-		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);
 		if (c.timing)
 		{
 			t.stop();

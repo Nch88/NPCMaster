@@ -5,8 +5,8 @@ public:
 	long symbol;
 	int frequency;
 	string code;
-	HuffmanNode * leftChild;
-	HuffmanNode * rightChild;
+	HuffmanNode * leftChild = nullptr;
+	HuffmanNode * rightChild = nullptr;
 
 	HuffmanNode();
 	HuffmanNode(long symbol, int frequency);	

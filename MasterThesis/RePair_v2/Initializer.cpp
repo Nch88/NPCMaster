@@ -76,7 +76,6 @@ void Initializer::resetForNextBlock(
 	terminals.clear();
 	
 	dictionary.clear();
-	dictionary.resize(0);
 }
 
 void Initializer::setupPairRecord(

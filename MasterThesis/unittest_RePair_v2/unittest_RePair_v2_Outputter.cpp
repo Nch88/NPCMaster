@@ -602,7 +602,7 @@ TEST(outputter, all_world192)
 		{
 			int x = 0;
 		}
-		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);	
+		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);	
 		
 		++loopcount;
 	}
