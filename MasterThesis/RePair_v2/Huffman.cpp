@@ -436,11 +436,10 @@ void Huffman::decodeDictionary(
 
 void Huffman::decode(
 	long *firstCode,
-	string filename,
+	ifstream &bitstream,
 	unordered_map<long, unordered_map<long, long>> &symbolIndices,
 	vector<long> &symbolIndexSequence)
 {
-	ifstream bitstream(filename, ios::binary);
 	if (bitstream.is_open())
 	{
 		int length = 0;

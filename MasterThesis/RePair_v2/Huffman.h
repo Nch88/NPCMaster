@@ -84,7 +84,7 @@ public:
 		unordered_map<long, unordered_map<long, long>> &symbolIndices);
 	void Huffman::decode(
 		long *firstCode,
-		string filename,
+		ifstream &bitstream,
 		unordered_map<long, unordered_map<long, long>> &symbolIndices,
 		vector<long> &symbolIndexSequence);
 };
