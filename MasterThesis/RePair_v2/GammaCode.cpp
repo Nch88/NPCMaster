@@ -328,45 +328,59 @@ void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream
 	}
 }
 
+void GammaCode::processBinary(int binarySize, int count, string chunk, vector<long> &values, string &prefix)
+{
+	int i = 0;
+	string subString = "";
+	//Add as many binary numbers as possible until we run out of data or reach count
+	while (i + binarySize < chunk.size() && values.size() < count)
+	{
+		subString.assign(chunk.substr(i, binarySize));
+		values.push_back(binaryToInt(subString));
+		i += binarySize;
+	}
+
+	//If anything is left of the chunk, save it as prefix
+	if (i != chunk.size())
+	{
+		prefix.assign(chunk.substr(i, string::npos));
+	}
+}
+
 void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values, ifstream &bitstream, string &prefix)
 {
-	if (bitstream.is_open())
+	processBinary(binarySize, count, prefix, values, prefix);
+	if (values.size() != count)
 	{
-		char rawChunk1 = 0;
-		char rawChunk2 = 0;
-		char rawChunk3 = 0;
-		char rawChunk4 = 0;
-		Huffman huff;
-		string chunk = "", subString = "";
 
-		if (!bitstream.eof())
+		if (bitstream.is_open())
 		{
-			bitstream.get(rawChunk1);
-			bitstream.get(rawChunk2);
-			bitstream.get(rawChunk3);
-			bitstream.get(rawChunk4);
+			char rawChunk1 = 0;
+			char rawChunk2 = 0;
+			char rawChunk3 = 0;
+			char rawChunk4 = 0;
+			Huffman huff;
+			string chunk;
+			chunk.assign("");
+			while (values.size() != count)
+			{
+				if (!bitstream.eof())
+				{
+					bitstream.get(rawChunk1);
+					bitstream.get(rawChunk2);
+					bitstream.get(rawChunk3);
+					bitstream.get(rawChunk4);
 
-			huff.fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
-		}
-		else
-			chunk = "";
+					huff.fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+				}
+				else
+					chunk.assign("");
 
-		//Prepend prefix
-		chunk = prefix + chunk;
+				//Prepend prefix
+				chunk.assign(prefix + chunk);
 
-		int i = 0;
-		//Add as many binary numbers as possible until we run out of data or reach count
-		while (i + binarySize < chunk.size() && values.size() < count)
-		{
-			subString = chunk.substr(i, binarySize);
-			values.push_back(this->binaryToInt(subString));
-			i += binarySize;
-		}
-
-		//If anything is left of the chunk, save it as prefix
-		if (i != chunk.size())
-		{
-			prefix = chunk.substr(i, string::npos);
+				processBinary(binarySize, count, chunk, values, prefix);
+			}
 		}
 	}
 }
