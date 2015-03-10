@@ -168,7 +168,7 @@ void Dictionary::decodeSymbol(
 void Dictionary::expandDictionary(
 	vector<CompactPair> &decodedPairs, 
 	vector<long> &decodedTerms, 
-	unordered_map<long, string> &expandedDict)
+	dense_hash_map<long, string> &expandedDict)
 {
 	string s;
 	for (long i = 0; i < decodedPairs.size(); ++i)

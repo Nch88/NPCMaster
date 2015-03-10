@@ -23,10 +23,14 @@ string Decoder::getOutfileName(string in)
 
 void Decoder::decode(string inFile)
 {
-	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	unordered_map<long, Pair> dictionary;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
 	long symbols(initialSymbolValue);//256
 
 	AlgorithmP algP;
@@ -37,7 +41,9 @@ void Decoder::decode(string inFile)
 
 	unordered_set<long> terminals;
 	vector<CompactPair> pairs;
-	unordered_map <long, unordered_map<long, long>> indices;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
 	ifstream file(inFile);
 	bool firstBlock = true;
 
@@ -48,10 +54,14 @@ void Decoder::decode(string inFile)
 
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
-	unordered_map<long, unordered_map<long, long>> symbolIndices;
+	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+	symbolIndices.set_empty_key(-1);
+	symbolIndices.set_deleted_key(-2);
 	long *firstCodes;
 	vector<long> symbolIndexSequence;
-	unordered_map<long, string> expandedDictionary;
+	dense_hash_map<long, string> expandedDictionary;
+	expandedDictionary.set_empty_key(-1);
+	expandedDictionary.set_deleted_key(-2);
 	
 	while (!bitstream.eof())
 	{
