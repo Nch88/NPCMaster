@@ -553,12 +553,21 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
-	ASSERT_EQ("000", huffmanCodes[97].code);
+	vector<long> testhuffmanCodessymbols;
+	vector<string> testhuffmanCodes;
+
+	for (auto &entry : huffmanCodes)
+	{
+		testhuffmanCodes.push_back(entry.second.code);
+		testhuffmanCodessymbols.push_back(entry.first);
+	}
+
+	ASSERT_EQ("010", huffmanCodes[97].code);
 	ASSERT_EQ("001", huffmanCodes[98].code);
-	ASSERT_EQ("010", huffmanCodes[99].code);
+	ASSERT_EQ("000", huffmanCodes[99].code);
 	ASSERT_EQ("011", huffmanCodes[100].code);
-	ASSERT_EQ("10", huffmanCodes[101].code);
-	ASSERT_EQ("11", huffmanCodes[102].code);
+	ASSERT_EQ("11", huffmanCodes[101].code);
+	ASSERT_EQ("10", huffmanCodes[102].code);
 }
 
 TEST(testingHuffman, generateCodesExampleFromBook2)
@@ -646,14 +655,23 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	huffmanToSymbol.set_deleted_key(-2);
 	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
+	vector<long> testhuffmanCodessymbols;
+	vector<string> testhuffmanCodes;
+
+	for (auto &entry : huffmanCodes)
+	{
+		testhuffmanCodes.push_back(entry.second.code);
+		testhuffmanCodessymbols.push_back(entry.first);
+	}
+
 	ASSERT_EQ("001", huffmanCodes[97].code);
-	ASSERT_EQ("00000", huffmanCodes[98].code);
-	ASSERT_EQ("00001", huffmanCodes[99].code);
-	ASSERT_EQ("00010", huffmanCodes[100].code);
-	ASSERT_EQ("00011", huffmanCodes[101].code);
-	ASSERT_EQ("01", huffmanCodes[102].code);
+	ASSERT_EQ("00001", huffmanCodes[98].code);
+	ASSERT_EQ("00000", huffmanCodes[99].code);
+	ASSERT_EQ("00011", huffmanCodes[100].code);
+	ASSERT_EQ("00010", huffmanCodes[101].code);
+	ASSERT_EQ("11", huffmanCodes[102].code);
 	ASSERT_EQ("10", huffmanCodes[103].code);
-	ASSERT_EQ("11", huffmanCodes[104].code);
+	ASSERT_EQ("01", huffmanCodes[104].code);
 }
 
 TEST(testingHuffman, fillBitset)
@@ -906,6 +924,19 @@ TEST(huffman, decodeDictionaryDiddy)
 		terminalIndices,
 		generationVectors);
 
+	vector<long> testIndices;
+
+	for (auto &entry : indices)
+	{
+		for (auto &subentry : entry.second)
+		{
+			testIndices.push_back(entry.first);
+			testIndices.push_back(subentry.first);
+			testIndices.push_back(subentry.second);
+			testIndices.push_back(-1);
+		}
+	}
+
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);
 	huffmanCodes.set_deleted_key(-2);
@@ -916,6 +947,24 @@ TEST(huffman, decodeDictionaryDiddy)
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+
+	vector<long> testdictionarysymbol;
+	vector<Pair> testdictionary;
+
+	for (auto &entry : dictionary)
+	{
+		testdictionarysymbol.push_back(entry.first);
+		testdictionary.push_back(entry.second);
+	}
+
+	vector<long> testhuffmanCodessymbol;
+	vector<HuffmanNode> testhuffmanCodes;
+
+	for (auto &entry : huffmanCodes)
+	{
+		testhuffmanCodessymbol.push_back(entry.first);
+		testhuffmanCodes.push_back(entry.second);
+	}
 
 	string outstring = "testHuffmanDictionary2";
 
@@ -939,17 +988,32 @@ TEST(huffman, decodeDictionaryDiddy)
 
 	h.decodeDictionary(ifs, firstCodes, symbolIndices);
 
+	vector<long> testsymbolIndices;
+
+	for (auto &entry : symbolIndices)
+	{
+		for (auto &subentry : entry.second)
+		{
+			testsymbolIndices.push_back(entry.first);
+			testsymbolIndices.push_back(subentry.first);
+			testsymbolIndices.push_back(subentry.second);
+			testsymbolIndices.push_back(-1);
+		}
+	}
+
 	ASSERT_EQ(4, (symbolIndices)[3].size());
 	ASSERT_EQ(8, (symbolIndices)[4].size());
 
 	long codeLength = 3;
+	long nrOfCodes = 4;
+	long codeStart = firstCodes[2];
 	long code = 4;
 	long symbol = (huffmanToSymbol[3])[4];
 	long index;
 
 	//Test codes of length 3
 	
-	for (int i = 4; i < 8; i++)
+	for (int i = codeStart; i < codeStart + nrOfCodes; i++)
 	{
 		code = i;
 		symbol = (huffmanToSymbol[codeLength])[code];
@@ -963,9 +1027,10 @@ TEST(huffman, decodeDictionaryDiddy)
 	}
 
 	//Test codes of length 4
-	codeLength = 4;
+	nrOfCodes = 8;
+	codeStart = firstCodes[3];
 
-	for (int i = 4; i < 12; i++)
+	for (int i = codeStart; i < codeStart + nrOfCodes; i++)
 	{
 		code = i;
 		symbol = (huffmanToSymbol[codeLength])[code];

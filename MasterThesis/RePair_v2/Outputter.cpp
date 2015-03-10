@@ -163,15 +163,18 @@ void Outputter::huffmanDictionary(
 	GammaCode gc;
 
 	string gammaCodes = "";
+	string toWrite = "";
 	string stringToWrite;
 
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
 
 	for (long i = 0; i < maxLength; i++)
 	{
-		gammaCodes += gc.getGammaCode(numl[i]);									//Convert number of codes of this length to gamma code
+		toWrite = gc.getGammaCode(numl[i]);
+		gammaCodes += toWrite;													//Convert number of codes of this length to gamma code
 																				//and append to the string of codes we want to write.
-		gammaCodes += gc.getGammaCode(firstCode[i]);							//Convert the value of the first code as well
+		toWrite = gc.getGammaCode(firstCode[i]);
+		gammaCodes += toWrite;													//Convert the value of the first code as well
 
 		for (int j = 0; j < numl[i]; j++)
 		{
@@ -186,7 +189,8 @@ void Outputter::huffmanDictionary(
 			else
 				index = (terminalIndices)[symbol];
 			
-			gammaCodes += gc.getGammaCode(index);								//Write the index corresponding to a specific huffman code (as gamma code)
+			toWrite = gc.getGammaCode(index);
+			gammaCodes += toWrite;												//Write the index corresponding to a specific huffman code (as gamma code)
 		}
 
 		while (gammaCodes.size() >= 32)											//Write as much as possible to file

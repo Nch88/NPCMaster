@@ -206,6 +206,15 @@ TEST(outputter, diddyHuffmanDictionary)
 		terminalIndices,
 		generationVectors);
 
+	vector<long> testterminalindicessymbols;
+	vector<long> testterminalindices;
+
+	for (auto &entry : terminalIndices)
+	{
+		testterminalindicessymbols.push_back(entry.first);
+		testterminalindices.push_back(entry.second);
+	}
+
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);
 	huffmanCodes.set_deleted_key(-2);
@@ -232,9 +241,9 @@ TEST(outputter, diddyHuffmanDictionary)
 
 	//Actual test
 	string expected1 = "11001010101100111001110011111000";
-	string expected2 = "00111000111110010111011111000101";
-	string expected3 = "11001011001111010011101100100111";
-	string expected4 = "10010011100110000000000000000000";
+	string expected2 = "01111000111110010111011111000101";
+	string expected3 = "10011110011100111001001110100111";
+	string expected4 = "01101111001000000000000000000000";
 
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
@@ -302,22 +311,26 @@ TEST(outputter, diddyHuffmanDictionary)
 	ASSERT_EQ(2, resultVector[2]);
 	ASSERT_EQ(0, resultVector[3]);
 	ASSERT_EQ(4, resultVector[4]);
+
 	ASSERT_EQ(4, resultVector[5]);
 	ASSERT_EQ(4, resultVector[6]);
 
-	ASSERT_EQ(15, resultVector[7]);
+	ASSERT_EQ(16, resultVector[7]);
 	ASSERT_EQ(8, resultVector[8]);
 	ASSERT_EQ(20, resultVector[9]);
 	ASSERT_EQ(6, resultVector[10]);
 
-	ASSERT_EQ(9, resultVector[13]);
-	ASSERT_EQ(4, resultVector[14]);
-	ASSERT_EQ(11, resultVector[15]);
-	ASSERT_EQ(13, resultVector[16]);
+	ASSERT_EQ(8, resultVector[11]);
+	ASSERT_EQ(0, resultVector[12]);
+
+	ASSERT_EQ(4, resultVector[13]);
+	ASSERT_EQ(10, resultVector[14]);
+	ASSERT_EQ(1, resultVector[15]);
+	ASSERT_EQ(9, resultVector[16]);
 	ASSERT_EQ(0, resultVector[17]);
-	ASSERT_EQ(1, resultVector[18]);
-	ASSERT_EQ(19, resultVector[19]);
-	ASSERT_EQ(10, resultVector[20]);
+	ASSERT_EQ(11, resultVector[18]);
+	ASSERT_EQ(13, resultVector[19]);
+	ASSERT_EQ(19, resultVector[20]);
 }
 
 TEST(outputter, diddyAll)
