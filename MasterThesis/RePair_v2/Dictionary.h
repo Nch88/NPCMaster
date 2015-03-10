@@ -27,4 +27,8 @@ public:
 		vector<CompactPair> &decodedPairs,
 		vector<long> &decodedTerms,
 		string &finalOutput);
+	void Dictionary::expandDictionary(
+		vector<CompactPair> &decodedPairs,
+		vector<long> &decodedTerms,
+		unordered_map<long, string> &expandedDict);
 };

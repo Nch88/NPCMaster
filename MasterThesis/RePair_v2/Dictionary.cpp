@@ -154,3 +154,17 @@ void Dictionary::decodeSymbol(
 		decodeSymbol(decodedPairs[symbolIndex - decodedTerms.size()].rightSymbol, decodedPairs, decodedTerms, finalOutput);
 	}
 }
+
+void Dictionary::expandDictionary(
+	vector<CompactPair> &decodedPairs, 
+	vector<long> &decodedTerms, 
+	unordered_map<long, string> &expandedDict)
+{
+	string s;
+	for (long i = 0; i < decodedPairs.size(); ++i)
+	{
+		s.assign("");
+		decodeSymbol(i, decodedPairs, decodedTerms, s);
+		expandedDict[i].assign(s);
+	}
+}

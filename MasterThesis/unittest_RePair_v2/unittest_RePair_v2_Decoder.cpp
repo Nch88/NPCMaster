@@ -93,3 +93,10 @@ TEST(decoder, diddyAll)
 	}
 	ASSERT_EQ(string1,finalOutput);
 }
+
+TEST(decoder, getDictionaryName)
+{
+	Decoder dc;
+	ASSERT_EQ("abc.dict.NPC", dc.getDictionaryName("abc.NPC"));
+	ASSERT_EQ("error", dc.getDictionaryName("blabla"));
+}

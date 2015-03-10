@@ -43,6 +43,7 @@
 #include "HuffmanNode.h"
 #include "Huffman.h"
 #include "Outputter.h"
+#include "Decoder.h"
 
 //Constants
 const int initialSymbolValue = 256;
