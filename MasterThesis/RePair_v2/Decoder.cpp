@@ -16,7 +16,7 @@ string Decoder::getDictionaryName(string in)
 string Decoder::getOutfileName(string in)
 {
 	if (in.substr(in.size() - 4, 4) == ".NPC")
-		return in.substr(0, in.size() - 4);
+		return in.substr(0, in.size() - 4) + ".decoded";
 	else
 		return "error";
 }
@@ -43,23 +43,36 @@ void Decoder::decode(string inFile)
 
 	string compressedDictionary = getDictionaryName(inFile);
 	ifstream bitstreamDict(compressedDictionary, ios::binary);
+	ifstream bitstream(inFile, ios::binary);
+	ofstream outstream(getOutfileName(inFile));
 
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
 	unordered_map<long, unordered_map<long, long>> symbolIndices;
 	long *firstCodes;
 	vector<long> symbolIndexSequence;
-
+	unordered_map<long, string> expandedDictionary;
 	
-	//Read dictionary
-	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
+	while (!bitstream.eof())
+	{
+		//Read dictionary
+		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
+		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
 
-	//Read huffman dictionary
-	h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
+		//Read huffman dictionary
+		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
 
-	//Read block
-	h.decode(firstCodes, inFile, symbolIndices, symbolIndexSequence);
+		//Read block
+		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
 
-	//Decode and write
-	ifstream bitstream(getOutfileName(inFile), ios::binary);
+		//Decode and write
+		for each (long n in symbolIndexSequence)
+		{
+			outstream << expandedDictionary[n];
+		}
+	}
+
+	bitstreamDict.close();
+	bitstream.close();
+	outstream.close();
 }

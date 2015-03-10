@@ -710,7 +710,8 @@ TEST(huffman, decoder)
 	int count = 0;
 	//sHHAo.wahFEumFo
 	
-	h.decode(firstCode, filename2, symbolIndices, symbolIndexSequence);
+	ifstream outstream(filename2, ios::binary);
+	h.decode(firstCode, outstream, symbolIndices, symbolIndexSequence);
 
 	for (int i = 0; i < symbolIndexSequence.size(); i++)
 	{

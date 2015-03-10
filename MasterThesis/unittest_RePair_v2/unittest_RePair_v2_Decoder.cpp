@@ -84,7 +84,8 @@ TEST(decoder, diddyAll)
 
 	//Read file
 	vector<long> symbolIndexSequence;
-	h.decode(firstCodes, compressedFile, symbolIndices, symbolIndexSequence);
+	ifstream outstream(compressedFile, ios::binary);
+	h.decode(firstCodes, outstream, symbolIndices, symbolIndexSequence);
 	string finalOutput;
 	finalOutput.assign("");
 	for (int i = 0; i < symbolIndexSequence.size(); ++i)
@@ -92,6 +93,46 @@ TEST(decoder, diddyAll)
 		finalDict.decodeSymbol(symbolIndexSequence[i], decodedPairs, decodedTerms, finalOutput);
 	}
 	ASSERT_EQ(string1,finalOutput);
+}
+
+TEST(decoder,decodeLargeFile)
+{
+	unordered_map<long, unordered_map<long, PairTracker>> activePairs;
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unordered_map<long, Pair> dictionary;
+	long symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	Algorithm algo;
+	MyTimer timer;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+	GammaCode gc;
+	Decoder dc;
+
+	string input1 = "bible.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<long> terminals;
+	vector<CompactPair> pairs;
+	unordered_map <long, unordered_map<long, long>> indices;
+	string filename = input1;
+	ifstream file(filename);
+	bool firstBlock = true;
+
+	c.verbose = true;
+
+	algo.run(filename, file, c, init, algP, timer, blockSize, activePairs, sequenceArray, priorityQueue, dictionary, symbols);
+
+	dc.decode("bible.txt.NPC");
+	int x = 0;
 }
 
 TEST(decoder, getDictionaryName)
