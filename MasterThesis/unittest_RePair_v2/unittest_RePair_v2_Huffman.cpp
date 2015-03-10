@@ -766,8 +766,13 @@ TEST(huffman, decoder)
 	ASSERT_EQ(4, firstCode[2]);
 	ASSERT_EQ(0, firstCode[3]);
 
+	string outstring = out.addFilenameEnding(input1, ".NPC");
+	ofstream myfile;
+	myfile.open(outstring, ios::binary);
+
 	out.huffmanEncoding(
-		out.addFilenameEnding(input1, ".NPC"),
+		outstring,
+		myfile,
 		sequenceArray,
 		huffmanCodes,
 		true);
@@ -969,8 +974,12 @@ TEST(huffman, decodeDictionaryDiddy)
 
 	string outstring = "testHuffmanDictionary2";
 
+	ofstream myfile;
+	myfile.open(outstring, ios::binary);
+
 	out.huffmanDictionary(
 		outstring,
+		myfile,
 		maxLength,
 		firstCode,
 		numl,
@@ -1132,8 +1141,12 @@ TEST(huffman, decodeDictionaryDuplicates)
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testDuplicatesLongCompressed";
+
+	ofstream myfile;
+	myfile.open(outstring, ios::binary);
 	out.huffmanDictionary(
 		outstring,
+		myfile,
 		maxLength,
 		firstCode,
 		numl,

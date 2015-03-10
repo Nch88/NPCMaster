@@ -62,11 +62,11 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 
 void Outputter::huffmanEncoding(
 	string outFile,
+	ofstream &myfile,
 	vector<SymbolRecord *>& sequenceArray,
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
 	bool firstBlock)
 {
-	ofstream myfile;
 	bitset<32> *bitsToWrite = new bitset<32>();
 	short chunkSize = sizeof(bitset<32>) * CHAR_BIT; //Bitset outputs a certain minimum nr of bytes
 	string chunk = "";
@@ -75,11 +75,6 @@ void Outputter::huffmanEncoding(
 	long seqIndex = 0;
 	long codeIndex = 0;
 	short paddingBits = 0;
-
-	if (firstBlock)
-		myfile.open(outFile, ios::binary | ios::trunc);
-	else
-		myfile.open(outFile, ios::binary | ios::app);
 
 	//Write chunks of Huffman codes until an entire block is processed
 	while (seqIndex < sequenceArray.size())
@@ -149,6 +144,7 @@ void Outputter::huffmanEncoding(
 
 void Outputter::huffmanDictionary(
 	string outFile,
+	ofstream &myfile,
 	long maxLength,
 	long *firstCode,
 	long *numl,
@@ -157,8 +153,6 @@ void Outputter::huffmanDictionary(
 	dense_hash_map<long, long> &terminalIndices,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
-	ofstream myfile;
-	myfile.open(outFile, ios::binary | ios::app);
 	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
 
@@ -238,17 +232,15 @@ void Outputter::compressedFile(
 
 void Outputter::dictionary(
 	string outFile,
+	ofstream &myfile,
 	string& output,
 	bool firstBlock)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
-	ofstream myfile;
-	if (firstBlock)
-		myfile.open(outFile, ios::binary | ios::trunc);
-	else
-		myfile.open(outFile, ios::binary | ios::app);
 	
-	string stringToWrite, rest = output;
+	
+	string stringToWrite, rest;
+	rest.assign(output);
 
 	//Write as much as possible to file
 	while (rest.size() >= 32)
@@ -291,6 +283,18 @@ void Outputter::all(
 	string compressedFilename = this->addFilenameEnding(filename, ".NPC");
 	string compressedDictionaryName = this->addFilenameEnding(filename, ".dict.NPC");
 
+	ofstream ofs_compressed;
+	if (firstBlock)
+		ofs_compressed.open(compressedFilename, ios::binary | ios::trunc);
+	else
+		ofs_compressed.open(compressedFilename, ios::binary | ios::app);
+
+	ofstream ofs_dictionary;
+	if (firstBlock)
+		ofs_dictionary.open(compressedDictionaryName, ios::binary | ios::trunc);
+	else
+		ofs_dictionary.open(compressedDictionaryName, ios::binary | ios::app);
+
 	//Do Huffman encoding
 	Huffman h;
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
@@ -308,6 +312,7 @@ void Outputter::all(
 	//Write Huffman encoded sequence to file
 	this->huffmanEncoding(
 		compressedFilename,
+		ofs_compressed,
 		sequenceArray,
 		huffmanCodes,
 		firstBlock);
@@ -343,12 +348,14 @@ void Outputter::all(
 
 	this->dictionary(
 		compressedDictionaryName,		
+		ofs_dictionary,
 		output,
 		firstBlock);
 
 	//Write Huffman dictionary to file
 	this->huffmanDictionary(
 		compressedDictionaryName,
+		ofs_dictionary,
 		maxLength,
 		firstCode,
 		numl,
