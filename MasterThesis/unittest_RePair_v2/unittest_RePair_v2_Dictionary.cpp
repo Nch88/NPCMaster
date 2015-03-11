@@ -89,6 +89,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dc.createGenerationVectors(dictionary, generationVectors);
 
 	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+	sort(terminals.begin(), terminals.end());
 
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
@@ -104,9 +105,9 @@ TEST(createCompactDictionary, createFinalPairVector)
 	expected.push_back(v1);
 	expected.push_back(v2);
 	expected.push_back(v3);
+	expected[0].push_back(CompactPair(1, 2));
 	expected[0].push_back(CompactPair(4, 5));
 	expected[0].push_back(CompactPair(5, 5));
-	expected[0].push_back(CompactPair(1, 2));
 	expected[1].push_back(CompactPair(13, 1));
 	expected[1].push_back(CompactPair(13, 6));
 	expected[1].push_back(CompactPair(14, 10));

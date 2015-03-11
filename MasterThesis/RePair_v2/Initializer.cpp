@@ -44,7 +44,7 @@ void Initializer::resetForNextBlock(
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
 	unordered_set<long> & terminals,
-	dense_hash_map<long, Pair> dictionary)
+	dense_hash_map<long, Pair> &dictionary)
 {
 	//Reset for next block
 	for (int i = 0; i < sequenceArray.size(); i++)
