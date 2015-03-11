@@ -18,7 +18,7 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue,
 		unordered_set<long> & terminals,
-		dense_hash_map<long, Pair> dictionary);
+		dense_hash_map<long, Pair> &dictionary);
 	void addToSequenceArray(
 		vector<SymbolRecord*> & sequenceArray,
 		char & symbol,
