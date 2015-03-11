@@ -11,11 +11,13 @@ public:
 	void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite);
 	void Outputter::huffmanEncoding(
 		string outFile,
+		ofstream &myfile,
 		vector<SymbolRecord *>& sequenceArray,
 		dense_hash_map<long, HuffmanNode> &huffmanCodes,
 		bool firstBlock);
 	void Outputter::huffmanDictionary(
 		string outFile,
+		ofstream &myfile,
 		long maxLength,
 		long *firstCode,
 		long *numl,
@@ -28,7 +30,8 @@ public:
 		vector<SymbolRecord>& sequenceArray,
 		bool firstBlock);
 	void dictionary(
-		string outFile,
+		string outfile,
+		ofstream &myfile,
 		string& output,
 		bool firstBlock);
 	void Outputter::all(

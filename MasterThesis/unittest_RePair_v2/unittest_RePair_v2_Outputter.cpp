@@ -72,8 +72,13 @@ TEST(outputter, diddyHuffmanCode)
 	huffmanToSymbol.set_deleted_key(-2);
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
+	string filenameout = out.addFilenameEnding(input1, ".NPC");
+	ofstream myfile;
+	myfile.open(filenameout, ios::binary);
+
 	out.huffmanEncoding(
-		out.addFilenameEnding(input1, ".NPC"),
+		filenameout,
+		myfile,
 		sequenceArray,
 		huffmanCodes,
 		true);
@@ -227,10 +232,12 @@ TEST(outputter, diddyHuffmanDictionary)
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
 	string outstring = "testHuffmanDictionary";
-	
+	ofstream myfile;
+	myfile.open(outstring, ios::binary);
 
 	out.huffmanDictionary(
 		outstring,
+		myfile,
 		maxLength,
 		firstCode,
 		numl,
@@ -489,7 +496,10 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	string finalstring = "";
 	gc.makeFinalString(pairs, terminals, finalstring, generationVectors);
 
-	out.dictionary(outstring, finalstring, true);
+	ofstream myfile;
+	myfile.open(outstring, ios::binary);
+
+	out.dictionary(outstring, myfile, finalstring, true);
 
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
@@ -523,87 +533,452 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	//ASSERT_EQ(terminals, decodedTerms);
 }
 
+//TEST(outputter, dictionary)
+//{
+//	Outputter out;
+//	string file = "outputDictionary.test";
+//	string file2 = "outputDictionary2.test";
+//	string file3 = "outputDictionary3.test";
+//	string file4 = "outputDictionary4.test";
+//	bool firstBlock = true;
+//	MyTimer timer;
+//
+//	ofstream myfile;
+//	myfile.open(file, ios::binary);
+//
+//	ofstream myfile2;
+//	myfile2.open(file2, ios::binary);
+//
+//	ofstream myfile3;
+//	myfile3.open(file3, ios::binary);
+//
+//	ofstream myfile4;
+//	myfile4.open(file4, ios::binary);
+//
+//
+//	string testString(800000, 'a');
+//	timer.start();
+//	out.dictionary(file, myfile, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//	string testString2(1600000, 'b');
+//	firstBlock = false;
+//	timer.start();
+//	out.dictionary(file, myfile, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString2.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//	string testString3(3200000, 'c');
+//	firstBlock = false;
+//	timer.start();
+//	out.dictionary(file, myfile, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString3.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//
+//	//!"""!!!!!!!!!!!!!!!!!!!!!!
+//
+//	string testString4(800000, 'a');
+//	firstBlock = true;
+//	timer.start();
+//	out.dictionary(file2, myfile2, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString4.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//	string testString5(16000000, 'b');
+//	firstBlock = false;
+//	timer.start();
+//	out.dictionary(file3, myfile3, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString5.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//	string testString6(320000000, 'c');
+//	firstBlock = false;
+//	timer.start();
+//	out.dictionary(file4, myfile4, testString, firstBlock);
+//	timer.stop();
+//	cout << "Wrote string of size " << testString6.size() << " chars to file in " << timer.getTime() << " ms" << endl;
+//
+//
+//	ASSERT_TRUE(true);
+//}
 
-TEST(outputter, all_world192)
-{
-	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
 
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	MyTest t;
-	Huffman h;
-	Outputter out;
-	Dictionary finalDict;
-	GammaCode gc;
-
-	string input1 = "world192.txt";
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<vector<CompactPair>> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	dense_hash_map <long, long> terminalIndices;
-	terminalIndices.set_empty_key(-1);
-	terminalIndices.set_deleted_key(-2);
-	vector<vector<CompactPair>> generationVectors;
-	string filename = input1;
-	ifstream file(filename);
-	bool firstBlock = true;
-
-	int loopcount = 1;
-
-	while (file.is_open())
-	{		
-		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
-		
-		priorityQueueSize = sqrt(sequenceArray.size());
-		priorityQueue.resize(priorityQueueSize);
-		
-		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);		
-		
-		algP.run(
-			sequenceArray,
-			dictionary,
-			activePairs,
-			priorityQueue,
-			terminals,
-			symbols,
-			c);		
-		if (loopcount == 2)
-		{
-			int x = 0;
-		}
-		out.all(
-			filename,
-			firstBlock,
-			sequenceArray,
-			dictionary,
-			activePairs,
-			priorityQueue,
-			terminals,
-			c);		
-
-		firstBlock = false;		
-		if (loopcount == 1)
-		{
-			int x = 0;
-		}
-		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);	
-		
-		++loopcount;
-	}
-}
+//TEST(outputter, all_world192)
+//{
+//	using namespace google;
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols(initialSymbolValue);//256
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//	MyTest t;
+//	Huffman h;
+//	Outputter out;
+//	Dictionary finalDict;
+//	GammaCode gc;
+//	MyTimer timer;
+//
+//	string input1 = "diddy.txt";
+//	string input2 = "E.coli";
+//	string input3 = "dna.50MB";
+//	string input4 = "crashtestdummy.txt";
+//	string input5 = "world192.txt";
+//	string input6 = "bible.txt";
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//	unordered_set<long> terminals;
+//	string filename = input5;
+//	ifstream file(filename);
+//	bool firstBlock = true;
+//
+//	//Create names for output files
+//	string compressedFilename = out.addFilenameEnding(filename, ".NPC");
+//	string compressedDictionaryName = out.addFilenameEnding(filename, ".dict.NPC");
+//
+//	ofstream ofs_compressed;
+//	if (firstBlock)
+//		ofs_compressed.open(compressedFilename, ios::binary | ios::trunc);
+//	else
+//		ofs_compressed.open(compressedFilename, ios::binary | ios::app);
+//
+//	ofstream ofs_dictionary;
+//	if (firstBlock)
+//		ofs_dictionary.open(compressedDictionaryName, ios::binary | ios::trunc);
+//	else
+//		ofs_dictionary.open(compressedDictionaryName, ios::binary | ios::app);
+//	
+//	int loopcount = 1;
+//
+//	while (file.is_open())
+//	{		
+//		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
+//		
+//		priorityQueueSize = sqrt(sequenceArray.size());
+//		priorityQueue.resize(priorityQueueSize);
+//		
+//		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);		
+//		
+//		algP.run(
+//			sequenceArray,
+//			dictionary,
+//			activePairs,
+//			priorityQueue,
+//			terminals,
+//			symbols,
+//			c);		
+//		long apsize = 0;
+//		for (auto &entry : activePairs)
+//		{
+//			for (auto &entry2 : entry.second)
+//			{
+//				++apsize;
+//			}
+//		}
+//		cout << "	Loop " << loopcount <<": Sequence array size: " << sequenceArray.size() << endl;
+//		cout << "	Loop " << loopcount << ": Active pairs size: " << apsize << endl;
+//		cout << "	Loop " << loopcount << ": Dictionary size: " << dictionary.size() << endl;
+//		cout << "	Loop " << loopcount << ": Terminals size: " << terminals.size() << endl;
+//
+//		if (loopcount == 2)
+//		{
+//			int x = 0;
+//		}
+//		//Out.all explicit		
+//
+//		//Do Huffman encoding
+//		dense_hash_map<long, HuffmanNode> huffmanCodes;
+//		huffmanCodes.set_empty_key(-1);
+//		huffmanCodes.set_deleted_key(-2);
+//		long *firstCode = nullptr;
+//		long *numl = nullptr;
+//		long maxLength = 0;
+//		dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+//		huffmanToSymbol.set_empty_key(-1);
+//		huffmanToSymbol.set_deleted_key(-2);
+//		
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//		long htssize = 0;
+//		for (auto &entry : huffmanToSymbol)
+//		{
+//			for (auto &entry2 : entry.second)
+//			{
+//				++htssize;
+//			}
+//		}
+//		cout << "	Loop " << loopcount << ": huffmanToSymbol size: " << htssize << endl;
+//
+//		//Write Huffman encoded sequence to file
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		out.huffmanEncoding(
+//			compressedFilename,
+//			ofs_compressed,
+//			sequenceArray,
+//			huffmanCodes,
+//			firstBlock);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman encoding: " << timer.getTime() << " ms" << endl;
+//		}
+//
+//		//Encode generations for dictionary
+//		Dictionary finalDict;
+//		vector<vector<CompactPair>> pairs;
+//		vector<vector<CompactPair>> generationVectors;
+//		dense_hash_map<long, dense_hash_map<long, long>> indices;
+//		indices.set_empty_key(-1);
+//		indices.set_deleted_key(-2);
+//		dense_hash_map<long, long> terminalIndices;
+//		terminalIndices.set_empty_key(-1);
+//		terminalIndices.set_deleted_key(-2);
+//
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		finalDict.generateCompactDictionary(
+//			dictionary,
+//			terminals,
+//			pairs,
+//			indices,
+//			terminalIndices,
+//			generationVectors);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  generate compact dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  generate compact dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  generate compact dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//		long isize = 0;
+//		for (auto &entry : indices)
+//		{
+//			for (auto &entry2 : entry.second)
+//			{
+//				++isize;
+//			}
+//		}
+//		long psize = 0;
+//		for (auto &entry : pairs)
+//		{
+//			for (auto &entry2 : entry)
+//			{
+//				++psize;
+//			}
+//		}
+//		long gvsize = 0;
+//		for (auto &entry : generationVectors)
+//		{
+//			for (auto &entry2 : entry)
+//			{
+//				++gvsize;
+//			}
+//		}
+//		cout << "	Loop " << loopcount << ": indices size: " << isize << endl;
+//		cout << "	Loop " << loopcount << ": pairs size: " << psize << endl;
+//		cout << "	Loop " << loopcount << ": generationVectors size: " << gvsize << endl;
+//		cout << "	Loop " << loopcount << ": terminalIndices size: " << terminalIndices.size() << endl;
+//
+//		//Write dictionary to file
+//		GammaCode gc;
+//		string output = "";
+//
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		gc.makeFinalString(
+//			pairs,
+//			terminals,
+//			output,
+//			generationVectors);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  make final string: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  make final string: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  make final string: " << timer.getTime() << " ms" << endl;
+//		}
+//
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		cout << "	Loop " << loopcount << ": Output string size: " << output.size() << endl;
+//		out.dictionary(
+//			compressedDictionaryName,
+//			ofs_dictionary,
+//			output,
+//			firstBlock);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write dictionary of generations: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write dictionary of generations: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write dictionary of generations: " << timer.getTime() << " ms" << endl;
+//		}
+//
+//		//Write Huffman dictionary to file
+//		if (loopcount == 1)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.start();
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.start();
+//		}
+//		out.huffmanDictionary(
+//			compressedDictionaryName,
+//			ofs_dictionary,
+//			maxLength,
+//			firstCode,
+//			numl,
+//			dictionary,
+//			indices,
+//			terminalIndices,
+//			huffmanToSymbol);
+//		if (loopcount == 1)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 2)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//		if (loopcount == 3)
+//		{
+//			timer.stop();
+//			cout << "	Loop " << loopcount << ":  write Huffman dictionary: " << timer.getTime() << " ms" << endl;
+//		}
+//
+//		//Clean up
+//		delete[] firstCode;
+//		delete[] numl;
+//		output = "";
+//
+//		//out.all explicit - end
+//
+//		firstBlock = false;		
+//		if (loopcount == 1)
+//		{
+//			int x = 0;
+//		}
+//		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);	
+//		
+//		++loopcount;
+//	}
+//}

@@ -736,5 +736,8 @@ TEST(gammaCodes, writeToFile)
 	GammaCode gc;
 	Outputter out;
 	string gamma = "100100100100100100100100100100100100";
-	out.dictionary("gammafun.npc", gamma, true);
+
+	ofstream myfile;
+	myfile.open("gammafun.npc", ios::binary);
+	out.dictionary("gammafun.npc", myfile, gamma, true);
 }
