@@ -38,88 +38,84 @@ void Dictionary::createFinalPairVectors(
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
 	dense_hash_map<long, long> &terminalIndices)
 {
+	//Record indices of terminals
 	for (int i = 0; i < terminals.size(); ++(i))
 	{
-		(terminalIndices)[terminals[i]] = i;
+		terminalIndices[terminals[i]] = i;
 	}
-	//Generation 1
-	vector<CompactPair> vec;
-	pairVectors.push_back(vec);
-	for (int i = 0; i < generationVectors[0].size(); ++(i))
-	{
-		//Find the new indices of the two symbols in this pair
-		long leftIndex = ((terminalIndices)[(generationVectors[0])[i].leftSymbol]);
-		long rightIndex = ((terminalIndices)[(generationVectors[0])[i].rightSymbol]);
 
-		//Make a pair out of the indices we found, then push it to the vector
-		CompactPair p(leftIndex, rightIndex);
-		pairVectors[0].push_back(p);
+	int offset = terminals.size();
 
-		//Record the index of this symbol
-		if (indices[(generationVectors[0])[i].leftSymbol].empty())
-		{
-			indices[(generationVectors[0])[i].leftSymbol].set_empty_key(-1);
-			indices[(generationVectors[0])[i].leftSymbol].set_deleted_key(-2);
-		}
-		((indices)[(generationVectors[0])[i].leftSymbol])[(generationVectors[0])[i].rightSymbol] = i + terminals.size();
-	}
-	//Generation 2+
-	int offset = terminals.size() + generationVectors[0].size();
-	if (generationVectors.size() > 1)
+	//For each generation
+	for (int gen = 0; gen < generationVectors.size(); ++gen)
 	{
-		for (int i = 1; i < generationVectors.size(); ++i)
+		vector<CompactPair> vec;
+		pairVectors.push_back(vec);
+		for (int j = 0; j < generationVectors[gen].size(); ++j)
 		{
-			vector<CompactPair> vec;
-			pairVectors.push_back(vec);
-			for (int j = 0; j < generationVectors[i].size(); ++j)
+			//Find the new indices of the two symbols in this pair
+			long leftSymbol = generationVectors[gen][j].leftSymbol;
+
+			long leftIndex;
+
+			//Check for terminal symbol or composite symbol
+			if (leftSymbol < initialSymbolValue) //Terminal
 			{
-				//Find the new indices of the two symbols in this pair
-				long leftSymbol = (generationVectors[i])[j].leftSymbol;
-
-				long leftIndex;
-
-				//Check for terminal symbol or composite symbol
-				if (leftSymbol < initialSymbolValue) //Terminal
-				{
-					leftIndex = (terminalIndices)[leftSymbol];
-				}
-				else //Composite
-				{
-					long leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
-					long leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
-					leftIndex = ((indices)[leftSymbolLeftPart])[leftSymbolRightPart];
-				}
-
-				long rightSymbol = (generationVectors[i])[j].rightSymbol;
-				long rightIndex;
-
-				//Check for terminal symbol or composite symbol
-				if (rightSymbol < initialSymbolValue) //Terminal
-				{
-					rightIndex = (terminalIndices)[rightSymbol];
-				}
-				else //Composite
-				{
-					long rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
-					long rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
-					rightIndex = ((indices)[rightSymbolLeftPart])[rightSymbolRightPart];
-				}
-
-				//Make a pair out of the indices we found, then push it to the vector
-				CompactPair p(leftIndex, rightIndex);
-				pairVectors[i].push_back(p);
-
-				//Record the index of this symbol
-				if (indices[leftSymbol].empty())
-				{
-					indices[leftSymbol].set_empty_key(-1);
-					indices[leftSymbol].set_deleted_key(-2);
-				}
-				((indices)[leftSymbol])[rightSymbol] = offset + j;
+				leftIndex = terminalIndices[leftSymbol];
 			}
-			//Update the offset
-			offset += generationVectors[i].size();
+			else //Composite
+			{
+				long leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
+				long leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
+				leftIndex = indices[leftSymbolLeftPart][leftSymbolRightPart];
+			}
+
+			long rightSymbol = generationVectors[gen][j].rightSymbol;
+			long rightIndex;
+
+			//Check for terminal symbol or composite symbol
+			if (rightSymbol < initialSymbolValue) //Terminal
+			{
+				rightIndex = terminalIndices[rightSymbol];
+			}
+			else //Composite
+			{
+				long rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
+				long rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
+				rightIndex = indices[rightSymbolLeftPart][rightSymbolRightPart];
+			}
+
+			//Make a pair out of the indices we found, then push it to the vector
+			CompactPair p(leftIndex, rightIndex);
+			pairVectors[gen].push_back(p);
 		}
+
+		////Figure out the dictionary names of each pair
+		//dense_hash_map<long, dense_hash_map<long, long>> dictionaryNames;
+		//dictionaryNames.set_empty_key(-1);
+		//dictionaryNames.set_deleted_key(-2);
+		//for (int i = 0; i < pairVectors[gen].size(); ++i)
+		//{
+		//	CompactPair temp(pairVectors[gen][i].leftSymbol, pairVectors[gen][i].rightSymbol);
+		//	dictionaryNames[]
+		//}
+
+		//Sort the new vector
+		sort(pairVectors[gen].begin(), pairVectors[gen].end(),comPair);
+
+		//Record the new indices
+		for (int i = 0; i < pairVectors[gen].size(); ++i)
+		{
+			if (indices[pairVectors[gen][i].leftSymbol].empty())
+			{
+				indices[pairVectors[gen][i].leftSymbol].set_empty_key(-1);
+				indices[pairVectors[gen][i].leftSymbol].set_deleted_key(-2);
+			}
+			indices[pairVectors[gen][i].leftSymbol][pairVectors[gen][i].rightSymbol] = offset + i;
+		}
+
+		//Update the offset
+		offset += pairVectors[gen].size();
 	}
 }
 
@@ -140,12 +136,6 @@ void Dictionary::createGenerationVectors(
 		//Add this pair to a vector
 		CompactPair cp(p.second.leftSymbol, p.second.rightSymbol);
 		generationVectors[p.second.generation - 1].push_back(cp);
-	}
-
-	//Sort the vectors
-	for (int i = 0; i < generationVectors.size(); i++)
-	{
-		sort(generationVectors[i].begin(), generationVectors[i].end(), comPair);
 	}
 }
 

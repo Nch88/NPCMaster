@@ -32,14 +32,14 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	dc.createGenerationVectors(dictionary, generationVectors);
 
 	vector<CompactPair*> gen0;
+	gen0.push_back(new CompactPair(105, 110));
 	gen0.push_back(new CompactPair(46, 100));
 	gen0.push_back(new CompactPair(100, 100));
-	gen0.push_back(new CompactPair(105, 110));
 	vector<CompactPair*> gen1;
-	gen1.push_back(new CompactPair(300, 105));
-	gen1.push_back(new CompactPair(300, 111));
 	gen1.push_back(new CompactPair(301, 121));
 	gen1.push_back(new CompactPair(305, 103));
+	gen1.push_back(new CompactPair(300, 105));
+	gen1.push_back(new CompactPair(300, 111));
 	vector<CompactPair*> gen2;
 	gen2.push_back(new CompactPair(302, 303));
 
