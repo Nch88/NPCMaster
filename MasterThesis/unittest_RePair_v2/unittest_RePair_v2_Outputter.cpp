@@ -500,6 +500,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	myfile.open(outstring, ios::binary);
 
 	out.dictionary(outstring, myfile, finalstring, true);
+	myfile.close();
 
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
@@ -530,7 +531,10 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	}
 	ASSERT_EQ(combinedSize, decodedPairs.size());
 
-	//ASSERT_EQ(terminals, decodedTerms);
+	vector<long> terms(terminals.begin(),terminals.end());
+	sort(terms.begin(), terms.end());
+
+	ASSERT_EQ(terms, decodedTerms);
 }
 
 //TEST(outputter, dictionary)
