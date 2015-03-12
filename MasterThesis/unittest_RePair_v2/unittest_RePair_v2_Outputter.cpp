@@ -245,7 +245,7 @@ TEST(outputter, diddyHuffmanDictionary)
 		indices,
 		terminalIndices,
 		huffmanToSymbol);
-
+	myfile.close();
 	//Actual test
 	string expected1 = "11001010101100111001110011111000";
 	string expected2 = "01111000111110010111011111000101";
@@ -338,6 +338,8 @@ TEST(outputter, diddyHuffmanDictionary)
 	ASSERT_EQ(11, resultVector[18]);
 	ASSERT_EQ(13, resultVector[19]);
 	ASSERT_EQ(19, resultVector[20]);
+
+	ifs.close();
 }
 
 TEST(outputter, diddyAll)
@@ -500,7 +502,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	myfile.open(outstring, ios::binary);
 
 	out.dictionary(outstring, myfile, finalstring, true);
-
+	myfile.close();
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
 	ifstream bitstream(outstring, ios::binary);
@@ -529,7 +531,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 		combinedSize += gen.size();
 	}
 	ASSERT_EQ(combinedSize, decodedPairs.size());
-
+	bitstream.close();
 	//ASSERT_EQ(terminals, decodedTerms);
 }
 

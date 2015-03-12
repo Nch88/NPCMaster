@@ -988,6 +988,8 @@ TEST(huffman, decodeDictionaryDiddy)
 		terminalIndices,
 		huffmanToSymbol);
 
+	myfile.close();
+
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
 
@@ -1052,6 +1054,7 @@ TEST(huffman, decodeDictionaryDiddy)
 
 		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
+	ifs.close();
 }
 
 TEST(huffman, decodeDictionaryDuplicates)
@@ -1154,6 +1157,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 		indices,
 		terminalIndices,
 		huffmanToSymbol);
+	myfile.close();
 
 	ifstream ifs;
 	ifs.open(outstring, ios::binary);
@@ -1203,4 +1207,5 @@ TEST(huffman, decodeDictionaryDuplicates)
 
 		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
+	ifs.close();
 }
