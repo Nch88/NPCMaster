@@ -69,8 +69,23 @@ void Decoder::decode(string inFile)
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
 		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
 
+		//DEBUG
+		/*for each (auto var in expandedDictionary)
+		{
+			cout << "\nEntry: " << var.first << " -> " << var.second << ".\n";
+		}*/
+
 		//Read huffman dictionary
 		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
+
+		//DEBUG
+		/*for each (auto var in symbolIndices)
+		{
+			for each (auto var2 in var.second)
+			{
+				cout << "\nEntry: ( " << var.first << " , " << var2.first << " ) -> " << var2.second << ".\n";
+			}
+		}*/
 
 		//Read block
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);

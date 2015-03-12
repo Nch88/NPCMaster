@@ -136,8 +136,6 @@ void Outputter::huffmanEncoding(
 	writeChunk(myfile, bitsToWrite);
 	delete bitsToWrite;
 
-	myfile.close();
-
 	if (firstBlock)
 		cout << "created compressed file: " << outFile << endl;
 }
@@ -200,7 +198,6 @@ void Outputter::huffmanDictionary(
 		gammaCodes += '0';
 	}
 	writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
-	myfile.close();
 
 	delete bitsToWrite;
 }
@@ -260,8 +257,6 @@ void Outputter::dictionary(
 		}
 		writeChunkFromString(myfile, rest, bitsToWrite);
 	}
-
-	myfile.close();
 
 	if (firstBlock)
 		cout << "created dictionary file: " << outFile << endl;
@@ -364,6 +359,8 @@ void Outputter::all(
 		terminalIndices,
 		huffmanToSymbol);
 
+	ofs_compressed.close();
+	ofs_dictionary.close();
 
 	//Clean up
 	delete[] firstCode;

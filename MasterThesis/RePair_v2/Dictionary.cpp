@@ -11,6 +11,17 @@ bool comPair(CompactPair fst, CompactPair snd)
 		return false;
 }
 
+bool comPairN(NamedPair fst, NamedPair snd)
+{
+	//compare two pairs by comparing left symbols, then right symbols
+	if (fst.leftSymbol < snd.leftSymbol)
+		return true;
+	else if (fst.leftSymbol == snd.leftSymbol)
+		return fst.rightSymbol < snd.rightSymbol;
+	else
+		return false;
+}
+
 //This is the main dictionary function. It fills the pair vector based on dictionary + terminals.
 void Dictionary::generateCompactDictionary(
 	dense_hash_map<long, Pair>& dictionary,
@@ -49,8 +60,9 @@ void Dictionary::createFinalPairVectors(
 	//For each generation
 	for (int gen = 0; gen < generationVectors.size(); ++gen)
 	{
-		vector<CompactPair> vec;
-		pairVectors.push_back(vec);
+		/*vector<CompactPair> vec;
+		pairVectors.push_back(vec);*/
+		vector<NamedPair> vec;
 		for (int j = 0; j < generationVectors[gen].size(); ++j)
 		{
 			//Find the new indices of the two symbols in this pair
@@ -85,33 +97,32 @@ void Dictionary::createFinalPairVectors(
 				rightIndex = indices[rightSymbolLeftPart][rightSymbolRightPart];
 			}
 
-			//Make a pair out of the indices we found, then push it to the vector
-			CompactPair p(leftIndex, rightIndex);
-			pairVectors[gen].push_back(p);
+			//Make a pair out of the indices we found
+			NamedPair p = { leftIndex, rightIndex, leftSymbol, rightSymbol };
+			vec.push_back(p);
+			//pairVectors[gen].push_back(p);
 		}
 
-		////Figure out the dictionary names of each pair
-		//dense_hash_map<long, dense_hash_map<long, long>> dictionaryNames;
-		//dictionaryNames.set_empty_key(-1);
-		//dictionaryNames.set_deleted_key(-2);
-		//for (int i = 0; i < pairVectors[gen].size(); ++i)
-		//{
-		//	CompactPair temp(pairVectors[gen][i].leftSymbol, pairVectors[gen][i].rightSymbol);
-		//	dictionaryNames[]
-		//}
-
 		//Sort the new vector
-		sort(pairVectors[gen].begin(), pairVectors[gen].end(),comPair);
+		sort(vec.begin(), vec.end(),comPairN);
+
+		//Add the new pairs to the corresponding pair vector
+		vector<CompactPair> vec2;
+		for (int i = 0; i < vec.size(); ++i)
+		{
+			vec2.push_back(CompactPair(vec[i].leftSymbol, vec[i].rightSymbol));
+		}
+		pairVectors.push_back(vec2);
 
 		//Record the new indices
-		for (int i = 0; i < pairVectors[gen].size(); ++i)
+		for (int i = 0; i < vec.size(); ++i)
 		{
-			if (indices[pairVectors[gen][i].leftSymbol].empty())
+			if (indices[vec[i].nameLeft].empty())
 			{
-				indices[pairVectors[gen][i].leftSymbol].set_empty_key(-1);
-				indices[pairVectors[gen][i].leftSymbol].set_deleted_key(-2);
+				indices[vec[i].nameLeft].set_empty_key(-1);
+				indices[vec[i].nameLeft].set_deleted_key(-2);
 			}
-			indices[pairVectors[gen][i].leftSymbol][pairVectors[gen][i].rightSymbol] = offset + i;
+			indices[vec[i].nameLeft][vec[i].nameRight] = offset + i;
 		}
 
 		//Update the offset

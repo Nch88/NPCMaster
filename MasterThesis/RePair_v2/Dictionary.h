@@ -2,6 +2,14 @@
 
 #include "stdafx.h"
 
+struct NamedPair
+{
+	long leftSymbol;
+	long rightSymbol;
+	long nameLeft;
+	long nameRight;
+};
+
 class Dictionary
 {
 public:

@@ -350,6 +350,9 @@ void Huffman::readFromGammaCodes(
 	char rawChunk3 = 0;
 	char rawChunk4 = 0;
 
+	string temp = "";
+	gc.decodeGammaString(prefix, temp, intValues, symbolsToRead);
+
 	while (intValues.size() < symbolsToRead)
 	{
 		if (!bitstream.eof())
@@ -364,6 +367,9 @@ void Huffman::readFromGammaCodes(
 			chunk = "";
 
 		gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
+		
+		//DEBUG
+		int w = 42;
 	}
 }
 

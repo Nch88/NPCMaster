@@ -103,51 +103,51 @@ TEST(decoder, diddyAll)
 	ASSERT_EQ(string1,finalOutput);
 }
 
-TEST(decoder,decodeLargeFile)
-{
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
-
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	Algorithm algo;
-	MyTimer timer;
-	MyTest t;
-	Huffman h;
-	Outputter out;
-	Dictionary finalDict;
-	GammaCode gc;
-	Decoder dc;
-
-	string input1 = "bible.txt";
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	string filename = input1;
-	ifstream file(filename);
-	bool firstBlock = true;
-
-	c.verbose = true;
-
-	algo.run(filename, file, c, init, algP, timer, blockSize, activePairs, sequenceArray, priorityQueue, dictionary, symbols);
-
-	dc.decode("bible.txt.NPC");
-	int x = 0;
-}
+//TEST(decoder,decodeLargeFile)
+//{
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols(initialSymbolValue);//256
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//	Algorithm algo;
+//	MyTimer timer;
+//	MyTest t;
+//	Huffman h;
+//	Outputter out;
+//	Dictionary finalDict;
+//	GammaCode gc;
+//	Decoder dc;
+//
+//	string input1 = "bible.txt";
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//	unordered_set<long> terminals;
+//	vector<CompactPair> pairs;
+//	dense_hash_map <long, dense_hash_map<long, long>> indices;
+//	indices.set_empty_key(-1);
+//	indices.set_deleted_key(-2);
+//	string filename = input1;
+//	ifstream file(filename);
+//	bool firstBlock = true;
+//
+//	c.verbose = true;
+//
+//	//algo.run(filename, file, c, init, algP, timer, blockSize, activePairs, sequenceArray, priorityQueue, dictionary, symbols);
+//
+//	dc.decode("bible.txt.NPC");
+//	int x = 0;
+//}
 
 TEST(decoder, getDictionaryName)
 {
