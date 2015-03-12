@@ -32,14 +32,14 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	dc.createGenerationVectors(dictionary, generationVectors);
 
 	vector<CompactPair*> gen0;
+	gen0.push_back(new CompactPair(105, 110));
 	gen0.push_back(new CompactPair(46, 100));
 	gen0.push_back(new CompactPair(100, 100));
-	gen0.push_back(new CompactPair(105, 110));
 	vector<CompactPair*> gen1;
-	gen1.push_back(new CompactPair(300, 105));
-	gen1.push_back(new CompactPair(300, 111));
 	gen1.push_back(new CompactPair(301, 121));
 	gen1.push_back(new CompactPair(305, 103));
+	gen1.push_back(new CompactPair(300, 105));
+	gen1.push_back(new CompactPair(300, 111));
 	vector<CompactPair*> gen2;
 	gen2.push_back(new CompactPair(302, 303));
 
@@ -89,6 +89,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dc.createGenerationVectors(dictionary, generationVectors);
 
 	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
+	sort(terminals.begin(), terminals.end());
 
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
@@ -104,12 +105,12 @@ TEST(createCompactDictionary, createFinalPairVector)
 	expected.push_back(v1);
 	expected.push_back(v2);
 	expected.push_back(v3);
-	expected[0].push_back(CompactPair(4, 5));
-	expected[0].push_back(CompactPair(5, 5));
-	expected[0].push_back(CompactPair(1, 2));
-	expected[1].push_back(CompactPair(13, 1));
-	expected[1].push_back(CompactPair(13, 6));
-	expected[1].push_back(CompactPair(14, 10));
+	expected[0].push_back(CompactPair(0, 2));
+	expected[0].push_back(CompactPair(2, 2));
+	expected[0].push_back(CompactPair(5, 7));
+	expected[1].push_back(CompactPair(13, 5));
+	expected[1].push_back(CompactPair(13, 8));
+	expected[1].push_back(CompactPair(14, 12));
 	expected[1].push_back(CompactPair(15, 3));
 	expected[2].push_back(CompactPair(16, 18));
 
