@@ -167,7 +167,7 @@ void Dictionary::decodeSymbol(
 	}
 
 	//Handle right part
-	long indexRight = decodedPairs[symbolIndex].leftSymbol;
+	long indexRight = decodedPairs[symbolIndex].rightSymbol;
 	if (indexRight < decodedTerms.size())
 		finalOutput += decodedTerms[indexRight];
 	else
