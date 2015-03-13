@@ -63,7 +63,10 @@ void Decoder::decode(string inFile)
 	expandedDictionary.set_empty_key(-1);
 	expandedDictionary.set_deleted_key(-2);
 	
-	while (!bitstream.eof())
+	//DEBUG
+	cout << "\nProgress:[";
+
+	//while (!bitstream.eof())
 	{
 		//Read dictionary
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
@@ -95,7 +98,13 @@ void Decoder::decode(string inFile)
 		{
 			outstream << expandedDictionary[n];
 		}
+
+		//DEBUG
+		cout << '#';
 	}
+
+	//DEBUG
+	cout << ']' << endl;
 
 	bitstreamDict.close();
 	bitstream.close();
