@@ -66,7 +66,7 @@ void Decoder::decode(string inFile)
 	//DEBUG
 	cout << "\nProgress:[";
 
-	//while (!bitstream.eof())
+	while (!bitstream.eof())
 	{
 		//Read dictionary
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
@@ -89,6 +89,9 @@ void Decoder::decode(string inFile)
 				cout << "\nEntry: ( " << var.first << " , " << var2.first << " ) -> " << var2.second << ".\n";
 			}
 		}*/
+
+		//DEBUG
+		cout << '#';
 
 		//Read block
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);

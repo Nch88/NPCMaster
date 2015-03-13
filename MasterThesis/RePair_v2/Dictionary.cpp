@@ -151,18 +151,29 @@ void Dictionary::createGenerationVectors(
 }
 
 void Dictionary::decodeSymbol(
-	long &symbolIndex, 
+	long symbolIndex, 
 	vector<CompactPair> &decodedPairs,
 	vector<long> &decodedTerms,
 	string &finalOutput)
 {
-	if (symbolIndex < decodedTerms.size())
-		finalOutput += decodedTerms[symbolIndex];
+	//Handle left part
+	long indexLeft = decodedPairs[symbolIndex].leftSymbol;
+	if (indexLeft < decodedTerms.size())
+		finalOutput += decodedTerms[indexLeft];
 	else
 	{
-		//Recursively decode left and right symbol
-		decodeSymbol(decodedPairs[symbolIndex - decodedTerms.size()].leftSymbol, decodedPairs, decodedTerms, finalOutput);
-		decodeSymbol(decodedPairs[symbolIndex - decodedTerms.size()].rightSymbol, decodedPairs, decodedTerms, finalOutput);
+		//Recursively decode left symbol
+		decodeSymbol((indexLeft - decodedTerms.size()), decodedPairs, decodedTerms, finalOutput);
+	}
+
+	//Handle right part
+	long indexRight = decodedPairs[symbolIndex].leftSymbol;
+	if (indexRight < decodedTerms.size())
+		finalOutput += decodedTerms[indexRight];
+	else
+	{
+		//Recursively decode right symbol
+		decodeSymbol(indexRight - decodedTerms.size(), decodedPairs, decodedTerms, finalOutput);
 	}
 }
 
