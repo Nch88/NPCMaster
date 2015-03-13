@@ -394,7 +394,9 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 
 	//Read header for terminals
 	readNextNumbers(1, values, bitstream, prefix);
-	int count = (values)[0];
+	if (values.empty())
+		throw new exception("Error in decoding: File not found or empty");
+	int count = values[0];
 	values.clear();
 
 	//Read terminals

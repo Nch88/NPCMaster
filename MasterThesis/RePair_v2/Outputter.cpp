@@ -302,9 +302,10 @@ void Outputter::all(
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
 
+	//Generate Huffman codes
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
-	//Write Huffman encoded sequence to file
+	//Encode sequence array and write it to file
 	this->huffmanEncoding(
 		compressedFilename,
 		ofs_compressed,
