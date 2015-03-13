@@ -23,27 +23,10 @@ string Decoder::getOutfileName(string in)
 
 void Decoder::decode(string inFile)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
-
-	AlgorithmP algP;
 	Huffman h;
-	Outputter out;
 	Dictionary finalDict;
 	GammaCode gc;
 
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
 	ifstream file(inFile);
 	bool firstBlock = true;
 
@@ -66,6 +49,7 @@ void Decoder::decode(string inFile)
 	//DEBUG
 	cout << "\nProgress:[";
 
+	//Each iteration represents a block
 	while (!bitstream.eof())
 	{
 		//Read dictionary
@@ -116,7 +100,16 @@ void Decoder::decode(string inFile)
 			outstream << toWrite;
 		}
 		
-		
+		//Reset for next block
+		delete firstCodes;
+		firstCodes = nullptr;
+
+		decodedPairs.clear();
+		decodedTerms.clear();
+		symbolIndices.clear();
+		symbolIndexSequence.clear();
+		expandedDictionary.clear();
+
 		//DEBUG
 		cout << '#';
 		bitstream.peek();

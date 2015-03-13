@@ -129,8 +129,10 @@ TEST(decoder, bible_Nicolai)
 
 	Initializer init;
 	Conditions c;
+	Algorithm algo;
 	AlgorithmP algP;
 	MyTest t;
+	MyTimer timer;
 	Huffman h;
 	Outputter out;
 	Dictionary finalDict;
@@ -161,39 +163,19 @@ TEST(decoder, bible_Nicolai)
 	
 	if (!checkStream.is_open())
 	{
-		std::cout << "Starting initialization" << endl;
-		init.SequenceArray(
-			c,
+		algo.run(
+			filename,
 			file,
+			c,
+			init,
+			algP,
+			timer,
 			blockSize,
 			activePairs,
 			sequenceArray,
-			terminals);
-
-		priorityQueueSize = sqrt(sequenceArray.size());
-		priorityQueue.resize(priorityQueueSize);
-		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-
-		std::cout << "Starting repair compression" << endl;
-		algP.run(
-			sequenceArray,
-			dictionary,
-			activePairs,
 			priorityQueue,
-			terminals,
-			symbols,
-			c);
-
-		std::cout << "Starting output all" << endl;
-		out.all(
-			filename,
-			firstBlock,
-			sequenceArray,
 			dictionary,
-			activePairs,
-			priorityQueue,
-			terminals,
-			c);
+			symbols);
 		checkStream.close();
 	}	
 	checkStream.close();
