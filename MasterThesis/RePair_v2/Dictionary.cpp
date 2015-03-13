@@ -154,6 +154,7 @@ void Dictionary::decodeSymbol(
 	long symbolIndex, 
 	vector<CompactPair> &decodedPairs,
 	vector<long> &decodedTerms,
+	dense_hash_map<long, string> &expandedDict,
 	string &finalOutput)
 {
 	//Handle left part
@@ -162,18 +163,18 @@ void Dictionary::decodeSymbol(
 		finalOutput += decodedTerms[indexLeft];
 	else
 	{
-		//Recursively decode left symbol
-		decodeSymbol((indexLeft - decodedTerms.size()), decodedPairs, decodedTerms, finalOutput);
+		//Decode left symbol
+		finalOutput += expandedDict[indexLeft - decodedTerms.size()];
 	}
 
 	//Handle right part
-	long indexRight = decodedPairs[symbolIndex].leftSymbol;
+	long indexRight = decodedPairs[symbolIndex].rightSymbol;
 	if (indexRight < decodedTerms.size())
 		finalOutput += decodedTerms[indexRight];
 	else
 	{
-		//Recursively decode right symbol
-		decodeSymbol(indexRight - decodedTerms.size(), decodedPairs, decodedTerms, finalOutput);
+		//Decode right symbol
+		finalOutput += expandedDict[indexRight - decodedTerms.size()];
 	}
 }
 
@@ -186,7 +187,7 @@ void Dictionary::expandDictionary(
 	for (long i = 0; i < decodedPairs.size(); ++i)
 	{
 		s.assign("");
-		decodeSymbol(i, decodedPairs, decodedTerms, s);
+		decodeSymbol(i, decodedPairs, decodedTerms, expandedDict, s);
 		expandedDict[i].assign(s);
 	}
 }

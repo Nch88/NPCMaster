@@ -80,8 +80,10 @@ TEST(decoder, diddyAll)
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
 	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
-
-	int location = bitstreamDict.tellg();
+	dense_hash_map<long, string> expandedDict;
+	expandedDict.set_empty_key(-1);
+	expandedDict.set_deleted_key(-2);
+	finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDict);
 
 	//Read huffman dictionary
 	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
@@ -96,11 +98,16 @@ TEST(decoder, diddyAll)
 	h.decode(firstCodes, outstream, symbolIndices, symbolIndexSequence);
 	string finalOutput;
 	finalOutput.assign("");
+	long cur;
 	for (int i = 0; i < symbolIndexSequence.size(); ++i)
 	{
-		//finalDict.decodeSymbol(symbolIndexSequence[i], decodedPairs, decodedTerms, finalOutput);
+		cur = symbolIndexSequence[i];
+		if (cur < decodedTerms.size())
+			finalOutput += decodedTerms[cur];
+		else
+			finalOutput += expandedDict[cur - decodedTerms.size()];
 	}
-	//ASSERT_EQ(string1,finalOutput);
+	ASSERT_EQ(string1, finalOutput);
 }
 
 TEST(decoder,decodeLargeFile)
