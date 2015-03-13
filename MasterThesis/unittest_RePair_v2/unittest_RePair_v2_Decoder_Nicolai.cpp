@@ -190,3 +190,155 @@ TEST(decoder, bible_Nicolai)
 	else
 		ASSERT_TRUE(false);
 }
+
+TEST(decoder, world_Nicolai)
+{
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long symbols(initialSymbolValue);//256
+
+	Initializer init;
+	Conditions c;
+	Algorithm algo;
+	AlgorithmP algP;
+	MyTest t;
+	MyTimer timer;
+	Huffman h;
+	Outputter out;
+	Dictionary finalDict;
+	GammaCode gc;
+	Decoder dec;
+
+	string input1 = "world192.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<long> terminals;
+	vector<CompactPair> pairs;
+	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	indices.set_empty_key(-1);
+	indices.set_deleted_key(-2);
+	string filename = input1;
+	ifstream file(filename);
+	bool firstBlock = true;
+
+	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+
+	string decompressedFile = dec.getOutfileName(compressedFile);
+
+	ifstream checkStream(compressedFile);
+
+
+	if (!checkStream.is_open())
+	{
+		algo.run(
+			filename,
+			file,
+			c,
+			init,
+			algP,
+			timer,
+			blockSize,
+			activePairs,
+			sequenceArray,
+			priorityQueue,
+			dictionary,
+			symbols);
+		checkStream.close();
+	}
+	checkStream.close();
+
+	std::cout << "Starting decoding" << endl;
+	dec.decode(compressedFile);
+
+	long badChar = 0;
+
+	if (compareFiles(input1, decompressedFile, badChar))
+		ASSERT_TRUE(true);
+	else
+		ASSERT_TRUE(false);
+}
+
+//TEST(decoder, ecoli_Nicolai)
+//{
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols(initialSymbolValue);//256
+//
+//	Initializer init;
+//	Conditions c;
+//	Algorithm algo;
+//	AlgorithmP algP;
+//	MyTest t;
+//	MyTimer timer;
+//	Huffman h;
+//	Outputter out;
+//	Dictionary finalDict;
+//	GammaCode gc;
+//	Decoder dec;
+//
+//	string input1 = "E.coli";
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//	unordered_set<long> terminals;
+//	vector<CompactPair> pairs;
+//	dense_hash_map <long, dense_hash_map<long, long>> indices;
+//	indices.set_empty_key(-1);
+//	indices.set_deleted_key(-2);
+//	string filename = input1;
+//	ifstream file(filename);
+//	bool firstBlock = true;
+//
+//	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+//	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+//
+//	string decompressedFile = dec.getOutfileName(compressedFile);
+//
+//	ifstream checkStream(compressedFile);
+//
+//
+//	if (!checkStream.is_open())
+//	{
+//		algo.run(
+//			filename,
+//			file,
+//			c,
+//			init,
+//			algP,
+//			timer,
+//			blockSize,
+//			activePairs,
+//			sequenceArray,
+//			priorityQueue,
+//			dictionary,
+//			symbols);
+//		checkStream.close();
+//	}
+//	checkStream.close();
+//
+//	std::cout << "Starting decoding" << endl;
+//	dec.decode(compressedFile);
+//
+//	long badChar = 0;
+//
+//	if (compareFiles(input1, decompressedFile, badChar))
+//		ASSERT_TRUE(true);
+//	else
+//		ASSERT_TRUE(false);
+//}

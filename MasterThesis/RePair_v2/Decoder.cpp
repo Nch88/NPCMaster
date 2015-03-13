@@ -33,7 +33,7 @@ void Decoder::decode(string inFile)
 	string compressedDictionary = getDictionaryName(inFile);
 	ifstream bitstreamDict(compressedDictionary, ios::binary);
 	ifstream bitstream(inFile, ios::binary);
-	ofstream outstream(getOutfileName(inFile));
+	ofstream outstream(getOutfileName(inFile), ios::binary);
 
 	vector<CompactPair> decodedPairs;
 	vector<long> decodedTerms;
