@@ -66,7 +66,7 @@ void Decoder::decode(string inFile)
 	//DEBUG
 	cout << "\nProgress:[";
 
-	//while (!bitstream.eof())
+	while (!bitstream.eof())
 	{
 		//Read dictionary
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
@@ -115,9 +115,11 @@ void Decoder::decode(string inFile)
 				toWrite = expandedDictionary[n - decodedTerms.size()];
 			outstream << toWrite;
 		}
-
+		
+		
 		//DEBUG
 		cout << '#';
+		bitstream.peek();
 	}
 
 	//DEBUG
