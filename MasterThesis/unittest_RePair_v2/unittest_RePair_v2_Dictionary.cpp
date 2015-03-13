@@ -198,3 +198,73 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	ASSERT_EQ(19, (indices[305])['g']);
 	ASSERT_EQ(20, (indices[302])[303]);
 }
+
+TEST(expandDictionary, diddy)
+{
+	Dictionary dict;
+
+	//Make decodedPairs
+	vector<CompactPair> dPairs;
+	dPairs.push_back(CompactPair(0, 2));
+	dPairs.push_back(CompactPair(5, 7));
+	dPairs.push_back(CompactPair(12, 13));
+	dPairs.push_back(CompactPair(14, 3));
+	dPairs.push_back(CompactPair(2, 15));
+	dPairs.push_back(CompactPair(2, 17));
+	dPairs.push_back(CompactPair(5, 18));
+	dPairs.push_back(CompactPair(13, 19));
+
+	//Make terminals
+	vector<long> dTerms;
+	dTerms.push_back(46);
+	dTerms.push_back(97);
+	dTerms.push_back(100);
+	dTerms.push_back(103);
+	dTerms.push_back(104);
+	dTerms.push_back(105);
+	dTerms.push_back(109);
+	dTerms.push_back(110);
+	dTerms.push_back(111);
+	dTerms.push_back(115);
+	dTerms.push_back(117);
+	dTerms.push_back(119);
+	dTerms.push_back(121);
+
+	dense_hash_map<long, string> expDict;
+	expDict.set_empty_key(-1);
+	expDict.set_deleted_key(-2);
+
+	dict.expandDictionary(dPairs, dTerms, expDict);
+
+	string expected = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	string output = "";
+
+	vector<long> symbolIndexSequence;
+	symbolIndexSequence.push_back(9);
+	symbolIndexSequence.push_back(16);
+	symbolIndexSequence.push_back(16);
+	symbolIndexSequence.push_back(13);
+	symbolIndexSequence.push_back(8);
+	symbolIndexSequence.push_back(0);
+	symbolIndexSequence.push_back(11);
+	symbolIndexSequence.push_back(1);
+	symbolIndexSequence.push_back(4);
+	symbolIndexSequence.push_back(20);
+	symbolIndexSequence.push_back(19);
+	symbolIndexSequence.push_back(10);
+	symbolIndexSequence.push_back(6);
+	symbolIndexSequence.push_back(20);
+	symbolIndexSequence.push_back(8);
+
+	long cur;
+	for (int i = 0; i < symbolIndexSequence.size(); ++i)
+	{
+		cur = symbolIndexSequence[i];
+		if (cur < dTerms.size())
+			output += dTerms[cur];
+		else
+			output += expDict[cur - dTerms.size()];
+	}
+
+	ASSERT_EQ(expected, output);
+}

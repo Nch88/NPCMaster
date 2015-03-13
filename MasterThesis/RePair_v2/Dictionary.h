@@ -34,6 +34,7 @@ public:
 		long symbolIndex,
 		vector<CompactPair> &decodedPairs,
 		vector<long> &decodedTerms,
+		dense_hash_map<long, string> &expandedDict,
 		string &finalOutput);
 	void Dictionary::expandDictionary(
 		vector<CompactPair> &decodedPairs,
