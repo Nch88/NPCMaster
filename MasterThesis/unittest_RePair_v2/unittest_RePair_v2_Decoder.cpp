@@ -155,3 +155,14 @@ TEST(decoder, getDictionaryName)
 	ASSERT_EQ("abc.dict.NPC", dc.getDictionaryName("abc.NPC"));
 	ASSERT_EQ("error", dc.getDictionaryName("blabla"));
 }
+
+bool compareFiles(string file1, string file2)
+{
+	ifstream stream1(file1);
+	ifstream stream2(file2);
+}
+
+TEST(decoder, bible_Nicolai)
+{
+
+}
