@@ -96,14 +96,30 @@ void Decoder::decode(string inFile)
 		//Read block
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
 
+		//DEBUG
+		vector<long> dictKeys;
+		vector<string> dictValues;
+		for each (auto &entry in expandedDictionary)
+		{
+			dictKeys.push_back(entry.first);
+			dictValues.push_back(entry.second);
+		}
+
 		//Decode and write
 		for each (long n in symbolIndexSequence)
 		{
-			outstream << expandedDictionary[n];
+			string toWrite;
+			if (n < decodedTerms.size())
+				toWrite = decodedTerms[n];
+			else
+				toWrite = expandedDictionary[n - decodedTerms.size()];
+			outstream << toWrite;
 		}
-
+		
+		
 		//DEBUG
 		cout << '#';
+		bitstream.peek();
 	}
 
 	//DEBUG
