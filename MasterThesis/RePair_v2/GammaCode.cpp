@@ -179,7 +179,7 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 		terminalsGamma += tmpGammaCode;
 	}
 
-	long bitLengthRightValue = terminalVector.size();
+	long bitLengthRightValue = terminalVector.size() - 1;
 	long bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Generation 1 can point to any terminal
 
 	//For each generation
