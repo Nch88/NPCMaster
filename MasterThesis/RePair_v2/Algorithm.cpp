@@ -47,6 +47,16 @@ int Algorithm::run(
 		}
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
 
+		//DEBUG
+		string endOfSeq = "";
+		int x = sequenceArray.size() - 7;
+		for (int i = x; i < sequenceArray.size(); i++)
+		{
+			endOfSeq += sequenceArray[i]->symbol;
+		}
+		if (endOfSeq == "atctcga")
+			int p = 0;
+
 		if (c.timing)
 		{
 			t.stop();
@@ -127,6 +137,6 @@ int Algorithm::run(
 		}
 	}
 	cout << "Completed compression of file: " << filename << endl;
-	
+	init.resetCompleted(activePairs, sequenceArray, blockSize);
 	return 0;
 }

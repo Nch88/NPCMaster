@@ -79,6 +79,9 @@ void Outputter::huffmanEncoding(
 	//Write chunks of Huffman codes until an entire block is processed
 	while (seqIndex < sequenceArray.size())
 	{
+		//DEBUG
+		if (seqIndex > sequenceArray.size() - 8)
+			int x = 0;
 		//Start new chunk
 		chunk += specialBit;
 		while (chunk.size() < chunkSize && seqIndex < sequenceArray.size())
@@ -105,8 +108,8 @@ void Outputter::huffmanEncoding(
 		}
 
 		//Write chunk and reset for next chunk
-		//If last symbol the do not write yet as we need to pad the chunk
-		if (seqIndex < sequenceArray.size())
+		//If last symbol then do not write yet as we need to pad the chunk, unless this chunk is full
+		if (seqIndex < sequenceArray.size() || chunk.size() == chunkSize)
 		{
 			writeChunkFromString(myfile, chunk, bitsToWrite);
 			chunk = "";
@@ -115,6 +118,8 @@ void Outputter::huffmanEncoding(
 	//Add the last part of the code for the last symbol to current chunk if necessary
 	while (codeIndex != code.size() && code.size() != 0)
 	{
+		if (chunk.size() == 0)
+			chunk += "0";
 		chunk += code[codeIndex++];
 	}
 

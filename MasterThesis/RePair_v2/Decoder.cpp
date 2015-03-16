@@ -47,7 +47,8 @@ void Decoder::decode(string inFile)
 	expandedDictionary.set_deleted_key(-2);
 	
 	//DEBUG
-	cout << "\nProgress:[";
+	std::cout << "\nProgress:[";
+	long count = 0;
 
 	//Each iteration represents a block
 	while (!bitstream.eof())
@@ -75,7 +76,7 @@ void Decoder::decode(string inFile)
 		}*/
 
 		//DEBUG
-		cout << '#';
+		std::cout << '#';
 
 		//Read block
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
@@ -87,16 +88,25 @@ void Decoder::decode(string inFile)
 		{
 			dictKeys.push_back(entry.first);
 			dictValues.push_back(entry.second);
+			if (entry.second == "atctcga")
+				int x = 0;
 		}
 
 		//Decode and write
 		for each (long n in symbolIndexSequence)
 		{
+			//DEBUG
+			if (count > 4194290)
+			{
+				int x = 0;
+			}
+				
 			string toWrite;
 			if (n < decodedTerms.size())
 				toWrite = decodedTerms[n];
 			else
 				toWrite = expandedDictionary[n - decodedTerms.size()];
+			count += toWrite.size();
 			outstream << toWrite;
 		}
 		
@@ -111,12 +121,12 @@ void Decoder::decode(string inFile)
 		expandedDictionary.clear();
 
 		//DEBUG
-		cout << '#';
+		std::cout << '#';
 		bitstream.peek();
 	}
 
 	//DEBUG
-	cout << ']' << endl;
+	std::cout << ']' << endl;
 
 	bitstreamDict.close();
 	bitstream.close();

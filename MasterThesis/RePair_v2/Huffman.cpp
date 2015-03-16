@@ -226,10 +226,10 @@ void Huffman::generateCanonicalHuffmanCodes(
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
-	for (int i = 0; i < maxLength; i++)											//Init codelengths with zero
+	for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
 	
-	for (int i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
+	for (long i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
 		++numl[codeLengths[i] - 1];
 
 	firstCode[maxLength - 1] = 0;
@@ -242,10 +242,10 @@ void Huffman::generateCanonicalHuffmanCodes(
 	for (int i = 0; i < maxLength; i++)											
 		nextCode[i] = firstCode[i];
 
-	int i = 0;
+	long codes = 0;
 	for(auto &huffmanNode : huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 	{
-		int codeLength = codeLengths[cardinality + i];
+		int codeLength = codeLengths[cardinality + codes];
 		string code = codeToString(nextCode[codeLength - 1], codeLength);
 		huffmanNode.second.code.assign(code);
 
@@ -256,7 +256,7 @@ void Huffman::generateCanonicalHuffmanCodes(
 		}
 		(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
 		++nextCode[codeLength - 1];
-		++i;
+		++codes;
 	}
 
 	delete[] nextCode;
@@ -373,6 +373,16 @@ void Huffman::readFromGammaCodes(
 	}
 }
 
+bool prefixIsGood(string &prefix)
+{
+	for (int i = 0; i < prefix.size(); i++)
+	{
+		if (prefix[i] != '0')
+			return false;
+	}
+	return true;
+}
+
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
 	long *&firstCodes,
@@ -450,6 +460,8 @@ void Huffman::decodeDictionary(
 				intValues.pop_back();											//Remove index we already processed
 			}
 		}
+		if (!prefixIsGood(prefix))
+			int x = 0;
 	}
 }
 

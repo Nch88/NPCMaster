@@ -136,6 +136,114 @@ TEST(outputter, diddyHuffmanCode)
 	ASSERT_EQ(expected1 + expected2 +expected3, totalResult);
 }
 
+TEST(outputter, randomHuffmanCode)
+{
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+	Huffman h;
+	Outputter out;
+
+	string input1 = "huffmanEncodeTest.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+	unordered_set<long> terminals;
+	string filename = input1;
+
+	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	huffmanCodes.set_empty_key(-1);
+	huffmanCodes.set_deleted_key(-2);
+	long *firstCode = nullptr;
+	long *numl = nullptr;
+	long maxLength = 0;
+	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	huffmanToSymbol.set_empty_key(-1);
+	huffmanToSymbol.set_deleted_key(-2);
+
+	//test stuff
+	sequenceArray.push_back(new SymbolRecord(55329, 0));
+	sequenceArray.push_back(new SymbolRecord(0, 1));
+	sequenceArray.push_back(new SymbolRecord(0, 2));
+	sequenceArray.push_back(new SymbolRecord(0, 3));
+	sequenceArray.push_back(new SymbolRecord(0, 4));
+	sequenceArray.push_back(new SymbolRecord(103, 5));
+	sequenceArray.push_back(new SymbolRecord(97, 6));
+
+	HuffmanNode node1; node1.code = "1101000110";
+	HuffmanNode node2; node2.code = "001010100110110";
+	HuffmanNode node3; node3.code = "00000000010010110";
+
+	string expresult =	"01101000110001010100110110000000";
+	expresult +=		"00001001011000000000000000000000";
+	expresult +=		"10000000000000000000000000010100";
+
+	huffmanCodes[55329] = node1;
+	huffmanCodes[103] = node2;
+	huffmanCodes[97] = node3;
+
+	string filenameout = out.addFilenameEnding(input1, ".NPC");
+	ofstream myfile;
+	myfile.open(filenameout, ios::binary);
+
+	out.huffmanEncoding(
+		filenameout,
+		myfile,
+		sequenceArray,
+		huffmanCodes,
+		true);
+	myfile.close();
+
+	//Actual test
+
+	ifstream ifs;
+	ifs.open(filenameout, ios::binary);
+	string result = "";
+	string totalResult = "";
+	char byte;
+	bitset<8> *bits;
+	int count = 0;
+
+	if (ifs.is_open())
+	{
+		while (ifs.get(byte))
+		{
+			bits = new bitset<8>(byte);
+
+			for (int i = bits->size() - 1; i >= 0; --i)
+			{
+				if ((*bits)[i] == 0)
+					result += "0";
+				else
+					result += "1";
+			}
+
+			if (result.size() == 32)
+			{
+				totalResult += result;
+				result = "";
+			}
+		}
+	}
+
+	ASSERT_EQ(expresult, totalResult);
+}
+
 TEST(outputter, diddyHuffmanDictionary)
 {
 	using namespace google;
