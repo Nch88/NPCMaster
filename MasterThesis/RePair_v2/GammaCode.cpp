@@ -442,5 +442,4 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 		}
 		left.clear();
 	}
-	int q = 42;
 }

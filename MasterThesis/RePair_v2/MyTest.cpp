@@ -330,3 +330,27 @@ bool MyTest::inPriorityQueueAtPosition(
 	
 	return false;
 }
+
+bool MyTest::compareFiles(string file1, string file2, long &badChar)
+{
+	ifstream stream1(file1);
+	ifstream stream2(file2);
+	badChar = 0;
+	char chunk1;
+	char chunk2;
+
+	if (stream1.is_open() && stream2.is_open())
+	{
+		while (stream1 >> noskipws >> chunk1 && stream2 >> noskipws >> chunk2)
+		{
+			++badChar;
+			if (chunk1 != chunk2)
+				return false;
+		}
+		stream1.peek();
+		stream2.peek();
+		if (stream1.eof() && stream2.eof())
+			return true;
+	}
+	return false;
+}
