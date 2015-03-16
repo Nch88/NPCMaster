@@ -25,6 +25,9 @@ void Huffman::getFrequencies(
 				++cardinality;
 		}		
 	}
+	//DEBUG
+	if (cardinality == 0)
+		cout << "getFrequencies, cardinality is 0" << endl;
 }
 
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
@@ -184,6 +187,9 @@ void Huffman::expandHuffmanTree(
 		if (codeLengths[i] > maxLength)
 			maxLength = codeLengths[i];
 	}
+	//DEBUG
+	if (maxLength == 0)
+		cout << "expandHuffmanTree, maxlength is 0" << endl;
 }
 
 void Huffman::getCodeLengths(
@@ -226,6 +232,9 @@ void Huffman::generateCanonicalHuffmanCodes(
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
+	//DEBUG
+	if (maxLength == 0)
+		cout << "generateCanonicalHuffmanCodes, Maxlength is 0" << endl;
 	for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
 	
@@ -257,6 +266,9 @@ void Huffman::generateCanonicalHuffmanCodes(
 		(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
 		++nextCode[codeLength - 1];
 		++codes;
+
+		//DEBUG
+		//cout << codes << endl;
 	}
 
 	delete[] nextCode;
@@ -404,6 +416,7 @@ void Huffman::decodeDictionary(
 		long firstCode = 0;
 		long lastCode = 0;
 		vector<long> intValues;
+
 		symbolsToRead = 1;
 		
 		readFromGammaCodes(
@@ -460,8 +473,9 @@ void Huffman::decodeDictionary(
 				intValues.pop_back();											//Remove index we already processed
 			}
 		}
+		//DEBUG
 		if (!prefixIsGood(prefix))
-			int x = 0;
+			cout << "Huffman::decodeDictionary bad prefix" << endl;
 	}
 }
 

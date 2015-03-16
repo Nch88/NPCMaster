@@ -53,6 +53,9 @@ void Decoder::decode(string inFile)
 	//Each iteration represents a block
 	while (!bitstream.eof())
 	{
+		//DEBUG 
+		++count;
+
 		//Read dictionary
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
 		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
@@ -65,6 +68,10 @@ void Decoder::decode(string inFile)
 		{
 			out << "\nEntry: " << var.first << " -> " << var.second << ".\n";
 		}*/
+
+		//DEBUG
+		if (count == 11)
+			int w = 0;
 
 		//Read huffman dictionary
 		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
@@ -100,18 +107,12 @@ void Decoder::decode(string inFile)
 		//Decode and write
 		for each (long n in symbolIndexSequence)
 		{
-			//DEBUG
-			if (count > 4194290)
-			{
-				int x = 0;
-			}
-				
 			string toWrite;
 			if (n < decodedTerms.size())
 				toWrite = decodedTerms[n];
 			else
 				toWrite = expandedDictionary[n - decodedTerms.size()];
-			count += toWrite.size();
+			
 			outstream << toWrite;
 		}
 		

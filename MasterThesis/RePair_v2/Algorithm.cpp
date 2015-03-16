@@ -35,8 +35,12 @@ int Algorithm::run(
 	unordered_set<long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
+	//DEBUG
+	long testCount = 0;
+
 	while (file.is_open())
 	{
+		++testCount;
 		if (c.verbose)
 		{
 			cout << " - Verbose: Initializing block" << endl;
@@ -48,14 +52,17 @@ int Algorithm::run(
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
 
 		//DEBUG
-		string endOfSeq = "";
-		int x = sequenceArray.size() - 7;
-		for (int i = x; i < sequenceArray.size(); i++)
+		bool testEmpty = true;
+		for (int i = 0; i < sequenceArray.size(); i++)
 		{
-			endOfSeq += sequenceArray[i]->symbol;
+			if (sequenceArray[i]->symbol != 0)
+			{
+				testEmpty = false;
+				break;
+			}
 		}
-		if (endOfSeq == "atctcga")
-			int p = 0;
+		if (testEmpty)
+			cout << "empty at block " << testCount << endl;
 
 		if (c.timing)
 		{
@@ -105,6 +112,12 @@ int Algorithm::run(
 		{
 			cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
 		}
+
+		//DEBUG
+		if (testCount == 11)
+			int w2 = 0;		//TODO: Test why 0 huffman codes are written for this block
+
+		//Find out why the sequence array is empty!!!
 		out.all(
 			filename,
 			firstBlock,
@@ -135,6 +148,9 @@ int Algorithm::run(
 			t.stop();
 			cout << " - Timing: Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
+		file.peek();
+		if (file.eof())
+			file.close();
 	}
 	cout << "Completed compression of file: " << filename << endl;
 	init.resetCompleted(activePairs, sequenceArray, blockSize);
