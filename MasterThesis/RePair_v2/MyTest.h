@@ -25,5 +25,6 @@ public:
 		PairRecord * pairRecord,
 		vector<PairRecord*> & priorityQueue,
 		long index);
+	bool compareFiles(std::string file1, std::string file2, long &badChar);
 };
 

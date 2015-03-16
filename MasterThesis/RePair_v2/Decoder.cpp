@@ -57,22 +57,27 @@ void Decoder::decode(string inFile)
 		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
 
 		//DEBUG
-		/*for each (auto var in expandedDictionary)
+		/*ofstream out;
+		out.open("debuggingfun.txt",ios::app);
+		out << "\n\nDic:\n";
+		for each (auto var in expandedDictionary)
 		{
-			cout << "\nEntry: " << var.first << " -> " << var.second << ".\n";
+			out << "\nEntry: " << var.first << " -> " << var.second << ".\n";
 		}*/
 
 		//Read huffman dictionary
 		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);
 
 		//DEBUG
-		/*for each (auto var in symbolIndices)
+		/*out << "\n\n\nHuffmanDic:\n";
+		for each (auto var in symbolIndices)
 		{
 			for each (auto var2 in var.second)
 			{
-				cout << "\nEntry: ( " << var.first << " , " << var2.first << " ) -> " << var2.second << ".\n";
+				out << "\nEntry: ( " << var.first << " , " << var2.first << " ) -> " << var2.second << ".\n";
 			}
-		}*/
+		}
+		out.close();*/
 
 		//DEBUG
 		cout << '#';
