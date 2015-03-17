@@ -48,7 +48,10 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 }
 
 void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite)
-{											
+{					
+	//DEBUG
+	if (chunk.size() != 32)
+		cout << "Outputter::writeChunkFromString bad chunk size" << endl;
 	for (int i = 0; i < 32; i++)
 	{
 		if (chunk[i] == '1')
@@ -193,7 +196,7 @@ void Outputter::huffmanDictionary(
 		while (gammaCodes.size() >= 32)											//Write as much as possible to file
 		{
 			stringToWrite = gammaCodes.substr(0, 32);
-			gammaCodes = gammaCodes.substr(32, gammaCodes.size());
+			gammaCodes = gammaCodes.substr(32, string::npos);
 
 			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
 		}

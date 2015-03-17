@@ -354,3 +354,13 @@ bool MyTest::compareFiles(string file1, string file2, long &badChar)
 	}
 	return false;
 }
+
+bool MyTest::prefixIsGood(string &prefix)
+{
+	for (int i = 0; i < prefix.size(); i++)
+	{
+		if (prefix[i] != '0')
+			return false;
+	}
+	return true;
+}

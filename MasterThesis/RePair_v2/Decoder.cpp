@@ -56,9 +56,24 @@ void Decoder::decode(string inFile)
 		//DEBUG 
 		++count;
 
+		//DEBUG
+		if (count == 11)
+			int w = 0;
+
 		//Read dictionary
 		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
+		//DEBUG
+		/*ofstream testOut("TestPairs", ios::app);
+
+		testOut << "Block " << count << endl;
+		for (long i = 0; i < decodedPairs.size(); i++)
+		{
+			testOut << "(" << decodedPairs[i].leftSymbol << ", " << decodedPairs[i].rightSymbol << ")" << endl;
+		}
+		testOut.close();*/
 		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
+
+		
 
 		//DEBUG
 		/*ofstream out;
@@ -69,9 +84,7 @@ void Decoder::decode(string inFile)
 			out << "\nEntry: " << var.first << " -> " << var.second << ".\n";
 		}*/
 
-		//DEBUG
-		if (count == 11)
-			int w = 0;
+		
 
 		//Read huffman dictionary
 		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);

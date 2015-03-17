@@ -367,6 +367,7 @@ void Huffman::readFromGammaCodes(
 
 	while (intValues.size() < symbolsToRead)
 	{
+		bitstream.peek();
 		if (!bitstream.eof())
 		{
 			bitstream.get(rawChunk1);
@@ -385,15 +386,6 @@ void Huffman::readFromGammaCodes(
 	}
 }
 
-bool prefixIsGood(string &prefix)
-{
-	for (int i = 0; i < prefix.size(); i++)
-	{
-		if (prefix[i] != '0')
-			return false;
-	}
-	return true;
-}
 
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
@@ -401,6 +393,9 @@ void Huffman::decodeDictionary(
 	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices)
 	//Outputs symbolIndices
 {
+	//DEBUG
+	MyTest test;
+
 	GammaCode gc;
 	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<long> actual, long count);
 	if (bitstream.is_open())
@@ -474,8 +469,8 @@ void Huffman::decodeDictionary(
 			}
 		}
 		//DEBUG
-		if (!prefixIsGood(prefix))
-			cout << "Huffman::decodeDictionary bad prefix" << endl;
+		if (!test.prefixIsGood(prefix))
+			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;
 	}
 }
 

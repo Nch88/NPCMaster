@@ -154,7 +154,7 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 //
 //
 //}
-
+//
 //TEST(decoder, bible_Nicolai)
 //{
 //	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -307,7 +307,7 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 //	else
 //		ASSERT_TRUE(false);
 //}
-
+//
 //TEST(decoder, ecoli_Nicolai)
 //{
 //	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;

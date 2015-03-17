@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GammaCode.h"
 
+
+
 long GammaCode::binaryToInt(string binary)
 {
 	if (binary == "")
@@ -82,6 +84,7 @@ void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<long> &o
 	int index = 0, start = 0;
 
 	string input = prefix + gamma, substring = "";
+	prefix = "";
 	long unary, binary;
 
 	while (output.size() < count)
@@ -96,7 +99,10 @@ void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<long> &o
 		if (index + ((int)unary) > input.size())
 		{
 			//End of input, set remainder and return
-			prefix = input.substr(start, string::npos);
+			if (start < input.size())
+				prefix = input.substr(start, string::npos);
+			else
+				prefix = "";
 			return;
 		}
 		else
@@ -311,6 +317,7 @@ void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream
 
 		while (values.size() < n)
 		{
+			bitstream.peek();
 			if (!bitstream.eof())
 			{
 				bitstream.get(rawChunk1);
@@ -330,10 +337,13 @@ void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream
 
 void GammaCode::processBinary(int binarySize, int count, string chunk, vector<long> &values, string &prefix)
 {
+	chunk.assign(prefix + chunk);
+	prefix = "";
+
 	int i = 0;
 	string subString = "";
 	//Add as many binary numbers as possible until we run out of data or reach count
-	while (i + binarySize < chunk.size() && values.size() < count)
+	while (i + binarySize <= chunk.size() && values.size() < count)
 	{
 		subString.assign(chunk.substr(i, binarySize));
 		values.push_back(binaryToInt(subString));
@@ -344,12 +354,12 @@ void GammaCode::processBinary(int binarySize, int count, string chunk, vector<lo
 	if (i != chunk.size())
 	{
 		prefix.assign(chunk.substr(i, string::npos));
-	}
+	}		
 }
 
 void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values, ifstream &bitstream, string &prefix)
 {
-	processBinary(binarySize, count, prefix, values, prefix);
+	processBinary(binarySize, count, "", values, prefix);
 	if (values.size() != count)
 	{
 
@@ -364,6 +374,7 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values
 			chunk.assign("");
 			while (values.size() != count)
 			{
+				bitstream.peek();
 				if (!bitstream.eof())
 				{
 					bitstream.get(rawChunk1);
@@ -376,9 +387,6 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values
 				else
 					chunk.assign("");
 
-				//Prepend prefix
-				chunk.assign(prefix + chunk);
-
 				processBinary(binarySize, count, chunk, values, prefix);
 			}
 		}
@@ -389,6 +397,9 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	vector<long>& terminals,
 	ifstream &bitstream)
 {
+	//DEBUG
+	MyTest test;
+
 	vector<long> values;
 	string prefix = "";
 
@@ -416,6 +427,10 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	vector<long> left;
 	for (int g = 0; g < generationCount; ++g)
 	{
+		//DEBUG
+		/*if (g == generationCount - 18)
+			cout << "Binary size: " << binarySize << endl;*/
+
 		//Read generation header
 		readNextNumbers(2, values, bitstream, prefix);
 		count = (values)[0];
@@ -430,16 +445,24 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 		i = 0;
 		while (i < count)
 		{
+			
+
 			readNextBinaries(binarySize, count, values, bitstream, prefix);
 			for (int j = 0; j < values.size(); ++j)
 			{
 				leftVal += (left)[i];
 				CompactPair c(leftVal, (values)[j]);
 				pairs.push_back(c);
+				//DEBUG
+				if (pairs.size() == 35)
+					cout << "pairs.size(): " << pairs.size() << endl;
 				++i;
 			}
 			values.clear();
 		}
 		left.clear();
 	}
+	//DEBUG
+	if (!test.prefixIsGood(prefix))
+		cout << "GammaCode::decodeDictionaryFile bad prefix" << endl;
 }
