@@ -25,9 +25,8 @@ void Huffman::getFrequencies(
 				++cardinality;
 		}		
 	}
-	//DEBUG
-	if (cardinality == 0)
-		cout << "getFrequencies, cardinality is 0" << endl;
+	if (cardinality <= 0)
+		throw new exception("Huffman::initCodeLengthsArray cardinality is " + cardinality);
 }
 
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
@@ -122,6 +121,9 @@ void Huffman::initCodeLengthsArray(
 	int *codeLengths,
 	dense_hash_map<long, HuffmanNode> &huffmanCodes)
 {
+	if (cardinality <= 0)
+		throw new exception("Huffman::initCodeLengthsArray cardinality is " + cardinality);
+
 	int i = 0;
 	for each (auto node in huffmanCodes)
 	{
@@ -135,6 +137,9 @@ void Huffman::initMinHeap(
 	int heapSize,
 	int *codeLengths)
 {
+	if (heapSize <= 0)
+		throw new exception("Huffman::initMinHeap heapSize is " + heapSize);
+
 	int currentNodeIndex = heapSize - 1;										//Last node
 	currentNodeIndex = currentNodeIndex / 2;									//Parent of last node
 
@@ -149,6 +154,9 @@ void Huffman::collapseHuffmanTree(
 	int heapSize,
 	int *codeLengths)
 {
+	if (heapSize <= 0)
+		throw new exception("Huffman::initMinHeap heapSize is " + heapSize);
+
 	int m1;
 	int m2;
 
@@ -187,9 +195,9 @@ void Huffman::expandHuffmanTree(
 		if (codeLengths[i] > maxLength)
 			maxLength = codeLengths[i];
 	}
-	//DEBUG
-	if (maxLength == 0)
-		cout << "expandHuffmanTree, maxlength is 0" << endl;
+
+	if (maxLength <= 0)
+		throw new exception("Huffman::expandHuffmanTree, maxlength is " + maxLength);
 }
 
 void Huffman::getCodeLengths(
@@ -211,6 +219,9 @@ void Huffman::getCodeLengths(
 
 string Huffman::codeToString(int intCode, int length)
 {
+	if (length <= 0)
+		throw new exception("Huffman::codeToString, length is " + length);
+
 	string stringCode = "";
 	for (int i = length - 1; i >= 0; --i)
 	{
@@ -232,9 +243,9 @@ void Huffman::generateCanonicalHuffmanCodes(
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
-	//DEBUG
-	if (maxLength == 0)
-		cout << "generateCanonicalHuffmanCodes, Maxlength is 0" << endl;
+	if (maxLength <= 0)
+		throw new exception("Huffman::generateCanonicalHuffmanCodes, Maxlength is " + maxLength);
+
 	for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
 		numl[i] = 0;
 	
@@ -381,8 +392,6 @@ void Huffman::readFromGammaCodes(
 
 		gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
 		
-		//DEBUG
-		int w = 42;
 	}
 }
 
@@ -423,6 +432,10 @@ void Huffman::decodeDictionary(
 			intValues);
 
 		maxLength = intValues[0];
+
+		if (maxLength <= 0)
+			throw new exception("Huffman::decodeDictionary, Maxlength is " + maxLength);
+
 		intValues.clear();													
 		firstCodes = new long[maxLength];
 		//symbolIndices: code length -> Huffman code -> index
@@ -438,8 +451,14 @@ void Huffman::decodeDictionary(
 				prefix,
 				intValues);
 
-			symbolsToRead = intValues[0];								
+			symbolsToRead = intValues[0];	
+			if (symbolsToRead < 0)
+				throw new exception("Huffman::decodeDictionary, symbolsToRead is " + symbolsToRead);
+
 			firstCode = intValues[1];
+			if (firstCode < 0)
+				throw new exception("Huffman::decodeDictionary, firstCode is " + firstCode);
+
 			firstCodes[i] = firstCode;
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
@@ -470,7 +489,7 @@ void Huffman::decodeDictionary(
 		}
 		//DEBUG
 		if (!test.prefixIsGood(prefix))
-			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;
+			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;		
 	}
 }
 

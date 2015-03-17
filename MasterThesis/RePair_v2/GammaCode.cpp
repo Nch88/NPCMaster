@@ -453,9 +453,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 				leftVal += (left)[i];
 				CompactPair c(leftVal, (values)[j]);
 				pairs.push_back(c);
-				//DEBUG
-				if (pairs.size() == 35)
-					cout << "pairs.size(): " << pairs.size() << endl;
+				
 				++i;
 			}
 			values.clear();
