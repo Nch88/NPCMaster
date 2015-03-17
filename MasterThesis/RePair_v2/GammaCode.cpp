@@ -5,6 +5,8 @@
 
 long GammaCode::binaryToInt(string binary)
 {
+	if (binary.size() == 0)
+		throw new exception("GammaCode::binaryToInt: Invalid string received");
 	if (binary == "")
 		return 0;
 	long result = 0;
@@ -13,6 +15,8 @@ long GammaCode::binaryToInt(string binary)
 	{
 		if (binary[i] == '1')
 			result += pow(2, ((binary.size() - 1) - i));
+		else if (binary[i] != '0')
+			throw new exception("GammaCode::binaryToInt: Invalid string received");
 		--i;
 	}
 	return result;
@@ -20,6 +24,8 @@ long GammaCode::binaryToInt(string binary)
 
 string GammaCode::getBinaryCode(long input)
 {
+	if (input < 0)
+		throw new exception("GammaCode::getBinaryCode: negative number received");
 	string s = "";
 	int i = 31;
 
@@ -42,6 +48,8 @@ string GammaCode::getBinaryCode(long input)
 
 long GammaCode::readGammaCodeHeader(string& gamma, int& i)
 {
+	if (gamma.size() == 0)
+		throw new exception("GammaCode::readGammaCodeHeader: Empty string received");
 	int unary = 0;
 	while (gamma[unary] == '1')
 	{
@@ -66,6 +74,8 @@ long GammaCode::readGammaCodeHeader(string& gamma, int& i)
 
 long GammaCode::gammaToInt(string gamma)
 {
+	if (gamma.size() == 0)
+		throw new exception("GammaCode::gammaToInt: Empty string received");
 	int unary = 0;
 	while (gamma[unary] == '1')
 	{
@@ -80,6 +90,8 @@ long GammaCode::gammaToInt(string gamma)
 
 void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<long> &output, long count)
 {
+	if (count < 1)
+		throw new exception("GammaCode::decodeGammaString: Invalid count received");
 	//Start is the index of the start of the current number
 	int index = 0, start = 0;
 
@@ -128,6 +140,8 @@ void GammaCode::decodeGammaString(string &prefix, string &gamma, vector<long> &o
 
 string GammaCode::getGammaCode(long in)
 {
+	if (in < 0)
+		throw new exception("GammaCode::get GammaCode: Negative number received");
 	//Adjust for 0-origin
 	long input = in + 1;
 	
@@ -163,6 +177,10 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	vector<string>& rightElementsBinaries,
 	vector<vector<CompactPair>>& generationVectors)
 {
+	if (pairs.size() == 0)
+		throw new exception("GammaCode::encode: Empty pair vector received");
+	if (terminals.size() == 0)
+		throw new exception("GammaCode::encode: Empty terminal set received");
 	int generations = generationVectors.size();
 	int genP1 = 0;
 	long firstElement = 0;
@@ -302,6 +320,10 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 
 void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream, string &prefix)
 {
+	if (n < 1)
+		throw new exception("GammaCode::readNextNumbers: Cannot read less than 1 number");
+	if (!bitstream.is_open())
+		throw new exception("GammaCode::readNextNumbers: Stream is not open");
 	string emptyString = "";
 	this->decodeGammaString(prefix, emptyString, values, n);
 	if (values.size() == n)
@@ -337,6 +359,10 @@ void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream
 
 void GammaCode::processBinary(int binarySize, int count, string chunk, vector<long> &values, string &prefix)
 {
+	if (binarySize < 1)
+		throw new exception("GammaCode::processBinary: Binary size must be at least 1");
+	if (count < 1)
+		throw new exception("GammaCode::processBinary: Cannot read less than 1 number");
 	chunk.assign(prefix + chunk);
 	prefix = "";
 
@@ -359,6 +385,10 @@ void GammaCode::processBinary(int binarySize, int count, string chunk, vector<lo
 
 void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values, ifstream &bitstream, string &prefix)
 {
+	if (binarySize < 1)
+		throw new exception("GammaCode::readNextBinaries: Binary size must be at least 1");
+	if (count < 1)
+		throw new exception("GammaCode::readNextBinaries: Cannot read less than 1 number");
 	processBinary(binarySize, count, "", values, prefix);
 	if (values.size() != count)
 	{
@@ -408,6 +438,8 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	if (values.empty())
 		throw new exception("Error in decoding: File not found or empty");
 	int count = values[0];
+	if (count < 1)
+		throw new exception("GammaCode::decodeDictionaryFile: Terminal count less than 1");
 	values.clear();
 
 	//Read terminals
@@ -420,6 +452,8 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	//Read number of generations
 	readNextNumbers(1, values, bitstream, prefix);
 	int generationCount = (values)[0];
+	if (count < 1)
+		throw new exception("GammaCode::decodeDictionaryFile: Generation count less than 1");
 	values.clear();
 
 	int binarySize, i;
@@ -427,15 +461,15 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	vector<long> left;
 	for (int g = 0; g < generationCount; ++g)
 	{
-		//DEBUG
-		/*if (g == generationCount - 18)
-			cout << "Binary size: " << binarySize << endl;*/
-
 		//Read generation header
 		readNextNumbers(2, values, bitstream, prefix);
 		count = (values)[0];
 		binarySize = 1 + floor(log2((values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
 		values.clear();
+		if (count < 1)
+			throw new exception("GammaCode::decodeDictionaryFile: Pair count less than 1 in generation " + g);
+		if (binarySize < 1)
+			throw new exception("GammaCode::decodeDictionaryFile: Binary size less than 1");
 
 		//Read left values and store them in 'left'
 		readNextNumbers(count, left, bitstream, prefix);
