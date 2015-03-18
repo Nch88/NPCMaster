@@ -21,7 +21,7 @@ public:
 		dense_hash_map<long, Pair> &dictionary);
 	void addToSequenceArray(
 		vector<SymbolRecord*> & sequenceArray,
-		char & symbol,
+		unsigned char & symbol,
 		long & index,
 		int & symbolCount,
 		unordered_set<long>& terminals);

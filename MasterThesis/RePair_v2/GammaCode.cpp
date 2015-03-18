@@ -267,11 +267,10 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	tHeader = getGammaCode(terminals.size());
 
 	//DEBUG
-	//ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
-	//testofs << terminals.size() << "\n";
+	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
+	testofs << terminals.size() << "\n";
 
 	//DEBUG
-	cerr << ("GammaCode::makeFinalString terminal header is " + tHeader) << endl;
 	if (tHeader[0] == '0')
 		cerr << ("GammaCode::makeFinalString terminal header is " + tHeader) << endl;
 
@@ -280,7 +279,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 
 	//Then a header w/ number of generations
 	//DEBUG
-	//testofs << generationVectors.size() << "\n";
+	testofs << generationVectors.size() << "\n";
 	finalString += getGammaCode(generationVectors.size());
 
 	//Then for each generation
@@ -288,12 +287,12 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	for (int i = 0; i < generationVectors.size(); ++i)
 	{
 		//DEBUG
-		//testofs << "Gen: " << i << "\n";
+		testofs << "Gen: " << i << "\n";
 		//Header is size of generation + max possible index found in that generation
 		header = getGammaCode(generationVectors[i].size()) + getGammaCode(maxIndex);
 		//DEBUG
-		//testofs << generationVectors[i].size() << "\n";
-		//testofs << maxIndex << "\n";
+		testofs << generationVectors[i].size() << "\n";
+		testofs << maxIndex << "\n";
 		
 		string leftPart = ((lefts)[i]);
 		string rightPart = ((rights)[i]);
@@ -307,7 +306,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	delete terminalsGamma;
 
 	//DEBUG
-	//testofs.close();
+	testofs.close();
 }
 
 //void GammaCode::decode(vector<CompactPair*>& pairs,
@@ -459,7 +458,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 {
 	//DEBUG
 	MyTest test;
-	//ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
+	ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
 
 	vector<long> values;
 	string prefix = "";
@@ -470,7 +469,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 		cerr << ("Error in decoding: File not found or empty") << endl;
 	int count = values[0];
 	//DEBUG
-	//testofs << count << "\n";
+	testofs << count << "\n";
 
 	if (count < 1)
 		cerr << ("GammaCode::decodeDictionaryFile: Terminal count is " + to_string(count)) << endl;
@@ -487,7 +486,7 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	readNextNumbers(1, values, bitstream, prefix);
 	int generationCount = (values)[0];
 	//DEBUG
-	//testofs << generationCount << "\n";
+	testofs << generationCount << "\n";
 
 	if (generationCount < 1)
 		cerr << ("GammaCode::decodeDictionaryFile: Generation count is " + to_string(generationCount)) << endl;
@@ -499,15 +498,15 @@ void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
 	for (int g = 0; g < generationCount; ++g)
 	{
 		//DEBUG
-		//testofs << "Gen: " << g << "\n";
+		testofs << "Gen: " << g << "\n";
 		//Read generation header
 		readNextNumbers(2, values, bitstream, prefix);
 		count = (values)[0];
 		//DEBUG
-		//testofs << count << "\n";
+		testofs << count << "\n";
 		binarySize = 1 + floor(log2((values)[1]));//Second nr. is the max index m, so binary size is 1 + floor(log2(m))
 		//DEBUG
-		//testofs << (values)[1] << "\n";
+		testofs << (values)[1] << "\n";
 		values.clear();
 		if (count < 1)
 			cerr << ("GammaCode::decodeDictionaryFile: Pair count less than 1 in generation " + to_string(g)) << endl;

@@ -146,7 +146,7 @@ void Initializer::setupPairRecord(
 
 void Initializer::addToSequenceArray(
 	vector<SymbolRecord*> & sequenceArray,
-	char & symbol,
+	unsigned char & symbol,
 	long & index,
 	int & symbolCount,
 	unordered_set<long>& terminals)
@@ -172,9 +172,9 @@ int Initializer::SequenceArray(
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_set<long>& terminals)
 {
-	char previousSymbol;
-	char leftSymbol;
-	char rightSymbol;
+	unsigned char previousSymbol;
+	unsigned char leftSymbol;
+	unsigned char rightSymbol;
 	int symbolCount = 0;
 	long index = 0;
 	bool skippedPair = false;

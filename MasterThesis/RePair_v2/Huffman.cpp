@@ -383,7 +383,7 @@ void Huffman::readFromGammaCodes(
 	char rawChunk4 = 0;
 
 	//DEBUG
-	ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
+	//ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
 
 	string temp = "";
 	if (symbolsToRead < 1)
@@ -402,7 +402,7 @@ void Huffman::readFromGammaCodes(
 			fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
 
 			
-			testofs << chunk << "\n";
+			//testofs << chunk << "\n";
 			
 		}
 		else
@@ -423,7 +423,7 @@ void Huffman::decodeDictionary(
 	//DEBUG
 	MyTest test;
 	ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
-	//testofs << "Huffman:\n";
+	testofs << "Huffman:\n";
 
 	GammaCode gc;
 	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<long> actual, long count);
@@ -453,7 +453,7 @@ void Huffman::decodeDictionary(
 
 		maxLength = intValues[0];
 		//DEBUG
-		//testofs << maxLength << "\n";
+		testofs << maxLength << "\n";
 
 		if (maxLength <= 0)
 			cerr << ("Huffman::decodeDictionary, Maxlength is " + to_string(maxLength)) << endl;
@@ -475,17 +475,17 @@ void Huffman::decodeDictionary(
 
 			symbolsToRead = intValues[0];
 			//DEBUG
-			//testofs << symbolsToRead << "\n";
+			testofs << symbolsToRead << "\n";
 
 			firstCode = intValues[1];
 			//DEBUG
-			//testofs << firstCode << "\n";
+			testofs << firstCode << "\n";
 
 			if (firstCode < 0)
 			{
 				cerr << ("Huffman::decodeDictionary, firstCode is " + to_string(firstCode)) << endl;
 			}
-			//testofs.close();
+			testofs.close();
 
 			firstCodes[i] = firstCode;
 			if (symbolsToRead > 0)
