@@ -82,9 +82,6 @@ void Outputter::huffmanEncoding(
 	//Write chunks of Huffman codes until an entire block is processed
 	while (seqIndex < sequenceArray.size())
 	{
-		//DEBUG
-		if (seqIndex > sequenceArray.size() - 8)
-			int x = 0;
 		//Start new chunk
 		chunk += specialBit;
 		while (chunk.size() < chunkSize && seqIndex < sequenceArray.size())
@@ -166,26 +163,17 @@ void Outputter::huffmanDictionary(
 	string toWrite = "";
 	string stringToWrite;
 
-	//DEBUG
-	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
-	testofs << "Huffman:" << "\n";
-
+	
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
-	//DEBUG
-	testofs << maxLength << "\n";
-
+	
 	for (long i = 0; i < maxLength; i++)
 	{
 		toWrite = gc.getGammaCode(numl[i]);
-		//DEBUG
-		testofs << numl[i] << "\n";
 		
 		gammaCodes += toWrite;													//Convert number of codes of this length to gamma code
 																				//and append to the string of codes we want to write.
 		toWrite = gc.getGammaCode(firstCode[i]);
-		//DEBUG
-		testofs << firstCode[i] << "\n";
-
+		
 		gammaCodes += toWrite;													//Convert the value of the first code as well
 
 		for (int j = 0; j < numl[i]; j++)
@@ -210,9 +198,6 @@ void Outputter::huffmanDictionary(
 			stringToWrite = gammaCodes.substr(0, 32);
 			gammaCodes = gammaCodes.substr(32, string::npos);
 
-			//DEBUG
-			//testofs << stringToWrite << "\n";
-
 			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
 		}
 	}
@@ -225,14 +210,7 @@ void Outputter::huffmanDictionary(
 		writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
 	}
 	
-
-	//DEBUG
-	//testofs << gammaCodes << "\n";
-
 	delete bitsToWrite;
-
-	//DEBUG
-	testofs.close();
 }
 
 void Outputter::compressedFile(

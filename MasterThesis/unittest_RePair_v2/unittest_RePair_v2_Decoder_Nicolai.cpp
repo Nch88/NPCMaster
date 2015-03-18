@@ -756,78 +756,78 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 //	ASSERT_TRUE(result);
 //}
 
-TEST(decoder, pitches50MB_Nicolai)
-{
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
-
-	Initializer init;
-	Conditions c;
-	Algorithm algo;
-	AlgorithmP algP;
-	MyTest t;
-	MyTimer timer;
-	Huffman h;
-	Outputter out;
-	Dictionary finalDict;
-	GammaCode gc;
-	Decoder dec;
-
-	string input1 = "pitches.50MB";
-
-	int blockSize;
-	blockSize = 1048576;
-	string filename = input1;
-	ifstream file(filename);
-	bool firstBlock = true;
-
-	string compressedFile = out.addFilenameEnding(filename, ".NPC");
-	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
-
-	string decompressedFile = dec.getOutfileName(compressedFile);
-
-	ifstream checkStream(compressedFile);
-
-	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::trunc);
-	testofs << "";
-	testofs.close();
-
-	ofstream testofs2("TestHeadersDecodeFun.txt", ios::binary | ios::trunc);
-	testofs2 << "";
-	testofs2.close();
-
-
-	if (!checkStream.is_open())
-	{
-		algo.run(
-			filename,
-			file,
-			c,
-			init,
-			algP,
-			timer,
-			blockSize,
-			activePairs,
-			sequenceArray,
-			priorityQueue,
-			dictionary,
-			symbols);
-		checkStream.close();
-	}
-	checkStream.close();
-
-	std::cout << "Starting decoding" << endl;
-	dec.decode(compressedFile);
-
-	long badChar = 0;
-
-	bool result = compareFiles(input1, decompressedFile, badChar);
-	ASSERT_TRUE(result);
-}
+//TEST(decoder, pitches50MB_Nicolai)
+//{
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols(initialSymbolValue);//256
+//
+//	Initializer init;
+//	Conditions c;
+//	Algorithm algo;
+//	AlgorithmP algP;
+//	MyTest t;
+//	MyTimer timer;
+//	Huffman h;
+//	Outputter out;
+//	Dictionary finalDict;
+//	GammaCode gc;
+//	Decoder dec;
+//
+//	string input1 = "pitches.50MB";
+//
+//	int blockSize;
+//	blockSize = 1048576;
+//	string filename = input1;
+//	ifstream file(filename);
+//	bool firstBlock = true;
+//
+//	string compressedFile = out.addFilenameEnding(filename, ".NPC");
+//	string compressedDictionary = out.addFilenameEnding(filename, ".dict.NPC");
+//
+//	string decompressedFile = dec.getOutfileName(compressedFile);
+//
+//	ifstream checkStream(compressedFile);
+//
+//	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::trunc);
+//	testofs << "";
+//	testofs.close();
+//
+//	ofstream testofs2("TestHeadersDecodeFun.txt", ios::binary | ios::trunc);
+//	testofs2 << "";
+//	testofs2.close();
+//
+//
+//	if (!checkStream.is_open())
+//	{
+//		algo.run(
+//			filename,
+//			file,
+//			c,
+//			init,
+//			algP,
+//			timer,
+//			blockSize,
+//			activePairs,
+//			sequenceArray,
+//			priorityQueue,
+//			dictionary,
+//			symbols);
+//		checkStream.close();
+//	}
+//	checkStream.close();
+//
+//	std::cout << "Starting decoding" << endl;
+//	dec.decode(compressedFile);
+//
+//	long badChar = 0;
+//
+//	bool result = compareFiles(input1, decompressedFile, badChar);
+//	ASSERT_TRUE(result);
+//}

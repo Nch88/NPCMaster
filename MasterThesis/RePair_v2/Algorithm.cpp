@@ -35,12 +35,8 @@ int Algorithm::run(
 	unordered_set<long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
-	//DEBUG
-	long testCount = 0;
-
 	while (file.is_open())
 	{
-		++testCount;
 		if (c.verbose)
 		{
 			cout << " - Verbose: Initializing block" << endl;
@@ -50,19 +46,6 @@ int Algorithm::run(
 			t.start();
 		}
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
-
-		//DEBUG
-		bool testEmpty = true;
-		for (int i = 0; i < sequenceArray.size(); i++)
-		{
-			if (sequenceArray[i]->symbol != 0)
-			{
-				testEmpty = false;
-				break;
-			}
-		}
-		if (testEmpty)
-			cout << "empty at block " << testCount << endl;
 
 		if (c.timing)
 		{
@@ -113,15 +96,7 @@ int Algorithm::run(
 		{
 			cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
 		}
-
-		//DEBUG
-		if (testCount == 11)
-			int w2 = 0;		//TODO: Test why 0 huffman codes are written for this block
-		ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
-		testofs << "Block: " << testCount << "\n";
-		testofs.close();
-
-		//Find out why the sequence array is empty!!!
+		
 		out.all(
 			filename,
 			firstBlock,

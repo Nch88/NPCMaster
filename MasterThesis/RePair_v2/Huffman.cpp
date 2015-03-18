@@ -285,9 +285,6 @@ void Huffman::generateCanonicalHuffmanCodes(
 			(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
 			++nextCode[codeLength - 1];
 			++codes;
-
-			//DEBUG
-			//cout << codes << endl;
 		}
 
 		delete[] nextCode;
@@ -382,9 +379,6 @@ void Huffman::readFromGammaCodes(
 	char rawChunk3 = 0;
 	char rawChunk4 = 0;
 
-	//DEBUG
-	//ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
-
 	string temp = "";
 	if (symbolsToRead < 1)
 		cerr << ("Huffman::readFromGammaCodes calls GammaCode::decodeGammaString: with " + to_string(symbolsToRead)) << endl;
@@ -422,8 +416,6 @@ void Huffman::decodeDictionary(
 {
 	//DEBUG
 	MyTest test;
-	ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
-	testofs << "Huffman:\n";
 
 	GammaCode gc;
 	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<long> actual, long count);
@@ -452,9 +444,7 @@ void Huffman::decodeDictionary(
 			intValues);
 
 		maxLength = intValues[0];
-		//DEBUG
-		testofs << maxLength << "\n";
-
+		
 		if (maxLength <= 0)
 			cerr << ("Huffman::decodeDictionary, Maxlength is " + to_string(maxLength)) << endl;
 
@@ -474,19 +464,13 @@ void Huffman::decodeDictionary(
 				intValues);
 
 			symbolsToRead = intValues[0];
-			//DEBUG
-			testofs << symbolsToRead << "\n";
-
+			
 			firstCode = intValues[1];
-			//DEBUG
-			testofs << firstCode << "\n";
-
+			
 			if (firstCode < 0)
 			{
 				cerr << ("Huffman::decodeDictionary, firstCode is " + to_string(firstCode)) << endl;
 			}
-			testofs.close();
-
 			firstCodes[i] = firstCode;
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
@@ -523,9 +507,6 @@ void Huffman::decodeDictionary(
 		if (!test.prefixIsGood(prefix))
 			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;
 
-		//DEBUG
-		/*cerr << ("Huffman::decodeDictionary prefix is " + prefix) << endl;
-		cerr << ("Huffman::decodeDictionary next char is " + bitstream.peek()) << endl;*/
 	}
 }
 
