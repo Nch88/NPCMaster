@@ -664,7 +664,6 @@ TEST(gammaCodes, diddy_makeFinalString)
 TEST(gammaCodes, binaryToInt)
 {
 	GammaCode gc;
-	ASSERT_EQ(0, gc.binaryToInt(""));
 	ASSERT_EQ(0, gc.binaryToInt("0"));
 	ASSERT_EQ(1, gc.binaryToInt("1"));
 	ASSERT_EQ(1, gc.binaryToInt("01"));

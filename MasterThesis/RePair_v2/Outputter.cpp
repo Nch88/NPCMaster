@@ -51,7 +51,7 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 {					
 	//DEBUG
 	if (chunk.size() != 32)
-		cout << "Outputter::writeChunkFromString bad chunk size" << endl;
+		cerr << "Outputter::writeChunkFromString bad chunk size" << endl;
 	for (int i = 0; i < 32; i++)
 	{
 		if (chunk[i] == '1')
@@ -166,14 +166,26 @@ void Outputter::huffmanDictionary(
 	string toWrite = "";
 	string stringToWrite;
 
+	//DEBUG
+	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
+	//testofs << "Huffman:" << "\n";
+
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
+	//DEBUG
+	//testofs << maxLength << "\n";
 
 	for (long i = 0; i < maxLength; i++)
 	{
 		toWrite = gc.getGammaCode(numl[i]);
+		//DEBUG
+		//testofs << numl[i] << "\n";
+		
 		gammaCodes += toWrite;													//Convert number of codes of this length to gamma code
 																				//and append to the string of codes we want to write.
 		toWrite = gc.getGammaCode(firstCode[i]);
+		//DEBUG
+		//testofs << firstCode[i] << "\n";
+
 		gammaCodes += toWrite;													//Convert the value of the first code as well
 
 		for (int j = 0; j < numl[i]; j++)
@@ -198,16 +210,29 @@ void Outputter::huffmanDictionary(
 			stringToWrite = gammaCodes.substr(0, 32);
 			gammaCodes = gammaCodes.substr(32, string::npos);
 
+			//DEBUG
+			testofs << stringToWrite << "\n";
+
 			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
 		}
-	}			
-	while (gammaCodes.size() < 32)
-	{
-		gammaCodes += '0';
 	}
-	writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
+	if (gammaCodes.size() != 0)
+	{
+		while (gammaCodes.size() < 32)
+		{
+			gammaCodes += '0';
+		}
+		writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
+	}
+	
+
+	//DEBUG
+	testofs << gammaCodes << "\n";
 
 	delete bitsToWrite;
+
+	//DEBUG
+	testofs.close();
 }
 
 void Outputter::compressedFile(
@@ -282,6 +307,7 @@ void Outputter::all(
 	unordered_set<long>& terminals,
 	Conditions& c)
 {
+
 	//Create names for output files
 	string compressedFilename = this->addFilenameEnding(filename, ".NPC");
 	string compressedDictionaryName = this->addFilenameEnding(filename, ".dict.NPC");
@@ -367,6 +393,10 @@ void Outputter::all(
 		indices,
 		terminalIndices,
 		huffmanToSymbol);
+
+	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
+	testofs << "Stream at pos: " << ofs_dictionary.tellp() << "\n";
+	testofs.close();
 
 	ofs_compressed.close();
 	ofs_dictionary.close();

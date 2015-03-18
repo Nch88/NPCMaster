@@ -97,7 +97,8 @@ int Algorithm::run(
 			priorityQueue,
 			terminals,
 			symbols,
-			c);
+			c);			
+
 		if (c.timing)
 		{
 			t.stop();
@@ -116,6 +117,9 @@ int Algorithm::run(
 		//DEBUG
 		if (testCount == 11)
 			int w2 = 0;		//TODO: Test why 0 huffman codes are written for this block
+		ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
+		testofs << "Block: " << testCount << "\n";
+		testofs.close();
 
 		//Find out why the sequence array is empty!!!
 		out.all(

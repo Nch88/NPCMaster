@@ -56,8 +56,12 @@ void Decoder::decode(string inFile)
 		//DEBUG 
 		++count;
 
+		ofstream testofs("TestHeadersDecodeFun.txt", ios::binary | ios::app);
+		testofs << "Block: " << count << "\n";
+		testofs.close();
+
 		//DEBUG
-		if (count == 11)
+		if (count == 24)
 			int w = 0;
 
 		//Read dictionary
@@ -101,7 +105,7 @@ void Decoder::decode(string inFile)
 		out.close();*/
 
 		//DEBUG
-		std::cout << '#';
+		std::cout << '#' << count;
 
 		//Read block
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
@@ -142,6 +146,10 @@ void Decoder::decode(string inFile)
 		//DEBUG
 		std::cout << '#';
 		bitstream.peek();
+
+		ofstream testofs2("TestHeadersDecodeFun.txt", ios::binary | ios::app);
+		testofs2 << "Stream at pos: " << bitstreamDict.tellg() << "\n";
+		testofs2.close();
 	}
 
 	//DEBUG
