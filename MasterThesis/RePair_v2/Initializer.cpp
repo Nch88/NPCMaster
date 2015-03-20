@@ -17,8 +17,7 @@ void Initializer::resetCompleted(
 	vector<SymbolRecord*> & sequenceArray,
 	int blockSize)
 {
-	
-
+	//Reset sequence array when we are done
 	for (int i = 0; i < sequenceArray.size(); i++)
 	{
 		if (sequenceArray[i])
@@ -29,6 +28,7 @@ void Initializer::resetCompleted(
 	}
 	sequenceArray.clear();
 
+	//Reset active pairs when we are done
 	for each (auto leftSymbol in activePairs)
 	{
 		for each (auto rightSymbol in leftSymbol.second)
@@ -46,7 +46,7 @@ void Initializer::resetForNextBlock(
 	unordered_set<long> & terminals,
 	dense_hash_map<long, Pair> &dictionary)
 {
-	//Reset for next block
+	//We do not free the memory between blocks as entries will be reused
 	for (int i = 0; i < sequenceArray.size(); i++)
 	{
 		if (sequenceArray[i])
@@ -62,6 +62,7 @@ void Initializer::resetForNextBlock(
 		priorityQueue[i] = nullptr;
 	}
 
+	//Here we need to free memory between blocks
 	for each (auto leftSymbol in activePairs)
 	{
 		for each (auto rightSymbol in leftSymbol.second)
@@ -94,12 +95,8 @@ void Initializer::setupPairRecord(
 		activePairs[leftSymbol].set_deleted_key(-2);
 	}
 	currentTracker = & activePairs[leftSymbol][rightSymbol];
-	/*if (!currentTracker)
-	{
-		activePairs[leftSymbol][rightSymbol] = *(new PairTracker());
-		currentTracker = & activePairs[leftSymbol][rightSymbol];
-	}*/
-
+	
+	//Pair is seen twice and now considered active
 	if (currentTracker->seenOnce)
 	{
 		currentTracker->pairRecord = new PairRecord();
@@ -115,16 +112,10 @@ void Initializer::setupPairRecord(
 		sequenceArray[currentTracker->pairRecord->arrayIndexLast]->previous =
 			sequenceArray[currentTracker->pairRecord->arrayIndexFirst];
 
-
-		/*previousOccurence = &sequenceArray[currentTracker->pairRecord->arrayIndexFirst];
-		newOccurence = &sequenceArray[currentTracker->pairRecord->arrayIndexLast];
-
-		previousOccurence->next = newOccurence;
-		newOccurence->previous = previousOccurence;*/
-
 		currentTracker->indexFirst = -1;
 		currentTracker->seenOnce = false;
 	}
+	//Pair is already active, update its record
 	else if (currentTracker->pairRecord)
 	{
 		currentTracker->pairRecord->count++;
@@ -137,6 +128,7 @@ void Initializer::setupPairRecord(
 
 		currentTracker->pairRecord->arrayIndexLast = offset;
 	}
+	//First time the pair is seen
 	else
 	{
 		currentTracker->seenOnce = true;
@@ -146,12 +138,12 @@ void Initializer::setupPairRecord(
 
 void Initializer::addToSequenceArray(
 	vector<SymbolRecord*> & sequenceArray,
-	char & symbol,
+	unsigned char & symbol,
 	long & index,
 	int & symbolCount,
 	unordered_set<long>& terminals)
 {
-	terminals.emplace(symbol);
+	terminals.emplace(symbol);													//Record all terminal symbols
 	if (index < sequenceArray.size())
 	{
 		sequenceArray[index]->symbol = (long)symbol;
@@ -172,15 +164,16 @@ int Initializer::SequenceArray(
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_set<long>& terminals)
 {
-	char previousSymbol;
-	char leftSymbol;
-	char rightSymbol;
+	unsigned char previousSymbol;
+	unsigned char leftSymbol;
+	unsigned char rightSymbol;
 	int symbolCount = 0;
 	long index = 0;
 	bool skippedPair = false;
 	MyTimer t;
 	c.timing = false;
 
+	//We read two symbols ahead to check for sequences of duplicate symbols
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
 		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount, terminals);
@@ -197,6 +190,7 @@ int Initializer::SequenceArray(
 				sequenceArray);
 			
 		}
+		//Read symbols until we reach the determined block size
 		while (symbolCount < blockSize && file >> noskipws >> rightSymbol && rightSymbol)
 		{
 			if (c.timing)
@@ -213,7 +207,7 @@ int Initializer::SequenceArray(
 					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
 			
-
+			//Skip if the current symbols is the right part of a pair of identical symbols
 			if (leftSymbol == rightSymbol &&
 				leftSymbol == previousSymbol &&
 				!skippedPair)
@@ -278,7 +272,7 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 	{
 		for each (auto rightSymbol in leftSymbol.second)
 		{
-			rightSymbol.second.seenOnce = false;
+			rightSymbol.second.seenOnce = false; //Reset as we need this to be false for later checks
 			if (rightSymbol.second.pairRecord)
 			{
 				if (rightSymbol.second.pairRecord->count > priorityQueueSize)
@@ -286,7 +280,6 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 
 				else
 					priorityIndex = rightSymbol.second.pairRecord->count - 2;
-
 
 				if (priorityQueue[priorityIndex] == nullptr)
 					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;

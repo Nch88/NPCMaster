@@ -16,18 +16,20 @@ void Huffman::getFrequencies(
 	dense_hash_map<long, HuffmanNode> & frequencies,
 	long &cardinality)
 {
-	for each (auto &symbolRecord in sequenceArray)
-	{
-		if (symbolRecord->symbol != 0)
+		for each (auto &symbolRecord in sequenceArray)
 		{
-			frequencies[symbolRecord->symbol].frequency++;
-			if (frequencies[symbolRecord->symbol].frequency == 1)
-				++cardinality;
-		}		
-	}
-	//DEBUG
-	if (cardinality == 0)
-		cout << "getFrequencies, cardinality is 0" << endl;
+			if (symbolRecord->symbol != 0)
+			{
+				frequencies[symbolRecord->symbol].frequency++;
+				if (frequencies[symbolRecord->symbol].frequency == 1)
+					++cardinality;
+			}
+		}
+		if (cardinality <= 0)
+		{
+			cerr << "Huffman::getFrequencies cardinality is " + to_string(cardinality) << endl;
+		}
+	
 }
 
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
@@ -122,56 +124,68 @@ void Huffman::initCodeLengthsArray(
 	int *codeLengths,
 	dense_hash_map<long, HuffmanNode> &huffmanCodes)
 {
-	int i = 0;
-	for each (auto node in huffmanCodes)
-	{
-		codeLengths[cardinality + i] = node.second.frequency;
-		codeLengths[i] = cardinality + i;										//Index of a symbol Points to the symbol's frequency
-		++i;
-	}
+		if (cardinality <= 0)
+			cerr << ("Huffman::initCodeLengthsArray cardinality is " + to_string(cardinality)) << endl;
+
+		int i = 0;
+		for each (auto node in huffmanCodes)
+		{
+			codeLengths[cardinality + i] = node.second.frequency;
+			codeLengths[i] = cardinality + i;										//Index of a symbol Points to the symbol's frequency
+			++i;
+		}
+	
 }
 
 void Huffman::initMinHeap(
 	int heapSize,
 	int *codeLengths)
 {
-	int currentNodeIndex = heapSize - 1;										//Last node
-	currentNodeIndex = currentNodeIndex / 2;									//Parent of last node
+		if (heapSize <= 0)
+			cerr << ("Huffman::initMinHeap heapSize is " + to_string(heapSize)) << endl;
 
-	while (currentNodeIndex >= 0)
-	{
-		sift(currentNodeIndex, heapSize, codeLengths);
-		--currentNodeIndex;
-	}
+		int currentNodeIndex = heapSize - 1;										//Last node
+		currentNodeIndex = currentNodeIndex / 2;									//Parent of last node
+
+		while (currentNodeIndex >= 0)
+		{
+			sift(currentNodeIndex, heapSize, codeLengths);
+			--currentNodeIndex;
+		}
+	
 }
 
 void Huffman::collapseHuffmanTree(
 	int heapSize,
 	int *codeLengths)
 {
-	int m1;
-	int m2;
+		if (heapSize <= 0)
+			cerr << ("Huffman::initMinHeap heapSize is " + to_string(heapSize)) << endl;
 
-	while (heapSize > 1)
-	{
-		//a)
-		m1 = codeLengths[0];													//Take symbol with smallest frequency
-		codeLengths[0] = codeLengths[heapSize - 1];								//Pull last element to front of heap
-		--heapSize;																
+		int m1;
+		int m2;
 
-		//b)
-		sift(0, heapSize, codeLengths);											//Sift the last element down through the heap
-		m2 = codeLengths[0];													//Take symbol with next smallest frequency
+		while (heapSize > 1)
+		{
+			//a)
+			m1 = codeLengths[0];													//Take symbol with smallest frequency
+			codeLengths[0] = codeLengths[heapSize - 1];								//Pull last element to front of heap
+			--heapSize;
 
-		//c)
-		codeLengths[(heapSize - 1) + 1] = codeLengths[m1] + codeLengths[m2];	//Create new frequency for combination of two smallest frequencies
-		codeLengths[0] = (heapSize - 1) + 1;									//"Create" new symbol pointing to the new frequency
-		codeLengths[m1] = (heapSize - 1) + 1;									//Point to new symbol
-		codeLengths[m2] = (heapSize - 1) + 1;									//Point to new symbol
+			//b)
+			sift(0, heapSize, codeLengths);											//Sift the last element down through the heap
+			m2 = codeLengths[0];													//Take symbol with next smallest frequency
 
-		//d)
-		sift(0, heapSize, codeLengths);											//Sift the new element down through the heap
-	}
+			//c)
+			codeLengths[(heapSize - 1) + 1] = codeLengths[m1] + codeLengths[m2];	//Create new frequency for combination of two smallest frequencies
+			codeLengths[0] = (heapSize - 1) + 1;									//"Create" new symbol pointing to the new frequency
+			codeLengths[m1] = (heapSize - 1) + 1;									//Point to new symbol
+			codeLengths[m2] = (heapSize - 1) + 1;									//Point to new symbol
+
+			//d)
+			sift(0, heapSize, codeLengths);											//Sift the new element down through the heap
+		}
+	
 }
 
 void Huffman::expandHuffmanTree(
@@ -179,17 +193,18 @@ void Huffman::expandHuffmanTree(
 	int *codeLengths,
 	long &maxLength)
 {
-	codeLengths[1] = 0;															//Represents the root with code length one
-	maxLength = 0;
-	for (int i = 2; i < cardinality * 2; i++)
-	{
-		codeLengths[i] = codeLengths[codeLengths[i]] + 1;						//Nodes will get codes of length one greater than their parents
-		if (codeLengths[i] > maxLength)
-			maxLength = codeLengths[i];
-	}
-	//DEBUG
-	if (maxLength == 0)
-		cout << "expandHuffmanTree, maxlength is 0" << endl;
+		codeLengths[1] = 0;															//Represents the root with code length one
+		maxLength = 0;
+		for (int i = 2; i < cardinality * 2; i++)
+		{
+			codeLengths[i] = codeLengths[codeLengths[i]] + 1;						//Nodes will get codes of length one greater than their parents
+			if (codeLengths[i] > maxLength)
+				maxLength = codeLengths[i];
+		}
+
+		if (maxLength <= 0)
+			cerr << ("Huffman::expandHuffmanTree, maxlength is " + to_string(maxLength)) << endl;
+	
 }
 
 void Huffman::getCodeLengths(
@@ -211,16 +226,20 @@ void Huffman::getCodeLengths(
 
 string Huffman::codeToString(int intCode, int length)
 {
-	string stringCode = "";
-	for (int i = length - 1; i >= 0; --i)
-	{
-		int v = intCode & (1 << i);
-		if (v == 0)
-			stringCode += "0";
-		else
-			stringCode += "1";
-	}
-	return stringCode;
+		if (length <= 0)
+			cerr << ("Huffman::codeToString, length is " + to_string(length)) << endl;
+
+		string stringCode = "";
+		for (int i = length - 1; i >= 0; --i)
+		{
+			int v = intCode & (1 << i);
+			if (v == 0)
+				stringCode += "0";
+			else
+				stringCode += "1";
+		}
+		return stringCode;
+	
 }
 
 void Huffman::generateCanonicalHuffmanCodes(
@@ -232,46 +251,44 @@ void Huffman::generateCanonicalHuffmanCodes(
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
-	//DEBUG
-	if (maxLength == 0)
-		cout << "generateCanonicalHuffmanCodes, Maxlength is 0" << endl;
-	for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
-		numl[i] = 0;
-	
-	for (long i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
-		++numl[codeLengths[i] - 1];
+		if (maxLength <= 0)
+			cerr << ("Huffman::generateCanonicalHuffmanCodes, Maxlength is " + to_string(maxLength)) << endl;
 
-	firstCode[maxLength - 1] = 0;
+		for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
+			numl[i] = 0;
 
-	for (int i = maxLength - 2; i >= 0; --i)									//Calculates value of first code for each code length
-		firstCode[i] = (firstCode[i + 1] + numl[i + 1]) / 2;
-	
-	int *nextCode = new int[maxLength];
+		for (long i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
+			++numl[codeLengths[i] - 1];
 
-	for (int i = 0; i < maxLength; i++)											
-		nextCode[i] = firstCode[i];
+		firstCode[maxLength - 1] = 0;
 
-	long codes = 0;
-	for(auto &huffmanNode : huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
-	{
-		int codeLength = codeLengths[cardinality + codes];
-		string code = codeToString(nextCode[codeLength - 1], codeLength);
-		huffmanNode.second.code.assign(code);
+		for (int i = maxLength - 2; i >= 0; --i)									//Calculates value of first code for each code length
+			firstCode[i] = (firstCode[i + 1] + numl[i + 1]) / 2;
 
-		if (huffmanToSymbol[codeLength].empty())
+		int *nextCode = new int[maxLength];
+
+		for (int i = 0; i < maxLength; i++)
+			nextCode[i] = firstCode[i];
+
+		long codes = 0;
+		for (auto &huffmanNode : huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 		{
-			huffmanToSymbol[codeLength].set_empty_key(-1);
-			huffmanToSymbol[codeLength].set_deleted_key(-2);
+			int codeLength = codeLengths[cardinality + codes];
+			string code = codeToString(nextCode[codeLength - 1], codeLength);
+			huffmanNode.second.code.assign(code);
+
+			if (huffmanToSymbol[codeLength].empty())
+			{
+				huffmanToSymbol[codeLength].set_empty_key(-1);
+				huffmanToSymbol[codeLength].set_deleted_key(-2);
+			}
+			(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
+			++nextCode[codeLength - 1];
+			++codes;
 		}
-		(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
-		++nextCode[codeLength - 1];
-		++codes;
 
-		//DEBUG
-		//cout << codes << endl;
-	}
-
-	delete[] nextCode;
+		delete[] nextCode;
+	
 }
 
 void Huffman::encode(
@@ -363,6 +380,8 @@ void Huffman::readFromGammaCodes(
 	char rawChunk4 = 0;
 
 	string temp = "";
+	if (symbolsToRead < 1)
+		cerr << ("Huffman::readFromGammaCodes calls GammaCode::decodeGammaString: with " + to_string(symbolsToRead)) << endl;
 	gc.decodeGammaString(prefix, temp, intValues, symbolsToRead);
 
 	while (intValues.size() < symbolsToRead)
@@ -375,14 +394,16 @@ void Huffman::readFromGammaCodes(
 			bitstream.get(rawChunk3);
 			bitstream.get(rawChunk4);
 			fillString(rawChunk1, rawChunk2, rawChunk3, rawChunk4, chunk);
+
+			
+			//testofs << chunk << "\n";
+			
 		}
 		else
 			chunk = "";
 
 		gc.decodeGammaString(prefix, chunk, intValues, symbolsToRead);
 		
-		//DEBUG
-		int w = 42;
 	}
 }
 
@@ -413,7 +434,7 @@ void Huffman::decodeDictionary(
 		vector<long> intValues;
 
 		symbolsToRead = 1;
-		
+
 		readFromGammaCodes(
 			symbolsToRead,
 			bitstream,
@@ -423,7 +444,11 @@ void Huffman::decodeDictionary(
 			intValues);
 
 		maxLength = intValues[0];
-		intValues.clear();													
+		
+		if (maxLength <= 0)
+			cerr << ("Huffman::decodeDictionary, Maxlength is " + to_string(maxLength)) << endl;
+
+		intValues.clear();
 		firstCodes = new long[maxLength];
 		//symbolIndices: code length -> Huffman code -> index
 		for (long i = 0; i < maxLength; i++)
@@ -438,22 +463,32 @@ void Huffman::decodeDictionary(
 				prefix,
 				intValues);
 
-			symbolsToRead = intValues[0];								
+			symbolsToRead = intValues[0];
+			
 			firstCode = intValues[1];
+			
+			if (firstCode < 0)
+			{
+				cerr << ("Huffman::decodeDictionary, firstCode is " + to_string(firstCode)) << endl;
+			}
 			firstCodes[i] = firstCode;
 			if (symbolsToRead > 0)
 				lastCode = firstCode + symbolsToRead - 1;						//Find the last code for this size of code,
-																				//this is used for efficiency when resetting intValues below
+			//this is used for efficiency when resetting intValues below
 			intValues.clear();													//Reset the vector holding values already used
 
 			//Read the corresponding i + 1 sequence indexes
-			readFromGammaCodes(
-				symbolsToRead,
-				bitstream,
-				gc,
-				chunk,
-				prefix,
-				intValues);
+			if (symbolsToRead > 0)
+				readFromGammaCodes(
+					symbolsToRead,
+					bitstream,
+					gc,
+					chunk,
+					prefix,
+					intValues);
+
+			
+			
 
 			//Add sequence indexes to dictionary based on Huffman code length
 			while (intValues.size() > 0)
@@ -471,6 +506,7 @@ void Huffman::decodeDictionary(
 		//DEBUG
 		if (!test.prefixIsGood(prefix))
 			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;
+
 	}
 }
 

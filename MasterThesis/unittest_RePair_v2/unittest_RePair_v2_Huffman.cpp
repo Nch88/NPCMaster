@@ -857,204 +857,207 @@ TEST(huffman, decoder)
 
 TEST(huffman, decodeDictionaryDiddy)
 {
-	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+		using namespace google;
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+		activePairs.set_empty_key(-1);
+		activePairs.set_deleted_key(-2);
+		vector<SymbolRecord*> sequenceArray;
+		vector<PairRecord*> priorityQueue;
+		dense_hash_map<long, Pair> dictionary;
+		dictionary.set_empty_key(-1);
+		dictionary.set_deleted_key(-2);
+		long symbols(initialSymbolValue);//256
 
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	MyTest t;
-	Huffman h;
-	Outputter out;
-	Dictionary finalDict;
+		Initializer init;
+		Conditions c;
+		AlgorithmP algP;
+		MyTest t;
+		Huffman h;
+		Outputter out;
+		Dictionary finalDict;
 
-	string input1 = "diddy.txt";
+		string input1 = "diddy.txt";
 
-	bool skip = false;
+		bool skip = false;
 
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<vector<CompactPair>> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	string filename = input1;
-	ifstream file(filename);
+		int priorityQueueSize;
+		int blockSize;
+		blockSize = 1048576;
+		unordered_set<long> terminals;
+		vector<vector<CompactPair>> pairs;
+		dense_hash_map <long, dense_hash_map<long, long>> indices;
+		indices.set_empty_key(-1);
+		indices.set_deleted_key(-2);
+		string filename = input1;
+		ifstream file(filename);
 
-	init.SequenceArray(
-		c,
-		file,
-		blockSize,
-		activePairs,
-		sequenceArray,
-		terminals);
+		init.SequenceArray(
+			c,
+			file,
+			blockSize,
+			activePairs,
+			sequenceArray,
+			terminals);
 
-	priorityQueueSize = sqrt(sequenceArray.size());
-	priorityQueue.resize(priorityQueueSize);
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+		priorityQueueSize = sqrt(sequenceArray.size());
+		priorityQueue.resize(priorityQueueSize);
+		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
-	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahFEumFo";
+		string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+		string string2 = "sHHAo.wahFEumFo";
 
-	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+		ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		terminals,
-		symbols,
-		c);
+		algP.run(
+			sequenceArray,
+			dictionary,
+			activePairs,
+			priorityQueue,
+			terminals,
+			symbols,
+			c);
 
-	dense_hash_map<long, long> terminalIndices;
-	terminalIndices.set_empty_key(-1);
-	terminalIndices.set_deleted_key(-2);
-	vector<vector<CompactPair>> generationVectors;
+		dense_hash_map<long, long> terminalIndices;
+		terminalIndices.set_empty_key(-1);
+		terminalIndices.set_deleted_key(-2);
+		vector<vector<CompactPair>> generationVectors;
 
-	finalDict.generateCompactDictionary(
-		dictionary,
-		terminals,
-		pairs,
-		indices,
-		terminalIndices,
-		generationVectors);
+		finalDict.generateCompactDictionary(
+			dictionary,
+			terminals,
+			pairs,
+			indices,
+			terminalIndices,
+			generationVectors);
 
-	vector<long> testIndices;
+		vector<long> testIndices;
 
-	for (auto &entry : indices)
-	{
-		for (auto &subentry : entry.second)
+		for (auto &entry : indices)
 		{
-			testIndices.push_back(entry.first);
-			testIndices.push_back(subentry.first);
-			testIndices.push_back(subentry.second);
-			testIndices.push_back(-1);
+			for (auto &subentry : entry.second)
+			{
+				testIndices.push_back(entry.first);
+				testIndices.push_back(subentry.first);
+				testIndices.push_back(subentry.second);
+				testIndices.push_back(-1);
+			}
 		}
-	}
 
-	dense_hash_map<long, HuffmanNode> huffmanCodes;
-	huffmanCodes.set_empty_key(-1);
-	huffmanCodes.set_deleted_key(-2);
-	long *firstCode = nullptr;
-	long *numl = nullptr;
-	long maxLength = 0;
-	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
-	huffmanToSymbol.set_empty_key(-1);
-	huffmanToSymbol.set_deleted_key(-2);
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+		dense_hash_map<long, HuffmanNode> huffmanCodes;
+		huffmanCodes.set_empty_key(-1);
+		huffmanCodes.set_deleted_key(-2);
+		long *firstCode = nullptr;
+		long *numl = nullptr;
+		long maxLength = 0;
+		dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+		huffmanToSymbol.set_empty_key(-1);
+		huffmanToSymbol.set_deleted_key(-2);
+		h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
 
-	vector<long> testdictionarysymbol;
-	vector<Pair> testdictionary;
+		vector<long> testdictionarysymbol;
+		vector<Pair> testdictionary;
 
-	for (auto &entry : dictionary)
-	{
-		testdictionarysymbol.push_back(entry.first);
-		testdictionary.push_back(entry.second);
-	}
-
-	vector<long> testhuffmanCodessymbol;
-	vector<HuffmanNode> testhuffmanCodes;
-
-	for (auto &entry : huffmanCodes)
-	{
-		testhuffmanCodessymbol.push_back(entry.first);
-		testhuffmanCodes.push_back(entry.second);
-	}
-
-	string outstring = "testHuffmanDictionary2";
-
-	ofstream myfile;
-	myfile.open(outstring, ios::binary);
-
-	out.huffmanDictionary(
-		outstring,
-		myfile,
-		maxLength,
-		firstCode,
-		numl,
-		dictionary,
-		indices,
-		terminalIndices,
-		huffmanToSymbol);
-
-	myfile.close();
-
-	ifstream ifs;
-	ifs.open(outstring, ios::binary);
-
-	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
-	symbolIndices.set_empty_key(-1);
-	symbolIndices.set_deleted_key(-2);
-	long *firstCodes;
-
-	h.decodeDictionary(ifs, firstCodes, symbolIndices);
-
-	vector<long> testsymbolIndices;
-
-	for (auto &entry : symbolIndices)
-	{
-		for (auto &subentry : entry.second)
+		for (auto &entry : dictionary)
 		{
-			testsymbolIndices.push_back(entry.first);
-			testsymbolIndices.push_back(subentry.first);
-			testsymbolIndices.push_back(subentry.second);
-			testsymbolIndices.push_back(-1);
+			testdictionarysymbol.push_back(entry.first);
+			testdictionary.push_back(entry.second);
 		}
-	}
 
-	ASSERT_EQ(4, (symbolIndices)[3].size());
-	ASSERT_EQ(8, (symbolIndices)[4].size());
+		vector<long> testhuffmanCodessymbol;
+		vector<HuffmanNode> testhuffmanCodes;
 
-	long codeLength = 3;
-	long nrOfCodes = 4;
-	long codeStart = firstCodes[2];
-	long code = 4;
-	long symbol = (huffmanToSymbol[3])[4];
-	long index;
+		for (auto &entry : huffmanCodes)
+		{
+			testhuffmanCodessymbol.push_back(entry.first);
+			testhuffmanCodes.push_back(entry.second);
+		}
 
-	//Test codes of length 3
+		string outstring = "testHuffmanDictionary2";
+
+		ofstream myfile;
+		myfile.open(outstring, ios::binary);
+
+		out.huffmanDictionary(
+			outstring,
+			myfile,
+			maxLength,
+			firstCode,
+			numl,
+			dictionary,
+			indices,
+			terminalIndices,
+			huffmanToSymbol);
+
+		myfile.close();
+
+		ifstream ifs;
+		ifs.open(outstring, ios::binary);
+
+		dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+		symbolIndices.set_empty_key(-1);
+		symbolIndices.set_deleted_key(-2);
+		long *firstCodes;
+
+		h.decodeDictionary(ifs, firstCodes, symbolIndices);
+
+
+
+		vector<long> testsymbolIndices;
+
+		for (auto &entry : symbolIndices)
+		{
+			for (auto &subentry : entry.second)
+			{
+				testsymbolIndices.push_back(entry.first);
+				testsymbolIndices.push_back(subentry.first);
+				testsymbolIndices.push_back(subentry.second);
+				testsymbolIndices.push_back(-1);
+			}
+		}
+
+		ASSERT_EQ(4, (symbolIndices)[3].size());
+		ASSERT_EQ(8, (symbolIndices)[4].size());
+
+		long codeLength = 3;
+		long nrOfCodes = 4;
+		long codeStart = firstCodes[2];
+		long code = 4;
+		long symbol = (huffmanToSymbol[3])[4];
+		long index;
+
+		//Test codes of length 3
+
+		for (int i = codeStart; i < codeStart + nrOfCodes; i++)
+		{
+			code = i;
+			symbol = (huffmanToSymbol[codeLength])[code];
+
+			if (symbol >= initialSymbolValue)
+				index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			else
+				index = (terminalIndices)[symbol];
+
+			ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
+		}
+
+		//Test codes of length 4
+		nrOfCodes = 8;
+		codeStart = firstCodes[3];
+
+		for (int i = codeStart; i < codeStart + nrOfCodes; i++)
+		{
+			code = i;
+			symbol = (huffmanToSymbol[codeLength])[code];
+
+			if (symbol >= initialSymbolValue)
+				index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
+			else
+				index = (terminalIndices)[symbol];
+
+			ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
+		}
+		ifs.close();
 	
-	for (int i = codeStart; i < codeStart + nrOfCodes; i++)
-	{
-		code = i;
-		symbol = (huffmanToSymbol[codeLength])[code];
-
-		if (symbol >= initialSymbolValue)
-			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
-		else
-			index = (terminalIndices)[symbol];
-
-		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
-	}
-
-	//Test codes of length 4
-	nrOfCodes = 8;
-	codeStart = firstCodes[3];
-
-	for (int i = codeStart; i < codeStart + nrOfCodes; i++)
-	{
-		code = i;
-		symbol = (huffmanToSymbol[codeLength])[code];
-
-		if (symbol >= initialSymbolValue)
-			index = (indices[dictionary[symbol].leftSymbol])[dictionary[symbol].rightSymbol];
-		else
-			index = (terminalIndices)[symbol];
-
-		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
-	}
-	ifs.close();
 }
 
 TEST(huffman, decodeDictionaryDuplicates)

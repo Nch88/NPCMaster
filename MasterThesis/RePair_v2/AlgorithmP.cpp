@@ -115,6 +115,7 @@ void AlgorithmP::removeSymbolThreadingPointers(
 	long & indexSymbolLeft,
 	vector<SymbolRecord*> & sequenceArray)
 {
+	//Middle of sequence, connect the remaining parts
 	if (sequenceArray[indexSymbolLeft]->previous &&
 		sequenceArray[indexSymbolLeft]->next)
 	{
@@ -123,10 +124,12 @@ void AlgorithmP::removeSymbolThreadingPointers(
 		sequenceArray[indexSymbolLeft]->next->previous =
 			sequenceArray[indexSymbolLeft]->previous;
 	}
+	//Last in sequence
 	else if (sequenceArray[indexSymbolLeft]->previous)
 	{
 		sequenceArray[indexSymbolLeft]->previous->next = nullptr;
 	}
+	//First in sequence
 	else if (sequenceArray[indexSymbolLeft]->next)
 	{
 		sequenceArray[indexSymbolLeft]->next->previous = nullptr;
@@ -158,7 +161,8 @@ void AlgorithmP::updatePairRecord(
 	long symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
 	long symbolRight = sequenceArray[indexSymbolRight]->symbol;
 
-	if (tracker->pairRecord->count < 2) //Delete pair record
+	//Delete pair record if the pair is no longer active
+	if (tracker->pairRecord->count < 2) 
 	{
 		deletePairRecord(
 			symbolLeft,
@@ -167,6 +171,7 @@ void AlgorithmP::updatePairRecord(
 		tracker->pairRecord = nullptr;
 		tracker = nullptr;
 	}
+	//If we are removing the first or last symbol in the sequence update the pair record to reflect this
 	else
 	{
 		if (indexSymbolLeft == tracker->pairRecord->arrayIndexFirst)
@@ -185,6 +190,7 @@ void AlgorithmP::removeFromPriorityQueueList(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	//Middle of list, connect the remaining parts
 	if (tracker->pairRecord->nextPair && tracker->pairRecord->previousPair)
 	{
 		tracker->pairRecord->nextPair->previousPair = 
@@ -192,15 +198,18 @@ void AlgorithmP::removeFromPriorityQueueList(
 		tracker->pairRecord->previousPair->nextPair =
 			tracker->pairRecord->nextPair;
 	}
+	//First in list
 	else if (tracker->pairRecord->nextPair)
 	{
 		priorityQueue[index] = tracker->pairRecord->nextPair;
 		tracker->pairRecord->nextPair->previousPair = nullptr;		
 	}
+	//Last in list
 	else if (tracker->pairRecord->previousPair)
 	{
 		tracker->pairRecord->previousPair->nextPair = nullptr;
 	}
+	//Only in list
 	else
 		priorityQueue[index] = nullptr;
 
@@ -213,6 +222,7 @@ void AlgorithmP::addToPriorityQueueList(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	//Put pairs with large frequencies in the last PQ entry
 	if (index > priorityQueue.size() - 1)
 		index = priorityQueue.size() - 1;
 
@@ -231,10 +241,12 @@ void AlgorithmP::moveDownInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	//Pairs is no longer active as count will be decremented to 1
 	if (tracker->pairRecord->count == 2)
 	{
 		removeFromPriorityQueueList(0, tracker, priorityQueue);
 	}
+	//Unless we still belong in the entry for very large frequency pairs move down one entry
 	else if (tracker->pairRecord->count - 1 <= priorityQueue.size())
 	{
 		removeFromPriorityQueueList(
@@ -252,6 +264,7 @@ void AlgorithmP::moveUpInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
+	//Move up unless we are already in entry for large frequencies
 	if (tracker->pairRecord->count - 1 < priorityQueue.size())
 	{
 		removeFromPriorityQueueList(
@@ -294,12 +307,16 @@ void AlgorithmP::decrementCountLeft(
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
 {	
+	//Check that a pair exists
 	if (indexSymbolPrevious >= 0)
 	{
 		PairTracker * tracker = nullptr;
 		tracker = 
 			&activePairs[sequenceArray[indexSymbolPrevious]->symbol]
 						[sequenceArray[indexSymbolLeft]->symbol];
+
+		//Check that the pair is active and 
+		//for the sake of identical symbols that this left is the left part of a pair we have counted
 		if (tracker && 
 			tracker->pairRecord &&
 			(sequenceArray[indexSymbolPrevious]->next ||
@@ -314,6 +331,8 @@ void AlgorithmP::decrementCountLeft(
 				tracker,
 				c);
 		}
+		//Reset the seenOnce bool such that temporary pairs which are destroyed in the subsequent 
+		//iteration are never considered active by mistake
 		else
 		{
 			tracker->seenOnce = false;
@@ -330,6 +349,7 @@ void AlgorithmP::decrementCountRight(
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
 {
+	//Check that a pair exists
 	if (indexSymbolNext >= 0)
 	{
 		PairTracker * tracker = nullptr;
@@ -337,6 +357,8 @@ void AlgorithmP::decrementCountRight(
 			&activePairs[sequenceArray[indexSymbolRight]->symbol]
 			[sequenceArray[indexSymbolNext]->symbol];
 
+		//Check that the pair is active and 
+		//for the sake of identical symbols that this left is the left part of a pair we have counted
 		if (tracker &&
 			tracker->pairRecord &&
 			(sequenceArray[indexSymbolRight]->next ||
@@ -366,6 +388,7 @@ void AlgorithmP::threadEmptySymbols(
 	firstEmptyRecord->previous = leftSymbolRecord;
 	firstEmptyRecord->next = nextSymbolRecord;
 
+	//Thread both ends of a sequence of empty symbols unless they are the same
 	if (nextSymbolRecord &&
 		nextSymbolRecord->index - 1 != firstEmptyRecord->index)
 	{
@@ -398,6 +421,7 @@ void AlgorithmP::replacePair(
 	
 	oldPair->count--;
 
+	//The pair is no longer active and can be deleted
 	if (oldPair->count == 0)
 	{
 		deletePairRecord(
@@ -411,6 +435,7 @@ void AlgorithmP::replacePair(
 	else
 		nextSymbolRecord = nullptr;
 
+	//The dictionary generation of the pair is determined and the replacement is stored in our dictionary
 	Pair pairToReplace(
 		leftSymbolRecord->symbol, 
 		rightSymbolRecord->symbol,
@@ -420,6 +445,7 @@ void AlgorithmP::replacePair(
 	leftSymbolRecord->symbol = Symbols;
 	rightSymbolRecord->symbol = 0;
 
+	//The right symbol of the old pair is now empty and must be threaded
 	threadEmptySymbols(
 		leftSymbolRecord,
 		rightSymbolRecord,
@@ -700,6 +726,7 @@ void AlgorithmP::replaceAllPairs(
 		indexSymbolNext = -1;
 
 		sequenceIndex = nextSymbol->index;
+		//Store the pointer to the next symbol now, as the current symbol is changed as we go
 		nextSymbol = nextSymbol->next;
 
 		establishContext(
@@ -728,9 +755,9 @@ void AlgorithmP::replaceAllPairs(
 
 void AlgorithmP::newSymbol(long & Symbols)
 {
-	if (Symbols == UINT_MAX - 1)
+	if (Symbols == LONG_MAX - 1)
 	{
-		cout << "Ran out of symbols, aborting compression" << endl;
+		cerr << "Ran out of symbols, aborting compression" << endl;
 		exit;
 	}
 	Symbols++;
@@ -842,6 +869,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	}
 }
 
+//Manages active pairs with frequencies greater than sqrt(n)
 void AlgorithmP::manageHighPriorityList(
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<long, Pair>& dictionary,
