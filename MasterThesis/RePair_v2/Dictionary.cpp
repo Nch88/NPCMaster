@@ -38,14 +38,14 @@ void Dictionary::generateCompactDictionary(
 	//Split map by generation
 	createGenerationVectors(dictionary, generationVectors);
 
-	createFinalPairVectors(dictionary, generationVectors, pairVectors, terminalVector, indices, terminalIndices);
+	createFinalPairVectors(dictionary, generationVectors, terminalVector, pairVectors, indices, terminalIndices);
 }
 
 void Dictionary::createFinalPairVectors(
 	dense_hash_map<long, Pair>& dictionary,
 	vector<vector<CompactPair>>& generationVectors,
-	vector<vector<CompactPair>>& pairVectors,
 	vector<long>& terminals,
+	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
 	dense_hash_map<long, long> &terminalIndices)
 {
