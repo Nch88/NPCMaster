@@ -291,44 +291,6 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	delete terminalsGamma;
 }
 
-//void GammaCode::decode(vector<CompactPair*>& pairs,
-//	unordered_set<long>& terminals,
-//	string& inputString)
-//{
-//	//Terminals
-//	vector<long> t;
-//	int startIndex = 0;
-//	int count = readGammaCodeHeader(inputString, startIndex);
-//	string pairString = "";
-//	decodeGammaString(pairString, inputString.substr(startIndex, string::npos), t, count);
-//	terminals = *(new unordered_set<long>(t.begin(), t.end()));
-//
-//	//Read header
-//	startIndex = 0;
-//	count = readGammaCodeHeader(pairString, startIndex);
-//
-//	vector<long> left;
-//	string prefix = "", cur;
-//	decodeGammaString(prefix, pairString.substr(startIndex,string::npos), left, count);
-//	int rightElemSize = floor(log2(count)) + 1;
-//	int i = 0;
-//	long leftVal = 0;
-//	while (prefix.size() > 0)
-//	{
-//		leftVal += left[i];
-//
-//		cur = prefix.substr(0, rightElemSize);
-//		if (prefix.size() > rightElemSize)
-//			prefix = prefix.substr(rightElemSize, string::npos);
-//		else
-//			prefix = "";
-//		CompactPair *c = new CompactPair(leftVal,binaryToInt(cur));
-//		pairs.push_back(c);
-//
-//		++i;
-//	}
-//}
-
 void GammaCode::readNextNumbers(int n, vector<long> &values, ifstream &bitstream, string &prefix)
 {
 	if (n < 1)
@@ -434,9 +396,10 @@ void GammaCode::readNextBinaries(int binarySize, int count, vector<long> &values
 	}
 }
 
-void GammaCode::decodeDictionaryFile(vector<CompactPair>& pairs,
-	vector<long>& terminals,
-	ifstream &bitstream)
+void GammaCode::decodeDictionaryFile(
+	ifstream &bitstream,
+	vector<CompactPair>& pairs,
+	vector<long>& terminals)
 {
 	vector<long> values;
 	string prefix = "";

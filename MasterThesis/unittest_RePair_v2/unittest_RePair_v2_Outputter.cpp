@@ -617,7 +617,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	ifstream bitstream(outstring, ios::binary);
 
 	//Read file
-	gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstream);
+	gc.decodeDictionaryFile(bitstream, decodedPairs, decodedTerms);
 
 	bool isInOriginalPairVector;
 	for (const auto p : decodedPairs)

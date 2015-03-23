@@ -98,7 +98,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dense_hash_map<long, long> tIndices;
 	tIndices.set_empty_key(-1);
 	tIndices.set_deleted_key(-2);
-	dc.createFinalPairVectors(dictionary, generationVectors, pairs, terminals, indices, tIndices);
+	dc.createFinalPairVectors(dictionary, generationVectors, terminals, pairs, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;

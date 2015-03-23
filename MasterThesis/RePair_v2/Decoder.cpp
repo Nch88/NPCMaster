@@ -52,7 +52,7 @@ void Decoder::decode(string inFile)
 	while (!bitstream.eof())
 	{
 		//Read dictionary
-		gc.decodeDictionaryFile(decodedPairs, decodedTerms, bitstreamDict);
+		gc.decodeDictionaryFile(bitstreamDict, decodedPairs, decodedTerms);
 		
 		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
 
