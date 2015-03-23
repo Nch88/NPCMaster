@@ -132,6 +132,6 @@ int Algorithm::run(
 			file.close();
 	}
 	cout << "Completed compression of file: " << filename << endl;
-	init.resetCompleted(activePairs, sequenceArray, blockSize);
+	init.resetCompleted(blockSize, activePairs, sequenceArray);
 	return 0;
 }
