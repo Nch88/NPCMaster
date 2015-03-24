@@ -30,20 +30,17 @@ public:
 		std::unordered_set<long>& terminals,
 		std::vector<vector<CompactPair>>& pairVectors,
 		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices,
-		std::vector<std::vector<CompactPair>> &generationVectors);
+		google::dense_hash_map<long, long> &terminalIndices);
 
 	///<summary>Change each pair in each generation to be a pair of indices into a hypothetical sequence consisting
 	/// of all the terminals followed by all the pairs of the previous generation, each generation sorted by their left elements.</summary>
 	///<param name="dictionary">Input: The dictionary created by RePair.</param>
-	///<param name="generationVectors">Input: The output from createGenerationVectors.</param>
 	///<param name="terminals">Input: A sorted vector of terminals</param>
 	///<param name="pairVectors">Output: The new pairs of indices, still split into seperate generations.</param>
 	///<param name="indices">Output: The index of each pair in pairVectors</param>
 	///<param name="terminalIndices">Output: The index of each terminal</param>
 	void Dictionary::createFinalPairVectors(
 		google::dense_hash_map<long, Pair>& dictionary,
-		std::vector<std::vector<CompactPair>>& generationVectors,
 		std::vector<long>& terminals,
 		std::vector<std::vector<CompactPair>>& pairVectors,
 		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,

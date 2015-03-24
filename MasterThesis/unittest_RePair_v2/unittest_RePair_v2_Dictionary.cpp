@@ -85,8 +85,8 @@ TEST(createCompactDictionary, createFinalPairVector)
 	Pair H(305, 'g', 2);
 	dictionary[307] = H;
 
-	vector<vector<CompactPair>> generationVectors;
-	dc.createGenerationVectors(dictionary, generationVectors);
+	vector<vector<CompactPair>> pairVectors;
+	dc.createGenerationVectors(dictionary, pairVectors);
 
 	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 	sort(terminals.begin(), terminals.end());
@@ -98,7 +98,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dense_hash_map<long, long> tIndices;
 	tIndices.set_empty_key(-1);
 	tIndices.set_deleted_key(-2);
-	dc.createFinalPairVectors(dictionary, generationVectors, terminals, pairs, indices, tIndices);
+	dc.createFinalPairVectors(dictionary, terminals, pairVectors, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;
@@ -161,8 +161,7 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	tIndices.set_empty_key(-1);
 	tIndices.set_deleted_key(-2);
 
-	vector<vector<CompactPair>> generationVectors;
-	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices ,generationVectors);
+	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;

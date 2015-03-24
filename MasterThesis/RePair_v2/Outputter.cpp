@@ -328,7 +328,6 @@ void Outputter::all(
 	//Encode generations for dictionary
 	Dictionary finalDict;
 	vector<vector<CompactPair>> pairs;
-	vector<vector<CompactPair>> generationVectors;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
@@ -341,8 +340,7 @@ void Outputter::all(
 		terminals,
 		pairs,
 		indices,
-		terminalIndices,
-		generationVectors);	
+		terminalIndices);	
 
 	//Write dictionary to file
 	GammaCode gc;
@@ -351,8 +349,7 @@ void Outputter::all(
 	gc.makeFinalString(
 		pairs,
 		terminals,
-		output,
-		generationVectors);
+		output);
 
 	this->dictionary(
 		compressedDictionaryName,		
