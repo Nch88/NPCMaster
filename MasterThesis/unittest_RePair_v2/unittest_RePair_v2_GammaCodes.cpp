@@ -98,7 +98,6 @@ TEST(gammaCodes, encode_diddy_explicit)
 		symbols,
 		c);
 
-	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
@@ -106,7 +105,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -118,7 +117,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 
 
 	//!!!!!!!!!!!!!!!! This is encode explicit !!!!!!!!!!!!!!!!!!!
-	int generations = generationVectors.size();
+	int generations = pairs.size();
 	int genP1 = 0;
 	long firstElement = 0;
 	string fstElmtGamma = "";
@@ -285,7 +284,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 			ASSERT_EQ("10011", rightElementsBinaries[genP1]);
 		}
 
-		bitLengthRightValue += generationVectors[genP1].size();
+		bitLengthRightValue += pairs[genP1].size();
 		bitLengthRight = floor(log2(bitLengthRightValue)) + 1;
 	}
 	
@@ -350,7 +349,6 @@ TEST(gammaCodes, encode_diddy)
 		symbols,
 		c);
 
-	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
@@ -358,7 +356,7 @@ TEST(gammaCodes, encode_diddy)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -397,7 +395,7 @@ TEST(gammaCodes, encode_diddy)
 			terminalsGammaResult += gc.getGammaCode(121);
 	}
 
-	gc.encode(pairs, terminals, terminalsGamma, leftElementsGammas, rightElementsBinaries, generationVectors);
+	gc.encode(pairs, terminals, terminalsGamma, leftElementsGammas, rightElementsBinaries);
 
 	ASSERT_EQ(terminalsGammaResult, terminalsGamma);
 
@@ -533,7 +531,6 @@ TEST(gammaCodes, diddy_makeFinalString)
 		symbols,
 		c);
 
-	vector<vector<CompactPair>> generationVectors;
 	vector<vector<CompactPair>> pairs;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
@@ -541,7 +538,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
 
 	//Test variables
 	string terminalsGammaResult = "";
@@ -626,8 +623,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	gc.makeFinalString(
 		pairs,
 		terminals,
-		*finalstring,
-		generationVectors);
+		*finalstring);
 
 	/*string pTestTHeader = finalstring->substr(0, 7);
 	string pTestTHeaderExpected = "1110110";
