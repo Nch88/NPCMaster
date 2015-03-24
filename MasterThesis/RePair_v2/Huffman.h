@@ -78,10 +78,27 @@ public:
 		string &chunk,
 		string &prefix,
 		vector<long> &intValues);
+
+	///<summary>
+	///Decodes a dictionary from Huffman codes to indices into the dictionary of generations needed to decode a 
+	///sequence of Huffman encoded characters.
+	///</summary>
+	///<param name="bitstream">Input: The stream of Huffman dictionary entries.</param>
+	///<param name="firstCodes">Output: An array of values of the first code for each length of code constructed from Huffman dictionary headers.</param>
+	///<param name="symbolIndices">Output: A table to look up dictionary indices from Huffman encoded characters.</param>
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
 		long *&firstCodes,
 		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices);
+
+	///<summary>
+	///Decodes a block of compressed Huffman codes based on the available Huffman dictionary, 
+	///converting a code to an index into the dictionary of generations
+	///</summary>
+	///<param name="firstCode">Input: Array with values of the first code for each length of code starting from length 1.</param>
+	///<param name="bitstream">Input: The stream of Huffman encoded characters.</param>
+	///<param name="symbolIndices">Input: A table to look up dictionary indices from Huffman encoded characters.</param>
+	///<param name="symbolIndexSequence">Output: The sequence of dictionary indices needed to reconstruct the original sequence.</param>
 	void Huffman::decode(
 		long *firstCode,
 		ifstream &bitstream,

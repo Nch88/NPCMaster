@@ -28,8 +28,7 @@ void Huffman::getFrequencies(
 		if (cardinality <= 0)
 		{
 			cerr << "Huffman::getFrequencies cardinality is " + to_string(cardinality) << endl;
-		}
-	
+		}	
 }
 
 void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)

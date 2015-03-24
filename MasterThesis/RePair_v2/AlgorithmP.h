@@ -162,6 +162,7 @@ public:
 	//Finds the next symbol and notifies us if we run out of symbols
 	void AlgorithmP::newSymbol(long & Symbols);
 
+	//Replaces all instances of a pair from one list entry in the priority queue
 	void AlgorithmP::manageOneEntryOnList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
@@ -172,6 +173,7 @@ public:
 		CompactionData &cData,
 		Conditions& c);
 
+	//Replaces all pairs on one list entry in the priority queue
 	void AlgorithmP::manageOneList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
@@ -182,6 +184,7 @@ public:
 		CompactionData &cData,
 		Conditions& c);
 
+	//Runs though the priority list from second last to first entry, replacing all pairs
 	void AlgorithmP::manageLowerPriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<long, Pair>& dictionary,
@@ -191,6 +194,7 @@ public:
 		CompactionData &cData,
 		Conditions& c);
 
+	//Replaces all pairs in decreasing order of frequency from the last list in the priority queue
 	void AlgorithmP::manageHighPriorityList(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<long, Pair>& dictionary,

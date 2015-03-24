@@ -13,9 +13,9 @@ Initializer::~Initializer()
 }
 
 void Initializer::resetCompleted(
+	int blockSize,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
-	vector<SymbolRecord*> & sequenceArray,
-	int blockSize)
+	vector<SymbolRecord*> & sequenceArray)
 {
 	//Reset sequence array when we are done
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -82,7 +82,7 @@ void Initializer::resetForNextBlock(
 void Initializer::setupPairRecord(
 	long leftSymbol,
 	long rightSymbol,
-	int offset,
+	int index,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
@@ -103,7 +103,7 @@ void Initializer::setupPairRecord(
 
 		currentTracker->pairRecord->count = 2;
 		currentTracker->pairRecord->arrayIndexFirst = currentTracker->indexFirst; //First symbol in active pair
-		currentTracker->pairRecord->arrayIndexLast = offset;
+		currentTracker->pairRecord->arrayIndexLast = index;
 		currentTracker->pairRecord->nextPair = NULL;
 		currentTracker->pairRecord->previousPair = NULL;
 
@@ -121,26 +121,26 @@ void Initializer::setupPairRecord(
 		currentTracker->pairRecord->count++;
 
 		previousOccurence = sequenceArray[currentTracker->pairRecord->arrayIndexLast];
-		newOccurence = sequenceArray[offset];
+		newOccurence = sequenceArray[index];
 
 		previousOccurence->next = newOccurence;
 		newOccurence->previous = previousOccurence;
 
-		currentTracker->pairRecord->arrayIndexLast = offset;
+		currentTracker->pairRecord->arrayIndexLast = index;
 	}
 	//First time the pair is seen
 	else
 	{
 		currentTracker->seenOnce = true;
-		currentTracker->indexFirst = offset;
+		currentTracker->indexFirst = index;
 	}
 }
 
-void Initializer::addToSequenceArray(
-	vector<SymbolRecord*> & sequenceArray,
+void Initializer::addToSequenceArray(	
 	unsigned char & symbol,
 	long & index,
 	int & symbolCount,
+	vector<SymbolRecord*> & sequenceArray,
 	unordered_set<long>& terminals)
 {
 	terminals.emplace(symbol);													//Record all terminal symbols
@@ -176,11 +176,11 @@ int Initializer::SequenceArray(
 	//We read two symbols ahead to check for sequences of duplicate symbols
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
-		addToSequenceArray(sequenceArray, previousSymbol, index, symbolCount, terminals);
+		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray, terminals);
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
-			addToSequenceArray(sequenceArray, leftSymbol, index, symbolCount, terminals);
+			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray, terminals);
 			
 			setupPairRecord(
 				(long)previousSymbol,
@@ -198,7 +198,7 @@ int Initializer::SequenceArray(
 				t.start();
 				cout << " - Timing: Timing push back onto Sequence array" << endl;
 			}
-			addToSequenceArray(sequenceArray, rightSymbol, index, symbolCount, terminals);
+			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray, terminals);
 			if (c.timing)
 			{
 				t.stop();

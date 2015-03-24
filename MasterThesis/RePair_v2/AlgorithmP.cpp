@@ -855,6 +855,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	CompactionData &cData,
 	Conditions& c)
 {
+	//Runs through all entries from second last to first
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{		
 		manageOneList(
