@@ -51,6 +51,8 @@ void Decoder::decode(string inFile)
 	//Each iteration represents a block
 	while (!bitstream.eof())
 	{
+		std::cout << '#';
+
 		//Read dictionary
 		gc.decodeDictionaryFile(bitstreamDict, decodedPairs, decodedTerms);
 		
