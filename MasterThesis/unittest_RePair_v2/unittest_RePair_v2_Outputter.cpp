@@ -309,15 +309,13 @@ TEST(outputter, diddyHuffmanDictionary)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices,
-		generationVectors);
+		terminalIndices);
 
 	vector<long> testterminalindicessymbols;
 	vector<long> testterminalindices;
@@ -601,10 +599,10 @@ TEST(outputter, readAndWriteDictionary_diddy)
 		symbols,
 		c);
 
-	finalDict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices, generationVectors);
+	finalDict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
 
 	string finalstring = "";
-	gc.makeFinalString(pairs, terminals, finalstring, generationVectors);
+	gc.makeFinalString(pairs, terminals, finalstring);
 
 	ofstream myfile;
 	myfile.open(outstring, ios::binary);

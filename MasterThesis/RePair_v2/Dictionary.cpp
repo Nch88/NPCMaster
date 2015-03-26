@@ -28,22 +28,20 @@ void Dictionary::generateCompactDictionary(
 	unordered_set<long>& terminals,
 	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices,
-	vector<vector<CompactPair>> &generationVectors)
+	dense_hash_map<long, long> &terminalIndices)
 {
 	vector<long> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
 
 	//Split map by generation
-	createGenerationVectors(dictionary, generationVectors);
+	createGenerationVectors(dictionary, pairVectors);
 
-	createFinalPairVectors(dictionary, generationVectors, terminalVector, pairVectors, indices, terminalIndices);
+	createFinalPairVectors(dictionary, terminalVector, pairVectors, indices, terminalIndices);
 }
 
 void Dictionary::createFinalPairVectors(
 	dense_hash_map<long, Pair>& dictionary,
-	vector<vector<CompactPair>>& generationVectors,
 	vector<long>& terminals,
 	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
@@ -58,15 +56,13 @@ void Dictionary::createFinalPairVectors(
 	int offset = terminals.size();
 
 	//For each generation
-	for (int gen = 0; gen < generationVectors.size(); ++gen)
+	for (int gen = 0; gen < pairVectors.size(); ++gen)
 	{
-		/*vector<CompactPair> vec;
-		pairVectors.push_back(vec);*/
 		vector<NamedPair> vec;
-		for (int j = 0; j < generationVectors[gen].size(); ++j)
+		for (int j = 0; j < pairVectors[gen].size(); ++j)
 		{
 			//Find the new indices of the two symbols in this pair
-			long leftSymbol = generationVectors[gen][j].leftSymbol;
+			long leftSymbol = pairVectors[gen][j].leftSymbol;
 
 			long leftIndex;
 
@@ -82,7 +78,7 @@ void Dictionary::createFinalPairVectors(
 				leftIndex = indices[leftSymbolLeftPart][leftSymbolRightPart];
 			}
 
-			long rightSymbol = generationVectors[gen][j].rightSymbol;
+			long rightSymbol = pairVectors[gen][j].rightSymbol;
 			long rightIndex;
 
 			//Check for terminal symbol or composite symbol
@@ -100,19 +96,18 @@ void Dictionary::createFinalPairVectors(
 			//Make a pair out of the indices we found
 			NamedPair p = { leftIndex, rightIndex, leftSymbol, rightSymbol };
 			vec.push_back(p);
-			//pairVectors[gen].push_back(p);
 		}
 
 		//Sort the new vector
-		sort(vec.begin(), vec.end(),comPairN);
+		sort(vec.begin(), vec.end(), comPairN);
 
-		//Add the new pairs to the corresponding pair vector
+		//Change the values in pairVectors to the new indices
 		vector<CompactPair> vec2;
 		for (int i = 0; i < vec.size(); ++i)
 		{
-			vec2.push_back(CompactPair(vec[i].leftSymbol, vec[i].rightSymbol));
+			pairVectors[gen][i].leftSymbol = vec[i].leftSymbol;
+			pairVectors[gen][i].rightSymbol = vec[i].rightSymbol;
 		}
-		pairVectors.push_back(vec2);
 
 		//Record the new indices
 		for (int i = 0; i < vec.size(); ++i)

@@ -920,15 +920,13 @@ TEST(huffman, decodeDictionaryDiddy)
 		dense_hash_map<long, long> terminalIndices;
 		terminalIndices.set_empty_key(-1);
 		terminalIndices.set_deleted_key(-2);
-		vector<vector<CompactPair>> generationVectors;
 
 		finalDict.generateCompactDictionary(
 			dictionary,
 			terminals,
 			pairs,
 			indices,
-			terminalIndices,
-			generationVectors);
+			terminalIndices);
 
 		vector<long> testIndices;
 
@@ -1125,15 +1123,13 @@ TEST(huffman, decodeDictionaryDuplicates)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	vector<vector<CompactPair>> generationVectors;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		pairs,
 		indices,
-		terminalIndices,
-		generationVectors);
+		terminalIndices);
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);

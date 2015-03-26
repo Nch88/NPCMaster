@@ -98,7 +98,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dense_hash_map<long, long> tIndices;
 	tIndices.set_empty_key(-1);
 	tIndices.set_deleted_key(-2);
-	dc.createFinalPairVectors(dictionary, generationVectors, terminals, pairs, indices, tIndices);
+	dc.createFinalPairVectors(dictionary, terminals, pairs, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;
@@ -162,7 +162,7 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	tIndices.set_deleted_key(-2);
 
 	vector<vector<CompactPair>> generationVectors;
-	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices ,generationVectors);
+	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;

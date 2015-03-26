@@ -341,8 +341,7 @@ void Outputter::all(
 		terminals,
 		pairs,
 		indices,
-		terminalIndices,
-		generationVectors);	
+		terminalIndices);	
 
 	//Write dictionary to file
 	GammaCode gc;
@@ -351,8 +350,7 @@ void Outputter::all(
 	gc.makeFinalString(
 		pairs,
 		terminals,
-		output,
-		generationVectors);
+		output);
 
 	this->dictionary(
 		compressedDictionaryName,		

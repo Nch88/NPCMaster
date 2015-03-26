@@ -40,14 +40,12 @@ public:
 
 	///<summary>Encodes a dictionary in pairvector form as a string of gamma codes.</summary>
 	///<param name="pairVector">Input: A vector of vectors of CompactPairs, as produced by Dictionary::generateCompactDictionary.</param>
-	///<param name="generationVectors">Input: A vector of vectors of Pairs, as produced by Dictionary::generateCompactDictionary.</param>
 	///<param name="terminals">Input: The set of terminals used in the dictionary.</param>
 	///<param name="finalString">Output: The dictionary in gamma code form.</param>
 	void makeFinalString(
 		std::vector<std::vector<CompactPair>>& pairVector,
 		std::unordered_set<long>& terminals,
-		std::string& finalString,
-		std::vector<std::vector<CompactPair>> generationVectors);
+		std::string& finalString);
 
 	///<summary>Internal function used by makeFinalString.</summary>
 	void encode(
@@ -55,8 +53,7 @@ public:
 		std::unordered_set<long>& terminals,
 		std::string& terminalsGamma,
 		std::vector<std::string>& leftElementsGammas,
-		std::vector<std::string>& rightElementsBinaries,
-		std::vector<std::vector<CompactPair>>& generationVectors);
+		std::vector<std::string>& rightElementsBinaries);
 
 	///<summary>Internal function used by decodeDictionaryFile.</summary>
 	void GammaCode::readNextNumbers(

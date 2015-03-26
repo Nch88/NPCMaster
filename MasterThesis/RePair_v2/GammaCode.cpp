@@ -185,29 +185,27 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	unordered_set<long>& terminals,
 	string& terminalsGamma,
 	vector<string>& leftElementsGammas,
-	vector<string>& rightElementsBinaries,
-	vector<vector<CompactPair>>& generationVectors)
+	vector<string>& rightElementsBinaries)
 {
 	if (pairs.size() == 0)
 		cerr << ("GammaCode::encode: Empty pair vector received") << endl;
 	if (terminals.size() == 0)
 		cerr << ("GammaCode::encode: Empty terminal set received") << endl;
-	int generations = generationVectors.size();
+	int generations = pairs.size();
 	int genP1 = 0;
 	long firstElement = 0;
 	string fstElmtGamma = "";
 
 	//Sort terminals
 	vector<long> terminalVector;
-	//terminalVector.resize(terminals.size());
-	//terminalVector.assign(terminals.begin(), terminals.end());
 	for each (auto entry in terminals)
 	{
 		terminalVector.push_back(entry);
 	}
 	sort(terminalVector.begin(), terminalVector.end());
-	string tmpGammaCode = "";
+
 	//Gamma code for terminals
+	string tmpGammaCode = "";
 	for (int iP1 = 0; iP1 < terminalVector.size(); ++iP1)
 	{
 		tmpGammaCode.assign(getGammaCode(terminalVector[iP1]));
@@ -246,22 +244,21 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 			rightElementsBinaries[genP1] += s;
 		}
 
-		bitLengthRightValue += generationVectors[genP1].size();
+		bitLengthRightValue += pairs[genP1].size();
 		bitLengthRight = floor(log2(bitLengthRightValue)) + 1; //Size of all generation below
 	}
 }
 
 void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	unordered_set<long>& terminals,
-	string& finalString,
-	vector<vector<CompactPair>> generationVectors)
+	string& finalString)
 {
 	string *terminalsGamma = new string("");
 
 	vector<string> lefts;
 	vector<string> rights;
 	string tHeader = "", header = "";
-	encode(pairs, terminals, *terminalsGamma, lefts, rights, generationVectors);
+	encode(pairs, terminals, *terminalsGamma, lefts, rights);
 
 	//Set terminal header
 	tHeader = getGammaCode(terminals.size());
@@ -270,14 +267,14 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	finalString = tHeader + *terminalsGamma;
 
 	//Then a header w/ number of generations
-	finalString += getGammaCode(generationVectors.size());
+	finalString += getGammaCode(pairs.size());
 
 	//Then for each generation
 	int maxIndex = terminals.size() - 1;
-	for (int i = 0; i < generationVectors.size(); ++i)
+	for (int i = 0; i < pairs.size(); ++i)
 	{
 		//Header is size of generation + max possible index found in that generation
-		header = getGammaCode(generationVectors[i].size()) + getGammaCode(maxIndex);
+		header = getGammaCode(pairs[i].size()) + getGammaCode(maxIndex);
 				
 		string leftPart = ((lefts)[i]);
 		string rightPart = ((rights)[i]);
@@ -285,7 +282,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 		finalString += (header + leftPart + rightPart);
 
 		//Increase maxindex by the size of the generation
-		maxIndex += generationVectors[i].size();
+		maxIndex += pairs[i].size();
 	}
 
 	delete terminalsGamma;
