@@ -225,7 +225,7 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 		leftElementsGammas.push_back(fstElmtGamma);
 		for (int i = 0; i < (pairs[genP1]).size() - 1; ++i)
 		{
-			tmpGammaCode.assign(getGammaCode((pairs[genP1])[i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
+			tmpGammaCode.assign(getGammaCode(pairs[genP1][i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
 			leftElementsGammas[genP1] += tmpGammaCode;
 		}
 
@@ -235,7 +235,6 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 		for (int i = 0; i < (pairs[genP1]).size(); ++i)
 		{			
 			s.assign(getBinaryCode((pairs[genP1])[i].rightSymbol));
-
 			
 			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
 			{
