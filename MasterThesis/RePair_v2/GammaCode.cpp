@@ -225,7 +225,7 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 		leftElementsGammas.push_back(fstElmtGamma);
 		for (int i = 0; i < (pairs[genP1]).size() - 1; ++i)
 		{
-			tmpGammaCode.assign(getGammaCode((pairs[genP1])[i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
+			tmpGammaCode.assign(getGammaCode(pairs[genP1][i + 1].leftSymbol - (pairs[genP1])[i].leftSymbol));
 			leftElementsGammas[genP1] += tmpGammaCode;
 		}
 
@@ -235,7 +235,6 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 		for (int i = 0; i < (pairs[genP1]).size(); ++i)
 		{			
 			s.assign(getBinaryCode((pairs[genP1])[i].rightSymbol));
-
 			
 			for (int k = 0; k < (bitLengthRight - s.length()); ++k)
 			{
@@ -249,7 +248,8 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	}
 }
 
-void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
+void GammaCode::makeFinalString(
+	vector<vector<CompactPair>>& pairs,
 	unordered_set<long>& terminals,
 	string& finalString)
 {
@@ -275,7 +275,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	{
 		//Header is size of generation + max possible index found in that generation
 		header = getGammaCode(pairs[i].size()) + getGammaCode(maxIndex);
-				
+		
 		string leftPart = ((lefts)[i]);
 		string rightPart = ((rights)[i]);
 

@@ -133,7 +133,6 @@ void Huffman::initCodeLengthsArray(
 			codeLengths[i] = cardinality + i;										//Index of a symbol Points to the symbol's frequency
 			++i;
 		}
-	
 }
 
 void Huffman::initMinHeap(
@@ -281,7 +280,7 @@ void Huffman::generateCanonicalHuffmanCodes(
 				huffmanToSymbol[codeLength].set_empty_key(-1);
 				huffmanToSymbol[codeLength].set_deleted_key(-2);
 			}
-			(huffmanToSymbol[codeLength])[nextCode[codeLength - 1]] = huffmanNode.first;
+			huffmanToSymbol[codeLength][nextCode[codeLength - 1]] = huffmanNode.first;
 			++nextCode[codeLength - 1];
 			++codes;
 		}
