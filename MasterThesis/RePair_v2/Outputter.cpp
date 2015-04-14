@@ -178,16 +178,16 @@ void Outputter::huffmanDictionary(
 
 		for (int j = 0; j < numl[i]; j++)
 		{
-			long symbol = (huffmanToSymbol[i + 1])[firstCode[i] + j];
+			long symbol = huffmanToSymbol[i + 1][firstCode[i] + j];
 			long index;
 			if (symbol >= initialSymbolValue)
 			{
 				long symbolLeft = dictionary[symbol].leftSymbol;
 				long symbolRight = dictionary[symbol].rightSymbol;
-				index = (indices[symbolLeft])[symbolRight];
+				index = indices[symbolLeft][symbolRight];
 			}
 			else
-				index = (terminalIndices)[symbol];
+				index = terminalIndices[symbol];
 			
 			toWrite = gc.getGammaCode(index);
 			gammaCodes += toWrite;												//Write the index corresponding to a specific huffman code (as gamma code)
@@ -328,7 +328,6 @@ void Outputter::all(
 	//Encode generations for dictionary
 	Dictionary finalDict;
 	vector<vector<CompactPair>> pairs;
-	vector<vector<CompactPair>> generationVectors;
 	dense_hash_map<long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
@@ -370,6 +369,7 @@ void Outputter::all(
 		terminalIndices,
 		huffmanToSymbol);
 
+	//DEBUG
 	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
 	testofs << "Stream at pos: " << ofs_dictionary.tellp() << "\n";
 	testofs.close();

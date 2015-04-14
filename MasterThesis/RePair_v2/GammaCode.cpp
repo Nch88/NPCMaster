@@ -248,7 +248,8 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 	}
 }
 
-void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
+void GammaCode::makeFinalString(
+	vector<vector<CompactPair>>& pairs,
 	unordered_set<long>& terminals,
 	string& finalString)
 {
@@ -274,7 +275,7 @@ void GammaCode::makeFinalString(vector<vector<CompactPair>>& pairs,
 	{
 		//Header is size of generation + max possible index found in that generation
 		header = getGammaCode(pairs[i].size()) + getGammaCode(maxIndex);
-				
+		
 		string leftPart = ((lefts)[i]);
 		string rightPart = ((rights)[i]);
 
