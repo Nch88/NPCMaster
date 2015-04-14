@@ -87,9 +87,6 @@ void AlgorithmP::compact(
 				}
 				if (activePairs[s1][s2].pairRecord->arrayIndexFirst == i)
 					activePairs[s1][s2].pairRecord->arrayIndexFirst = empty->index;
-
-				if (activePairs[s1][s2].pairRecord->arrayIndexLast == i)
-					activePairs[s1][s2].pairRecord->arrayIndexLast = empty->index;
 			}
 
 			//Clear this record
@@ -134,7 +131,6 @@ void AlgorithmP::removeSymbolThreadingPointers(
 	{
 		sequenceArray[indexSymbolLeft]->next->previous = nullptr;
 	}
-	sequenceArray[indexSymbolLeft]->previous = nullptr;
 	sequenceArray[indexSymbolLeft]->next = nullptr;
 }
 
@@ -146,7 +142,6 @@ void AlgorithmP::deletePairRecord(
 	delete activePairs[symbolLeft][symbolRight].pairRecord;
 	activePairs[symbolLeft][symbolRight].pairRecord = nullptr;
 	activePairs[symbolLeft][symbolRight].seenOnce = false;
-	activePairs[symbolLeft][symbolRight].indexFirst = -1;
 }
 
 void AlgorithmP::updatePairRecord(
@@ -177,10 +172,6 @@ void AlgorithmP::updatePairRecord(
 		if (indexSymbolLeft == tracker->pairRecord->arrayIndexFirst)
 		{
 			tracker->pairRecord->arrayIndexFirst = sequenceArray[indexSymbolLeft]->next->index;
-		}
-		else if (indexSymbolLeft == tracker->pairRecord->arrayIndexLast)
-		{
-			tracker->pairRecord->arrayIndexLast = sequenceArray[indexSymbolLeft]->previous->index;
 		}
 	}	
 }
@@ -336,7 +327,6 @@ void AlgorithmP::decrementCountLeft(
 		else
 		{
 			tracker->seenOnce = false;
-			tracker->indexFirst = -1;
 		}
 	}
 }
@@ -453,7 +443,6 @@ void AlgorithmP::replacePair(
 		sequenceArray);
 
 	leftSymbolRecord->next = nullptr;
-	leftSymbolRecord->previous = nullptr;
 }
 
 void AlgorithmP::incrementCountLeft(
@@ -482,47 +471,35 @@ void AlgorithmP::incrementCountLeft(
 
 		if (!skip)
 			//Don't do this for the first pair, or if we need to skip a pair
-		{
-			if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord == NULL)
-				//This is exactly the first time we see this
-			{
-				activePairs[symbolPrevious][Symbols].seenOnce = true;
-				activePairs[symbolPrevious][Symbols].indexFirst = indexSymbolPrevious;
-			}
-
-			else if (activePairs[symbolPrevious][Symbols].seenOnce)
+		{			
+			if (activePairs[symbolPrevious][Symbols].pairRecord)
 				//This is if we se it the second time
 			{
-				activePairs[symbolPrevious][Symbols].seenOnce = false;
-				activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord(activePairs[symbolPrevious][Symbols].indexFirst, indexSymbolPrevious);
-				activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
-
 				//Add to priority queue
 				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
-				addToPriorityQueueList(0, tracker, priorityQueue);
-
-			//Update threading pointers
-			sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
-			sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst];
-		}
-
-			else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
-				//This is if we see it after the second time
-			{
-				//Raise priority
-				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
-				moveUpInPriorityQueue(tracker, priorityQueue);
-
-				//Update count
-				activePairs[symbolPrevious][Symbols].pairRecord->count++;
+				PairRecord* record = tracker->pairRecord;
 
 				//Update threading pointers
-				sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast]->next = sequenceArray[indexSymbolPrevious];
-				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast];
+				//First occurrence
+				if (record->arrayIndexFirst > indexSymbolPrevious)
+				{
+					record->arrayIndexFirst = indexSymbolPrevious;
+					addToPriorityQueueList(record->count - 2, tracker, priorityQueue);
+				}
 
-				//Update arrayIndexLast
-				activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexLast = indexSymbolPrevious;
+				//Second occurrence
+				else if (!sequenceArray[indexSymbolPrevious]->previous)
+				{
+					sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+					sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
+				}
+				else
+				{
+					sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
+				}
 			}
+			else
+				activePairs[symbolPrevious][Symbols].seenOnce = false;
 		}
 
 		//Update skip flag
@@ -551,46 +528,35 @@ void AlgorithmP::incrementCountRight(
 			activePairs[Symbols].set_empty_key(-1);
 			activePairs[Symbols].set_deleted_key(-2);
 		}
-		if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord == NULL)
-			//This is exactly the first time we see this
-		{
-			activePairs[Symbols][symbolNext].seenOnce = true;
-			activePairs[Symbols][symbolNext].indexFirst = indexSymbolLeft;
-		}
 
-		else if (activePairs[Symbols][symbolNext].seenOnce)
+		if (activePairs[Symbols][symbolNext].pairRecord)
 			//This is if we se it the second time
 		{
-			activePairs[Symbols][symbolNext].seenOnce = false;
-			activePairs[Symbols][symbolNext].pairRecord = new PairRecord(activePairs[Symbols][symbolNext].indexFirst, indexSymbolLeft);
-			activePairs[Symbols][symbolNext].pairRecord->count = 2;
-
 			//Add to priority queue
 			PairTracker* tracker = &activePairs[Symbols][symbolNext];
-			addToPriorityQueueList(0, tracker, priorityQueue);
+			PairRecord* record = tracker->pairRecord;
 
 			//Update threading pointers
-			sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst]->next = sequenceArray[indexSymbolLeft];
-			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst];
+			//First occurrence
+			if (record->arrayIndexFirst > indexSymbolLeft)
+			{
+				record->arrayIndexFirst = indexSymbolLeft;
+				addToPriorityQueueList(record->count - 2, tracker, priorityQueue);
+			}
+
+			//Second occurrence
+			else if (!sequenceArray[indexSymbolLeft]->previous)
+			{
+				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolLeft];
+				sequenceArray[indexSymbolLeft]->previous = sequenceArray[record->arrayIndexFirst];
+			}
+			else
+			{
+				sequenceArray[indexSymbolLeft]->previous->next = sequenceArray[indexSymbolLeft];
+			}
 		}
-
-		else if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord)
-			//This is if we see it after the second time
-		{
-			//Raise priority
-			PairTracker* tracker = &activePairs[Symbols][symbolNext];
-			moveUpInPriorityQueue(tracker, priorityQueue);
-
-			//Update count
-			activePairs[Symbols][symbolNext].pairRecord->count++;
-
-			//Update threading pointers
-			sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexLast]->next = sequenceArray[indexSymbolLeft];
-			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexLast];
-			
-			//Update arrayIndexLast
-			activePairs[Symbols][symbolNext].pairRecord->arrayIndexLast = indexSymbolLeft;
-		}
+		else
+			activePairs[Symbols][symbolNext].seenOnce = false;
 	}
 }
 
@@ -701,6 +667,174 @@ void AlgorithmP::establishContext(
 		indexSymbolNext = -1;
 }
 
+void AlgorithmP::checkCountLeft(
+	long & indexSymbolPrevious,
+	long & indexSymbolLeft,
+	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	long & Symbols,
+	bool &skip,
+	Conditions& c)
+{
+	if (indexSymbolPrevious > -1)
+	{
+		long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
+
+		if (activePairs[symbolPrevious].empty())
+		{
+			activePairs[symbolPrevious].set_empty_key(-1);
+			activePairs[symbolPrevious].set_deleted_key(-2);
+		}
+
+		//Check if we need to skip
+		if (symbolPrevious != Symbols)
+			skip = false;
+
+		if (!skip)
+			//Don't do this for the first pair, or if we need to skip a pair
+		{
+			if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord == NULL)
+				//This is exactly the first time we see this
+			{
+				activePairs[symbolPrevious][Symbols].seenOnce = true;
+			}
+
+			else if (activePairs[symbolPrevious][Symbols].seenOnce)
+				//This is if we se it the second time
+			{
+				activePairs[symbolPrevious][Symbols].seenOnce = false;
+				activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord();
+				activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
+				activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst = indexSymbolPrevious;
+			}
+
+			else if (!activePairs[symbolPrevious][Symbols].seenOnce && activePairs[symbolPrevious][Symbols].pairRecord)
+				//This is if we see it after the second time
+			{
+				//Update count
+				activePairs[symbolPrevious][Symbols].pairRecord->count++;
+
+				//Update threading pointers
+				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst];
+
+				//Update arrayIndexLast
+				activePairs[symbolPrevious][Symbols].pairRecord->arrayIndexFirst = indexSymbolPrevious;
+			}
+		}
+
+		//Update skip flag
+		if (symbolPrevious == Symbols)
+			skip = !skip;
+	}
+}
+
+void AlgorithmP::checkCountRight(
+	long & indexSymbolLeft,
+	long & indexSymbolNext,
+	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	vector<SymbolRecord*> & sequenceArray,
+	long & Symbols,
+	Conditions& c)
+{
+	//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
+	sequenceArray[indexSymbolLeft]->previous = nullptr;
+
+	if (indexSymbolNext > -1)
+		//Only do this if there is a next symbol
+	{
+		long symbolNext = sequenceArray[indexSymbolNext]->symbol;
+
+		if (activePairs[Symbols].empty())
+		{
+			activePairs[Symbols].set_empty_key(-1);
+			activePairs[Symbols].set_deleted_key(-2);
+		}
+		if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord == NULL)
+			//This is exactly the first time we see this
+		{
+			activePairs[Symbols][symbolNext].seenOnce = true;
+		}
+
+		else if (activePairs[Symbols][symbolNext].seenOnce)
+			//This is if we se it the second time
+		{
+			activePairs[Symbols][symbolNext].seenOnce = false;
+			activePairs[Symbols][symbolNext].pairRecord = new PairRecord();
+			activePairs[Symbols][symbolNext].pairRecord->count = 2;
+			activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst = indexSymbolLeft;
+		}
+
+		else if (!activePairs[Symbols][symbolNext].seenOnce && activePairs[Symbols][symbolNext].pairRecord)
+			//This is if we see it after the second time
+		{
+			//Update count
+			activePairs[Symbols][symbolNext].pairRecord->count++;
+
+			//Update threading pointers
+			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst];
+
+			//Update arrayIndexLast
+			activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst = indexSymbolLeft;
+		}
+	}
+}
+
+void AlgorithmP::firstPass(
+	long sequenceIndex,
+	vector<SymbolRecord*> & sequenceArray,
+	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	long & Symbols,
+	Conditions& c)
+{
+	long indexSymbolLeft = -1;
+	long indexSymbolRight = -1;
+	long indexSymbolPrevious = -1;
+	long indexSymbolNext = -1;
+
+	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+	bool skip = false;
+
+	do
+	{
+		indexSymbolLeft = -1;
+		indexSymbolRight = -1;
+		indexSymbolPrevious = -1;
+		indexSymbolNext = -1;
+
+		sequenceIndex = nextSymbol->index;
+		//Store the pointer to the next symbol now, as the current symbol is changed as we go
+		nextSymbol = nextSymbol->next;
+
+		establishContext(
+			indexSymbolLeft,
+			indexSymbolRight,
+			indexSymbolPrevious,
+			indexSymbolNext,
+			sequenceIndex,
+			sequenceArray);
+
+		//Left pair
+		checkCountLeft(
+			indexSymbolPrevious,
+			indexSymbolLeft,
+			activePairs,
+			sequenceArray,
+			Symbols,
+			skip,
+			c);
+
+		//Right pair
+		checkCountRight(
+			indexSymbolLeft,
+			indexSymbolNext,
+			activePairs,
+			sequenceArray,
+			Symbols,
+			c);
+
+	} while (nextSymbol);
+}
+
 void AlgorithmP::replaceAllPairs(
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
@@ -716,6 +850,15 @@ void AlgorithmP::replaceAllPairs(
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+	
+
+	firstPass(
+		sequenceIndex,
+		sequenceArray,
+		activePairs,
+		Symbols,
+		c);
+
 	bool skip = false;
 
 	do

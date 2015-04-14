@@ -68,7 +68,6 @@ void Initializer::resetForNextBlock(
 		for each (auto rightSymbol in leftSymbol.second)
 		{
 			delete rightSymbol.second.pairRecord;
-			rightSymbol.second.indexFirst = -1;
 			rightSymbol.second.seenOnce = false;
 		}
 	}
@@ -102,17 +101,10 @@ void Initializer::setupPairRecord(
 		currentTracker->pairRecord = new PairRecord();
 
 		currentTracker->pairRecord->count = 2;
-		currentTracker->pairRecord->arrayIndexFirst = currentTracker->indexFirst; //First symbol in active pair
-		currentTracker->pairRecord->arrayIndexLast = index;
+		currentTracker->pairRecord->arrayIndexFirst = index; //used for threading after indexLast was removed
 		currentTracker->pairRecord->nextPair = NULL;
 		currentTracker->pairRecord->previousPair = NULL;
 
-		sequenceArray[currentTracker->pairRecord->arrayIndexFirst]->next =
-			sequenceArray[currentTracker->pairRecord->arrayIndexLast];
-		sequenceArray[currentTracker->pairRecord->arrayIndexLast]->previous =
-			sequenceArray[currentTracker->pairRecord->arrayIndexFirst];
-
-		currentTracker->indexFirst = -1;
 		currentTracker->seenOnce = false;
 	}
 	//Pair is already active, update its record
@@ -120,19 +112,18 @@ void Initializer::setupPairRecord(
 	{
 		currentTracker->pairRecord->count++;
 
-		previousOccurence = sequenceArray[currentTracker->pairRecord->arrayIndexLast];
+		previousOccurence = sequenceArray[currentTracker->pairRecord->arrayIndexFirst];
 		newOccurence = sequenceArray[index];
 
 		previousOccurence->next = newOccurence;
 		newOccurence->previous = previousOccurence;
 
-		currentTracker->pairRecord->arrayIndexLast = index;
+		currentTracker->pairRecord->arrayIndexFirst = index;
 	}
 	//First time the pair is seen
 	else
 	{
 		currentTracker->seenOnce = true;
-		currentTracker->indexFirst = index;
 	}
 }
 
@@ -251,6 +242,35 @@ int Initializer::SequenceArray(
 	else
 		file.close();
 
+
+	//Run through the sequence array again to set and thread the first occurrence of pairs correctly
+	PairTracker * currentTracker;
+	PairRecord * currentRecord;
+	SymbolRecord * currentSymbolRecord;
+	long leftSymbolLong;
+	long rightSymbolLong;
+
+	for (int i = 0; i < sequenceArray.size() - 1; i++)
+	{
+		currentSymbolRecord = sequenceArray[i];
+		leftSymbolLong = sequenceArray[i]->symbol;
+		rightSymbolLong = sequenceArray[i + 1]->symbol;
+		currentTracker = &activePairs[leftSymbolLong][rightSymbolLong];
+
+		if (currentTracker->pairRecord)
+		{
+			currentRecord = currentTracker->pairRecord;
+			//First occurrence
+			if (currentRecord->arrayIndexFirst > i)
+				currentRecord->arrayIndexFirst = i;
+			//Second occurrence
+			else if (!currentSymbolRecord->previous)
+			{
+				sequenceArray[currentRecord->arrayIndexFirst]->next = currentSymbolRecord;
+				currentSymbolRecord->previous = sequenceArray[currentRecord->arrayIndexFirst];
+			}
+		}
+	}
 	return 0;
 }
 
@@ -265,8 +285,7 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 	if (c.verbose)
 	{
 		cout << " - Verbose: Initializing priority queue" << endl;
-	}
-	
+	}	
 
 	for each (auto leftSymbol in activePairs)
 	{

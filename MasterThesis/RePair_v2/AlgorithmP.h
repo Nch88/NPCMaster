@@ -149,6 +149,30 @@ public:
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray);
 
+	void checkCountLeft(
+		long & indexSymbolPrevious,
+		long & indexSymbolLeft,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		long & Symbols,
+		bool &skip,
+		Conditions& c);
+
+	void checkCountRight(
+		long & indexSymbolLeft,
+		long & indexSymbolNext,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
+		long & Symbols,
+		Conditions& c);
+
+	void firstPass(
+		long sequenceIndex,
+		vector<SymbolRecord*> & sequenceArray,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		long & Symbols,
+		Conditions& c);
+
 	//Makes a pass of the instances of one active pair an replaces them in the sequence array
 	void replaceAllPairs(
 		long sequenceIndex,

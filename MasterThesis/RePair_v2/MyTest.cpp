@@ -149,12 +149,12 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 				{
 					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
 					result += "Count does not match queue number.";
-				}
+				}/*
 				if (current->arrayIndexFirst > current->arrayIndexLast)
 				{
 					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
 					result += "ArrayIndexFirst greater than ArrayIndexLast.";
-				}
+				}*/
 
 				//Check index first & index last
 				sr = sequenceArray[current->arrayIndexFirst];
@@ -168,7 +168,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
 					result += "Element pointed to by ArrayIndexFirst has no next element.";
 				}
-				sr = sequenceArray[current->arrayIndexLast];
+				/*sr = sequenceArray[current->arrayIndexLast];
 				if (sr->previous == nullptr)
 				{
 					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
@@ -178,7 +178,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 				{
 					result += "\nError in priority queue number " + to_string(i) + " at entry number " + to_string(pairCount) + ":";
 					result += "Element pointed to by ArrayIndexLast has next element.";
-				}
+				}*/
 
 				current = current->nextPair;
 			}
@@ -200,13 +200,13 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 			PairRecord* current = priorityQueue[i];
 			while (current->nextPair)
 			{
-				sane = sane && current->count == i + 2 && (current->arrayIndexFirst < current->arrayIndexLast);
+				sane = sane && current->count == i + 2;// && (current->arrayIndexFirst < current->arrayIndexLast);
 
 				//Check index first & index last
 				sr = sequenceArray[current->arrayIndexFirst];
 				sane = sane && (sr->previous == nullptr) && (sr->next != nullptr);
-				sr = sequenceArray[current->arrayIndexLast];
-				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);
+				/*sr = sequenceArray[current->arrayIndexLast];
+				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);*/
 
 				current = current->nextPair;
 			}

@@ -336,13 +336,11 @@ TEST(replaceAllPairsThorough, diddy)
 		if (count == 0)
 		{//gA at 6
 			ASSERT_EQ(true, activePairs[103][65].seenOnce);
-			ASSERT_EQ(6, activePairs[103][65].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[103][65].pairRecord);
 		}
 		if (count == 1)
 		{//hA at 13
 			ASSERT_EQ(true, activePairs[104][65].seenOnce);
-			ASSERT_EQ(13, activePairs[104][65].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[104][65].pairRecord);
 		}
 		if (count == 2)
@@ -350,7 +348,6 @@ TEST(replaceAllPairsThorough, diddy)
 			int left = 121;
 			int right = 65;
 			ASSERT_EQ(true, activePairs[left][right].seenOnce);
-			ASSERT_EQ(19, activePairs[left][right].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[left][right].pairRecord);
 		}
 
@@ -367,13 +364,11 @@ TEST(replaceAllPairsThorough, diddy)
 		if (count == 0)
 		{//Ao at 7
 			ASSERT_EQ(true, activePairs[65][111].seenOnce);
-			ASSERT_EQ(7, activePairs[65][111].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[65][111].pairRecord);
 		}
 		if (count == 1)
 		{//Ai at 14
 			ASSERT_EQ(true, activePairs[65][105].seenOnce);
-			ASSERT_EQ(14, activePairs[65][105].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[65][105].pairRecord);
 		}
 		if (count == 2)

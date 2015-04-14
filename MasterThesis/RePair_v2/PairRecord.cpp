@@ -9,11 +9,10 @@ PairRecord::PairRecord()
 	nextPair = nullptr;
 }
 
-PairRecord::PairRecord(long indexFirst, long indexLast)
+PairRecord::PairRecord(long indexFirst)
 {
 	count = 0;
 	arrayIndexFirst = indexFirst;
-	arrayIndexLast = indexLast;
 	previousPair = nullptr;
 	nextPair = nullptr;
 }
