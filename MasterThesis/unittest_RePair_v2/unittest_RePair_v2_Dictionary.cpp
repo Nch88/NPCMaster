@@ -162,7 +162,8 @@ TEST(createCompactDictionary, generateCompactDictionary)
 	tIndices.set_deleted_key(-2);
 
 	vector<vector<CompactPair>> generationVectors;
-	dc.generateCompactDictionary(dictionary, terminals, pairs, indices, tIndices);
+	vector<long> terminalVector;
+	dc.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, tIndices);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;

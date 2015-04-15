@@ -310,9 +310,12 @@ TEST(outputter, diddyHuffmanDictionary)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 
+	vector<long> terminalVector;
+
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
+		terminalVector,
 		pairs,
 		indices,
 		terminalIndices);
@@ -599,10 +602,12 @@ TEST(outputter, readAndWriteDictionary_diddy)
 		symbols,
 		c);
 
-	finalDict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
+	vector<long> terminalVector;
+
+	finalDict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string finalstring = "";
-	gc.makeFinalString(pairs, terminals, finalstring);
+	gc.makeFinalString(pairs, terminalVector, finalstring);
 
 	ofstream myfile;
 	myfile.open(outstring, ios::binary);

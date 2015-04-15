@@ -334,10 +334,12 @@ void Outputter::all(
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
+	vector<long> terminalVector;
 
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
+		terminalVector,
 		pairs,
 		indices,
 		terminalIndices);	
@@ -348,7 +350,7 @@ void Outputter::all(
 
 	gc.makeFinalString(
 		pairs,
-		terminals,
+		terminalVector,
 		output);
 
 	this->dictionary(

@@ -921,9 +921,12 @@ TEST(huffman, decodeDictionaryDiddy)
 		terminalIndices.set_empty_key(-1);
 		terminalIndices.set_deleted_key(-2);
 
+		vector<long> terminalVector;
+
 		finalDict.generateCompactDictionary(
 			dictionary,
 			terminals,
+			terminalVector,
 			pairs,
 			indices,
 			terminalIndices);
@@ -1124,9 +1127,12 @@ TEST(huffman, decodeDictionaryDuplicates)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 
+	vector<long> terminalVector;
+
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
+		terminalVector,
 		pairs,
 		indices,
 		terminalIndices);

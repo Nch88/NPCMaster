@@ -105,7 +105,8 @@ TEST(gammaCodes, encode_diddy_explicit)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
+	vector<long> terminalVector;
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -123,14 +124,8 @@ TEST(gammaCodes, encode_diddy_explicit)
 	string fstElmtGamma = "";
 
 	//Sort terminals
-	vector<long> terminalVector;
 	//terminalVector.resize(terminals.size());
 	//terminalVector.assign(terminals.begin(), terminals.end());
-	for each (auto entry in terminals)
-	{
-		terminalVector.push_back(entry);
-	}
-	sort(terminalVector.begin(), terminalVector.end());
 	string tmpGammaCode = "";
 	//Gamma code for terminals
 	for (int iP1 = 0; iP1 < terminalVector.size(); ++iP1)
@@ -356,7 +351,8 @@ TEST(gammaCodes, encode_diddy)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
+	vector<long> terminalVector;
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -395,7 +391,7 @@ TEST(gammaCodes, encode_diddy)
 			terminalsGammaResult += gc.getGammaCode(121);
 	}
 
-	gc.encode(pairs, terminals, terminalsGamma, leftElementsGammas, rightElementsBinaries);
+	gc.encode(pairs, terminalVector, terminalsGamma, leftElementsGammas, rightElementsBinaries);
 
 	ASSERT_EQ(terminalsGammaResult, terminalsGamma);
 
@@ -538,7 +534,8 @@ TEST(gammaCodes, diddy_makeFinalString)
 	dense_hash_map<long, long> terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	dict.generateCompactDictionary(dictionary, terminals, pairs, indices, terminalIndices);
+	vector<long> terminalVector;
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	//Test variables
 	string terminalsGammaResult = "";
@@ -622,7 +619,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 
 	gc.makeFinalString(
 		pairs,
-		terminals,
+		terminalVector,
 		*finalstring);
 
 	/*string pTestTHeader = finalstring->substr(0, 7);

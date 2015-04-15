@@ -182,27 +182,19 @@ string GammaCode::getGammaCode(long in)
 }
 
 void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
-	unordered_set<long>& terminals,
+	vector<long>& terminalVector,
 	string& terminalsGamma,
 	vector<string>& leftElementsGammas,
 	vector<string>& rightElementsBinaries)
 {
 	if (pairs.size() == 0)
 		cerr << ("GammaCode::encode: Empty pair vector received") << endl;
-	if (terminals.size() == 0)
+	if (terminalVector.size() == 0)
 		cerr << ("GammaCode::encode: Empty terminal set received") << endl;
 	int generations = pairs.size();
 	int genP1 = 0;
 	long firstElement = 0;
 	string fstElmtGamma = "";
-
-	//Sort terminals
-	vector<long> terminalVector;
-	for each (auto entry in terminals)
-	{
-		terminalVector.push_back(entry);
-	}
-	sort(terminalVector.begin(), terminalVector.end());
 
 	//Gamma code for terminals
 	string tmpGammaCode = "";
@@ -250,7 +242,7 @@ void GammaCode::encode(std::vector<vector<CompactPair>>& pairs,
 
 void GammaCode::makeFinalString(
 	vector<vector<CompactPair>>& pairs,
-	unordered_set<long>& terminals,
+	vector<long>& terminalVector,
 	string& finalString)
 {
 	string *terminalsGamma = new string("");
@@ -258,10 +250,10 @@ void GammaCode::makeFinalString(
 	vector<string> lefts;
 	vector<string> rights;
 	string tHeader = "", header = "";
-	encode(pairs, terminals, *terminalsGamma, lefts, rights);
+	encode(pairs, terminalVector, *terminalsGamma, lefts, rights);
 
 	//Set terminal header
-	tHeader = getGammaCode(terminals.size());
+	tHeader = getGammaCode(terminalVector.size());
 
 	//First we add terminals to the final output
 	finalString = tHeader + *terminalsGamma;
@@ -270,7 +262,7 @@ void GammaCode::makeFinalString(
 	finalString += getGammaCode(pairs.size());
 
 	//Then for each generation
-	int maxIndex = terminals.size() - 1;
+	int maxIndex = terminalVector.size() - 1;
 	for (int i = 0; i < pairs.size(); ++i)
 	{
 		//Header is size of generation + max possible index found in that generation

@@ -20,14 +20,16 @@ public:
 	///In this form the dictionary can be stored efficiently using zero-order gamma codes.
 	///</summary>
 	///<param name="dictionary">Input: The dictionary created by RePair.</param>
-	///<param name="terminals">Input: The set of terminals</param>
+	///<param name="terminals">Input: The set of terminals.</param>
+	///<param name="terminals">Output: A sorted vector of the terminals.</param>
 	///<param name="pairVectors">Output: The pairs of indices, split into seperate generations.</param>
-	///<param name="indices">Output: The index of each pair in pairVectors</param>
-	///<param name="terminalIndices">Output: The index of each terminal</param>
+	///<param name="indices">Output: The index of each pair in pairVectors.</param>
+	///<param name="terminalIndices">Output: The index of each terminal.</param>
 	///<param name="generationVectors">Output: The output from createGenerationVectors.</param>
 	void generateCompactDictionary(
 		google::dense_hash_map<long, Pair>& dictionary,
 		std::unordered_set<long>& terminals,
+		std::vector<long>& terminalVector,
 		std::vector<vector<CompactPair>>& pairVectors,
 		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
 		google::dense_hash_map<long, long> &terminalIndices);

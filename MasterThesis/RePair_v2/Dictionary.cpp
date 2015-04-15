@@ -26,11 +26,11 @@ bool comPairN(NamedPair fst, NamedPair snd)
 void Dictionary::generateCompactDictionary(
 	dense_hash_map<long, Pair>& dictionary,
 	unordered_set<long>& terminals,
+	vector<long>& terminalVector,
 	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
 	dense_hash_map<long, long> &terminalIndices)
 {
-	vector<long> terminalVector;
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
 
