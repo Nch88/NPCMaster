@@ -14,47 +14,17 @@ struct NamedPair
 class Dictionary
 {
 public:
-	///<summary>
-	///Convert a RePair dictionary to a vector of pairs for each generation. 
-	///Each element of a pair is an index into either the pair vectors themselves or the sorted list of terminals.
-	///In this form the dictionary can be stored efficiently using zero-order gamma codes.
-	///</summary>
-	///<param name="dictionary">Input: The dictionary created by RePair.</param>
-	///<param name="terminals">Input: The set of terminals.</param>
-	///<param name="terminals">Output: A sorted vector of the terminals.</param>
-	///<param name="pairVectors">Output: The pairs of indices, split into seperate generations.</param>
-	///<param name="indices">Output: The index of each pair in pairVectors.</param>
-	///<param name="terminalIndices">Output: The index of each terminal.</param>
-	///<param name="generationVectors">Output: The output from createGenerationVectors.</param>
-	void generateCompactDictionary(
-		google::dense_hash_map<long, Pair>& dictionary,
-		std::unordered_set<long>& terminals,
-		std::vector<long>& terminalVector,
-		std::vector<vector<CompactPair>>& pairVectors,
-		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices);
+	int Dictionary::findGenerations(
+		long symbol, 
+		dense_hash_map<long, long>& symbolToGen,
+		unordered_set<long>& terminals);
 
-	///<summary>Change each pair in each generation to be a pair of indices into a hypothetical sequence consisting
-	/// of all the terminals followed by all the pairs of the previous generation, each generation sorted by their left elements.</summary>
-	///<param name="dictionary">Input: The dictionary created by RePair.</param>
-	///<param name="terminals">Input: A sorted vector of terminals</param>
-	///<param name="pairVectors">Output: The new pairs of indices, still split into seperate generations.</param>
-	///<param name="indices">Output: The index of each pair in pairVectors</param>
-	///<param name="terminalIndices">Output: The index of each terminal</param>
-	void Dictionary::createFinalPairVectors(
-		google::dense_hash_map<long, Pair>& dictionary,
-		std::vector<long>& terminals,
-		std::vector<std::vector<CompactPair>>& pairVectors,
-		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices);
-
-	///<summary>Split the entries in a RePair dictionary into generations</summary>
-	///<param name="dictionary">Input: The dictionary created by RePair</param>
-	///<param name="generationVectors">Output: The pairs of symbols that each dictionary entry corresponds to, 
-	///split into a vector for each generation</param>
-	void Dictionary::createGenerationVectors(
-		google::dense_hash_map<long, Pair>& dictionary,
-		std::vector<std::vector<CompactPair>>& generationVectors);
+	///<summary>Create the symbol to generation table and the pair vectors.</summary>
+	void Dictionary::createSupportStructures(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_set<long>& terminals,
+		dense_hash_map<long, long>& symbolToGen,
+		vector<vector<long*>>& pairVectors);
 	
 	///<summary>Find the sequence of terminals corresponding to one non-terminal. Used by expandDictionary.</summary>
 	///<param name="symbolIndex">Input: The index (in decodedPairs) of the current pair</param>

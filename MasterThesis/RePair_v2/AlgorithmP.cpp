@@ -11,31 +11,6 @@ AlgorithmP::~AlgorithmP()
 {
 }
 
-long AlgorithmP::findGeneration(
-	dense_hash_map<long, Pair>& dictionary, 
-	long left, 
-	long right
-	)
-{
-	if (left < initialSymbolValue)
-		if (right < initialSymbolValue)
-			//Both left & right are terminals
-			return 1;
-		else
-			//Left is a terminal, right is not
-			return dictionary[right].generation + 1;
-	else if (right < initialSymbolValue)
-		//Right is a terminal, left is not
-		return dictionary[left].generation + 1;
-	else
-	{
-		//Neither are terminals, so we need to compare them
-		long genLeft = dictionary[left].generation;
-		long genRight = dictionary[right].generation;
-		return (genLeft > genRight ? genLeft : genRight) + 1;
-	}
-}
-
 SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  SymbolRecord* current)
 {
 	SymbolRecord* result = current;
@@ -405,7 +380,6 @@ void AlgorithmP::replacePair(
 	long & indexSymbolNext,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	long & Symbols,
 	Conditions& c)
 {
@@ -434,16 +408,6 @@ void AlgorithmP::replacePair(
 		nextSymbolRecord = sequenceArray[indexSymbolNext];
 	else
 		nextSymbolRecord = nullptr;
-
-	//The dictionary generation of the pair is determined and the replacement is stored in our dictionary
-	Pair pairToReplace(
-		leftSymbolRecord->symbol, 
-		rightSymbolRecord->symbol,
-		findGeneration(dictionary, leftSymbolRecord->symbol, rightSymbolRecord->symbol));
-	
-	dictionary[Symbols] = pairToReplace;
-	leftSymbolRecord->symbol = Symbols;
-	rightSymbolRecord->symbol = 0;
 
 	//The right symbol of the old pair is now empty and must be threaded
 	threadEmptySymbols(
@@ -600,13 +564,18 @@ void AlgorithmP::replaceInstanceOfPair(
 	long & indexSymbolPrevious,
 	long & indexSymbolNext,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
 	bool& skip,
 	Conditions& c)
 {
+	//Create the new dictionary pair and set Symbols to ist address
+	long* newPair = new long[2];
+	newPair[0] = sequenceArray[indexSymbolLeft]->symbol;
+	newPair[1] = sequenceArray[indexSymbolRight]->symbol;
+	Symbols = (long)newPair;
+
 	//Decrement count of xa
 	decrementCountLeft(
 		indexSymbolPrevious,
@@ -632,7 +601,6 @@ void AlgorithmP::replaceInstanceOfPair(
 		indexSymbolNext,
 		activePairs,
 		sequenceArray,
-		dictionary,
 		Symbols,
 		c);
 
@@ -704,7 +672,6 @@ void AlgorithmP::establishContext(
 void AlgorithmP::replaceAllPairs(
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
@@ -743,7 +710,6 @@ void AlgorithmP::replaceAllPairs(
 			indexSymbolPrevious,
 			indexSymbolNext,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			Symbols,
@@ -753,20 +719,9 @@ void AlgorithmP::replaceAllPairs(
 	} while (nextSymbol);
 }
 
-void AlgorithmP::newSymbol(long & Symbols)
-{
-	if (Symbols == LONG_MAX - 1)
-	{
-		cerr << "Ran out of symbols, aborting compression" << endl;
-		exit;
-	}
-	Symbols++;
-}
-
 void AlgorithmP::manageOneEntryOnList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
@@ -802,7 +757,6 @@ void AlgorithmP::manageOneEntryOnList(
 	replaceAllPairs(
 		sequenceIndex,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		Symbols,
@@ -817,15 +771,11 @@ void AlgorithmP::manageOneEntryOnList(
 			cData.updateCompactTotal();
 		}
 	}
-
-	//Pick new symbol
-	newSymbol(Symbols);
 }
 
 void AlgorithmP::manageOneList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
@@ -837,7 +787,6 @@ void AlgorithmP::manageOneList(
 		manageOneEntryOnList(
 			i,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			Symbols,
@@ -848,7 +797,6 @@ void AlgorithmP::manageOneList(
 
 void AlgorithmP::manageLowerPriorityLists(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
@@ -861,7 +809,6 @@ void AlgorithmP::manageLowerPriorityLists(
 		manageOneList(
 			i,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			Symbols,
@@ -873,7 +820,6 @@ void AlgorithmP::manageLowerPriorityLists(
 //Manages active pairs with frequencies greater than sqrt(n)
 void AlgorithmP::manageHighPriorityList(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	long & Symbols,
@@ -931,7 +877,6 @@ void AlgorithmP::manageHighPriorityList(
 		replaceAllPairs(
 			sequenceIndex,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			Symbols,
@@ -946,15 +891,11 @@ void AlgorithmP::manageHighPriorityList(
 				cData.updateCompactTotal();
 			}
 		}
-
-		//Pick new symbol
-		newSymbol(Symbols);
 	}
 }
 
 void AlgorithmP::run(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	unordered_set<long>& terminals,
@@ -965,7 +906,6 @@ void AlgorithmP::run(
 
 	manageHighPriorityList(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		Symbols,
@@ -974,7 +914,6 @@ void AlgorithmP::run(
 
 	manageLowerPriorityLists(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		Symbols,

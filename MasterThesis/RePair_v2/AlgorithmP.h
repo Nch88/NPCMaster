@@ -7,11 +7,6 @@ public:
 	AlgorithmP();
 	~AlgorithmP();
 
-	long AlgorithmP::findGeneration(
-		dense_hash_map<long, Pair>& dictionary, 
-		long left, 
-		long right);
-
 	SymbolRecord* AlgorithmP::findNextEmpty(
 		vector<SymbolRecord*> & sequenceArray,
 		SymbolRecord* current);
@@ -120,7 +115,6 @@ public:
 		long & indexSymbolNext,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		long & Symbols,
 		Conditions& c);
 
@@ -132,7 +126,6 @@ public:
 		long & indexSymbolPrevious,
 		long & indexSymbolNext,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -153,7 +146,6 @@ public:
 	void replaceAllPairs(
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -166,7 +158,6 @@ public:
 	void AlgorithmP::manageOneEntryOnList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -177,7 +168,6 @@ public:
 	void AlgorithmP::manageOneList(
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -187,7 +177,6 @@ public:
 	//Runs though the priority list from second last to first entry, replacing all pairs
 	void AlgorithmP::manageLowerPriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -197,7 +186,6 @@ public:
 	//Replaces all pairs in decreasing order of frequency from the last list in the priority queue
 	void AlgorithmP::manageHighPriorityList(
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
@@ -207,7 +195,6 @@ public:
 	//Runs the Re-Pair algorithm on the current block
 	void AlgorithmP::run(
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
 		unordered_set<long>& terminals,

@@ -11,138 +11,84 @@ bool comPair(CompactPair fst, CompactPair snd)
 		return false;
 }
 
-bool comPairN(NamedPair fst, NamedPair snd)
+int Dictionary::findGenerations(
+	long symbol, 
+	dense_hash_map<long, long>& symbolToGen, 
+	unordered_set<long>& terminals)
 {
-	//compare two pairs by comparing left symbols, then right symbols
-	if (fst.leftSymbol < snd.leftSymbol)
-		return true;
-	else if (fst.leftSymbol == snd.leftSymbol)
-		return fst.rightSymbol < snd.rightSymbol;
+	if (symbol < initialSymbolValue)
+	{
+		//This is a terminal. Add it to the term set and return 0.
+		terminals.emplace(symbol);
+		return 0;
+	}
+	else if (symbolToGen[symbol] != 0)
+	{
+		//We have seen this before
+		return symbolToGen[symbol];
+	}
 	else
-		return false;
+	{
+		long* address = (long*)symbol;
+		int d1 = findGenerations(address[0], symbolToGen, terminals);
+		int d2 = findGenerations(address[1], symbolToGen, terminals);
+		int gen = max(d1, d2) + 1;
+		symbolToGen[symbol] = gen;
+		return gen;
+	}
 }
 
-//This is the main dictionary function. It fills the pair vector based on dictionary + terminals.
-void Dictionary::generateCompactDictionary(
-	dense_hash_map<long, Pair>& dictionary,
+void Dictionary::createSupportStructures(
+	vector<SymbolRecord*> & sequenceArray,
 	unordered_set<long>& terminals,
-	vector<long>& terminalVector,
-	vector<vector<CompactPair>>& pairVectors,
-	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices)
+	dense_hash_map<long,long>& symbolToGen,
+	vector<vector<long*>>& pairVectors)
 {
-	terminalVector.assign(terminals.begin(), terminals.end());
-	sort(terminalVector.begin(), terminalVector.end());
-
-	//Split map by generation
-	createGenerationVectors(dictionary, pairVectors);
-
-	createFinalPairVectors(dictionary, terminalVector, pairVectors, indices, terminalIndices);
-}
-
-void Dictionary::createFinalPairVectors(
-	dense_hash_map<long, Pair>& dictionary,
-	vector<long>& terminals,
-	vector<vector<CompactPair>>& pairVectors,
-	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices)
-{
-	//Record indices of terminals
-	for (int i = 0; i < terminals.size(); ++(i))
+	//Create the symbol to gen table and count the number of generations
+	int genCount = 0;
+	unordered_set<long> roots;
+	for each (SymbolRecord* record in sequenceArray)
 	{
-		terminalIndices[terminals[i]] = i;
+		if (record->symbol > initialSymbolValue)
+			roots.emplace(record->symbol);
+	}
+	for each (long s in roots)
+	{
+		int d = findGenerations(s, symbolToGen, terminals);
+		genCount = max(d, genCount);
 	}
 
-	int offset = terminals.size();
-
-	//For each generation
-	for (int gen = 0; gen < pairVectors.size(); ++gen)
+	//Create pairVectors
+	pairVectors.reserve(genCount);
+	for (int i = 0; i < genCount; ++i)
 	{
-		vector<NamedPair> vec;
-		for (int j = 0; j < pairVectors[gen].size(); ++j)
-		{
-			//Find the new indices of the two symbols in this pair
-			long leftSymbol = pairVectors[gen][j].leftSymbol;
-
-			long leftIndex;
-
-			//Check for terminal symbol or composite symbol
-			if (leftSymbol < initialSymbolValue) //Terminal
-			{
-				leftIndex = terminalIndices[leftSymbol];
-			}
-			else //Composite
-			{
-				long leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
-				long leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
-				leftIndex = indices[leftSymbolLeftPart][leftSymbolRightPart];
-			}
-
-			long rightSymbol = pairVectors[gen][j].rightSymbol;
-			long rightIndex;
-
-			//Check for terminal symbol or composite symbol
-			if (rightSymbol < initialSymbolValue) //Terminal
-			{
-				rightIndex = terminalIndices[rightSymbol];
-			}
-			else //Composite
-			{
-				long rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
-				long rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
-				rightIndex = indices[rightSymbolLeftPart][rightSymbolRightPart];
-			}
-
-			//Make a pair out of the indices we found
-			NamedPair p = { leftIndex, rightIndex, leftSymbol, rightSymbol };
-			vec.push_back(p);
-		}
-
-		//Sort the new vector
-		sort(vec.begin(), vec.end(), comPairN);
-
-		//Change the values in pairVectors to the new indices
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			pairVectors[gen][i].leftSymbol = vec[i].leftSymbol;
-			pairVectors[gen][i].rightSymbol = vec[i].rightSymbol;
-		}
-
-		//Record the new indices
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			if (indices[vec[i].nameLeft].empty())
-			{
-				indices[vec[i].nameLeft].set_empty_key(-1);
-				indices[vec[i].nameLeft].set_deleted_key(-2);
-			}
-			indices[vec[i].nameLeft][vec[i].nameRight] = offset + i;
-		}
-
-		//Update the offset
-		offset += pairVectors[gen].size();
+		vector<long*> v;
+		pairVectors.push_back(v);
+	}
+	for each (auto kvpair in symbolToGen)
+	{
+		//Push the address of each pair to their respective generation vectors
+		pairVectors[kvpair.second - 1].push_back((long*)(kvpair.first));
 	}
 }
 
-void Dictionary::createGenerationVectors(
-	dense_hash_map<long, Pair>& dictionary,
-	vector<vector<CompactPair>>& generationVectors)
-{
-	//Distribute pairs in vectors
-	for each (std::pair<const long, Pair> p in dictionary)
-	{
-		//Expand the outer vector if necessary
-		while (p.second.generation > generationVectors.size())
-		{
-			vector<CompactPair> v;
-			generationVectors.push_back(v);
-		}
 
-		//Add this pair to a vector
-		CompactPair cp(p.second.leftSymbol, p.second.rightSymbol);
-		generationVectors[p.second.generation - 1].push_back(cp);
-	}
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void Dictionary::decodeSymbol(
 	long symbolIndex, 
