@@ -50,6 +50,14 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		unordered_set<long>& terminals);
 
+	//Checks a pair during the second pass of the sequence.
+	void Initializer::checkPair(
+		int i,
+		long & leftSymbolLong,
+		long & rightSymbolLong,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		vector<SymbolRecord*> & sequenceArray);
+
 	///<summary>
 	///Initializes the sequence array and active pairs structures by reading input characters one by one and adding them as we go.
 	///</summary>

@@ -1187,16 +1187,19 @@ TEST(incrementCountLeft, firstTimeSeen)
 	long symbols = 65;
 	Conditions c;
 
-	long previous = 0, left = 1;
+	long previousprevious = -1, previous = 0, left = 1, right = 2;
 	bool skip = false;
 
 	long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 100};
-	mytest.buildSequenceArray(sequenceArray, a, 4);
+	long a[] = { 99, 65, 0, 100, 99, 65 };
+	mytest.buildSequenceArray(sequenceArray, a, 6);
 
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
+	sequenceArray[0]->next = sequenceArray[4];
+	sequenceArray[4]->previous = sequenceArray[0];
+
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
 
 	//Check that new pair was counted
 	if (activePairs[99].empty())
@@ -1230,8 +1233,11 @@ TEST(incrementCountRight, firstTimeSeen)
 	long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 100 };
-	mytest.buildSequenceArray(sequenceArray, a, 4);
+	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
+	mytest.buildSequenceArray(sequenceArray, a, 7);
+
+	sequenceArray[1]->next = sequenceArray[4];
+	sequenceArray[4]->previous = sequenceArray[1];
 
 	algo.checkCountRight(left, next, activePairs, sequenceArray, symbols, c);
 	if (activePairs[65].empty())
@@ -1262,7 +1268,7 @@ TEST(incrementCountLeft, secondTimeSeen)
 	Conditions c;
 
 	long previousFirst = 0, leftFirst = 1;
-	long previous = 3, left = 4;
+	long previousprevious = 1, previous = 3, left = 4, right = 6;
 	bool skip = false;
 
 	long symbol;
@@ -1277,7 +1283,10 @@ TEST(incrementCountLeft, secondTimeSeen)
 	}
 	activePairs[99][65].seenOnce = true;
 
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
+	sequenceArray[0]->next = sequenceArray[3];
+	sequenceArray[3]->previous = sequenceArray[0];
+
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
 	algo.incrementCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
@@ -1361,9 +1370,9 @@ TEST(incrementCountLeft, thirdTimeSeen)
 	long symbols = 65;
 	Conditions c;
 
-	long previousFirst = 0, leftFirst = 1;
-	long previousSecond = 3, leftSecond = 4;
-	long previous = 6, left = 7;
+	long previouspreviousFirst = -1, previousFirst = 0, leftFirst = 1, rightFirst = 3;
+	long previouspreviousSecond = 1, previousSecond = 3, leftSecond = 4, rightSecond = 6;
+	long previousprevious = 4, previous = 6, left = 7, right = 9;
 	bool skip = false;
 
 	long symbol;
@@ -1371,19 +1380,15 @@ TEST(incrementCountLeft, thirdTimeSeen)
 
 	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
-	/*activePairs[99][65].seenOnce = false;
-	activePairs[99][65].pairRecord = new PairRecord(0);
-	activePairs[99][65].pairRecord->count = 2;
-
-	PairTracker* tracker = &activePairs[99][65];
-	algo.addToPriorityQueueList(0, tracker, priorityQueue);
-
+	
 	sequenceArray[0]->next = sequenceArray[3];
-	sequenceArray[3]->previous = sequenceArray[0];*/
+	sequenceArray[3]->previous = sequenceArray[0];
+	sequenceArray[3]->next = sequenceArray[6];
+	sequenceArray[6]->previous = sequenceArray[3];
 
-	algo.checkCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, symbols, skip, c);
-	algo.checkCountLeft(previousSecond, leftSecond, activePairs, sequenceArray, symbols, skip, c);
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
+	algo.checkCountLeft(previouspreviousFirst, previousFirst, leftFirst, rightFirst, activePairs, sequenceArray, symbols, skip, c);
+	algo.checkCountLeft(previouspreviousSecond, previousSecond, leftSecond, rightSecond, activePairs, sequenceArray, symbols, skip, c);
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
 
 	algo.incrementCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 	algo.incrementCountLeft(previousSecond, leftSecond, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
@@ -1429,20 +1434,6 @@ TEST(incrementCountRight, thirdTimeSeen)
 	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 
-	/*if (activePairs[65].empty())
-	{
-		activePairs[65].set_empty_key(-1);
-		activePairs[65].set_deleted_key(-2);
-	}
-	activePairs[65][100].seenOnce = false;
-	activePairs[65][100].pairRecord = new PairRecord(1);
-	activePairs[65][100].pairRecord->count = 2;
-
-	PairTracker* tracker = &activePairs[65][100];
-	algo.addToPriorityQueueList(0, tracker, priorityQueue);
-
-	sequenceArray[1]->next = sequenceArray[4];
-	sequenceArray[4]->previous = sequenceArray[1];*/
 
 	algo.checkCountRight(leftFirst, nextFirst, activePairs, sequenceArray, symbols, c);
 	algo.checkCountRight(leftSecond, nextSecond, activePairs, sequenceArray, symbols, c);
@@ -1489,26 +1480,41 @@ TEST(incrementCountLeft, skipTest)
 	long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
-	mytest.buildSequenceArray(sequenceArray, a, 10);
+	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100, 100 };
+	mytest.buildSequenceArray(sequenceArray, a, 11);
 
-	long previous = 0, left = 1;
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
-	ASSERT_FALSE(skip);
-	previous = 1; left = 3;
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
-	ASSERT_TRUE(skip);
-	previous = 3; left = 5;
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
-	ASSERT_FALSE(skip);
-	previous = 5; left = 7;
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
-	ASSERT_TRUE(skip);
-	previous = 7; left = 9;
-	algo.checkCountLeft(previous, left, activePairs, sequenceArray, symbols, skip, c);
+	sequenceArray[1]->next = sequenceArray[5];
+	sequenceArray[5]->previous = sequenceArray[1];
 
-	//Check that seenOnce was set for cA
-	ASSERT_TRUE(activePairs[99][65].seenOnce);
+	long previousprevious = -1, previous = 0, left = 1, right = 3;
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+	
+	previousprevious = 0, previous = 1; left = 3, right = 5;
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+
+	//previousprevious = 1, previous = 3; left = 5, right = 7;
+	//algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+	
+	previousprevious = 3, previous = 5; left = 7, right = 9;
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+	
+	previousprevious = 5, previous = 7; left = 9, right = 10;
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+
+	if (activePairs[99].empty())
+	{
+		activePairs[99].set_empty_key(-1);
+		activePairs[99].set_deleted_key(-2);
+	}
+
+	if (activePairs[65].empty())
+	{
+		activePairs[65].set_empty_key(-1);
+		activePairs[65].set_deleted_key(-2);
+	}
+
+	//Check that seenOnce was not set for cA
+	ASSERT_FALSE(activePairs[99][65].seenOnce);
 
 	//Check that a pair record was added for AA
 	ASSERT_FALSE(activePairs[65][65].seenOnce);
@@ -1732,10 +1738,12 @@ TEST(decrementCountLeft, hasPrevious)
 	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
+	long symbols(initialSymbolValue);
 	vector<PairRecord*> priorityQueue(3);
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
+	long indexSymbolPreviousPrevious = -1;
 	long indexSymbolNext = -1;
 
 	long sequenceIndex = 2;
@@ -1804,6 +1812,7 @@ TEST(decrementCountLeft, hasPrevious)
 	priorityQueue[tracker->pairRecord->count - 2] =
 		tracker->pairRecord;
 
+	indexSymbolPreviousPrevious = fstPairRight->index;
 	indexSymbolPrevious = scdPairLeft->index;
 	indexSymbolLeft = scdPairRight->index;
 	indexSymbolRight = trdPairLeft->index;
@@ -1814,12 +1823,21 @@ TEST(decrementCountLeft, hasPrevious)
 	ASSERT_EQ(nullptr, priorityQueue[0]);
 
 	algP.decrementCountLeft(
+		indexSymbolPreviousPrevious,
 		indexSymbolPrevious,
 		indexSymbolLeft,
+		indexSymbolRight,
 		activePairs,
 		sequenceArray,
 		priorityQueue,
+		symbols,
 		c);
+
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 
 
 	ASSERT_EQ(nullptr, priorityQueue[2]);
@@ -1838,11 +1856,13 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 {
 	using namespace google;
 	AlgorithmP algP;
+	long symbols(initialSymbolValue);
 	Conditions c;
 	vector<PairRecord*> priorityQueue(3);
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
+	long indexSymbolPreviousPrevious = -1;
 	long indexSymbolNext = -1;
 
 	long sequenceIndex = 2;
@@ -1911,6 +1931,7 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	priorityQueue[tracker->pairRecord->count - 2] =
 		tracker->pairRecord;
 
+	indexSymbolPreviousPrevious = fstPairRight->index;
 	indexSymbolPrevious = scdPairLeft->index;
 	indexSymbolLeft = scdPairRight->index;
 	indexSymbolRight = trdPairLeft->index;
@@ -1921,13 +1942,21 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
 
 	algP.decrementCountLeft(
+		indexSymbolPreviousPrevious,
 		indexSymbolPrevious,
 		indexSymbolLeft,
+		indexSymbolRight,
 		activePairs,
 		sequenceArray,
 		priorityQueue,
+		symbols,
 		c);
 
+	if (activePairs[scdPairLeft->symbol].empty())
+	{
+		activePairs[scdPairLeft->symbol].set_empty_key(-1);
+		activePairs[scdPairLeft->symbol].set_deleted_key(-2);
+	}
 
 	ASSERT_EQ(nullptr, priorityQueue[2]);
 	ASSERT_EQ(nullptr, priorityQueue[1]);
@@ -1946,10 +1975,12 @@ TEST(decrementCountRight, hasNext)
 	using namespace google;
 	AlgorithmP algP;
 	Conditions c;
+	long symbols(initialSymbolValue);
 	vector<PairRecord*> priorityQueue(3);
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
+	long indexSymbolPreviousPrevious = -1;
 	long indexSymbolNext = -1;
 
 	long sequenceIndex = 2;
@@ -2025,7 +2056,7 @@ TEST(decrementCountRight, hasNext)
 	ASSERT_EQ(tracker->pairRecord, priorityQueue[1]);
 	ASSERT_EQ(nullptr, priorityQueue[0]);
 
-	algP.decrementCountLeft(
+	algP.decrementCountRight(
 		indexSymbolRight,
 		indexSymbolNext,
 		activePairs,
@@ -2571,7 +2602,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
 	vector<PairRecord*> priorityQueue;
-	long symbols(256);
+	long symbols(initialSymbolValue);
 	long symbol;
 	long index;
 
@@ -2649,6 +2680,44 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	pairRecord2->arrayIndexFirst = 1;
 	priorityQueue[0] = pairRecord2;
 
+	algP.decrementCountLeft(
+		fstPairLeft->index,
+		fstPairRight->index,
+		scdPairLeft->index,
+		scdPairRight->index,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		symbols,
+		c);
+
+	algP.decrementCountRight(
+		scdPairRight->index,
+		trdPairLeft->index,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
+	algP.checkCountLeft(
+		fstPairLeft->index,
+		fstPairRight->index,
+		scdPairLeft->index,
+		scdPairRight->index,
+		activePairs,
+		sequenceArray,
+		symbols,
+		skip,
+		c);
+
+	algP.checkCountRight(
+		scdPairLeft->index,
+		trdPairLeft->index,
+		activePairs,
+		sequenceArray,
+		symbols,
+		c);
+
 	algP.replaceInstanceOfPair(
 		scdPairLeft->index,
 		scdPairRight->index,
@@ -2718,6 +2787,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	long indexSymbolLeft = 20;
 	long indexSymbolRight = 21;
 	long indexSymbolPrevious = 19;
+	long indexSymbolPreviousPrevious = 18;
 	long indexSymbolNext = 22;
 
 	if (activePairs[sequenceArray[indexSymbolLeft]->symbol].empty())
@@ -2771,6 +2841,44 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	}
 	ASSERT_TRUE(left);
 	ASSERT_TRUE(right);
+
+	algP.decrementCountLeft(
+		indexSymbolPreviousPrevious,
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		indexSymbolRight,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		symbols,
+		c);
+
+	algP.decrementCountRight(
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
+	algP.checkCountLeft(
+		indexSymbolPreviousPrevious,
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		indexSymbolRight,
+		activePairs,
+		sequenceArray,
+		symbols,
+		skip,
+		c);
+
+	algP.checkCountRight(
+		indexSymbolLeft,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		symbols,
+		c);
 
 	algP.replaceInstanceOfPair(
 		indexSymbolLeft,
@@ -3023,6 +3131,7 @@ TEST(testingRun, diddy_explicit)
 			long indexSymbolLeft = -1;
 			long indexSymbolRight = -1;
 			long indexSymbolPrevious = -1;
+			long indexSymbolPreviousPrevious = -1;
 			long indexSymbolNext = -1;
 
 			long oldSequenceIndex = sequenceIndex;
@@ -3036,6 +3145,7 @@ TEST(testingRun, diddy_explicit)
 				indexSymbolLeft = -1;
 				indexSymbolRight = -1;
 				indexSymbolPrevious = -1;
+				indexSymbolPreviousPrevious = -1;
 				indexSymbolNext = -1;
 
 				sequenceIndex = nextSymbol->index;
@@ -3057,10 +3167,34 @@ TEST(testingRun, diddy_explicit)
 					sequenceIndex,
 					sequenceArray);
 
-				//Left pair
-				algP.checkCountLeft(
+				//Decrement count of xa
+				algP.decrementCountLeft(
+					indexSymbolPreviousPrevious,
 					indexSymbolPrevious,
 					indexSymbolLeft,
+					indexSymbolRight,
+					activePairs,
+					sequenceArray,
+					priorityQueue,
+					Symbols,
+					c);
+
+				//Decrement count of by
+				algP.decrementCountRight(
+					indexSymbolRight,
+					indexSymbolNext,
+					activePairs,
+					sequenceArray,
+					priorityQueue,
+					c);
+
+
+				//Left pair
+				algP.checkCountLeft(
+					indexSymbolPreviousPrevious,
+					indexSymbolPrevious,
+					indexSymbolLeft,
+					indexSymbolRight,
 					activePairs,
 					sequenceArray,
 					Symbols,

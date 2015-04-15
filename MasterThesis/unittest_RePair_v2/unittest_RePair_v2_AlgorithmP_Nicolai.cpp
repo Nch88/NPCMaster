@@ -178,6 +178,7 @@ TEST(replaceAllPairsThorough, diddy)
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
+	long indexSymbolPreviousPrevious = -1;
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
@@ -217,11 +218,14 @@ TEST(replaceAllPairsThorough, diddy)
 
 		//Decrement count of xa
 		algP.decrementCountLeft(
+			indexSymbolPreviousPrevious,
 			indexSymbolPrevious,
 			indexSymbolLeft,
+			indexSymbolRight,
 			activePairs,
 			sequenceArray,
 			priorityQueue,
+			Symbols,
 			c);
 
 		if (count == 0)

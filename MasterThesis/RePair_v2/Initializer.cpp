@@ -147,6 +147,35 @@ void Initializer::addToSequenceArray(
 	symbolCount++;
 }
 
+void Initializer::checkPair(
+	int i,
+	long & leftSymbolLong,
+	long & rightSymbolLong,
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs, 
+	vector<SymbolRecord*> & sequenceArray)
+{
+	PairTracker * currentTracker;
+	PairRecord * currentRecord;
+	SymbolRecord * currentSymbolRecord;
+
+	currentSymbolRecord = sequenceArray[i];
+	currentTracker = &activePairs[leftSymbolLong][rightSymbolLong];
+
+	if (currentTracker->pairRecord)
+	{
+		currentRecord = currentTracker->pairRecord;
+		//First occurrence
+		if (currentRecord->arrayIndexFirst > i)
+			currentRecord->arrayIndexFirst = i;
+		//Second occurrence
+		else if (!currentSymbolRecord->previous)
+		{
+			sequenceArray[currentRecord->arrayIndexFirst]->next = currentSymbolRecord;
+			currentSymbolRecord->previous = sequenceArray[currentRecord->arrayIndexFirst];
+		}
+	}
+}
+
 int Initializer::SequenceArray(
 	Conditions c,
 	ifstream & file,
@@ -198,7 +227,7 @@ int Initializer::SequenceArray(
 					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
 			
-			//Skip if the current symbols is the right part of a pair of identical symbols
+			//Skip if the current symbol is the right part of a pair of identical symbols
 			if (leftSymbol == rightSymbol &&
 				leftSymbol == previousSymbol &&
 				!skippedPair)
@@ -244,32 +273,48 @@ int Initializer::SequenceArray(
 
 
 	//Run through the sequence array again to set and thread the first occurrence of pairs correctly
-	PairTracker * currentTracker;
-	PairRecord * currentRecord;
-	SymbolRecord * currentSymbolRecord;
+	
 	long leftSymbolLong;
 	long rightSymbolLong;
+	long previousSymbolLong;
+	skippedPair = false;
 
-	for (int i = 0; i < sequenceArray.size() - 1; i++)
+	//Handle the first pair seperate as we need to look back on symbol
+	previousSymbolLong = sequenceArray[0]->symbol;
+	leftSymbolLong = sequenceArray[1]->symbol;
+
+	checkPair(
+		0,
+		previousSymbolLong,
+		leftSymbolLong,
+		activePairs,
+		sequenceArray);
+
+	//Run through the rest of the sequence
+	for (int i = 1; i < sequenceArray.size() - 1; i++)
 	{
-		currentSymbolRecord = sequenceArray[i];
+		previousSymbolLong = sequenceArray[i - 1]->symbol;
 		leftSymbolLong = sequenceArray[i]->symbol;
 		rightSymbolLong = sequenceArray[i + 1]->symbol;
-		currentTracker = &activePairs[leftSymbolLong][rightSymbolLong];
-
-		if (currentTracker->pairRecord)
+		
+		//Skip if the current symbol is the right part of a pair of identical symbols
+		if (leftSymbolLong == rightSymbolLong &&
+			leftSymbolLong == previousSymbolLong &&
+			!skippedPair)
 		{
-			currentRecord = currentTracker->pairRecord;
-			//First occurrence
-			if (currentRecord->arrayIndexFirst > i)
-				currentRecord->arrayIndexFirst = i;
-			//Second occurrence
-			else if (!currentSymbolRecord->previous)
-			{
-				sequenceArray[currentRecord->arrayIndexFirst]->next = currentSymbolRecord;
-				currentSymbolRecord->previous = sequenceArray[currentRecord->arrayIndexFirst];
-			}
+			skippedPair = true;
 		}
+		else
+		{
+			checkPair(
+				i,
+				leftSymbolLong,
+				rightSymbolLong,
+				activePairs,
+				sequenceArray);
+			skippedPair = false;
+		}
+		
 	}
 	return 0;
 }

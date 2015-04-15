@@ -67,12 +67,15 @@ public:
 
 	//Decrements count and updates structures of the pair whose right symbol
 	//is the current symbol
-	void decrementCountLeft(
+	void AlgorithmP::decrementCountLeft(
+		long & indexSymbolPreviousPrevious,
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
-		vector<SymbolRecord*> & sequenceArray, 
+		long & indexSymbolRight,
+		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue,
+		long & Symbols,
 		Conditions& c);
 
 	//Decrements count and updates structures of the pair whose left symbol
@@ -149,9 +152,20 @@ public:
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray);
 
+	void establishExtendedContext(
+		long & indexSymbolLeft,
+		long & indexSymbolRight,
+		long & indexSymbolPrevious,
+		long & indexSymbolPreviousPrevious,
+		long & indexSymbolNext,
+		long sequenceIndex,
+		vector<SymbolRecord*> & sequenceArray);
+
 	void checkCountLeft(
+		long & indexSymbolPreviousPrevious,
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
+		long & indexSymbolRight,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		long & Symbols,
@@ -170,6 +184,7 @@ public:
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		vector<PairRecord*>& priorityQueue,
 		long & Symbols,
 		Conditions& c);
 
