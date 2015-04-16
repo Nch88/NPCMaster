@@ -47,7 +47,7 @@ TEST(outputter, diddyHuffmanCode)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahFEumFo";
+	string string2 = "sHHAo.wahEFumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 

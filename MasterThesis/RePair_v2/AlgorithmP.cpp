@@ -328,7 +328,7 @@ void AlgorithmP::decrementCountLeft(
 		}
 		//Reset the seenOnce bool such that temporary pairs which are destroyed in the subsequent 
 		//iteration are never considered active by mistake
-		else if (indexSymbolPreviousPrevious >= 0 &&
+		if (indexSymbolPreviousPrevious >= 0 &&
 				sequenceArray[indexSymbolPreviousPrevious]->symbol == sequenceArray[indexSymbolLeft]->symbol &&
 				sequenceArray[indexSymbolPrevious]->symbol == sequenceArray[indexSymbolRight]->symbol)
 		{
@@ -447,6 +447,7 @@ void AlgorithmP::replacePair(
 		findGeneration(dictionary, leftSymbolRecord->symbol, rightSymbolRecord->symbol));
 	
 	dictionary[Symbols] = pairToReplace;
+
 	leftSymbolRecord->symbol = Symbols;
 	rightSymbolRecord->symbol = 0;
 
@@ -474,52 +475,76 @@ void AlgorithmP::incrementCountLeft(
 	{
 		long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
-		if (activePairs[symbolPrevious].empty())
-		{
-			activePairs[symbolPrevious].set_empty_key(-1);
-			activePairs[symbolPrevious].set_deleted_key(-2);
-		}
+		//Check for when we have duplicates
 
-		//Check if we need to skip
-		if (symbolPrevious != Symbols)
+		if (sequenceArray[indexSymbolPrevious]->symbol == Symbols &&
+			activePairs[Symbols][Symbols].pairRecord &&
+			!skip)
+		{
+			skip = true;
+
+			if (activePairs[symbolPrevious].empty())
+			{
+				activePairs[symbolPrevious].set_empty_key(-1);
+				activePairs[symbolPrevious].set_deleted_key(-2);
+			}
+
+			PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
+			PairRecord* record = tracker->pairRecord;
+
+			//If this is the first occurrence, update index first
+			if (record->arrayIndexFirst > indexSymbolPrevious)
+			{
+				record->arrayIndexFirst = indexSymbolPrevious;
+				addToPriorityQueueList(record->count - 2, tracker, priorityQueue);
+			}
+			//For second occurrence we thread the sequence to the first occ.
+			else if (!sequenceArray[indexSymbolPrevious]->previous)
+			{
+				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
+				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+			}
+			//Else we update the next pointer based on the previous pointer set in first pass
+			else
+			{
+				sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
+			}
+		}
+		//Check for normal pairs
+		else if (activePairs[symbolPrevious][Symbols].pairRecord)
+		{
 			skip = false;
 
-		if (!skip)
-			//Don't do this for the first pair, or if we need to skip a pair
-		{			
-			if (activePairs[symbolPrevious][Symbols].pairRecord)
-				//This is if we se it the second time
+			PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
+			PairRecord* record = tracker->pairRecord;
+
+			//If this is the first occurrence, update index first
+			if (record->arrayIndexFirst > indexSymbolPrevious)
 			{
-				//Add to priority queue
-				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
-				PairRecord* record = tracker->pairRecord;
-
-				//Update threading pointers
-				//First occurrence
-				if (record->arrayIndexFirst > indexSymbolPrevious)
-				{
-					record->arrayIndexFirst = indexSymbolPrevious;
-					addToPriorityQueueList(record->count - 2, tracker, priorityQueue);
-				}
-
-				//Second occurrence
-				else if (!sequenceArray[indexSymbolPrevious]->previous)
-				{
-					sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
-					sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
-				}
-				else
-				{
-					sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
-				}
+				record->arrayIndexFirst = indexSymbolPrevious;
+				addToPriorityQueueList(record->count - 2, tracker, priorityQueue);
 			}
+			//For second occurrence we thread the sequence to the first occ.
+			else if (!sequenceArray[indexSymbolPrevious]->previous)
+			{
+				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
+				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+			}
+			//Else we update the next pointer based on the previous pointer set in first pass
 			else
-				activePairs[symbolPrevious][Symbols].seenOnce = false;
+			{
+				sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
+			}
 		}
+		else if (activePairs[symbolPrevious][Symbols].seenOnce)
+		{
+			skip = false;
 
-		//Update skip flag
-		if (symbolPrevious == Symbols)
-			skip = !skip;
+			activePairs[symbolPrevious][Symbols].seenOnce = false;
+		}			
+
+		else
+			skip = false;
 	}
 }
 
@@ -829,8 +854,7 @@ void AlgorithmP::checkCountRight(
 	long & Symbols,
 	Conditions& c)
 {
-	//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
-	sequenceArray[indexSymbolLeft]->previous = nullptr;
+	
 
 	if (indexSymbolNext > -1)
 		//Only do this if there is a next symbol
@@ -931,7 +955,8 @@ void AlgorithmP::firstPass(
 			priorityQueue,
 			c);
 
-
+		//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
+		sequenceArray[indexSymbolLeft]->previous = nullptr;
 
 		//Left pair
 		checkCountLeft(

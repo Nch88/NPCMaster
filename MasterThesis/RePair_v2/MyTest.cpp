@@ -142,7 +142,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 		{
 			PairRecord* current = priorityQueue[i];
 			int pairCount = 0;
-			while (current->nextPair)
+			do
 			{
 				pairCount++;
 				if ((i < priorityQueue.size() - 1 && current->count != i + 2) || current->count < i + 2)
@@ -181,7 +181,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 				}*/
 
 				current = current->nextPair;
-			}
+			} while (current);
 		}
 	}
 	return result + "\n\n";
@@ -198,10 +198,12 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 		if (priorityQueue[i])
 		{
 			PairRecord* current = priorityQueue[i];
-			while (current->nextPair)
+			do
 			{
-				sane = sane && current->count == i + 2;// && (current->arrayIndexFirst < current->arrayIndexLast);
-
+				if ((i < priorityQueue.size() - 1 && current->count != i + 2) || current->count < i + 2)
+					sane = sane && false;
+				
+				
 				//Check index first & index last
 				sr = sequenceArray[current->arrayIndexFirst];
 				sane = sane && (sr->previous == nullptr) && (sr->next != nullptr);
@@ -209,7 +211,7 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);*/
 
 				current = current->nextPair;
-			}
+			} while (current);
 		}
 	}
 	if (!sane)
