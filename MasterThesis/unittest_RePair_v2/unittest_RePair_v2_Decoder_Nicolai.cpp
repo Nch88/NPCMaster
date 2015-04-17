@@ -2,7 +2,7 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-
+/*
 bool compareFiles(string file1, string file2, long &badChar)
 {
 	ifstream stream1(file1);
@@ -122,7 +122,6 @@ TEST(decoder, diddy_Nicolai)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -851,3 +850,4 @@ TEST(decoder, pitches50MB_Nicolai)
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
 }
+*/

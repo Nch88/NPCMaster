@@ -17,7 +17,7 @@ TEST(establishContext, adjacentSymbolsPreviousAndNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -67,7 +67,7 @@ TEST(establishContext, adjacentSymbolsNoPrevious)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -117,7 +117,7 @@ TEST(establishContext, adjacentSymbolsNoNext)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -167,7 +167,7 @@ TEST(establishContext, notAdjacentSymbols)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+    unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -240,7 +240,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGap)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -335,7 +335,7 @@ TEST(establishContext, notAdjacentSymbolsLargeGaps)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -476,7 +476,7 @@ TEST(removeSymbolThreadingPointers, bothPreviousAndNextPointers)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -538,7 +538,7 @@ TEST(removeSymbolThreadingPointers, onlyPreviousPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -601,7 +601,7 @@ TEST(removeSymbolThreadingPointers, onlyNextPointer)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -667,10 +667,10 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	
@@ -755,10 +755,10 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -843,10 +843,10 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -931,10 +931,10 @@ TEST(updatePairRecord, countTwoFirstPair)
 	AlgorithmP algP;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -1183,24 +1183,24 @@ TEST(incrementCountLeft, firstTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long , Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long previous = 0, left = 1;
 	bool skip = false;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 100};
+	unsigned long a[] = { 99, 65, 0, 100};
 	mytest.buildSequenceArray(sequenceArray, a, 4);
 
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
@@ -1224,23 +1224,20 @@ TEST(incrementCountRight, firstTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary; 
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long left = 1, next = 3;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 4);
 
 	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
@@ -1263,24 +1260,21 @@ TEST(incrementCountLeft, secondTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long previous = 3, left = 4;
 	bool skip = false;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 99, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 7);
 	if (activePairs[99].empty())
 	{
@@ -1315,23 +1309,20 @@ TEST(incrementCountRight, secondTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long left = 4, next = 6;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 100, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 7);
 
 	if (activePairs[65].empty())
@@ -1367,24 +1358,21 @@ TEST(incrementCountLeft, thirdTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long previous = 6, left = 7;
 	bool skip = false;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 	if (activePairs[99].empty())
 	{
@@ -1429,21 +1417,18 @@ TEST(incrementCountRight, thirdTimeSeen)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	long left = 7, next = 9;
 	bool skip = false;
 
-	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 	if (activePairs[65].empty())
@@ -1489,23 +1474,20 @@ TEST(incrementCountLeft, skipTest)
 {
 	using namespace google;
 	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue(5);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
+	unsigned long symbols = 65;
 	Conditions c;
 
 	bool skip = false;
 
-	long symbol;
+	unsigned long symbol;
 	long index;
 
-	long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
+	unsigned long a[] = { 99, 65, 0, 65, 0, 65, 0, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 	long previous = 0, left = 1;
@@ -1643,10 +1625,10 @@ TEST(decrementCount, threePairsRemoveMiddle)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -1750,10 +1732,10 @@ TEST(decrementCountLeft, hasPrevious)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -1858,10 +1840,10 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -1966,10 +1948,10 @@ TEST(decrementCountRight, hasNext)
 	PairTracker * tracker;
 
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 
@@ -2063,10 +2045,10 @@ TEST(threadEmptySymbols, singleEmptySymbol)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2123,10 +2105,10 @@ TEST(threadEmptySymbols, sequenceOfEmptySymbols)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	long symbol;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2178,14 +2160,11 @@ TEST(replacePair, middleOfSequence)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(256);
-	long symbol;
+	unsigned long Symbols;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2218,10 +2197,6 @@ TEST(replacePair, middleOfSequence)
 	index = 5;
 	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
 	sequenceArray.push_back(trdPairRight);
-
-	Pair pair(scdPairLeft->symbol,
-		scdPairRight->symbol, 
-		0);
 
 	if (activePairs[scdPairLeft->symbol].empty())
 	{
@@ -2231,24 +2206,26 @@ TEST(replacePair, middleOfSequence)
 	PairRecord * pairRecord = activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
+	long* newPair = new long[2];
+	newPair[0] = scdPairLeft->symbol;
+	newPair[1] = scdPairRight->symbol;
+	Symbols = (long)newPair;
+
 	algP.replacePair(
 		scdPairLeft->index,
 		scdPairRight->index,
 		trdPairLeft->index,
 		activePairs,
 		sequenceArray,
-		dictionary,
-		symbols,
+		Symbols,
 		c);
 
-
-
-	ASSERT_EQ(symbols, scdPairLeft->symbol);
+	ASSERT_EQ(Symbols, scdPairLeft->symbol);
 	ASSERT_EQ(0, scdPairRight->symbol);
 	ASSERT_EQ(scdPairLeft, scdPairRight->previous);
 	ASSERT_EQ(trdPairLeft, scdPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
+	ASSERT_EQ(1, ((long*)Symbols)[0]);
+	ASSERT_EQ(2, ((long*)Symbols)[1]);
 }
 
 TEST(replacePair, endOfSequence)
@@ -2257,14 +2234,11 @@ TEST(replacePair, endOfSequence)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(256);
-	long symbol;
+	unsigned long symbols;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2297,10 +2271,6 @@ TEST(replacePair, endOfSequence)
 	index = 5;
 	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
 	sequenceArray.push_back(trdPairRight);
-
-	Pair pair(trdPairLeft->symbol,
-		trdPairRight->symbol,
-		0);
 
 	long noNext = -1;
 
@@ -2312,13 +2282,17 @@ TEST(replacePair, endOfSequence)
 	PairRecord * pairRecord = activePairs[trdPairLeft->symbol][trdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
+	long* newPair = new long[2];
+	newPair[0] = trdPairLeft->symbol;
+	newPair[1] = trdPairRight->symbol;
+	symbols = (long)newPair;
+
 	algP.replacePair(
 		trdPairLeft->index,
 		trdPairRight->index,
 		noNext,
 		activePairs,
 		sequenceArray,
-		dictionary,
 		symbols,
 		c);
 
@@ -2326,8 +2300,6 @@ TEST(replacePair, endOfSequence)
 	ASSERT_EQ(0, trdPairRight->symbol);
 	ASSERT_EQ(trdPairLeft, trdPairRight->previous);
 	ASSERT_EQ(nullptr, scdPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
 }
 
 TEST(replacePair, severalEmptySymbols)
@@ -2336,14 +2308,11 @@ TEST(replacePair, severalEmptySymbols)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(256);
-	long symbol;
+	unsigned long symbols;
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2376,10 +2345,6 @@ TEST(replacePair, severalEmptySymbols)
 	index = 5;
 	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
 	sequenceArray.push_back(trdPairRight);
-
-	Pair pair(fstPairLeft->symbol,
-		trdPairLeft->symbol,
-		0);
 
 	if (activePairs[fstPairLeft->symbol].empty())
 	{
@@ -2389,13 +2354,17 @@ TEST(replacePair, severalEmptySymbols)
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][trdPairLeft->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
+	long* newPair = new long[2];
+	newPair[0] = fstPairLeft->symbol;
+	newPair[1] = trdPairLeft->symbol;
+	symbols = (long)newPair;
+
 	algP.replacePair(
 		fstPairLeft->index,
 		trdPairLeft->index,
 		trdPairRight->index,
 		activePairs,
 		sequenceArray,
-		dictionary,
 		symbols,
 		c);
 
@@ -2405,8 +2374,6 @@ TEST(replacePair, severalEmptySymbols)
 	ASSERT_EQ(trdPairRight, trdPairLeft->next);
 	ASSERT_EQ(fstPairLeft, fstPairRight->previous);
 	ASSERT_EQ(trdPairRight, fstPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
 }
 
 TEST(replacePair, emptySymbolsAroundRightSymbol)
@@ -2415,14 +2382,11 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(256);
-	long symbol;
+	unsigned long symbols(256);
+	unsigned long symbol;
 	long index;
 
 	//Setup symbol records in sequence array
@@ -2456,10 +2420,6 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	SymbolRecord * trdPairRight = new SymbolRecord(symbol, index);
 	sequenceArray.push_back(trdPairRight);
 
-	Pair pair(fstPairLeft->symbol,
-		scdPairRight->symbol,
-		0);
-
 	if (activePairs[fstPairLeft->symbol].empty())
 	{
 		activePairs[fstPairLeft->symbol].set_empty_key(-1);
@@ -2468,13 +2428,17 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	PairRecord * pairRecord = activePairs[fstPairLeft->symbol][scdPairRight->symbol].pairRecord = new PairRecord();
 	pairRecord->count = 2;
 
+	long* newPair = new long[2];
+	newPair[0] = fstPairLeft->symbol;
+	newPair[1] = scdPairRight->symbol;
+	symbols = (long)newPair;
+
 	algP.replacePair(
 		fstPairLeft->index,
 		scdPairRight->index,
 		trdPairRight->index,
 		activePairs,
 		sequenceArray,
-		dictionary,
 		symbols,
 		c);
 
@@ -2484,8 +2448,6 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 	ASSERT_EQ(trdPairRight, trdPairLeft->next);
 	ASSERT_EQ(fstPairLeft, fstPairRight->previous);
 	ASSERT_EQ(trdPairRight, fstPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
 }
 
 //TEST(replacePair, deletingPairRecord)
@@ -2494,14 +2456,11 @@ TEST(replacePair, emptySymbolsAroundRightSymbol)
 //	AlgorithmP algP;
 //	Conditions c;
 //	vector<SymbolRecord*> sequenceArray;
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 //	activePairs.set_empty_key(-1);
 //	activePairs.set_deleted_key(-2);
-//	dense_hash_map<long, Pair> dictionary;
-//	dictionary.set_empty_key(-1);
-//	dictionary.set_deleted_key(-2);
-//	long symbols(256);
-//	long symbol;
+//	unsigned long symbols(256);
+//	unsigned long symbol;
 //	long index;
 //
 //	//Setup symbol records in sequence array
@@ -2574,15 +2533,12 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	AlgorithmP algP;
 	Conditions c;
 	vector<SymbolRecord*> sequenceArray;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
 	vector<PairRecord*> priorityQueue;
-	long symbols(256);
-	long symbol;
+	unsigned long symbols;
+	unsigned long symbol;
 	long index;
 
 	bool skip = false;
@@ -2630,13 +2586,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	scdPairRight->previous = fstPairRight;
 	scdPairRight->next = nullptr;
 
-	Pair pair(scdPairLeft->symbol,
-		scdPairRight->symbol,
-		0);
-
 	priorityQueue.resize(sqrt(sequenceArray.size()));
-
-	
 
 	//Setup pair record for pair 12
 	if (activePairs[scdPairLeft->symbol].empty())
@@ -2648,8 +2598,6 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	pairRecord1->count = 3;
 	pairRecord1->arrayIndexFirst = 0;
 	pairRecord1->arrayIndexLast = 4;
-
-	
 
 	//Setup pair record for pair 21
 	if (activePairs[scdPairRight->symbol].empty())
@@ -2669,7 +2617,6 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 		fstPairRight->index,
 		trdPairLeft->index,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		symbols,
@@ -2680,8 +2627,6 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	ASSERT_EQ(0, scdPairRight->symbol);
 	ASSERT_EQ(scdPairLeft, scdPairRight->previous);
 	ASSERT_EQ(trdPairLeft, scdPairRight->next);
-	ASSERT_EQ(pair.leftSymbol, dictionary[symbols].leftSymbol);
-	ASSERT_EQ(pair.rightSymbol, dictionary[symbols].rightSymbol);
 	ASSERT_EQ(nullptr, activePairs[2][1].pairRecord);
 	ASSERT_EQ(2, activePairs[1][2].pairRecord->count);
 	ASSERT_EQ(nullptr, priorityQueue[0]);
@@ -2690,15 +2635,12 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(256);
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -2715,15 +2657,14 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long > terminals;
 
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -2792,7 +2733,6 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 		indexSymbolPrevious,
 		indexSymbolNext,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		symbols,
@@ -2829,22 +2769,17 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	ASSERT_EQ(sequenceArray[indexSymbolNext], sequenceArray[indexSymbolNext - 1]->next);
 	ASSERT_EQ(sequenceArray[indexSymbolLeft], sequenceArray[indexSymbolNext - 1]->previous);
 	ASSERT_EQ(0, sequenceArray[indexSymbolNext - 1]->symbol);
-
-
 }
 
 TEST(replaceAllInstancesOfPair, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -2861,87 +2796,95 @@ TEST(replaceAllInstancesOfPair, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long > terminals;
 
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 	priorityQueue[4] = nullptr;
 
-	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+	algP.replaceAllPairs(7, sequenceArray, activePairs, priorityQueue, symbols, c);
 
 	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '_', 'o', '.', 'w', 'a', 'h', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'u', 'm', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'o'};
 
 	MyTest mytest;
 	string result = mytest.SequenceToCompleteString(sequenceArray);
 
-	ASSERT_EQ(expected, result);
+	long x;
+	for (int i = 0; i < result.size(); ++i)
+	{
+		if (i == 7)
+			x = result[i];
+		else if (i == 14 || i == 20 || i == 26 || i == 30 || i == 36)
+			ASSERT_EQ(x, result[i]);
+		else 
+			ASSERT_EQ(expected[i], result[i]);
+	}
+
 	ASSERT_EQ(0,mytest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
-TEST(testingRun, diddy)
-{
-	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
-
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	MyTest t;
-
-	string input1 = "diddy.txt";
-
-	bool skip = false;
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-
-	string filename = input1;
-	ifstream file(filename);
-
-	unordered_set<long> terminals;
-
-	init.SequenceArray(
-		c,
-		file,
-		blockSize,
-		activePairs,
-		sequenceArray,
-		terminals);
-
-	priorityQueueSize = sqrt(sequenceArray.size());
-	priorityQueue.resize(priorityQueueSize);
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-
-	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahFEumFo";
-
-	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
-
-	algP.run(
-		sequenceArray,
-		dictionary,
-		activePairs,
-		priorityQueue,
-		terminals,
-		symbols,
-		c);
-	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
-}
+//TEST(testingRun, diddy)
+//{
+//	using namespace google;
+//	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<unsigned long , Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	unsigned long symbols(65);//A
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//	MyTest t;
+//
+//	string input1 = "diddy.txt";
+//
+//	bool skip = false;
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//
+//	string filename = input1;
+//	ifstream file(filename);
+//
+//	unordered_set<unsigned long > terminals;
+//
+//	init.SequenceArray(
+//		c,
+//		file,
+//		blockSize,
+//		activePairs,
+//		sequenceArray,
+//		terminals);
+//
+//	priorityQueueSize = sqrt(sequenceArray.size());
+//	priorityQueue.resize(priorityQueueSize);
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//
+//	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+//	string string2 = "sHHAo.wahFEumFo";
+//
+//	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+//
+//	algP.run(
+//		sequenceArray,
+//		activePairs,
+//		priorityQueue,
+//		terminals,
+//		symbols,
+//		c);
+//	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+//}

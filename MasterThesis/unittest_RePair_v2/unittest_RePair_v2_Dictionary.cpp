@@ -3,202 +3,308 @@
 
 using namespace std;
 
-TEST(createCompactDictionary, createGenerationVectors_diddy)
+TEST(createDictionary, findGenerations)
 {
-	AlgorithmP algo;
-	Dictionary dc;
+	Dictionary d;
 
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	Pair A('.', 'd', 1);
-	dictionary[300] = A;
-	Pair B('d', 'd', 1);
-	dictionary[301] = B;
-	Pair C(300, 'i', 2);
-	dictionary[302] = C;
-	Pair D(301, 'y', 2);
-	dictionary[303] = D;
-	Pair E(302, 303, 3);
-	dictionary[304] = E;
-	Pair F('i', 'n', 1);
-	dictionary[305] = F;
-	Pair G(300, 'o', 2);
-	dictionary[306] = G;
-	Pair H(305, 'g', 2);
-	dictionary[307] = H;
+	//     (_,_)
+	//     /   \
+	// (c,b)   (b,a)
 
-	vector<vector<CompactPair>> generationVectors;
-	dc.createGenerationVectors(dictionary, generationVectors);
+	unsigned long* l1 = new unsigned long[2];
+	unsigned long* l2 = new unsigned long[2];
+	unsigned long* l3 = new unsigned long[2];
+	l1[0] = (unsigned long)l2;
+	l1[1] = (unsigned long)l3;
+	l2[0] = 'c';
+	l2[1] = 'b';
+	l3[0] = 'b';
+	l3[1] = 'a';
 
-	vector<CompactPair*> gen0;
-	gen0.push_back(new CompactPair(105, 110));
-	gen0.push_back(new CompactPair(46, 100));
-	gen0.push_back(new CompactPair(100, 100));
-	vector<CompactPair*> gen1;
-	gen1.push_back(new CompactPair(301, 121));
-	gen1.push_back(new CompactPair(305, 103));
-	gen1.push_back(new CompactPair(300, 105));
-	gen1.push_back(new CompactPair(300, 111));
-	vector<CompactPair*> gen2;
-	gen2.push_back(new CompactPair(302, 303));
+	dense_hash_map<unsigned long, unsigned long> StG;
+	StG.set_empty_key(-1);
+	unordered_set<unsigned long> terms;
 
-	for (int i = 0; i < generationVectors[0].size(); ++i)
-	{
-		ASSERT_TRUE((generationVectors[0])[i].leftSymbol == gen0[i]->leftSymbol);
-		ASSERT_TRUE((generationVectors[0])[i].rightSymbol == gen0[i]->rightSymbol);
-	}
-	for (int i = 0; i < generationVectors[1].size(); ++i)
-	{
-		ASSERT_TRUE((generationVectors[1])[i].leftSymbol == gen1[i]->leftSymbol);
-		ASSERT_TRUE((generationVectors[1])[i].rightSymbol == gen1[i]->rightSymbol);
-	}
-	for (int i = 0; i < generationVectors[2].size(); ++i)
-	{
-		ASSERT_TRUE((generationVectors[2])[i].leftSymbol == gen2[i]->leftSymbol);
-		ASSERT_TRUE((generationVectors[2])[i].rightSymbol == gen2[i]->rightSymbol);
-	}
+	d.findGenerations((unsigned long)l1,StG,terms);
+
+	ASSERT_EQ(3, terms.size());
+	ASSERT_EQ(2, StG[(unsigned long)l1]);
+	ASSERT_EQ(1, StG[(unsigned long)l2]);
+	ASSERT_EQ(1, StG[(unsigned long)l3]);
 }
 
-TEST(createCompactDictionary, createFinalPairVector)
+TEST(createDictionary, createSupportStructures_diddy)
 {
-	AlgorithmP algo;
-	Dictionary dc;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unsigned long symbols;
 
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	Pair A('.', 'd', 1);
-	dictionary[300] = A;
-	Pair B('d', 'd', 1);
-	dictionary[301] = B;
-	Pair C(300, 'i', 2);
-	dictionary[302] = C;
-	Pair D(301, 'y', 2);
-	dictionary[303] = D;
-	Pair E(302, 303, 3);
-	dictionary[304] = E;
-	Pair F('i', 'n', 1);
-	dictionary[305] = F;
-	Pair G(300, 'o', 2);
-	dictionary[306] = G;
-	Pair H(305, 'g', 2);
-	dictionary[307] = H;
+	Initializer init;
+	Conditions c;
+	Dictionary dict;
+	AlgorithmP algP;
+	MyTest t;
 
-	vector<vector<CompactPair>> generationVectors;
-	dc.createGenerationVectors(dictionary, generationVectors);
+	string input1 = "diddy.txt";
 
-	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
-	sort(terminals.begin(), terminals.end());
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
 
-	vector<vector<CompactPair>> pairs;
-	dense_hash_map<long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	dense_hash_map<long, long> tIndices;
-	tIndices.set_empty_key(-1);
-	tIndices.set_deleted_key(-2);
-	dc.createFinalPairVectors(dictionary, terminals, pairs, indices, tIndices);
+	string filename = input1;
+	ifstream file(filename);
 
-	vector<vector<CompactPair>> expected;
-	vector<CompactPair> v1, v2, v3;
-	expected.push_back(v1);
-	expected.push_back(v2);
-	expected.push_back(v3);
-	expected[0].push_back(CompactPair(0, 2));
-	expected[0].push_back(CompactPair(2, 2));
-	expected[0].push_back(CompactPair(5, 7));
-	expected[1].push_back(CompactPair(13, 5));
-	expected[1].push_back(CompactPair(13, 8));
-	expected[1].push_back(CompactPair(14, 12));
-	expected[1].push_back(CompactPair(15, 3));
-	expected[2].push_back(CompactPair(16, 18));
+	unordered_set<unsigned long> terminals;
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
 
-	//Check pairs
-	for (int i = 0; i < pairs.size(); ++i)
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	//string string2 = "sDDAo.wahHGumHo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		activePairs,
+		priorityQueue,
+		symbols,
+		c);
+
+	algP.compact(sequenceArray, activePairs, priorityQueue);
+
+	dense_hash_map<unsigned long, unsigned long> StG;
+	StG.set_empty_key(-1);
+	vector<vector<unsigned long*>> pairs;
+
+	dict.createSupportStructures(sequenceArray, terminals, StG, pairs);
+
+	//Some preliminary asserts in case the basic stuff goes wrong
+	ASSERT_EQ(13,terminals.size());
+	ASSERT_EQ(6,pairs.size());
+	ASSERT_EQ(2,pairs[0].size());
+	ASSERT_EQ(2,pairs[1].size());
+	ASSERT_EQ(1,pairs[2].size());
+	ASSERT_EQ(1,pairs[3].size());
+	ASSERT_EQ(1,pairs[4].size());
+	ASSERT_EQ(1,pairs[5].size());
+
+	//Test the output by carefully constructing the complete string from the phrase table + pair vectors
+	string d;
+	char ch1, ch2, ch3, ch4, ch5, ch6;
+	if (((char)(pairs[1][1][1])) == 'g')
 	{
-		for (int j = 0; j < pairs[i].size(); ++j)
+		ch1 = (char)(((unsigned long*)(pairs[1][1][0]))[0]);
+		ch2 = ((char)(((unsigned long*)(pairs[1][1][0]))[1]));
+		ch3 = ((char)pairs[1][1][1]);
+		d = string(1,ch1) + string(1,ch2) + string(1,ch3);
+	}
+	else
+	{
+		ch1 = ((char)(((unsigned long*)(pairs[1][0][0]))[0]));
+		ch2 = ((char)(((unsigned long*)(pairs[1][0][0]))[1]));
+		ch3 = ((char)pairs[1][0][1]);
+		d = string(1, ch1) + string(1, ch2) + string(1, ch3);
+	}
+	string a;
+	if (((char)pairs[0][0][0]) == '.')
+	{
+		ch1 = ((char)pairs[0][0][0]);
+		ch2 = ((char)pairs[0][0][1]);
+		a = string(1, ch1) + string(1, ch2);
+	}
+	else
+	{
+		ch1 = ((char)pairs[0][1][0]);
+		ch2 = ((char)pairs[0][1][1]);
+		a = string(1, ch1) + string(1, ch2);
+	}
+	string g; 
+	ch1 = ((char)pairs[4][0][0]);
+	ch2 = ((char)((unsigned long*)(pairs[4][0][1]))[0]);
+	ch3 = ((char)(((unsigned long*)((unsigned long*)(pairs[4][0][1]))[1]))[0]);
+	ch4 = ((char)((unsigned long*)(((unsigned long*)((unsigned long*)(pairs[4][0][1]))[1]))[1])[0]);
+	ch5 = ((char)((unsigned long*)(((unsigned long*)((unsigned long*)((unsigned long*)(pairs[4][0][1]))[1])[1]))[1])[0]);
+	ch6 = ((char)((unsigned long*)(((unsigned long*)((unsigned long*)((unsigned long*)(pairs[4][0][1]))[1])[1]))[1])[1]);
+	g = string(1, ch1) + string(1, ch2) + string(1, ch3) + string(1, ch4) + string(1, ch5) + string(1, ch6);
+	
+	//Lazyness
+	string h = a + g;
+
+	string result = "s" + d + d + a + "o.wah" + h + g + "um" + h + "o";
+
+	ASSERT_EQ(string1,result);
+}
+
+TEST(createDictionary, switchToOrdinalNumbers_diddy)
+{
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unsigned long symbols;
+
+	Initializer init;
+	Conditions c;
+	Dictionary dict;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "diddy.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	unordered_set<unsigned long> terminals;
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	//string string2 = "sDDAo.wahHGumHo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		activePairs,
+		priorityQueue,
+		symbols,
+		c);
+
+	algP.compact(sequenceArray, activePairs, priorityQueue);
+
+	dense_hash_map<unsigned long, unsigned long> StG;
+	StG.set_empty_key(-1);
+	vector<vector<unsigned long*>> pairs;
+
+	dict.createSupportStructures(sequenceArray, terminals, StG, pairs);
+
+	vector<unsigned long> termVector;
+
+	/*cout << endl << "Non-Terminals: " << endl << "   A        B        C        D        E        F        G        H" << endl;
+	if (((char)pairs[0][0][0]) == '.')
+		cout << (unsigned long)(pairs[0][0]) << "  " << (unsigned long)(pairs[0][1]) << "  ";
+	else
+		cout << (unsigned long)(pairs[0][1]) << "  " << (unsigned long)(pairs[0][0]) << "  ";
+
+	if (((char)(pairs[1][1][1])) == 'g')
+		cout << (unsigned long)(pairs[1][0]) << "  " << (unsigned long)(pairs[1][1]) << "  ";
+	else
+		cout << (unsigned long)(pairs[1][1]) << "  " << (unsigned long)(pairs[1][0]) << "  ";
+
+	cout << (unsigned long)(pairs[2][0]) << "  " << (unsigned long)(pairs[3][0]) << "  " << (unsigned long)(pairs[4][0]) << "  " << (unsigned long)(pairs[5][0]) << "  ";
+*/
+	dict.switchToOrdinalNumbers(terminals, StG, pairs, termVector);
+
+	/*string s;
+	cout << "\n\n" << endl << "Terminals:";
+	for each (auto var in termVector)
+	{
+		cout << "   " << (char)var;
+	}
+	cout << endl << "Number:   ";
+	for each (auto var in termVector)
+	{
+		s = to_string(var);
+		while (s.size() < 4)
+			s = " " + s;
+		cout << s;
+	}
+	cout << endl << "T-Indices:";
+	for (int i = 0; i < termVector.size(); ++i)
+	{
+		s = to_string(i);
+		while (s.size() < 4)
+			s = " " + s;
+		cout << s;
+	}
+	cout << "\n" << endl;
+	for (int gen = 0; gen < pairs.size(); ++gen)
+	{
+		cout << endl;
+		cout << "Gen " << (gen + 1) << ":";
+		for each (auto var in pairs[gen])
 		{
-			ASSERT_EQ(expected[i][j].leftSymbol, (pairs[i])[j].leftSymbol);
-			ASSERT_EQ(expected[i][j].rightSymbol, (pairs[i])[j].rightSymbol);
+			cout << " (" << var[0] << "," << var[1] << ")";
 		}
-	}
+	}*/
+
+	ASSERT_EQ(6, pairs.size());
+
+	//Gen 1
+	ASSERT_EQ(2, pairs[0].size());
+	ASSERT_EQ(0, pairs[0][0][0]);
+	ASSERT_EQ(2, pairs[0][0][1]);
+	ASSERT_EQ(5, pairs[0][1][0]);
+	ASSERT_EQ(7, pairs[0][1][1]);
+
+	//Gen 2
+	ASSERT_EQ(2, pairs[1].size());
+	ASSERT_EQ(12, pairs[1][0][0]);
+	ASSERT_EQ(13, pairs[1][0][1]);
+	ASSERT_EQ(14, pairs[1][1][0]);
+	ASSERT_EQ(3, pairs[1][1][1]);
+
+	//Gen 3
+	ASSERT_EQ(1, pairs[2].size());
+	ASSERT_EQ(2, pairs[2][0][0]);
+	ASSERT_EQ(15, pairs[2][0][1]);
+
+	//Gen 4
+	ASSERT_EQ(1, pairs[3].size());
+	ASSERT_EQ(2, pairs[3][0][0]);
+	ASSERT_EQ(17, pairs[3][0][1]);
+
+	//Gen 5
+	ASSERT_EQ(1, pairs[4].size());
+	ASSERT_EQ(5, pairs[4][0][0]);
+	ASSERT_EQ(18, pairs[4][0][1]);
+
+	//Gen 6
+	ASSERT_EQ(1, pairs[5].size());
+	ASSERT_EQ(13, pairs[5][0][0]);
+	ASSERT_EQ(19, pairs[5][0][1]);
 }
 
-TEST(createCompactDictionary, generateCompactDictionary)
-{
-	AlgorithmP algo;
-	Dictionary dc;
 
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	Pair A('.', 'd', 1);
-	dictionary[300] = A;
-	Pair B('d', 'd', 1);
-	dictionary[301] = B;
-	Pair C(300, 'i', 2);
-	dictionary[302] = C;
-	Pair D(301, 'y', 2);
-	dictionary[303] = D;
-	Pair E(302, 303, 3);
-	dictionary[304] = E;
-	Pair F('i', 'n', 1);
-	dictionary[305] = F;
-	Pair G(300, 'o', 2);
-	dictionary[306] = G;
-	Pair H(305, 'g', 2);
-	dictionary[307] = H;
 
-	unordered_set<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 
-	vector<vector<CompactPair>> pairs;
 
-	dense_hash_map<long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	dense_hash_map<long, long> tIndices;
-	tIndices.set_empty_key(-1);
-	tIndices.set_deleted_key(-2);
 
-	vector<vector<CompactPair>> generationVectors;
-	vector<long> terminalVector;
-	dc.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, tIndices);
 
-	vector<vector<CompactPair>> expected;
-	vector<CompactPair> v1, v2, v3;
-	expected.push_back(v1);
-	expected.push_back(v2);
-	expected.push_back(v3);
-	expected[0].push_back(CompactPair(0, 2));
-	expected[0].push_back(CompactPair(2, 2));
-	expected[0].push_back(CompactPair(5, 7));
-	expected[1].push_back(CompactPair(13, 5));
-	expected[1].push_back(CompactPair(13, 8));
-	expected[1].push_back(CompactPair(14, 12));
-	expected[1].push_back(CompactPair(15, 3));
-	expected[2].push_back(CompactPair(16, 18));
 
-	//Check pairs
-	for (int i = 0; i < pairs.size(); ++i)
-	{
-		for (int j = 0; j < pairs[i].size(); ++j)
-		{
-			ASSERT_EQ(expected[i][j].leftSymbol, (pairs[i])[j].leftSymbol);
-			ASSERT_EQ(expected[i][j].rightSymbol, (pairs[i])[j].rightSymbol);
-		}
-	}
 
-	//Check indices
-	ASSERT_EQ(13, (indices['.'])['d']);
-	ASSERT_EQ(14, (indices['d'])['d']);
-	ASSERT_EQ(15, (indices['i'])['n']);
-	ASSERT_EQ(16, (indices[300])['i']);
-	ASSERT_EQ(17, (indices[300])['o']);
-	ASSERT_EQ(18, (indices[301])['y']);
-	ASSERT_EQ(19, (indices[305])['g']);
-	ASSERT_EQ(20, (indices[302])[303]);
-}
+
+
+
+
+
+
+
+
 
 TEST(expandDictionary, diddy)
 {
@@ -216,7 +322,7 @@ TEST(expandDictionary, diddy)
 	dPairs.push_back(CompactPair(13, 19));
 
 	//Make terminals
-	vector<long> dTerms;
+	vector<unsigned long> dTerms;
 	dTerms.push_back(46);
 	dTerms.push_back(97);
 	dTerms.push_back(100);
@@ -231,7 +337,7 @@ TEST(expandDictionary, diddy)
 	dTerms.push_back(119);
 	dTerms.push_back(121);
 
-	dense_hash_map<long, string> expDict;
+	dense_hash_map<unsigned long, string> expDict;
 	expDict.set_empty_key(-1);
 	expDict.set_deleted_key(-2);
 

@@ -4,7 +4,7 @@
 using namespace std;
 
 MyTest mtest;
-
+/*
 TEST(compaction, diddy)
 {
 	using namespace google;
@@ -50,7 +50,7 @@ TEST(compaction, diddy)
 
 	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 
-	algP.replaceAllPairs(7, sequenceArray, dictionary, activePairs, priorityQueue, symbols, c);
+	algP.replaceAllPairs(7, sequenceArray, activePairs, priorityQueue, symbols, c);
 
 	string expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', '_', 'o', '.', 'w', 'a', 'h', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'u', 'm', 'A', '_', 'i', 'd', 'd', 'y', 'A', '_', 'o' };
 
@@ -127,7 +127,6 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 			algP.manageOneEntryOnList(
 				i,
 				sequenceArray,
-				dictionary,
 				activePairs,
 				priorityQueue,
 				symbols,
@@ -288,38 +287,6 @@ TEST(compaction, calculateCompactionTime)
 //		cout << "Problem opening file: " << filename << endl;
 //	}
 //}
+*/
 
-TEST(createCompactDictionary, findGeneration_diddy)
-{
-	AlgorithmP algo;
-
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	Pair A('.', 'd', 1);
-	dictionary[300] = A;
-	Pair B('d', 'd', 1);
-	dictionary[301] = B;
-	Pair C(300, 'i', 2);
-	dictionary[302] = C;
-	Pair D(301, 'y', 2);
-	dictionary[303] = D;
-	Pair E(302, 303, 3);
-	dictionary[304] = E;
-	Pair F('i', 'n', 1);
-	dictionary[305] = F;
-	Pair G(300, 'o', 2);
-	dictionary[306] = G;
-	Pair H(305, 'g', 2);
-	dictionary[307] = H;
-
-	ASSERT_EQ(1, algo.findGeneration(dictionary, '.', 'd'));//A
-	ASSERT_EQ(1, algo.findGeneration(dictionary, 'd', 'd'));//B
-	ASSERT_EQ(2, algo.findGeneration(dictionary, 300, 'i'));//C
-	ASSERT_EQ(2, algo.findGeneration(dictionary, 301, 'y'));//D
-	ASSERT_EQ(3, algo.findGeneration(dictionary, 302, 303));//E
-	ASSERT_EQ(1, algo.findGeneration(dictionary, 'i', 'n'));//F
-	ASSERT_EQ(2, algo.findGeneration(dictionary, 300, 'o'));//G
-	ASSERT_EQ(2, algo.findGeneration(dictionary, 305, 'g'));//H
-}
 

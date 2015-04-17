@@ -6,7 +6,7 @@ public:
 	long rightSymbol;
 
 	CompactPair();
-	CompactPair(long leftSymbol, long rightSymbol);
+	CompactPair(unsigned long leftSymbol, unsigned long rightSymbol);
 	CompactPair::CompactPair(Pair &p);
 	~CompactPair();
 };

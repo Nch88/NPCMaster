@@ -36,13 +36,13 @@ void Decoder::decode(string inFile)
 	ofstream outstream(getOutfileName(inFile), ios::binary);
 
 	vector<CompactPair> decodedPairs;
-	vector<long> decodedTerms;
-	dense_hash_map<long, dense_hash_map<long, long>> symbolIndices;
+	vector<unsigned long > decodedTerms;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> symbolIndices;
 	symbolIndices.set_empty_key(-1);
 	symbolIndices.set_deleted_key(-2);
-	long *firstCodes;
-	vector<long> symbolIndexSequence;
-	dense_hash_map<long, string> expandedDictionary;
+	unsigned long  *firstCodes;
+	vector<unsigned long > symbolIndexSequence;
+	dense_hash_map<unsigned long , string> expandedDictionary;
 	expandedDictionary.set_empty_key(-1);
 	expandedDictionary.set_deleted_key(-2);
 	
@@ -65,7 +65,7 @@ void Decoder::decode(string inFile)
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
 
 		//Decode and write
-		for each (long n in symbolIndexSequence)
+		for each (unsigned long  n in symbolIndexSequence)
 		{
 			string toWrite;
 			if (n < decodedTerms.size())

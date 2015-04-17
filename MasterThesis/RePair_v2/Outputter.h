@@ -13,18 +13,17 @@ public:
 		string outFile,
 		ofstream &myfile,
 		vector<SymbolRecord *>& sequenceArray,
-		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
 		bool firstBlock);
 	void Outputter::huffmanDictionary(
 		string outFile,
 		ofstream &myfile,
-		long maxLength,
-		long *firstCode,
-		long *numl,
-		dense_hash_map<long, Pair> &dictionary,
-		dense_hash_map <long, dense_hash_map<long, long>> &indices,
-		dense_hash_map<long, long> &terminalIndices,
-		dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol);
+		unsigned long  maxLength,
+		unsigned long  *firstCode,
+		unsigned long  *numl,
+		dense_hash_map <unsigned long , dense_hash_map<unsigned long , unsigned long >> &indices,
+		dense_hash_map<unsigned long , unsigned long > &terminalIndices,
+		dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
@@ -38,10 +37,9 @@ public:
 		string filename,
 		bool firstBlock,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, Pair>& dictionary,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unordered_set<long>& terminals,
+		unordered_set<unsigned long >& terminals,
 		Conditions& c);
 };
 

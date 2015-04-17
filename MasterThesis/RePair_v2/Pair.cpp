@@ -6,7 +6,7 @@ Pair::Pair()
 {
 }
 
-Pair::Pair(long left, long right, long gen)
+Pair::Pair(unsigned long  left, unsigned long  right, unsigned long  gen)
 {
 	leftSymbol = left;
 	rightSymbol = right;

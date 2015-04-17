@@ -67,7 +67,7 @@ void Outputter::huffmanEncoding(
 	string outFile,
 	ofstream &myfile,
 	vector<SymbolRecord *>& sequenceArray,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
 	bool firstBlock)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
@@ -148,13 +148,12 @@ void Outputter::huffmanEncoding(
 void Outputter::huffmanDictionary(
 	string outFile,
 	ofstream &myfile,
-	long maxLength,
-	long *firstCode,
-	long *numl,
-	dense_hash_map<long, Pair> &dictionary,
-	dense_hash_map <long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
+	unsigned long  maxLength,
+	unsigned long  *firstCode,
+	unsigned long  *numl,
+	dense_hash_map <unsigned long , dense_hash_map<unsigned long , unsigned long >> &indices,
+	dense_hash_map<unsigned long , unsigned long > &terminalIndices,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
@@ -166,7 +165,7 @@ void Outputter::huffmanDictionary(
 	
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
 	
-	for (long i = 0; i < maxLength; i++)
+	for (unsigned long  i = 0; i < maxLength; i++)
 	{
 		toWrite = gc.getGammaCode(numl[i]);
 		
@@ -178,12 +177,12 @@ void Outputter::huffmanDictionary(
 
 		for (int j = 0; j < numl[i]; j++)
 		{
-			long symbol = huffmanToSymbol[i + 1][firstCode[i] + j];
+			unsigned long  symbol = huffmanToSymbol[i + 1][firstCode[i] + j];
 			long index;
 			if (symbol >= initialSymbolValue)
 			{
-				long symbolLeft = dictionary[symbol].leftSymbol;
-				long symbolRight = dictionary[symbol].rightSymbol;
+				unsigned long  symbolLeft = 0;// dictionary[symbol].leftSymbol;
+				unsigned long  symbolRight = 0;// dictionary[symbol].rightSymbol;
 				index = indices[symbolLeft][symbolRight];
 			}
 			else
@@ -279,10 +278,9 @@ void Outputter::all(
 	string filename,
 	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unordered_set<long>& terminals,
+	unordered_set<unsigned long >& terminals,
 	Conditions& c)
 {
 
@@ -304,13 +302,13 @@ void Outputter::all(
 
 	//Do Huffman encoding
 	Huffman h;
-	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	dense_hash_map<unsigned long , HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);
 	huffmanCodes.set_deleted_key(-2);
-	long *firstCode = nullptr;
-	long *numl = nullptr;
-	long maxLength = 0;
-	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	unsigned long  *firstCode = nullptr;
+	unsigned long  *numl = nullptr;
+	unsigned long  maxLength = 0;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
 
@@ -328,21 +326,21 @@ void Outputter::all(
 	//Encode generations for dictionary
 	Dictionary finalDict;
 	vector<vector<CompactPair>> pairs;
-	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
-	dense_hash_map<long, long> terminalIndices;
+	dense_hash_map<unsigned long , unsigned long > terminalIndices;
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
-	vector<long> terminalVector;
+	vector<unsigned long > terminalVector;
 
-	finalDict.generateCompactDictionary(
+	/*finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		terminalVector,
 		pairs,
 		indices,
-		terminalIndices);	
+		terminalIndices);*/	
 
 	//Write dictionary to file
 	GammaCode gc;
@@ -366,7 +364,6 @@ void Outputter::all(
 		maxLength,
 		firstCode,
 		numl,
-		dictionary,
 		indices,
 		terminalIndices,
 		huffmanToSymbol);

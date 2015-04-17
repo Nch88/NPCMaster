@@ -45,4 +45,4 @@
 #include "Decoder.h"
 
 //Constants
-const int initialSymbolValue = 256;
+const unsigned long initialSymbolValue = 256;

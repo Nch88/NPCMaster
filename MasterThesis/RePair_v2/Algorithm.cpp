@@ -21,18 +21,17 @@ int Algorithm::run(
 	AlgorithmP algP,
 	MyTimer t,
 	int blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	dense_hash_map<long, Pair> & dictionary,
-	long & symbols)
+	unsigned long  & symbols)
 {
 	int priorityQueueSize;
 	bool firstBlock = true;
 	Huffman h;
 	Outputter out;
-	dense_hash_map<long, HuffmanNode *> huffmanCodes;
-	unordered_set<long> terminals;
+	dense_hash_map<unsigned long , HuffmanNode *> huffmanCodes;
+	unordered_set<unsigned long > terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())
@@ -45,7 +44,7 @@ int Algorithm::run(
 		{
 			t.start();
 		}
-		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray, terminals);
+		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
 
 		if (c.timing)
 		{
@@ -75,10 +74,8 @@ int Algorithm::run(
 		}
 		algP.run(
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
-			terminals,
 			symbols,
 			c);			
 
@@ -101,7 +98,6 @@ int Algorithm::run(
 			filename,
 			firstBlock,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			terminals,
@@ -121,7 +117,7 @@ int Algorithm::run(
 		{
 			cout << " - Verbose: Resetting for next block" << endl;
 		}
-		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);
+		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue);
 		if (c.timing)
 		{
 			t.stop();

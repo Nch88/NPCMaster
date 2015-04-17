@@ -13,30 +13,30 @@ public:
 	void GammaCode::decodeGammaString(
 		std::string &prefix, 
 		std::string &gamma,
-		std::vector<long> &output, 
-		long count);
+		std::vector<unsigned long > &output, 
+		unsigned long  count);
 
 	///<summary>Interprets a string of 1's and 0's as a binary number, and converts it to a long.</summary>
 	///<param name="binary">Input: A string of 1's and 0's.</param>
-	long GammaCode::binaryToInt(std::string binary);
+	unsigned long  GammaCode::binaryToInt(std::string binary);
 
 	///<summary>Reads one gamma code from a string. Returns the corresponding number, 
 	/// and sets 'index' to the index of the first char after the code that has been read.</summary>
 	///<param name="gamma">Input: A string of 1's and 0's to read from.</param>
 	///<param name="index">Output: Set to the index of the first char after the first gamma code in the input.</param>
-	long GammaCode::readGammaCodeHeader(std::string& gamma, int& index);
+	unsigned long  GammaCode::readGammaCodeHeader(std::string& gamma, int& index);
 
 	///<summary>Interprets a string as a gamma code, and returns it as a long. Behavior is undefined if the input is not a valid gamma code.</summary>
 	///<param name="gamma">Input: A string of 1's and 0's. Must be exactly one valid gamma code.</param>
-	long GammaCode::gammaToInt(std::string gamma);
+	unsigned long  GammaCode::gammaToInt(std::string gamma);
 
 	///<summary>Returns the binary version of a number as a string of 1's and 0's.</summary>
 	///<param name="input">Input: A non-negative number.</param>
-	std::string getBinaryCode(long input);
+	std::string getBinaryCode(unsigned long  input);
 
 	///<summary>Returns the gamma code for a number as a string of 1's and 0's.</summary>
 	///<param name="input">Input: A non-negative number.</param>
-	std::string getGammaCode(long input);
+	std::string getGammaCode(unsigned long  input);
 
 	///<summary>Encodes a dictionary in pairvector form as a string of gamma codes.</summary>
 	///<param name="pairVector">Input: A vector of vectors of CompactPairs, as produced by Dictionary::generateCompactDictionary.</param>
@@ -44,13 +44,13 @@ public:
 	///<param name="finalString">Output: The dictionary in gamma code form.</param>
 	void makeFinalString(
 		std::vector<std::vector<CompactPair>>& pairVector,
-		std::vector<long>& terminalVector,
+		std::vector<unsigned long >& terminalVector,
 		std::string& finalString);
 
 	///<summary>Internal function used by makeFinalString.</summary>
 	void encode(
 		std::vector<std::vector<CompactPair>>& pairVector,
-		std::vector<long>& terminalVector,
+		std::vector<unsigned long >& terminalVector,
 		std::string& terminalsGamma,
 		std::vector<std::string>& leftElementsGammas,
 		std::vector<std::string>& rightElementsBinaries);
@@ -58,7 +58,7 @@ public:
 	///<summary>Internal function used by decodeDictionaryFile.</summary>
 	void GammaCode::readNextNumbers(
 		int n, 
-		std::vector<long> &values, 
+		std::vector<unsigned long > &values, 
 		std::ifstream &bitstream, 
 		std::string &prefix);
 
@@ -67,14 +67,14 @@ public:
 		int binarySize, 
 		int count, 
 		std::string chunk, 
-		std::vector<long> &values, 
+		std::vector<unsigned long > &values, 
 		std::string &prefix);
 
 	///<summary>Internal function used by decodeDictionaryFile.</summary>
 	void GammaCode::readNextBinaries(
 		int binarySize, 
 		int count, 
-		std::vector<long> &values, 
+		std::vector<unsigned long > &values, 
 		std::ifstream &bitstream, 
 		std::string &prefix);
 
@@ -86,5 +86,5 @@ public:
 	void GammaCode::decodeDictionaryFile(
 		std::ifstream &bitstream,
 		std::vector<CompactPair>& pairVector,
-		std::vector<long>& terminals);
+		std::vector<unsigned long >& terminals);
 };

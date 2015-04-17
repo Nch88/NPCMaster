@@ -2,7 +2,7 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-
+/*
 TEST(manageOneList, oneEntry)
 {
 	using namespace google;
@@ -52,7 +52,6 @@ TEST(manageOneList, oneEntry)
 	algP.manageOneList(
 		index,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		symbols,
@@ -113,7 +112,6 @@ TEST(manageOneList, multipleEntries)
 	algP.manageOneList(
 		index,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		symbols,
@@ -285,7 +283,6 @@ TEST(replaceAllPairsThorough, diddy)
 			indexSymbolNext,
 			activePairs,
 			sequenceArray,
-			dictionary,
 			Symbols,
 			c);
 
@@ -464,7 +461,6 @@ TEST(testingLowerPriority, diddy)
 			algP.manageOneEntryOnList(
 				i,
 				sequenceArray,
-				dictionary,
 				activePairs,
 				priorityQueue,
 				symbols,
@@ -548,7 +544,6 @@ TEST(testingLowerPriority, duplicates)
 			algP.manageOneEntryOnList(
 				i,
 				sequenceArray,
-				dictionary,
 				activePairs,
 				priorityQueue,
 				symbols,
@@ -620,7 +615,6 @@ TEST(testingRun, duplicates2)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -681,7 +675,6 @@ TEST(testingRun, duplicates3)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -743,7 +736,6 @@ TEST(testingRun, duplicatesLong)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -804,7 +796,6 @@ TEST(testingRun, duplicatesLong3)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -912,7 +903,6 @@ TEST(crashPossiblePointerError, 264a)
 		algP.replaceAllPairs(
 			sequenceIndex,
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			symbols,
@@ -938,8 +928,6 @@ TEST(crashPossiblePointerError, 264a)
 		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 
 		count++;
-		//Pick new symbol
-		algP.newSymbol(symbols);
 	}
 
 	CompactionData cData(1);
@@ -953,7 +941,6 @@ TEST(crashPossiblePointerError, 264a)
 			algP.manageOneEntryOnList(
 				i,
 				sequenceArray,
-				dictionary,
 				activePairs,
 				priorityQueue,
 				symbols,
@@ -965,3 +952,4 @@ TEST(crashPossiblePointerError, 264a)
 	}
 	ASSERT_EQ(string6, t.SequenceToString(sequenceArray));
 }
+*/

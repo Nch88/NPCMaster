@@ -2,7 +2,7 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-
+/*
 TEST(testingHuffman, getFrequenciesAndCodeLengths)
 {
 	using namespace google;
@@ -53,7 +53,6 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -186,7 +185,6 @@ TEST(testingHuffman, collapseSymbols)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -271,7 +269,6 @@ TEST(testingHuffman, phaseThree)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -396,7 +393,6 @@ TEST(testingHuffman, generateCodes)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -742,7 +738,6 @@ TEST(huffman, decoder)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -910,7 +905,6 @@ TEST(huffman, decodeDictionaryDiddy)
 
 		algP.run(
 			sequenceArray,
-			dictionary,
 			activePairs,
 			priorityQueue,
 			terminals,
@@ -1116,7 +1110,6 @@ TEST(huffman, decodeDictionaryDuplicates)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -1213,4 +1206,4 @@ TEST(huffman, decodeDictionaryDuplicates)
 		ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
 	}
 	ifs.close();
-}
+}*/

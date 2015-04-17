@@ -2,7 +2,7 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-
+/*
 TEST(outputter, diddyHuffmanCode)
 {
 	using namespace google;
@@ -53,7 +53,6 @@ TEST(outputter, diddyHuffmanCode)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -299,7 +298,6 @@ TEST(outputter, diddyHuffmanDictionary)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -505,7 +503,6 @@ TEST(outputter, diddyAll)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -595,7 +592,6 @@ TEST(outputter, readAndWriteDictionary_diddy)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -604,7 +600,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 
 	vector<long> terminalVector;
 
-	finalDict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	//finalDict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string finalstring = "";
 	gc.makeFinalString(pairs, terminalVector, finalstring);
@@ -1098,4 +1094,4 @@ TEST(outputter, readAndWriteDictionary_diddy)
 //		
 //		++loopcount;
 //	}
-//}
+//}*/

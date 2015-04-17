@@ -2,7 +2,7 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-
+/*
 TEST(gammaCodes, getBinaryCode_1to15)
 {
 	GammaCode gc;
@@ -91,7 +91,6 @@ TEST(gammaCodes, encode_diddy_explicit)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -106,7 +105,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	//dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -337,7 +336,6 @@ TEST(gammaCodes, encode_diddy)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -352,7 +350,7 @@ TEST(gammaCodes, encode_diddy)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	//dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -520,7 +518,6 @@ TEST(gammaCodes, diddy_makeFinalString)
 
 	algP.run(
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
 		terminals,
@@ -535,7 +532,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	//dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
 
 	//Test variables
 	string terminalsGammaResult = "";
@@ -648,7 +645,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	string pTest_gen2l_Expected = gc.getGammaCode(5) + gc.getGammaCode(7);
 
 	string pTest_gen2R = finalstring->substr(7 + 167 + 5 + 10 + 8 + 8 + 10 + 12, 8);
-	string pTest_gen2R_Expected = "11101101";*/
+	string pTest_gen2R_Expected = "11101101";
 
 
 	ASSERT_EQ(finalExpectedResult, *finalstring);
@@ -732,4 +729,4 @@ TEST(gammaCodes, writeToFile)
 	ofstream myfile;
 	myfile.open("gammafun.npc", ios::binary);
 	out.dictionary("gammafun.npc", myfile, gamma, true);
-}
+}*/

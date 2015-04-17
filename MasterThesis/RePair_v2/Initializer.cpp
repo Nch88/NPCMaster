@@ -14,7 +14,7 @@ Initializer::~Initializer()
 
 void Initializer::resetCompleted(
 	int blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
 	//Reset sequence array when we are done
@@ -40,11 +40,9 @@ void Initializer::resetCompleted(
 }
 
 void Initializer::resetForNextBlock(
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*> & priorityQueue,
-	unordered_set<long> & terminals,
-	dense_hash_map<long, Pair> &dictionary)
+	vector<PairRecord*> & priorityQueue)
 {
 	//We do not free the memory between blocks as entries will be reused
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -73,17 +71,13 @@ void Initializer::resetForNextBlock(
 		}
 	}
 	activePairs.clear();
-
-	terminals.clear();
-	
-	dictionary.clear();
 }
 
 void Initializer::setupPairRecord(
-	long leftSymbol,
-	long rightSymbol,
+	unsigned long  leftSymbol,
+	unsigned long  rightSymbol,
 	int index,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
 	PairTracker * currentTracker;
@@ -140,17 +134,15 @@ void Initializer::addToSequenceArray(
 	unsigned char & symbol,
 	long & index,
 	int & symbolCount,
-	vector<SymbolRecord*> & sequenceArray,
-	unordered_set<long>& terminals)
-{
-	terminals.emplace(symbol);													//Record all terminal symbols
+	vector<SymbolRecord*> & sequenceArray)
+{													//Record all terminal symbols
 	if (index < sequenceArray.size())
 	{
-		sequenceArray[index]->symbol = (long)symbol;
+		sequenceArray[index]->symbol = (unsigned long )symbol;
 	}
 	else
 	{
-		sequenceArray.push_back(new SymbolRecord((long)symbol, index));
+		sequenceArray.push_back(new SymbolRecord((unsigned long )symbol, index));
 	}	
 	index++;
 	symbolCount++;
@@ -160,9 +152,8 @@ int Initializer::SequenceArray(
 	Conditions c,
 	ifstream & file,
 	int & blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
-	vector<SymbolRecord*> & sequenceArray,
-	unordered_set<long>& terminals)
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
+	vector<SymbolRecord*> & sequenceArray)
 {
 	unsigned char previousSymbol;
 	unsigned char leftSymbol;
@@ -176,15 +167,15 @@ int Initializer::SequenceArray(
 	//We read two symbols ahead to check for sequences of duplicate symbols
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
-		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray, terminals);
+		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
-			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray, terminals);
+			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
 			
 			setupPairRecord(
-				(long)previousSymbol,
-				(long)leftSymbol,
+				(unsigned long )previousSymbol,
+				(unsigned long )leftSymbol,
 				0,
 				activePairs,
 				sequenceArray);
@@ -198,7 +189,7 @@ int Initializer::SequenceArray(
 				t.start();
 				cout << " - Timing: Timing push back onto Sequence array" << endl;
 			}
-			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray, terminals);
+			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
 			if (c.timing)
 			{
 				t.stop();
@@ -224,8 +215,8 @@ int Initializer::SequenceArray(
 					cout << " - Timing: Timing setup pair record" << endl;
 				}
 				setupPairRecord(
-				(long)leftSymbol,
-				(long)rightSymbol,
+				(unsigned long )leftSymbol,
+				(unsigned long )rightSymbol,
 				index - 2,
 				activePairs,
 				sequenceArray);
@@ -255,7 +246,7 @@ int Initializer::SequenceArray(
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<PairRecord*> & priorityQueue,
 	Conditions & c)
 {

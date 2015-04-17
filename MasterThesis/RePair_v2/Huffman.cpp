@@ -13,8 +13,8 @@ Huffman::~Huffman()
 
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, HuffmanNode> & frequencies,
-	long &cardinality)
+	dense_hash_map<unsigned long , HuffmanNode> & frequencies,
+	unsigned long  &cardinality)
 {
 		for each (auto &symbolRecord in sequenceArray)
 		{
@@ -121,7 +121,7 @@ void Huffman::sift(
 void Huffman::initCodeLengthsArray(
 	int cardinality,
 	int *codeLengths,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes)
+	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes)
 {
 		if (cardinality <= 0)
 			cerr << ("Huffman::initCodeLengthsArray cardinality is " + to_string(cardinality)) << endl;
@@ -187,9 +187,9 @@ void Huffman::collapseHuffmanTree(
 }
 
 void Huffman::expandHuffmanTree(
-	long cardinality,
+	unsigned long  cardinality,
 	int *codeLengths,
-	long &maxLength)
+	unsigned long  &maxLength)
 {
 		codeLengths[1] = 0;															//Represents the root with code length one
 		maxLength = 0;
@@ -206,10 +206,10 @@ void Huffman::expandHuffmanTree(
 }
 
 void Huffman::getCodeLengths(
-	long cardinality,
+	unsigned long  cardinality,
 	int *codeLengths,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
-	long &maxLength)																//Assigns a value to maxLength as an output
+	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
+	unsigned long  &maxLength)																//Assigns a value to maxLength as an output
 {
 	int heapSize = cardinality;
 	//Phase 1	
@@ -241,21 +241,21 @@ string Huffman::codeToString(int intCode, int length)
 }
 
 void Huffman::generateCanonicalHuffmanCodes(
-	long cardinality,
-	long maxLength,
+	unsigned long  cardinality,
+	unsigned long  maxLength,
 	int *codeLengths,
-	long *firstCode,
-	long *numl,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
+	unsigned long  *firstCode,
+	unsigned long  *numl,
+	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
 {
 		if (maxLength <= 0)
 			cerr << ("Huffman::generateCanonicalHuffmanCodes, Maxlength is " + to_string(maxLength)) << endl;
 
-		for (long i = 0; i < maxLength; i++)											//Init codelengths with zero
+		for (unsigned long  i = 0; i < maxLength; i++)											//Init codelengths with zero
 			numl[i] = 0;
 
-		for (long i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
+		for (unsigned long  i = cardinality; i < cardinality * 2; i++)							//Count number of codes with same length
 			++numl[codeLengths[i] - 1];
 
 		firstCode[maxLength - 1] = 0;
@@ -268,7 +268,7 @@ void Huffman::generateCanonicalHuffmanCodes(
 		for (int i = 0; i < maxLength; i++)
 			nextCode[i] = firstCode[i];
 
-		long codes = 0;
+		unsigned long  codes = 0;
 		for (auto &huffmanNode : huffmanCodes)									//For each symbol, look up its code by its length in the nextcode structure 
 		{
 			int codeLength = codeLengths[cardinality + codes];
@@ -291,19 +291,19 @@ void Huffman::generateCanonicalHuffmanCodes(
 
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
-	long *&firstCode,
-	long *&numl,
-	long &maxLength,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
+	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
+	unsigned long  *&firstCode,
+	unsigned long  *&numl,
+	unsigned long  &maxLength,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
 {	
-	long cardinality = 0;
+	unsigned long  cardinality = 0;
 	getFrequencies(sequenceArray, huffmanCodes, cardinality);					//+ cardinality of compressed sequence
 	int *codeLengths = new int[cardinality * 2];	
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
 
-	firstCode = new long[maxLength];
-	numl = new long[maxLength];
+	firstCode = new unsigned long [maxLength];
+	numl = new unsigned long [maxLength];
 	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
 
 	delete[] codeLengths;
@@ -365,12 +365,12 @@ void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char ra
 }
 
 void Huffman::readFromGammaCodes(
-	long symbolsToRead,
+	unsigned long  symbolsToRead,
 	ifstream &bitstream,
 	GammaCode &gc,
 	string &chunk,
 	string &prefix,
-	vector<long> &intValues)
+	vector<unsigned long > &intValues)
 {
 	char rawChunk1 = 0;
 	char rawChunk2 = 0;
@@ -408,15 +408,15 @@ void Huffman::readFromGammaCodes(
 
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
-	long *&firstCodes,
-	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices)
+	unsigned long  *&firstCodes,
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &symbolIndices)
 	//Outputs symbolIndices
 {
 	//DEBUG
 	MyTest test;
 
 	GammaCode gc;
-	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<long> actual, long count);
+	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<unsigned long > actual, unsigned long  count);
 	if (bitstream.is_open())
 	{
 		char rawChunk1 = 0;
@@ -425,11 +425,11 @@ void Huffman::decodeDictionary(
 		char rawChunk4 = 0;
 		string chunk = "";
 		string prefix = "";
-		long maxLength = 0;
-		long symbolsToRead = 0;
-		long firstCode = 0;
-		long lastCode = 0;
-		vector<long> intValues;
+		unsigned long  maxLength = 0;
+		unsigned long  symbolsToRead = 0;
+		unsigned long  firstCode = 0;
+		unsigned long  lastCode = 0;
+		vector<unsigned long > intValues;
 
 		symbolsToRead = 1;
 
@@ -447,9 +447,9 @@ void Huffman::decodeDictionary(
 			cerr << ("Huffman::decodeDictionary, Maxlength is " + to_string(maxLength)) << endl;
 
 		intValues.clear();
-		firstCodes = new long[maxLength];
+		firstCodes = new unsigned long [maxLength];
 		//symbolIndices: code length -> Huffman code -> index
-		for (long i = 0; i < maxLength; i++)
+		for (unsigned long  i = 0; i < maxLength; i++)
 		{
 			//Read the number of codes of length i + 1 and the first code of that length
 			symbolsToRead = 2;
@@ -509,10 +509,10 @@ void Huffman::decodeDictionary(
 }
 
 void Huffman::decode(
-	long *firstCode,
+	unsigned long  *firstCode,
 	ifstream &bitstream,
-	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
-	vector<long> &symbolIndexSequence)
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &symbolIndices,
+	vector<unsigned long > &symbolIndexSequence)
 {
 	if (bitstream.is_open())
 	{
