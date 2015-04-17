@@ -67,8 +67,7 @@ public:
 
 	//Decrements count and updates structures of the pair whose right symbol
 	//is the current symbol
-	void AlgorithmP::decrementCountLeft(
-		long & indexSymbolPreviousPrevious,
+	void decrementCountLeft(
 		long & indexSymbolPrevious,
 		long & indexSymbolLeft,
 		long & indexSymbolRight,
@@ -105,7 +104,8 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue, 
 		long & Symbols,
-		Conditions& c);
+		Conditions& c,
+		bool & skipright);
 
 	//Makes sure that empty symbols have pointers to the previous and next actual symbols
 	//in the sequence array
@@ -158,6 +158,7 @@ public:
 		long & indexSymbolPrevious,
 		long & indexSymbolPreviousPrevious,
 		long & indexSymbolNext,
+		long & indexSymbolNextNext,
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray);
 
@@ -174,7 +175,9 @@ public:
 
 	void checkCountRight(
 		long & indexSymbolLeft,
+		long & indexSymbolRight,
 		long & indexSymbolNext,
+		long & indexSymbolNextNext,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		long & Symbols,

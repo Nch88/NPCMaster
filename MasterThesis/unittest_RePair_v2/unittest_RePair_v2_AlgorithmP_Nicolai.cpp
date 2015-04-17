@@ -1258,6 +1258,788 @@ TEST(testingRun, duplicatesLong4_explicit)
 	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
 
+TEST(testingRun, duplicatesLong5)
+{
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long Symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "duplicatesLong5.txt";
+
+	bool skip = false;
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	unordered_set<long> terminals;
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	int testcount = 0;
+
+	string string1 = "aaaacccaaaaabbbbccccaaaacccbbccc";
+	string string2 = "FDaEEBBFEC";
+
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+
+	//Check result of initialization
+	//Pair aa
+	ASSERT_FALSE(sequenceArray[0]->previous);
+	ASSERT_EQ(sequenceArray[2], sequenceArray[0]->next);
+
+	ASSERT_EQ(sequenceArray[0], sequenceArray[2]->previous);
+	ASSERT_EQ(sequenceArray[7], sequenceArray[2]->next);
+
+	ASSERT_EQ(sequenceArray[2], sequenceArray[7]->previous);
+	ASSERT_EQ(sequenceArray[9], sequenceArray[7]->next);
+
+	ASSERT_EQ(sequenceArray[7], sequenceArray[9]->previous);
+	ASSERT_EQ(sequenceArray[20], sequenceArray[9]->next);
+
+	ASSERT_EQ(sequenceArray[9], sequenceArray[20]->previous);
+	ASSERT_EQ(sequenceArray[22], sequenceArray[20]->next);
+
+	ASSERT_EQ(sequenceArray[20], sequenceArray[22]->previous);
+	ASSERT_FALSE(sequenceArray[22]->next);
+
+	//Pair cc
+	ASSERT_FALSE(sequenceArray[4]->previous);
+	ASSERT_EQ(sequenceArray[16], sequenceArray[4]->next);
+
+	ASSERT_EQ(sequenceArray[4], sequenceArray[16]->previous);
+	ASSERT_EQ(sequenceArray[18], sequenceArray[16]->next);
+
+	ASSERT_EQ(sequenceArray[16], sequenceArray[18]->previous);
+	ASSERT_EQ(sequenceArray[24], sequenceArray[18]->next);
+
+	ASSERT_EQ(sequenceArray[18], sequenceArray[24]->previous);
+	ASSERT_EQ(sequenceArray[29], sequenceArray[24]->next);
+
+	ASSERT_EQ(sequenceArray[24], sequenceArray[29]->previous);
+	ASSERT_FALSE(sequenceArray[29]->next);
+
+	//Pair bb
+	ASSERT_FALSE(sequenceArray[12]->previous);
+	ASSERT_EQ(sequenceArray[14], sequenceArray[12]->next);
+
+	ASSERT_EQ(sequenceArray[12], sequenceArray[14]->previous);
+	ASSERT_EQ(sequenceArray[27], sequenceArray[14]->next);
+
+	ASSERT_EQ(sequenceArray[14], sequenceArray[27]->previous);
+	ASSERT_FALSE(sequenceArray[27]->next);
+
+	//Pair ac
+	ASSERT_FALSE(sequenceArray[3]->previous);
+	ASSERT_EQ(sequenceArray[23], sequenceArray[3]->next);
+
+	ASSERT_EQ(sequenceArray[3], sequenceArray[23]->previous);
+	ASSERT_FALSE(sequenceArray[23]->next);
+
+	//Pair ca
+	ASSERT_FALSE(sequenceArray[6]->previous);
+	ASSERT_EQ(sequenceArray[19], sequenceArray[6]->next);
+
+	ASSERT_EQ(sequenceArray[6], sequenceArray[19]->previous);
+	ASSERT_FALSE(sequenceArray[19]->next);
+
+	//Pair bc
+	ASSERT_FALSE(sequenceArray[15]->previous);
+	ASSERT_EQ(sequenceArray[28], sequenceArray[15]->next);
+
+	ASSERT_EQ(sequenceArray[15], sequenceArray[28]->previous);
+	ASSERT_FALSE(sequenceArray[28]->next);
+
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
+	//Run - start
+	CompactionData cData(sequenceArray.size());
+
+	//manageHighPriorityList - start
+	PairRecord * tmpPairRecord = nullptr;
+	PairRecord * tmpPairRecordSelected = nullptr;
+	long sequenceIndex = 0;
+	long last = priorityQueue.size() - 1;
+
+	while (priorityQueue[last])
+	{
+		tmpPairRecordSelected = priorityQueue[last];
+		tmpPairRecord = priorityQueue[last];
+
+		//Find pair with most occurences
+		while (tmpPairRecord->nextPair)
+		{
+			tmpPairRecord = tmpPairRecord->nextPair;
+			if (tmpPairRecord->count > tmpPairRecordSelected->count)
+				tmpPairRecordSelected = tmpPairRecord;
+		}
+		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+
+		//Remove current pair from priority queue
+		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
+			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
+		}
+		else if (tmpPairRecordSelected->previousPair)
+		{
+			tmpPairRecordSelected->previousPair->nextPair = nullptr;
+		}
+		else if (tmpPairRecordSelected->nextPair)
+		{
+			priorityQueue[last] = tmpPairRecordSelected->nextPair;
+			priorityQueue[last]->previousPair = nullptr;
+		}
+		else
+			priorityQueue[last] = nullptr;
+		tmpPairRecordSelected->previousPair = nullptr;
+		tmpPairRecordSelected->nextPair = nullptr;
+
+		//Find the count of the pair to be replaced and update counter for compaction
+		if (c.compact)
+		{
+			long i = sequenceIndex;
+			long s1 = sequenceArray[i]->symbol;
+			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+		}
+
+		//replaceAllPairs - start
+		long indexSymbolLeft = -1;
+		long indexSymbolRight = -1;
+		long indexSymbolPrevious = -1;
+		long indexSymbolNext = -1;
+
+		SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+
+		//First pass - start
+		long indexSymbolPreviousPrevious = -1;
+		long indexSymbolNextNext = -1;
+
+		long sequenceIndex2 = sequenceIndex;
+		SymbolRecord * nextSymbol2 = sequenceArray[sequenceIndex2];
+		bool skip2 = false;
+
+		do
+		{
+			indexSymbolLeft = -1;
+			indexSymbolRight = -1;
+			indexSymbolPrevious = -1;
+			indexSymbolPreviousPrevious = -1;
+			indexSymbolNext = -1;
+			indexSymbolNextNext = -1;
+
+			sequenceIndex2 = nextSymbol2->index;
+			//Store the pointer to the next symbol now, as the current symbol is changed as we go
+			nextSymbol2 = nextSymbol2->next;
+
+			algP.establishExtendedContext(
+				indexSymbolLeft,
+				indexSymbolRight,
+				indexSymbolPrevious,
+				indexSymbolPreviousPrevious,
+				indexSymbolNext,
+				indexSymbolNextNext,
+				sequenceIndex2,
+				sequenceArray);
+
+			if (indexSymbolLeft == 7)
+			{
+				int x = 0;
+			}
+
+			//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
+			sequenceArray[indexSymbolLeft]->previous = nullptr;
+
+			//Left pair
+			algP.checkCountLeft(
+				indexSymbolPreviousPrevious,
+				indexSymbolPrevious,
+				indexSymbolLeft,
+				indexSymbolRight,
+				activePairs,
+				sequenceArray,
+				Symbols,
+				skip2,
+				c);
+
+			//Right pair
+			algP.checkCountRight(
+				indexSymbolLeft,
+				indexSymbolRight,
+				indexSymbolNext,
+				indexSymbolNextNext,
+				activePairs,
+				sequenceArray,
+				Symbols,
+				c);
+
+			
+
+		} while (nextSymbol2);
+		//First pass - end
+
+		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
+		bool skip = false;
+
+		int testcount2 = 0;
+
+		ASSERT_FALSE(activePairs[65][97].pairRecord);
+
+		do
+		{
+			indexSymbolLeft = -1;
+			indexSymbolRight = -1;
+			indexSymbolPrevious = -1;
+			indexSymbolNext = -1;
+
+			sequenceIndex = nextSymbol->index;
+			//Store the pointer to the next symbol now, as the current symbol is changed as we go
+			nextSymbol = nextSymbol->next;
+
+			algP.establishContext(
+				indexSymbolLeft,
+				indexSymbolRight,
+				indexSymbolPrevious,
+				indexSymbolNext,
+				sequenceIndex,
+				sequenceArray);
+
+			if (indexSymbolLeft == 7)
+			{
+				int x = 0;
+			}
+
+
+			algP.replaceInstanceOfPair(
+				indexSymbolLeft,
+				indexSymbolRight,
+				indexSymbolPrevious,
+				indexSymbolNext,
+				sequenceArray,
+				dictionary,
+				activePairs,
+				priorityQueue,
+				Symbols,
+				skip,
+				c);
+
+
+		} while (nextSymbol);
+		//replaceAllPairs - end
+
+		cout << "Sanity check: " << t.SanityCheckPairRecordsDetailed(sequenceArray, priorityQueue) << endl;
+		ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+
+		//Compaction
+		if (c.compact)
+		{
+			if (cData.replaceCount > cData.compactTotal)
+			{
+				algP.compact(sequenceArray, activePairs, priorityQueue);
+				cData.updateCompactTotal();
+			}
+		}
+
+		//Pick new symbol
+		algP.newSymbol(Symbols);
+
+		//Assertion tests
+		if (testcount == 0)
+		{
+			//Check result of compacting aa
+			//Pair AA
+			ASSERT_FALSE(sequenceArray[0]->previous);
+			ASSERT_EQ(sequenceArray[7], sequenceArray[0]->next);			
+
+			ASSERT_EQ(sequenceArray[0], sequenceArray[7]->previous);
+			ASSERT_EQ(sequenceArray[20], sequenceArray[7]->next);			
+						
+			ASSERT_EQ(sequenceArray[7], sequenceArray[20]->previous);
+			ASSERT_FALSE(sequenceArray[20]->next);
+
+			//Lonely Aa
+			ASSERT_FALSE(sequenceArray[9]->previous);
+			ASSERT_FALSE(sequenceArray[9]->next);
+
+			//Pair cA
+			ASSERT_FALSE(sequenceArray[6]->previous);
+			ASSERT_EQ(sequenceArray[19], sequenceArray[6]->next);
+
+			ASSERT_EQ(sequenceArray[6], sequenceArray[19]->previous);
+			ASSERT_FALSE(sequenceArray[19]->next);
+
+			//Pair Ac
+			ASSERT_FALSE(sequenceArray[2]->previous);
+			ASSERT_EQ(sequenceArray[22], sequenceArray[2]->next);
+
+			ASSERT_EQ(sequenceArray[2], sequenceArray[22]->previous);
+			ASSERT_FALSE(sequenceArray[22]->next);
+
+			//Pair cc
+			ASSERT_FALSE(sequenceArray[4]->previous);
+			ASSERT_EQ(sequenceArray[16], sequenceArray[4]->next);
+
+			ASSERT_EQ(sequenceArray[4], sequenceArray[16]->previous);
+			ASSERT_EQ(sequenceArray[18], sequenceArray[16]->next);
+
+			ASSERT_EQ(sequenceArray[16], sequenceArray[18]->previous);
+			ASSERT_EQ(sequenceArray[24], sequenceArray[18]->next);
+
+			ASSERT_EQ(sequenceArray[18], sequenceArray[24]->previous);
+			ASSERT_EQ(sequenceArray[29], sequenceArray[24]->next);
+
+			ASSERT_EQ(sequenceArray[24], sequenceArray[29]->previous);
+			ASSERT_FALSE(sequenceArray[29]->next);
+
+			//Pair bb
+			ASSERT_FALSE(sequenceArray[12]->previous);
+			ASSERT_EQ(sequenceArray[14], sequenceArray[12]->next);
+
+			ASSERT_EQ(sequenceArray[12], sequenceArray[14]->previous);
+			ASSERT_EQ(sequenceArray[27], sequenceArray[14]->next);
+
+			ASSERT_EQ(sequenceArray[14], sequenceArray[27]->previous);
+			ASSERT_FALSE(sequenceArray[27]->next);
+
+			//Pair bc
+			ASSERT_FALSE(sequenceArray[15]->previous);
+			ASSERT_EQ(sequenceArray[28], sequenceArray[15]->next);
+
+			ASSERT_EQ(sequenceArray[15], sequenceArray[28]->previous);
+			ASSERT_FALSE(sequenceArray[28]->next);
+			
+
+			ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+		}
+
+
+		testcount++;
+	}
+	//manageHighPriorityList - end
+
+	//manageLowerPriorityLists - start
+	//Runs through all entries from second last to first
+	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	{
+		//manageOneList - start
+		while (priorityQueue[i])
+		{
+			//manageOneEntryOnList - start 
+			PairRecord * tmpPairRecord = nullptr;
+			long sequenceIndex = -1;
+
+			tmpPairRecord = priorityQueue[i];
+			sequenceIndex = tmpPairRecord->arrayIndexFirst;
+
+			//Remove current pair from priority queue
+			if (tmpPairRecord->nextPair)
+			{
+				priorityQueue[i] = tmpPairRecord->nextPair;
+				priorityQueue[i]->previousPair = nullptr;
+			}
+			else
+				priorityQueue[i] = nullptr;
+			tmpPairRecord->previousPair = nullptr;
+			tmpPairRecord->nextPair = nullptr;
+
+			//Find the count of the pair to be replaced and update counter for compaction
+			if (c.compact)
+			{
+				long idx = sequenceIndex;
+				long s1 = sequenceArray[idx]->symbol;
+				long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
+				cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+			}
+			//replaceAllPairs - start
+			long indexSymbolLeft = -1;
+			long indexSymbolRight = -1;
+			long indexSymbolPrevious = -1;
+			long indexSymbolNext = -1;
+
+			SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+
+
+			//First pass - start
+			long indexSymbolPreviousPrevious = -1;
+			long indexSymbolNextNext = -1;
+
+			long sequenceIndex2 = sequenceIndex;
+			SymbolRecord * nextSymbol2 = sequenceArray[sequenceIndex2];
+			bool skip2 = false;
+
+			do
+			{
+				indexSymbolLeft = -1;
+				indexSymbolRight = -1;
+				indexSymbolPrevious = -1;
+				indexSymbolPreviousPrevious = -1;
+				indexSymbolNext = -1;
+				indexSymbolNextNext = -1;
+
+				sequenceIndex2 = nextSymbol2->index;
+				//Store the pointer to the next symbol now, as the current symbol is changed as we go
+				nextSymbol2 = nextSymbol2->next;
+
+				algP.establishExtendedContext(
+					indexSymbolLeft,
+					indexSymbolRight,
+					indexSymbolPrevious,
+					indexSymbolPreviousPrevious,
+					indexSymbolNext,
+					indexSymbolNextNext,
+					sequenceIndex2,
+					sequenceArray);
+
+				if (indexSymbolLeft == 4)
+				{
+					int x = 0;
+				}
+				if (indexSymbolLeft == 24)
+				{
+					int x = 0;
+				}
+
+
+				//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
+				sequenceArray[indexSymbolLeft]->previous = nullptr;
+
+				//Left pair
+				algP.checkCountLeft(
+					indexSymbolPreviousPrevious,
+					indexSymbolPrevious,
+					indexSymbolLeft,
+					indexSymbolRight,
+					activePairs,
+					sequenceArray,
+					Symbols,
+					skip2,
+					c);
+
+				//Right pair
+				algP.checkCountRight(
+					indexSymbolLeft,
+					indexSymbolRight,
+					indexSymbolNext,
+					indexSymbolNextNext,
+					activePairs,
+					sequenceArray,
+					Symbols,
+					c);
+
+
+
+			} while (nextSymbol2);
+			//First pass - end
+
+			bool skip = false;
+
+			do
+			{
+				indexSymbolLeft = -1;
+				indexSymbolRight = -1;
+				indexSymbolPrevious = -1;
+				indexSymbolNext = -1;
+
+				sequenceIndex = nextSymbol->index;
+				//Store the pointer to the next symbol now, as the current symbol is changed as we go
+				nextSymbol = nextSymbol->next;
+
+				algP.establishContext(
+					indexSymbolLeft,
+					indexSymbolRight,
+					indexSymbolPrevious,
+					indexSymbolNext,
+					sequenceIndex,
+					sequenceArray);
+
+				
+
+				algP.replaceInstanceOfPair(
+					indexSymbolLeft,
+					indexSymbolRight,
+					indexSymbolPrevious,
+					indexSymbolNext,
+					sequenceArray,
+					dictionary,
+					activePairs,
+					priorityQueue,
+					Symbols,
+					skip,
+					c);
+
+			} while (nextSymbol);
+			//replaceAllPairs - end
+
+			//Compaction
+			if (c.compact)
+			{
+				if (cData.replaceCount > cData.compactTotal)
+				{
+					algP.compact(sequenceArray, activePairs, priorityQueue);
+					cData.updateCompactTotal();
+				}
+			}
+
+			//Pick new symbol
+			algP.newSymbol(Symbols);
+			//manageOneEntryOnList - end
+
+			//Assertion tests
+			if (testcount == 1)
+			{
+				//Check result of compacting cc
+				//pair Bc
+				ASSERT_FALSE(sequenceArray[4]->previous);
+				ASSERT_EQ(sequenceArray[24], sequenceArray[4]->next);				
+
+				ASSERT_EQ(sequenceArray[4], sequenceArray[24]->previous);
+				ASSERT_EQ(sequenceArray[29], sequenceArray[24]->next);
+
+				ASSERT_EQ(sequenceArray[24], sequenceArray[29]->previous);
+				ASSERT_FALSE(sequenceArray[29]->next);
+
+				//lonely BB
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_FALSE(sequenceArray[16]->next);
+
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_FALSE(sequenceArray[18]->next);
+
+				//Pair AB
+
+				ASSERT_FALSE(sequenceArray[2]->previous);
+				ASSERT_EQ(sequenceArray[22], sequenceArray[2]->next);
+
+				ASSERT_EQ(sequenceArray[2], sequenceArray[22]->previous);
+				ASSERT_FALSE(sequenceArray[22]->next);
+
+				//Pair AA
+				ASSERT_FALSE(sequenceArray[0]->previous);
+				ASSERT_EQ(sequenceArray[7], sequenceArray[0]->next);
+
+				ASSERT_EQ(sequenceArray[0], sequenceArray[7]->previous);
+				ASSERT_EQ(sequenceArray[20], sequenceArray[7]->next);
+
+				ASSERT_EQ(sequenceArray[7], sequenceArray[20]->previous);
+				ASSERT_FALSE(sequenceArray[20]->next);
+
+				//Lonely Aa
+				ASSERT_FALSE(sequenceArray[9]->previous);
+				ASSERT_FALSE(sequenceArray[9]->next);
+
+
+				//Pair bb
+				ASSERT_FALSE(sequenceArray[12]->previous);
+				ASSERT_EQ(sequenceArray[14], sequenceArray[12]->next);
+
+				ASSERT_EQ(sequenceArray[12], sequenceArray[14]->previous);
+				ASSERT_EQ(sequenceArray[27], sequenceArray[14]->next);
+
+				ASSERT_EQ(sequenceArray[14], sequenceArray[27]->previous);
+				ASSERT_FALSE(sequenceArray[27]->next);
+
+				//Pair bB
+				ASSERT_FALSE(sequenceArray[15]->previous);
+				ASSERT_EQ(sequenceArray[28], sequenceArray[15]->next);
+
+				ASSERT_EQ(sequenceArray[15], sequenceArray[28]->previous);
+				ASSERT_FALSE(sequenceArray[28]->next);
+
+
+
+
+
+				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			}
+
+			if (testcount == 2)
+			{
+				//Check result of compacting Bc
+				
+				//lonely BB
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_FALSE(sequenceArray[16]->next);
+
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_FALSE(sequenceArray[18]->next);
+
+				//Pair AA
+				ASSERT_FALSE(sequenceArray[0]->previous);
+				ASSERT_EQ(sequenceArray[7], sequenceArray[0]->next);
+
+				ASSERT_EQ(sequenceArray[0], sequenceArray[7]->previous);
+				ASSERT_EQ(sequenceArray[20], sequenceArray[7]->next);
+
+				ASSERT_EQ(sequenceArray[7], sequenceArray[20]->previous);
+				ASSERT_FALSE(sequenceArray[20]->next);
+
+				//Lonely Aa
+				ASSERT_FALSE(sequenceArray[9]->previous);
+				ASSERT_FALSE(sequenceArray[9]->next);
+
+
+				//Pair bb
+				ASSERT_FALSE(sequenceArray[12]->previous);
+				ASSERT_EQ(sequenceArray[14], sequenceArray[12]->next);
+
+				ASSERT_EQ(sequenceArray[12], sequenceArray[14]->previous);
+				ASSERT_EQ(sequenceArray[27], sequenceArray[14]->next);
+
+				ASSERT_EQ(sequenceArray[14], sequenceArray[27]->previous);
+				ASSERT_FALSE(sequenceArray[27]->next);
+
+				//Pair AC
+				ASSERT_FALSE(sequenceArray[2]->previous);
+				ASSERT_EQ(sequenceArray[22], sequenceArray[2]->next);
+				
+				ASSERT_EQ(sequenceArray[2], sequenceArray[22]->previous);
+				ASSERT_FALSE(sequenceArray[22]->next);
+
+
+
+
+
+
+				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			}
+
+			if (testcount == 3)
+			{
+				//Check result of compacting AA
+
+				//lonely BB
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_FALSE(sequenceArray[16]->next);
+
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_FALSE(sequenceArray[18]->next);
+
+				//Lonely Aa
+				ASSERT_FALSE(sequenceArray[9]->previous);
+				ASSERT_FALSE(sequenceArray[9]->next);
+
+
+				//Pair bb
+				ASSERT_FALSE(sequenceArray[12]->previous);
+				ASSERT_EQ(sequenceArray[14], sequenceArray[12]->next);
+
+				ASSERT_EQ(sequenceArray[12], sequenceArray[14]->previous);
+				ASSERT_EQ(sequenceArray[27], sequenceArray[14]->next);
+
+				ASSERT_EQ(sequenceArray[14], sequenceArray[27]->previous);
+				ASSERT_FALSE(sequenceArray[27]->next);
+
+				//Pair DC
+				ASSERT_FALSE(sequenceArray[0]->previous);
+				ASSERT_EQ(sequenceArray[20], sequenceArray[0]->next);
+
+				ASSERT_EQ(sequenceArray[0], sequenceArray[20]->previous);
+				ASSERT_FALSE(sequenceArray[20]->next);
+
+
+
+
+
+
+				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			}
+
+			if (testcount == 4)
+			{
+				//Check result of compacting bb
+
+				//lonely BB
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_FALSE(sequenceArray[16]->next);
+
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_FALSE(sequenceArray[18]->next);
+
+				//Lonely Aa
+				ASSERT_FALSE(sequenceArray[9]->previous);
+				ASSERT_FALSE(sequenceArray[9]->next);
+
+
+				//Pair DC
+				ASSERT_FALSE(sequenceArray[0]->previous);
+				ASSERT_EQ(sequenceArray[20], sequenceArray[0]->next);
+
+				ASSERT_EQ(sequenceArray[0], sequenceArray[20]->previous);
+				ASSERT_FALSE(sequenceArray[20]->next);
+
+
+
+
+
+				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			}
+
+			if (testcount == 5)
+			{
+				//Check result of compacting DC
+
+				//lonely BB
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_FALSE(sequenceArray[16]->next);
+
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_FALSE(sequenceArray[18]->next);
+
+				//Lonely Aa
+				ASSERT_FALSE(sequenceArray[9]->previous);
+				ASSERT_FALSE(sequenceArray[9]->next);
+
+
+
+
+				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+			}
+
+
+			testcount++;
+		}
+		//manageOneList - end
+	}
+	//manageLowerPriorityLists - end
+	//Run - end
+
+
+	string result = t.SequenceToString(sequenceArray);
+	//ASSERT_EQ(string2, result);
+
+	ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
+}
+
 void firstPassOnePair(
 	AlgorithmP & algP,
 	bool & skip,
@@ -1266,6 +2048,7 @@ void firstPassOnePair(
 	long & indexSymbolPrevious,
 	long & indexSymbolPreviousPrevious,
 	long & indexSymbolNext,
+	long & indexSymbolNextNext,
 	int & sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> & activePairs,
@@ -1279,29 +2062,14 @@ void firstPassOnePair(
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		sequenceIndex,
 		sequenceArray);
 
-	//Decrement count of xa
-	algP.decrementCountLeft(
-		indexSymbolPreviousPrevious,
-		indexSymbolPrevious,
-		indexSymbolLeft,
-		indexSymbolRight,
-		activePairs,
-		sequenceArray,
-		priorityQueue,
-		Symbols,
-		c);
-
-	//Decrement count of by
-	algP.decrementCountRight(
-		indexSymbolRight,
-		indexSymbolNext,
-		activePairs,
-		sequenceArray,
-		priorityQueue,
-		c);
+	bool activePairLeft = false;
+	if (indexSymbolPrevious >= 0)
+		activePairLeft = sequenceArray[indexSymbolPrevious]->next ||
+		sequenceArray[indexSymbolPrevious]->previous;
 
 	//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
 	sequenceArray[indexSymbolLeft]->previous = nullptr;
@@ -1321,7 +2089,9 @@ void firstPassOnePair(
 	//Right pair
 	algP.checkCountRight(
 		indexSymbolLeft,
+		indexSymbolRight,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		activePairs,
 		sequenceArray,
 		Symbols,
@@ -1344,6 +2114,9 @@ void secondPassOnePair(
 	long & Symbols,
 	Conditions & c)
 {
+	
+
+
 	algP.establishContext(
 		indexSymbolLeft,
 		indexSymbolRight,
@@ -1351,6 +2124,34 @@ void secondPassOnePair(
 		indexSymbolNext,
 		sequenceIndex,
 		sequenceArray);
+
+	//We must not increment a temporary pair
+	//aaaa -> Aaa, Aa is about to disappear so we must not count it
+	bool skipright = false;
+	if (sequenceArray[indexSymbolLeft]->next &&
+		sequenceArray[indexSymbolLeft]->next == sequenceArray[indexSymbolNext])
+		skipright = true;
+
+	//Decrement count of xa
+	algP.decrementCountLeft(
+		indexSymbolPrevious,
+		indexSymbolLeft,
+		indexSymbolRight,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		Symbols,
+		c);
+
+	//Decrement count of by
+	algP.decrementCountRight(
+		indexSymbolRight,
+		indexSymbolNext,
+		activePairs,
+		sequenceArray,
+		priorityQueue,
+		c);
+
 
 	//Replace xaby with xA_y
 	algP.replacePair(
@@ -1382,10 +2183,69 @@ void secondPassOnePair(
 		sequenceArray,
 		priorityQueue,
 		Symbols,
-		c);
+		c,
+		skipright);
 }
 
 TEST(testingRun, skiptestnew)
+{
+	using namespace google;
+	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	dense_hash_map<long, Pair> dictionary;
+	dictionary.set_empty_key(-1);
+	dictionary.set_deleted_key(-2);
+	long symbols(65);//A
+
+	Initializer init;
+	Conditions c;
+	AlgorithmP algP;
+	MyTest t;
+
+	string input1 = "skiptestnew.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	unordered_set<long> terminals;
+
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray,
+		terminals);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "aaaaaaaaaaaaaaaaaaaa";
+	string string2 = "CCB";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		dictionary,
+		activePairs,
+		priorityQueue,
+		terminals,
+		symbols,
+		c);
+
+	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+}
+
+TEST(testingRun, skiptestnew_explicit)
 {
 	using namespace google;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -1459,6 +2319,7 @@ TEST(testingRun, skiptestnew)
 	long indexSymbolPrevious = -1;
 	long indexSymbolPreviousPrevious = -1;
 	long indexSymbolNext = -1;
+	long indexSymbolNextNext = -1;
 
 	//First pair
 	index = 0;
@@ -1472,6 +2333,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1479,7 +2341,13 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	if (activePairs[symbols].empty())
+	{
+		activePairs[symbols].set_empty_key(-1);
+		activePairs[symbols].set_deleted_key(-2);
+	}
+
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 
 	ASSERT_FALSE(sequenceArray[index]->previous);
@@ -1499,6 +2367,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1506,7 +2375,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_TRUE(activePairs[symbols][symbols].seenOnce);
 
@@ -1527,6 +2396,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1534,7 +2404,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_TRUE(activePairs[symbols][symbols].seenOnce);
 
@@ -1555,6 +2425,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1562,7 +2433,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1586,6 +2457,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1593,7 +2465,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1616,6 +2488,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1623,7 +2496,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1648,6 +2521,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1655,7 +2529,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1678,6 +2552,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1685,7 +2560,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1710,6 +2585,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1717,7 +2593,7 @@ TEST(testingRun, skiptestnew)
 		symbols,
 		c);
 
-	ASSERT_TRUE(activePairs[symbols][97].seenOnce);
+	ASSERT_FALSE(activePairs[symbols][97].seenOnce);
 	ASSERT_FALSE(activePairs[symbols][97].pairRecord);
 	ASSERT_FALSE(activePairs[symbols][symbols].seenOnce);
 	ASSERT_TRUE(activePairs[symbols][symbols].pairRecord);
@@ -1740,6 +2616,7 @@ TEST(testingRun, skiptestnew)
 		indexSymbolPrevious,
 		indexSymbolPreviousPrevious,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		index,
 		sequenceArray,
 		activePairs,
@@ -1863,6 +2740,14 @@ TEST(testingRun, skiptestnew)
 
 	ASSERT_TRUE(skip);
 
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 17; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
+
+
 	//Third pair
 	index = 4;
 	nextSymbol = sequenceArray[index];
@@ -1892,6 +2777,13 @@ TEST(testingRun, skiptestnew)
 	ASSERT_FALSE(sequenceArray[index]->next);
 
 	ASSERT_FALSE(skip);
+
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 17; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
 
 	//Fourth pair
 	index = 6;
@@ -1924,6 +2816,13 @@ TEST(testingRun, skiptestnew)
 
 	ASSERT_TRUE(skip);
 
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 13; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
+
 	//Fifth pair
 	index = 8;
 	nextSymbol = sequenceArray[index];
@@ -1951,6 +2850,13 @@ TEST(testingRun, skiptestnew)
 	ASSERT_EQ(sequenceArray[index + 2], sequenceArray[index + 1]->next);
 
 	ASSERT_FALSE(skip);
+
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 13; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
 
 	//Sixth pair
 	index = 10;
@@ -1983,6 +2889,13 @@ TEST(testingRun, skiptestnew)
 
 	ASSERT_TRUE(skip);
 
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 9; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
+
 	//Seventh pair
 	index = 12;
 	nextSymbol = sequenceArray[index];
@@ -2010,6 +2923,13 @@ TEST(testingRun, skiptestnew)
 	ASSERT_EQ(sequenceArray[index + 2], sequenceArray[index + 1]->next);
 
 	ASSERT_FALSE(skip);
+
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 9; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
 
 	//Eigth pair
 	index = 14;
@@ -2042,6 +2962,13 @@ TEST(testingRun, skiptestnew)
 
 	ASSERT_TRUE(skip);
 
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 5; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
+
 	//Ninth pair
 	index = 16;
 	nextSymbol = sequenceArray[index];
@@ -2069,6 +2996,13 @@ TEST(testingRun, skiptestnew)
 	ASSERT_EQ(sequenceArray[index + 2], sequenceArray[index + 1]->next);
 
 	ASSERT_FALSE(skip);
+
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 5; i = i + 4)
+	{
+		ASSERT_FALSE(sequenceArray[i]->previous);
+		ASSERT_FALSE(sequenceArray[i]->next);
+	}
 
 	//Tenth pair
 	index = 18;
@@ -2101,31 +3035,68 @@ TEST(testingRun, skiptestnew)
 
 	ASSERT_TRUE(skip);
 
-	//TODO: Setup tests after second pass is done
+	
 	//Checks after second pass done
 	//Sequence array
 	index = 0;
-	ASSERT_FALSE(sequenceArray[index]->previous);
-	ASSERT_EQ(sequenceArray[index + 2], sequenceArray[index]->next);
 
-	for (int i = 1; i < sequenceArray.size() - 2; i = i + 2)
+	//Check that empty symbols are threaded correctly
+	for (int i = 1; i < sequenceArray.size() - 1; i = i + 2)
+	{
+		ASSERT_EQ(sequenceArray[i - 1], sequenceArray[i]->previous);
+		ASSERT_EQ(sequenceArray[i + 1], sequenceArray[i]->next);
+	}
+	ASSERT_EQ(sequenceArray[18], sequenceArray[19]->previous);
+	ASSERT_FALSE(sequenceArray[19]->next);
+
+	//Check that right symbols in pairs do not have pointers
+	for (int i = 2; i < sequenceArray.size() - 1; i = i + 4)
 	{
 		ASSERT_FALSE(sequenceArray[i]->previous);
 		ASSERT_FALSE(sequenceArray[i]->next);
 	}
 
-	for (int i = 2; i < sequenceArray.size() - 4; i = i + 2)
+	//Check that pointers between pairs are correct
+	ASSERT_FALSE(sequenceArray[0]->previous);
+	ASSERT_EQ(sequenceArray[4], sequenceArray[0]->next);
+	for (int i = 4; i < sequenceArray.size() - 4; i = i + 4)
 	{
-		if (i == 8)
-			ASSERT_EQ(sequenceArray[i - 4], sequenceArray[i]->previous);
-		else if (i == 12)
-			ASSERT_EQ(sequenceArray[i - 4], sequenceArray[i]->previous);
-		else if (i == 16)
-			ASSERT_EQ(sequenceArray[i - 4], sequenceArray[i]->previous);
-		else
-			ASSERT_FALSE(sequenceArray[i]->previous);
-		ASSERT_EQ(sequenceArray[i + 2], sequenceArray[i]->next);
+		ASSERT_EQ(sequenceArray[i - 4], sequenceArray[i]->previous);
+		ASSERT_EQ(sequenceArray[i + 4], sequenceArray[i]->next);
 	}
+	ASSERT_EQ(sequenceArray[12], sequenceArray[16]->previous);
+	ASSERT_FALSE(sequenceArray[16]->next);
+
+	//Check that symbols have correctly updated
+	for (int i = 0; i < sequenceArray.size(); i++)
+	{
+		if (i % 2 == 0)
+		{
+			ASSERT_EQ(symbols, sequenceArray[i]->symbol);
+		}
+		else
+			ASSERT_EQ(0, sequenceArray[i]->symbol);
+	}
+
+	//Check that the priority queue has been correctly populated
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		if (i == priorityQueue.size() - 1)
+			ASSERT_TRUE(priorityQueue[i]);
+		else
+			ASSERT_FALSE(priorityQueue[i]);
+	}
+
+	//Check that the active pairs record is correct
+	ASSERT_EQ(5, activePairs[symbols][symbols].pairRecord->count);
+	ASSERT_EQ(0, activePairs[symbols][symbols].pairRecord->arrayIndexFirst);
+
+
+	//Round 2 - 
+
+
+
+
 
 	string result = t.SequenceToString(sequenceArray);
 

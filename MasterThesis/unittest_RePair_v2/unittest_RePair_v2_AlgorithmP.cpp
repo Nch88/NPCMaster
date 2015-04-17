@@ -1228,7 +1228,7 @@ TEST(incrementCountRight, firstTimeSeen)
 	long symbols = 65;
 	Conditions c;
 
-	long left = 1, next = 3;
+	long left = 1, right = 2, next = 3, nextnext = 3;
 
 	long symbol;
 	long index;
@@ -1239,7 +1239,7 @@ TEST(incrementCountRight, firstTimeSeen)
 	sequenceArray[1]->next = sequenceArray[4];
 	sequenceArray[4]->previous = sequenceArray[1];
 
-	algo.checkCountRight(left, next, activePairs, sequenceArray, symbols, c);
+	algo.checkCountRight(left, right, next, nextnext, activePairs, sequenceArray, symbols, c);
 	if (activePairs[65].empty())
 	{
 		activePairs[65].set_empty_key(-1);
@@ -1321,7 +1321,8 @@ TEST(incrementCountRight, secondTimeSeen)
 	Conditions c;
 
 	long leftFirst = 1, nextFirst = 3;
-	long left = 4, next = 6;
+	long left = 4, right = 5, next = 6, nextnext = -1;
+	bool skipright = false;
 
 	long symbol;
 	long index;
@@ -1336,9 +1337,9 @@ TEST(incrementCountRight, secondTimeSeen)
 	}
 	activePairs[65][100].seenOnce = true;
 
-	algo.checkCountRight(left, next, activePairs, sequenceArray, symbols, c);
-	algo.incrementCountRight(leftFirst, nextFirst, activePairs, sequenceArray, priorityQueue, symbols, c);
-	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
+	algo.checkCountRight(left, right, next, nextnext, activePairs, sequenceArray, symbols, c);
+	algo.incrementCountRight(leftFirst, nextFirst, activePairs, sequenceArray, priorityQueue, symbols, c, skipright);
+	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c, skipright);
 
 	//Check that seenOnce was reset
 	ASSERT_FALSE(activePairs[65][100].seenOnce);
@@ -1426,22 +1427,23 @@ TEST(incrementCountRight, thirdTimeSeen)
 	long symbols = 65;
 	Conditions c;
 
-	long leftFirst = 1, nextFirst = 3;
-	long leftSecond = 4, nextSecond = 6;
-	long left = 7, next = 9;
+	long leftFirst = 1, rightFirst = 2, nextFirst = 3, nextnextFirst = 4;
+	long leftSecond = 4, rightSecond = 5, nextSecond = 6, nextnextSecond = 7;
+	long left = 7, right = 8, next = 9, nextnext = -1;
 	bool skip = false;
+	bool skipright = false;
 
 	long a[] = { 99, 65, 0, 100, 65, 0, 100, 65, 0, 100 };
 	mytest.buildSequenceArray(sequenceArray, a, 10);
 
 
-	algo.checkCountRight(leftFirst, nextFirst, activePairs, sequenceArray, symbols, c);
-	algo.checkCountRight(leftSecond, nextSecond, activePairs, sequenceArray, symbols, c);
-	algo.checkCountRight(left, next, activePairs, sequenceArray, symbols, c);
+	algo.checkCountRight(leftFirst, rightFirst, nextFirst, nextnextFirst, activePairs, sequenceArray, symbols, c);
+	algo.checkCountRight(leftSecond, rightSecond, nextSecond, nextnextSecond, activePairs, sequenceArray, symbols, c);
+	algo.checkCountRight(left, right, next, nextnext, activePairs, sequenceArray, symbols, c);
 
-	algo.incrementCountRight(leftFirst, nextFirst, activePairs, sequenceArray, priorityQueue, symbols, c);
-	algo.incrementCountRight(leftSecond, nextSecond, activePairs, sequenceArray, priorityQueue, symbols, c);
-	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c);
+	algo.incrementCountRight(leftFirst, nextFirst, activePairs, sequenceArray, priorityQueue, symbols, c, skipright);
+	algo.incrementCountRight(leftSecond, nextSecond, activePairs, sequenceArray, priorityQueue, symbols, c, skipright);
+	algo.incrementCountRight(left, next, activePairs, sequenceArray, priorityQueue, symbols, c, skipright);
 
 	//Check that seenOnce was reset
 	ASSERT_FALSE(activePairs[65][100].seenOnce);
@@ -1823,7 +1825,6 @@ TEST(decrementCountLeft, hasPrevious)
 	ASSERT_EQ(nullptr, priorityQueue[0]);
 
 	algP.decrementCountLeft(
-		indexSymbolPreviousPrevious,
 		indexSymbolPrevious,
 		indexSymbolLeft,
 		indexSymbolRight,
@@ -1942,7 +1943,6 @@ TEST(decrementCountLeft, hasPreviousNotActivePair)
 	ASSERT_EQ(tracker->pairRecord, priorityQueue[0]);
 
 	algP.decrementCountLeft(
-		indexSymbolPreviousPrevious,
 		indexSymbolPrevious,
 		indexSymbolLeft,
 		indexSymbolRight,
@@ -2680,8 +2680,10 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	pairRecord2->arrayIndexFirst = 1;
 	priorityQueue[0] = pairRecord2;
 
+	bool activePairLeft = sequenceArray[fstPairRight->index]->next ||
+		sequenceArray[fstPairRight->index]->previous;
+
 	algP.decrementCountLeft(
-		fstPairLeft->index,
 		fstPairRight->index,
 		scdPairLeft->index,
 		scdPairRight->index,
@@ -2712,7 +2714,9 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 
 	algP.checkCountRight(
 		scdPairLeft->index,
+		scdPairRight->index,
 		trdPairLeft->index,
+		trdPairRight->index,
 		activePairs,
 		sequenceArray,
 		symbols,
@@ -2789,6 +2793,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	long indexSymbolPrevious = 19;
 	long indexSymbolPreviousPrevious = 18;
 	long indexSymbolNext = 22;
+	long indexSymbolNextNext = 23;
 
 	if (activePairs[sequenceArray[indexSymbolLeft]->symbol].empty())
 	{
@@ -2842,8 +2847,10 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	ASSERT_TRUE(left);
 	ASSERT_TRUE(right);
 
+	bool activePairLeft = sequenceArray[indexSymbolPrevious]->next ||
+		sequenceArray[indexSymbolPrevious]->previous;
+
 	algP.decrementCountLeft(
-		indexSymbolPreviousPrevious,
 		indexSymbolPrevious,
 		indexSymbolLeft,
 		indexSymbolRight,
@@ -2874,7 +2881,9 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 
 	algP.checkCountRight(
 		indexSymbolLeft,
+		indexSymbolRight,
 		indexSymbolNext,
+		indexSymbolNextNext,
 		activePairs,
 		sequenceArray,
 		symbols,
@@ -3133,6 +3142,7 @@ TEST(testingRun, diddy_explicit)
 			long indexSymbolPrevious = -1;
 			long indexSymbolPreviousPrevious = -1;
 			long indexSymbolNext = -1;
+			long indexSymbolNextNext = -1;
 
 			long oldSequenceIndex = sequenceIndex;
 
@@ -3167,27 +3177,6 @@ TEST(testingRun, diddy_explicit)
 					sequenceIndex,
 					sequenceArray);
 
-				//Decrement count of xa
-				algP.decrementCountLeft(
-					indexSymbolPreviousPrevious,
-					indexSymbolPrevious,
-					indexSymbolLeft,
-					indexSymbolRight,
-					activePairs,
-					sequenceArray,
-					priorityQueue,
-					Symbols,
-					c);
-
-				//Decrement count of by
-				algP.decrementCountRight(
-					indexSymbolRight,
-					indexSymbolNext,
-					activePairs,
-					sequenceArray,
-					priorityQueue,
-					c);
-
 
 				//Left pair
 				algP.checkCountLeft(
@@ -3204,7 +3193,9 @@ TEST(testingRun, diddy_explicit)
 				//Right pair
 				algP.checkCountRight(
 					indexSymbolLeft,
+					indexSymbolRight,
 					indexSymbolNext,
+					indexSymbolNextNext,
 					activePairs,
 					sequenceArray,
 					Symbols,
