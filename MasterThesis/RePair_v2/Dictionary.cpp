@@ -202,8 +202,6 @@ void Dictionary::switchToOrdinalNumbers(
 
 
 
-
-
 void Dictionary::decodeSymbol(
 	unsigned long  symbolIndex, 
 	vector<CompactPair> &decodedPairs,

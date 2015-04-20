@@ -2,19 +2,16 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-/*
+
 TEST(manageOneList, oneEntry)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -38,8 +35,7 @@ TEST(manageOneList, oneEntry)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -66,15 +62,12 @@ TEST(manageOneList, oneEntry)
 TEST(manageOneList, multipleEntries)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -98,8 +91,7 @@ TEST(manageOneList, multipleEntries)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -126,7 +118,7 @@ TEST(manageOneList, multipleEntries)
 TEST(replaceAllPairsThorough, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -134,7 +126,7 @@ TEST(replaceAllPairsThorough, diddy)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long Symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -159,8 +151,7 @@ TEST(replaceAllPairsThorough, diddy)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -283,12 +274,12 @@ TEST(replaceAllPairsThorough, diddy)
 			indexSymbolNext,
 			activePairs,
 			sequenceArray,
-			Symbols,
+			symbols,
 			c);
 
 		if (count == 0)
 		{//.d to A at 7
-			ASSERT_EQ(65, sequenceArray[7]->symbol);
+			ASSERT_EQ(symbols, sequenceArray[7]->symbol);
 			ASSERT_EQ(0, sequenceArray[8]->symbol);
 			ASSERT_EQ(nullptr, sequenceArray[7]->next);
 
@@ -298,7 +289,7 @@ TEST(replaceAllPairsThorough, diddy)
 		if (count == 1)
 		{//.d to A at 14
 			int i = 14;
-			ASSERT_EQ(65, sequenceArray[i]->symbol);
+			ASSERT_EQ(symbols, sequenceArray[i]->symbol);
 			ASSERT_EQ(0, sequenceArray[i+1]->symbol);
 			ASSERT_EQ(nullptr, sequenceArray[i]->next);
 			ASSERT_EQ(nullptr, sequenceArray[i]->previous);
@@ -309,7 +300,7 @@ TEST(replaceAllPairsThorough, diddy)
 		if (count == 2)
 		{//.d to A at 20
 			int i = 20;
-			ASSERT_EQ(65, sequenceArray[i]->symbol);
+			ASSERT_EQ(symbols, sequenceArray[i]->symbol);
 			ASSERT_EQ(0, sequenceArray[i + 1]->symbol);
 			ASSERT_EQ(nullptr, sequenceArray[i]->next);
 			ASSERT_EQ(nullptr, sequenceArray[i]->previous);
@@ -326,26 +317,26 @@ TEST(replaceAllPairsThorough, diddy)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			Symbols,
+			symbols,
 			skip,
 			c);
 
 		if (count == 0)
 		{//gA at 6
-			ASSERT_EQ(true, activePairs[103][65].seenOnce);
-			ASSERT_EQ(6, activePairs[103][65].indexFirst);
-			ASSERT_EQ(nullptr, activePairs[103][65].pairRecord);
+			ASSERT_EQ(true, activePairs[103][symbols].seenOnce);
+			ASSERT_EQ(6, activePairs[103][symbols].indexFirst);
+			ASSERT_EQ(nullptr, activePairs[103][symbols].pairRecord);
 		}
 		if (count == 1)
 		{//hA at 13
-			ASSERT_EQ(true, activePairs[104][65].seenOnce);
-			ASSERT_EQ(13, activePairs[104][65].indexFirst);
-			ASSERT_EQ(nullptr, activePairs[104][65].pairRecord);
+			ASSERT_EQ(true, activePairs[104][symbols].seenOnce);
+			ASSERT_EQ(13, activePairs[104][symbols].indexFirst);
+			ASSERT_EQ(nullptr, activePairs[104][symbols].pairRecord);
 		}
 		if (count == 2)
 		{//yA at 19
 			int left = 121;
-			int right = 65;
+			int right = symbols;
 			ASSERT_EQ(true, activePairs[left][right].seenOnce);
 			ASSERT_EQ(19, activePairs[left][right].indexFirst);
 			ASSERT_EQ(nullptr, activePairs[left][right].pairRecord);
@@ -358,30 +349,30 @@ TEST(replaceAllPairsThorough, diddy)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			Symbols,
+			symbols,
 			c);
 
 		if (count == 0)
 		{//Ao at 7
-			ASSERT_EQ(true, activePairs[65][111].seenOnce);
-			ASSERT_EQ(7, activePairs[65][111].indexFirst);
-			ASSERT_EQ(nullptr, activePairs[65][111].pairRecord);
+			ASSERT_EQ(true, activePairs[symbols][111].seenOnce);
+			ASSERT_EQ(7, activePairs[symbols][111].indexFirst);
+			ASSERT_EQ(nullptr, activePairs[symbols][111].pairRecord);
 		}
 		if (count == 1)
 		{//Ai at 14
-			ASSERT_EQ(true, activePairs[65][105].seenOnce);
-			ASSERT_EQ(14, activePairs[65][105].indexFirst);
-			ASSERT_EQ(nullptr, activePairs[65][105].pairRecord);
+			ASSERT_EQ(true, activePairs[symbols][105].seenOnce);
+			ASSERT_EQ(14, activePairs[symbols][105].indexFirst);
+			ASSERT_EQ(nullptr, activePairs[symbols][105].pairRecord);
 		}
 		if (count == 2)
 		{//Ai at 20
-			int left = 65;
+			int left = symbols;
 			int right = 105;
 			ASSERT_EQ(false, activePairs[left][right].seenOnce);
 			//ASSERT_EQ(-1, activePairs[left][right].indexFirst);
 			ASSERT_EQ(2, activePairs[left][right].pairRecord->count);
 			//Set to Ai
-			tmpPairRecord0 = activePairs[65][105].pairRecord;
+			tmpPairRecord0 = activePairs[symbols][105].pairRecord;
 			ASSERT_TRUE(t.inPriorityQueueAtPosition(tmpPairRecord0, priorityQueue, 0));
 		}
 		
@@ -402,7 +393,7 @@ TEST(replaceAllPairsThorough, diddy)
 TEST(testingLowerPriority, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -410,7 +401,7 @@ TEST(testingLowerPriority, diddy)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -435,8 +426,7 @@ TEST(testingLowerPriority, diddy)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -486,7 +476,7 @@ TEST(testingLowerPriority, diddy)
 TEST(testingLowerPriority, duplicates)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -494,7 +484,7 @@ TEST(testingLowerPriority, duplicates)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -519,8 +509,7 @@ TEST(testingLowerPriority, duplicates)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -568,7 +557,7 @@ TEST(testingLowerPriority, duplicates)
 TEST(testingRun, duplicates2)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -576,7 +565,7 @@ TEST(testingRun, duplicates2)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -601,8 +590,7 @@ TEST(testingRun, duplicates2)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -617,7 +605,6 @@ TEST(testingRun, duplicates2)
 		sequenceArray,
 		activePairs,
 		priorityQueue,
-		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -628,7 +615,7 @@ TEST(testingRun, duplicates2)
 TEST(testingRun, duplicates3)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -636,7 +623,7 @@ TEST(testingRun, duplicates3)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -661,8 +648,7 @@ TEST(testingRun, duplicates3)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -677,7 +663,6 @@ TEST(testingRun, duplicates3)
 		sequenceArray,
 		activePairs,
 		priorityQueue,
-		terminals,
 		symbols,
 		c);
 	string result = t.SequenceToString(sequenceArray);
@@ -689,7 +674,7 @@ TEST(testingRun, duplicates3)
 TEST(testingRun, duplicatesLong)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -697,7 +682,7 @@ TEST(testingRun, duplicatesLong)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -722,8 +707,7 @@ TEST(testingRun, duplicatesLong)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -738,7 +722,6 @@ TEST(testingRun, duplicatesLong)
 		sequenceArray,
 		activePairs,
 		priorityQueue,
-		terminals,
 		symbols,
 		c);
 	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
@@ -749,7 +732,7 @@ TEST(testingRun, duplicatesLong)
 TEST(testingRun, duplicatesLong3)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -757,7 +740,7 @@ TEST(testingRun, duplicatesLong3)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -782,8 +765,7 @@ TEST(testingRun, duplicatesLong3)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -798,7 +780,6 @@ TEST(testingRun, duplicatesLong3)
 		sequenceArray,
 		activePairs,
 		priorityQueue,
-		terminals,
 		symbols,
 		c);
 	string result = t.SequenceToString(sequenceArray);
@@ -810,7 +791,7 @@ TEST(testingRun, duplicatesLong3)
 TEST(crashPossiblePointerError, 264a)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
@@ -818,7 +799,7 @@ TEST(crashPossiblePointerError, 264a)
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -843,8 +824,7 @@ TEST(crashPossiblePointerError, 264a)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -952,4 +932,3 @@ TEST(crashPossiblePointerError, 264a)
 	}
 	ASSERT_EQ(string6, t.SequenceToString(sequenceArray));
 }
-*/

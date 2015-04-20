@@ -63,6 +63,22 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 	writeChunk(myfile, bitsToWrite);
 }
 
+void Outputter::writeDictionaryChunk(ofstream &myfile, string &inchunk, bitset<32> *&bitsToWrite)
+{
+	//DEBUG
+	string chunk = inchunk.substr(0, 32);
+	inchunk = inchunk.substr(32,string::npos);
+	for (int i = 0; i < 32; i++)
+	{
+		if (chunk[i] == '1')
+			bitsToWrite->set(31 - i, true);
+		else
+			bitsToWrite->set(31 - i, false);
+	}
+
+	writeChunk(myfile, bitsToWrite);
+}
+
 void Outputter::huffmanEncoding(
 	string outFile,
 	ofstream &myfile,
@@ -244,8 +260,7 @@ void Outputter::dictionary(
 	bool firstBlock)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
-	
-	
+
 	string stringToWrite, rest;
 	rest.assign(output);
 
@@ -273,6 +288,69 @@ void Outputter::dictionary(
 
 	delete bitsToWrite;
 }
+
+void Outputter::dictionary2(
+	string outFile,
+	ofstream &myfile,
+	vector<vector<unsigned long *>>& pairVectors,
+	vector<unsigned long >& terminalVector,
+	bool firstBlock)
+{
+	bitset<32> *bitsToWrite = new bitset<32>();
+	GammaCode gc;
+	string output;
+
+	//Set terminal header
+	output = gc.getGammaCode(terminalVector.size());
+
+	//Write terminals
+	for (int i = 0; i < terminalVector.size(); ++i)
+	{
+		output += gc.getGammaCode(terminalVector[i]);
+		while (output.size() >= 32)
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+	}
+
+	//Then a header w/ number of generations
+	output += gc.getGammaCode(pairVectors.size());
+	while (output.size() >= 32)
+		writeDictionaryChunk(myfile, output, bitsToWrite);
+
+	//Then for each generation
+	int maxIndex = terminalVector.size() - 1;
+	for (int gen = 0; gen < pairVectors.size(); ++gen)
+	{
+		//Header is size of generation + max possible index found in that generation
+		output += gc.getGammaCode(pairVectors[gen].size()) + gc.getGammaCode(maxIndex);
+		while (output.size() >= 32)
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+
+		//Write first left element
+		output += gc.getGammaCode(pairVectors[gen][0][0]);
+		while (output.size() >= 32)
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+
+		//Write differences between remaining lefts
+		for (int i = 1; i < pairVectors[gen].size(); ++i)
+		{
+			output += gc.getGammaCode((pairVectors[gen][i][0] - pairVectors[gen][i-1][0]));
+			while (output.size() >= 32)
+				writeDictionaryChunk(myfile, output, bitsToWrite);
+		}
+
+		//Write rights
+		for (int i = 0; i < pairVectors[gen].size(); ++i)
+		{
+			output += gc.getGammaCode(pairVectors[gen][i][1]);
+			while (output.size() >= 32)
+				writeDictionaryChunk(myfile, output, bitsToWrite);
+		}
+
+		//Increase maxindex by the size of the generation
+		maxIndex += pairVectors[gen].size();
+	}
+}
+
 
 void Outputter::all(
 	string filename,
@@ -325,40 +403,28 @@ void Outputter::all(
 
 	//Encode generations for dictionary
 	Dictionary finalDict;
-	vector<vector<CompactPair>> pairs;
-	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	dense_hash_map<unsigned long , unsigned long > terminalIndices;
-	terminalIndices.set_empty_key(-1);
-	terminalIndices.set_deleted_key(-2);
-	vector<unsigned long > terminalVector;
+	dense_hash_map<unsigned long, unsigned long> StG;
+	StG.set_empty_key(-1);
+	vector<vector<unsigned long*>> pairs;
+	vector<unsigned long> terminalVector;
 
-	/*finalDict.generateCompactDictionary(
-		dictionary,
-		terminals,
-		terminalVector,
-		pairs,
-		indices,
-		terminalIndices);*/	
+	finalDict.createSupportStructures(sequenceArray, terminals, StG, pairs);
+
+	finalDict.switchToOrdinalNumbers(terminals, StG, pairs, terminalVector);
 
 	//Write dictionary to file
 	GammaCode gc;
 	string output = "";
 
-	gc.makeFinalString(
-		pairs,
-		terminalVector,
-		output);
-
-	this->dictionary(
+	this->dictionary2(
 		compressedDictionaryName,		
 		ofs_dictionary,
-		output,
+		pairs,
+		terminalVector,
 		firstBlock);
 
 	//Write Huffman dictionary to file
-	this->huffmanDictionary(
+	/*this->huffmanDictionary(
 		compressedDictionaryName,
 		ofs_dictionary,
 		maxLength,
@@ -366,7 +432,7 @@ void Outputter::all(
 		numl,
 		indices,
 		terminalIndices,
-		huffmanToSymbol);
+		huffmanToSymbol);*/
 
 	//DEBUG
 	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);

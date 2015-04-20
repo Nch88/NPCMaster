@@ -2842,7 +2842,7 @@ TEST(replaceAllInstancesOfPair, diddy)
 //	dense_hash_map<unsigned long , Pair> dictionary;
 //	dictionary.set_empty_key(-1);
 //	dictionary.set_deleted_key(-2);
-//	unsigned long symbols(65);//A
+//	unsigned long symbols;
 //
 //	Initializer init;
 //	Conditions c;

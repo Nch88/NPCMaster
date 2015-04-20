@@ -9,6 +9,7 @@ public:
 	string Outputter::addFilenameEnding(string inputFile, string addName);
 	void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite);
 	void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite);
+	void Outputter::writeDictionaryChunk(ofstream &myfile, string &inchunk, bitset<32> *&bitsToWrite);
 	void Outputter::huffmanEncoding(
 		string outFile,
 		ofstream &myfile,
@@ -32,6 +33,12 @@ public:
 		string outfile,
 		ofstream &myfile,
 		string& output,
+		bool firstBlock);
+	void Outputter::dictionary2(
+		std::string outFile,
+		std::ofstream &myfile,
+		std::vector<std::vector<unsigned long *>>& pairVectors,
+		vector<unsigned long >& terminalVector,
 		bool firstBlock);
 	void Outputter::all(
 		string filename,
