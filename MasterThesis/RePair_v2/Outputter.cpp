@@ -339,15 +339,27 @@ void Outputter::dictionary2(
 		}
 
 		//Write rights
+		int binarySize = 1 + floor(log2(maxIndex));
 		for (int i = 0; i < pairVectors[gen].size(); ++i)
 		{
-			output += gc.getGammaCode(pairVectors[gen][i][1]);
+			string binary = gc.getBinaryCode(pairVectors[gen][i][1]);
+			while (binary.size() < binarySize)
+				binary = '0' + binary;
+			output += binary;
 			while (output.size() >= 32)
 				writeDictionaryChunk(myfile, output, bitsToWrite);
 		}
 
 		//Increase maxindex by the size of the generation
 		maxIndex += pairVectors[gen].size();
+	}
+	if (output.size() != 0)
+	{
+		while (output.size() < 32)
+		{
+			output += '0';
+		}
+		writeDictionaryChunk(myfile, output, bitsToWrite);						//Write the last gamma codes and possibly padding
 	}
 }
 

@@ -100,13 +100,19 @@ int bSearch(vector<unsigned long >& terminals, int first, int last, unsigned lon
 	return -(first + 1);    // failed to find key
 }
 
-int bSearchP(vector<unsigned long *>& terminals, int first, int last, unsigned long * key)
+bool greaterP(unsigned long* a, unsigned long* b)
+{
+	//True if the pair at a comes after the pair at b
+	return (a[0] > b[0] || (a[0] == b[0] && a[1] > b[1]));
+}
+
+int bSearchP(vector<unsigned long *>& genVector, int first, int last, unsigned long * key)
 {
 	while (first <= last) {
 		int mid = (first + last) / 2;  // compute mid point.
-		if (key > terminals[mid])
+		if (greaterP(key,genVector[mid]))
 			first = mid + 1;  // repeat search in top half.
-		else if (key < terminals[mid])
+		else if (greaterP(genVector[mid],key))
 			last = mid - 1; // repeat search in bottom half.
 		else
 			return mid;     // found it. return position /////

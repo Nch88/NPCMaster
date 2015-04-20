@@ -4,19 +4,16 @@
 using namespace std;
 
 MyTest mtest;
-/*
+
 TEST(compaction, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -33,15 +30,14 @@ TEST(compaction, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -56,7 +52,15 @@ TEST(compaction, diddy)
 
 	string result = mtest.SequenceToCompleteString(sequenceArray);
 
-	ASSERT_EQ(expected, result);
+	for (int i = 0; i < expected.size(); ++i)
+	{
+		if (expected[i] == 'A')
+			ASSERT_EQ(symbols, sequenceArray[i]->symbol);
+		else if (expected[i] == '_')
+			ASSERT_EQ(0, sequenceArray[i]->symbol);
+		else
+			ASSERT_EQ(expected[i], sequenceArray[i]->symbol);
+	}
 	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 
 	//Setup complete, we can now test compaction
@@ -65,86 +69,89 @@ TEST(compaction, diddy)
 	expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', 'o', '.', 'w', 'a', 'h', 'A', 'i', 'd', 'd', 'y', 'A', 'i', 'd', 'd', 'y', 'A', 'u', 'm', 'A', 'i', 'd', 'd', 'y', 'A', 'o'};
 	result = mtest.SequenceToCompleteString(sequenceArray);
 
-	ASSERT_EQ(expected, result);
-	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
-}
-
-TEST(compaction, compactingAfterEachNewSymbol_diddy)
-{
-	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
-
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-
-	string input1 = "diddy.txt";
-
-	bool skip = false;
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-
-	string filename = input1;
-	ifstream file(filename);
-
-	unordered_set<long> terminals;
-
-	init.SequenceArray(
-		c,
-		file,
-		blockSize,
-		activePairs,
-		sequenceArray,
-		terminals);
-
-	priorityQueueSize = sqrt(sequenceArray.size());
-	priorityQueue.resize(priorityQueueSize);
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-
-	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
-	string diddy3 = "singingAo.wahAiddBiddBumAiddBo";
-
-	int count = 0;
-
-	//Compaction counters
-	CompactionData cData(1);
-
-	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	for (int i = 0; i < expected.size(); ++i)
 	{
-		while (priorityQueue[i])
-		{
-			algP.manageOneEntryOnList(
-				i,
-				sequenceArray,
-				activePairs,
-				priorityQueue,
-				symbols,
-				cData,
-				c);
-
-			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
-			algP.compact(sequenceArray, activePairs, priorityQueue);
-			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
-		}
-
-		ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+		if (expected[i] == 'A')
+			ASSERT_EQ(symbols, sequenceArray[i]->symbol);
+		else
+			ASSERT_EQ(expected[i],sequenceArray[i]->symbol);
 	}
-	string s = mtest.SequenceToString(sequenceArray);
-	int x = 0;
 
 	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 }
+
+//TEST(compaction, compactingAfterEachNewSymbol_diddy)
+//{
+//	using namespace google;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	unsigned long symbols;
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//
+//	string input1 = "diddy.txt";
+//
+//	bool skip = false;
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//
+//	string filename = input1;
+//	ifstream file(filename);
+//
+//	unordered_set<unsigned long> terminals;
+//
+//	init.SequenceArray(
+//		c,
+//		file,
+//		blockSize,
+//		activePairs,
+//		sequenceArray);
+//
+//	priorityQueueSize = sqrt(sequenceArray.size());
+//	priorityQueue.resize(priorityQueueSize);
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//
+//	string diddy1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+//	string diddy2 = "singingAo.wahAiddyAiddyAumAiddyAo";
+//	string diddy3 = "singingAo.wahAiddBiddBumAiddBo";
+//
+//	int count = 0;
+//
+//	//Compaction counters
+//	CompactionData cData(1);
+//
+//	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+//	{
+//		while (priorityQueue[i])
+//		{
+//			algP.manageOneEntryOnList(
+//				i,
+//				sequenceArray,
+//				activePairs,
+//				priorityQueue,
+//				symbols,
+//				cData,
+//				c);
+//
+//			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//			algP.compact(sequenceArray, activePairs, priorityQueue);
+//			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//		}
+//
+//		ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//	}
+//	string s = mtest.SequenceToString(sequenceArray);
+//	int x = 0;
+//
+//	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
+//}
 
 //TEST(compaction, compactingAfterEachNewSymbol_ecoli)
 //{
@@ -203,7 +210,7 @@ TEST(compaction, findNextEmpty)
 	vector<SymbolRecord*> sequenceArray;
 	AlgorithmP algP;
 
-	long a[] = { 97, 0, 98, 0, 0, 99, 100, 0, 101, 102, 103, 0 };
+	unsigned long a[] = { 97, 0, 98, 0, 0, 99, 100, 0, 101, 102, 103, 0 };
 	mtest.buildSequenceArray(sequenceArray, a, 12);
 	SymbolRecord *sr = sequenceArray[0];
 
@@ -287,6 +294,5 @@ TEST(compaction, calculateCompactionTime)
 //		cout << "Problem opening file: " << filename << endl;
 //	}
 //}
-*/
 
 

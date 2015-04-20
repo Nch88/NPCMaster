@@ -215,8 +215,8 @@ TEST(createDictionary, switchToOrdinalNumbers_diddy)
 	else
 		cout << (unsigned long)(pairs[1][1]) << "  " << (unsigned long)(pairs[1][0]) << "  ";
 
-	cout << (unsigned long)(pairs[2][0]) << "  " << (unsigned long)(pairs[3][0]) << "  " << (unsigned long)(pairs[4][0]) << "  " << (unsigned long)(pairs[5][0]) << "  ";
-*/
+	cout << (unsigned long)(pairs[2][0]) << "  " << (unsigned long)(pairs[3][0]) << "  " << (unsigned long)(pairs[4][0]) << "  " << (unsigned long)(pairs[5][0]) << "  ";*/
+
 	dict.switchToOrdinalNumbers(terminals, StG, pairs, termVector);
 
 	/*string s;
@@ -289,8 +289,103 @@ TEST(createDictionary, switchToOrdinalNumbers_diddy)
 	ASSERT_EQ(19, pairs[5][0][1]);
 }
 
+TEST(createDictionary, writeThenReadDictionary_diddy)
+{
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
+	activePairs.set_empty_key(-1);
+	activePairs.set_deleted_key(-2);
+	vector<SymbolRecord*> sequenceArray;
+	vector<PairRecord*> priorityQueue;
+	unsigned long symbols;
 
+	Initializer init;
+	Conditions c;
+	Dictionary dict;
+	AlgorithmP algP;
+	MyTest t;
+	Outputter outputter;
+	GammaCode gc;
 
+	string input1 = "diddy.txt";
+
+	int priorityQueueSize;
+	int blockSize;
+	blockSize = 1048576;
+
+	string filename = input1;
+	ifstream file(filename);
+
+	unordered_set<unsigned long> terminals;
+	init.SequenceArray(
+		c,
+		file,
+		blockSize,
+		activePairs,
+		sequenceArray);
+
+	priorityQueueSize = sqrt(sequenceArray.size());
+	priorityQueue.resize(priorityQueueSize);
+	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+
+	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
+	//string string2 = "sDDAo.wahHGumHo";
+
+	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+
+	algP.run(
+		sequenceArray,
+		activePairs,
+		priorityQueue,
+		symbols,
+		c);
+
+	algP.compact(sequenceArray, activePairs, priorityQueue);
+
+	dense_hash_map<unsigned long, unsigned long> StG;
+	StG.set_empty_key(-1);
+	vector<vector<unsigned long*>> pairs;
+
+	dict.createSupportStructures(sequenceArray, terminals, StG, pairs);
+
+	vector<unsigned long> termVector(terminals.size());
+
+	dict.switchToOrdinalNumbers(terminals, StG, pairs, termVector);
+
+	ofstream ofs;
+	string cDName = "DictionaryTestDiddy.dict.NPC";
+	ofs.open(cDName, ios::binary | ios::trunc);
+
+	bool fB = true;
+
+	outputter.dictionary2(cDName, ofs, pairs, termVector, fB);
+
+	ofs.close();
+
+	ifstream bitstreamDict(cDName, ios::binary);
+	vector<CompactPair> decodedPairs;
+	vector<unsigned long > decodedTerms;
+	dense_hash_map<unsigned long, string> expandedDictionary;
+	expandedDictionary.set_empty_key(-1);
+
+	gc.decodeDictionaryFile(bitstreamDict, decodedPairs, decodedTerms);
+
+	dict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
+
+	bitstreamDict.close();
+
+	string result = "";
+	//finalSeq is "sDDAo.wahHGumHo"
+	vector<unsigned long> finalSeq{9,16,16,13,8,0,11,1,4,20,19,10,6,20,8};
+	for each (long l in finalSeq)
+	{
+		if (l < decodedTerms.size())
+			result += decodedTerms[l];
+		else
+			result += expandedDictionary[l - decodedTerms.size()];
+	}
+
+	ASSERT_EQ("singing.do.wah.diddy.diddy.dum.diddy.do", result);
+}
 
 
 
