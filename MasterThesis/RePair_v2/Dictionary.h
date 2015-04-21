@@ -27,6 +27,14 @@ public:
 		google::dense_hash_map<unsigned long , unsigned long >& symbolToGen,
 		vector<vector<unsigned long *>>& pairVectors,
 		std::vector<unsigned long >& terminalVector);
+
+	///<summary>The main dictionary function. Create a dictionary from the output from RePair.</summary>
+	void Dictionary::createDictionary(
+		vector<SymbolRecord*> & sequenceArray,
+		unordered_set<unsigned long >& terminals,
+		dense_hash_map<unsigned long, unsigned long >& symbolToGen,
+		vector<vector<unsigned long *>>& pairVectors,
+		vector<unsigned long>& terminalVector);
 	
 	///<summary>Find the sequence of terminals corresponding to one non-terminal. Used by expandDictionary.</summary>
 	///<param name="symbolIndex">Input: The index (in decodedPairs) of the current pair</param>

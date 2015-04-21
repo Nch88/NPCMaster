@@ -100,7 +100,6 @@ int Algorithm::run(
 			sequenceArray,
 			activePairs,
 			priorityQueue,
-			terminals,
 			c);
 		if (c.timing)
 		{

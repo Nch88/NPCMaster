@@ -1,14 +1,14 @@
-//#include "gtest\gtest.h"
-//#include "RePair_v2\stdafx.h"
-//
-//using namespace std;
-//
+#include "gtest\gtest.h"
+#include "RePair_v2\stdafx.h"
+
+using namespace std;
+
 //TEST(testInitialization, diddyTest)
 //{
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -44,7 +44,7 @@
 //				ASSERT_EQ(sequenceArray[i]->symbol, sequenceArray[i]->next->symbol);
 //				ASSERT_EQ(sequenceArray[i + 1]->symbol, sequenceArray[sequenceArray[i]->next->index + 1]->symbol);
 //
-//				ASSERT_TRUE(sequenceArray[i], sequenceArray[i]->next->previous);
+//				ASSERT_EQ(sequenceArray[i], sequenceArray[i]->next->previous);
 //
 //				if (sequenceArray[i]->symbol == 105 && //in
 //					sequenceArray[i + 1]->symbol == 110)
@@ -128,7 +128,7 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -225,7 +225,7 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -309,7 +309,7 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -391,7 +391,7 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -481,7 +481,7 @@
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -558,7 +558,7 @@
 //
 //			}
 //			
-//			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+//			init.resetForNextBlock(activePairs, sequenceArray, priorityQueue);
 //		}
 //	}
 //	else
@@ -572,7 +572,7 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
 //	//dense_hash_map<long, Pair> dictionary;
@@ -659,7 +659,7 @@
 //
 //		}
 //		//Reset for next block
-//		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, blockSize);
+//		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue);
 //	}
 //	else
 //	{

@@ -22,8 +22,9 @@ public:
 		unsigned long  maxLength,
 		unsigned long  *firstCode,
 		unsigned long  *numl,
-		dense_hash_map <unsigned long , dense_hash_map<unsigned long , unsigned long >> &indices,
-		dense_hash_map<unsigned long , unsigned long > &terminalIndices,
+		std::vector<std::vector<unsigned long *>>& pairVectors,
+		dense_hash_map<unsigned long, unsigned long >& symbolToGen,
+		vector<unsigned long >& terminals,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol);
 	void compressedFile(
 		string inputFile,
@@ -46,7 +47,6 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,
-		unordered_set<unsigned long >& terminals,
 		Conditions& c);
 };
 

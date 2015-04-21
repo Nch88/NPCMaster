@@ -167,12 +167,14 @@ void Outputter::huffmanDictionary(
 	unsigned long  maxLength,
 	unsigned long  *firstCode,
 	unsigned long  *numl,
-	dense_hash_map <unsigned long , dense_hash_map<unsigned long , unsigned long >> &indices,
-	dense_hash_map<unsigned long , unsigned long > &terminalIndices,
+	vector<vector<unsigned long *>>& pairVectors,
+	dense_hash_map<unsigned long, unsigned long >& symbolToGen,
+	vector<unsigned long>& terminals,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
+	Dictionary dict;
 
 	string gammaCodes = "";
 	string toWrite = "";
@@ -195,14 +197,16 @@ void Outputter::huffmanDictionary(
 		{
 			unsigned long  symbol = huffmanToSymbol[i + 1][firstCode[i] + j];
 			long index;
+			int gen = symbolToGen[symbol];
 			if (symbol >= initialSymbolValue)
 			{
-				unsigned long  symbolLeft = 0;// dictionary[symbol].leftSymbol;
-				unsigned long  symbolRight = 0;// dictionary[symbol].rightSymbol;
-				index = indices[symbolLeft][symbolRight];
+				index = terminals.size();
+				for (int k = 0; k < gen - k; ++k)
+					index += pairVectors[k].size();
+				index += dict.findNonTerminalIndex(pairVectors[gen - 1], (unsigned long*)symbol);
 			}
 			else
-				index = terminalIndices[symbol];
+				index = dict.findTerminalIndex(terminals, symbol);
 			
 			toWrite = gc.getGammaCode(index);
 			gammaCodes += toWrite;												//Write the index corresponding to a specific huffman code (as gamma code)
@@ -370,7 +374,6 @@ void Outputter::all(
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unordered_set<unsigned long >& terminals,
 	Conditions& c)
 {
 
@@ -418,6 +421,7 @@ void Outputter::all(
 	dense_hash_map<unsigned long, unsigned long> StG;
 	StG.set_empty_key(-1);
 	vector<vector<unsigned long*>> pairs;
+	unordered_set<unsigned long> terminals;
 	vector<unsigned long> terminalVector;
 
 	finalDict.createSupportStructures(sequenceArray, terminals, StG, pairs);
@@ -436,15 +440,16 @@ void Outputter::all(
 		firstBlock);
 
 	//Write Huffman dictionary to file
-	/*this->huffmanDictionary(
+	this->huffmanDictionary(
 		compressedDictionaryName,
 		ofs_dictionary,
 		maxLength,
 		firstCode,
 		numl,
-		indices,
-		terminalIndices,
-		huffmanToSymbol);*/
+		pairs,
+		StG,
+		terminalVector,
+		huffmanToSymbol);
 
 	//DEBUG
 	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);

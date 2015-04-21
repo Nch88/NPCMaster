@@ -30,7 +30,8 @@ int Dictionary::findGenerations(
 	if (symbol < initialSymbolValue)
 	{
 		//This is a terminal. Add it to the term set and return 0.
-		terminals.emplace(symbol);
+		if(symbol != 0)
+			terminals.emplace(symbol);
 		return 0;
 	}
 	else if (symbolToGen[symbol] != 0)
@@ -62,7 +63,7 @@ void Dictionary::createSupportStructures(
 	{
 		if (record->symbol > initialSymbolValue)
 			roots.emplace(record->symbol);
-		else
+		else if(record->symbol != 0)
 			terminals.emplace(record->symbol);
 	}
 	//roots should be H + A + F + E
@@ -194,7 +195,16 @@ void Dictionary::switchToOrdinalNumbers(
 	}
 }
 
-
+void Dictionary::createDictionary(
+	vector<SymbolRecord*> & sequenceArray,
+	unordered_set<unsigned long >& terminals,
+	dense_hash_map<unsigned long, unsigned long >& symbolToGen,
+	vector<vector<unsigned long *>>& pairVectors,
+	vector<unsigned long>& terminalVector)
+{
+	createSupportStructures(sequenceArray, terminals, symbolToGen, pairVectors);
+	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector);
+}
 
 
 
