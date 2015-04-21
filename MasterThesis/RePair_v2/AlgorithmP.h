@@ -21,11 +21,14 @@ public:
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<PairRecord*>& priorityQueue);
 
+	bool sameContext(long & indexSymbolLeft, vector<SymbolRecord*> & sequenceArray);
+
 	void removeSymbolThreadingPointers(
 		long & indexSymbolLeft,
-		vector<SymbolRecord*> & sequenceArray);
+		vector<SymbolRecord*> & sequenceArray,
+		bool left);
 
-	void AlgorithmP::deletePairRecord(
+	void deletePairRecord(
 		long & symbolLeft,
 		long & symbolRight,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs);
@@ -63,6 +66,7 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*>& priorityQueue,
 		PairTracker *& tracker,
+		bool left,
 		Conditions& c);
 
 	//Decrements count and updates structures of the pair whose right symbol
@@ -170,6 +174,7 @@ public:
 		dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		long & Symbols,
+		bool activeLeft,
 		bool &skip,
 		Conditions& c);
 

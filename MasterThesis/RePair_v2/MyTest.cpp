@@ -100,11 +100,11 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 				}
 				for (int j = i + 1; j < p->next->index; j++)
 				{
-					if (sequenceArray[j]->symbol == 0)
+					if (sequenceArray[j]->symbol != 0)
 					{
 						output += "Error in next-pointer of empty symbol at index ";
 						output += to_string(i);
-						output += ": target is also empty.\n\n";
+						output += ": target is not the next non-empty symbol.\n\n";
 					}
 				}
 			}
@@ -118,11 +118,11 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 				}
 				for (int j = p->previous->index + 1; j < i; j++)
 				{
-					if (sequenceArray[j]->symbol == 0)
+					if (sequenceArray[j]->symbol != 0)
 					{
 						output += "Error in previous-pointer of empty symbol at index ";
 						output += to_string(i);
-						output += ": target is also empty\n\n";
+						output += ": target is not the last non-empty symbol\n\n";
 					}
 				}
 			}
@@ -287,7 +287,8 @@ void MyTest::ActivePairs(string msg, dense_hash_map<long, dense_hash_map<long, P
 	{
 		for each (auto pair in leftSymbol.second)
 		{
-			cout << leftSymbol.first << pair.first << " ";
+			if (pair.second.pairRecord)
+				cout << "Left: " << leftSymbol.first << " Right: " << pair.first << " Count: " << pair.second.pairRecord->count << endl;
 		}
 	}
 	cout << endl << endl;

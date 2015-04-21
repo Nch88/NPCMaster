@@ -108,18 +108,58 @@ void AlgorithmP::compact(
 	sequenceArray.resize(index);
 }
 
+bool AlgorithmP::sameContext(long & indexSymbolLeft, vector<SymbolRecord*> & sequenceArray)
+{
+	bool same = true;
+
+	long indexHerePrevious;
+	long indexHereLeft;
+	long indexHereRight;
+	long indexHereNext;
+
+	long indexTherePrevious;
+	long indexThereLeft;
+	long indexThereRight;
+	long indexThereNext;
+	
+	establishContext(indexHereLeft, indexHereRight, indexHerePrevious, indexHereNext, indexSymbolLeft, sequenceArray);
+	establishContext(indexThereLeft, indexThereRight, indexTherePrevious, indexThereNext, sequenceArray[indexSymbolLeft]->next->index, sequenceArray);
+
+	if (indexThereNext == -1)
+		return false;
+
+	same = same && sequenceArray[indexHereLeft]->symbol == sequenceArray[indexThereLeft]->symbol && sequenceArray[indexHereLeft]->symbol != 0;
+
+	same = same && sequenceArray[indexHereRight]->symbol == sequenceArray[indexThereRight]->symbol && sequenceArray[indexHereRight]->symbol != 0;
+
+	same = same && sequenceArray[indexHereNext]->symbol == sequenceArray[indexThereNext]->symbol && sequenceArray[indexHereNext]->symbol != 0;
+
+	return same;
+}
+
 void AlgorithmP::removeSymbolThreadingPointers(
 	long & indexSymbolLeft,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	bool left)
 {
+	
 	//Middle of sequence, connect the remaining parts
 	if (sequenceArray[indexSymbolLeft]->previous &&
 		sequenceArray[indexSymbolLeft]->next)
 	{
 		sequenceArray[indexSymbolLeft]->previous->next =
 			sequenceArray[indexSymbolLeft]->next;
+
+		//DEBUG
+		if (sequenceArray[indexSymbolLeft]->previous->index == 136963 &&
+			sequenceArray[indexSymbolLeft]->previous->next->index == 142806)
+		{
+			int x = 0;
+		}
+		
 		sequenceArray[indexSymbolLeft]->next->previous =
 			sequenceArray[indexSymbolLeft]->previous;
+		
 	}
 	//Last in sequence
 	else if (sequenceArray[indexSymbolLeft]->previous)
@@ -129,8 +169,17 @@ void AlgorithmP::removeSymbolThreadingPointers(
 	//First in sequence
 	else if (sequenceArray[indexSymbolLeft]->next)
 	{
-		sequenceArray[indexSymbolLeft]->next->previous = nullptr;
+		//We cannot remove pointers from last left pair in a sequence if it has the same context, as it will not seem active later
+		if (!(left &&
+			sequenceArray[indexSymbolLeft]->next &&
+			!sequenceArray[indexSymbolLeft]->next->next &&
+			sameContext(indexSymbolLeft, sequenceArray)))
+		{
+			sequenceArray[indexSymbolLeft]->next->previous = nullptr;
+		}
 	}
+	
+	
 	sequenceArray[indexSymbolLeft]->next = nullptr;
 	sequenceArray[indexSymbolLeft]->previous = nullptr;
 }
@@ -167,7 +216,7 @@ void AlgorithmP::updatePairRecord(
 		tracker->pairRecord = nullptr;
 		tracker = nullptr;
 	}
-	//If we are removing the first or last symbol in the sequence update the pair record to reflect this
+	//If we are removing the first symbol in the sequence update the pair record to reflect this
 	else
 	{
 		if (indexSymbolLeft == tracker->pairRecord->arrayIndexFirst)
@@ -277,6 +326,7 @@ void AlgorithmP::decrementCount(
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
 	PairTracker *& tracker,
+	bool left,
 	Conditions& c)
 {
 	moveDownInPriorityQueue(tracker, priorityQueue);
@@ -288,7 +338,7 @@ void AlgorithmP::decrementCount(
 		sequenceArray,
 		tracker);
 
-	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);	
+	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray, left);	
 }
 
 void AlgorithmP::decrementCountLeft(
@@ -323,6 +373,7 @@ void AlgorithmP::decrementCountLeft(
 				sequenceArray,
 				priorityQueue,
 				tracker,
+				true,
 				c);
 		}
 	}
@@ -358,6 +409,7 @@ void AlgorithmP::decrementCountRight(
 				sequenceArray,
 				priorityQueue,
 				tracker,
+				false,
 				c);
 		}
 	}
@@ -369,11 +421,24 @@ void AlgorithmP::threadEmptySymbols(
 	SymbolRecord *& nextSymbolRecord,
 	vector<SymbolRecord*> & sequenceArray)
 {
+	//DEBUG
+	if (leftSymbolRecord->index == 136963 && nextSymbolRecord->index == 142806)
+	{
+		int x = 0;
+	}
+
 	SymbolRecord * firstEmptyRecord =
 		sequenceArray[leftSymbolRecord->index + 1];
 
 	firstEmptyRecord->previous = leftSymbolRecord;
 	firstEmptyRecord->next = nextSymbolRecord;
+
+	//DEBUG
+	if (firstEmptyRecord->index == 136963 &&
+		firstEmptyRecord->next->index == 142806)
+	{
+		int x = 0;
+	}
 
 	//Thread both ends of a sequence of empty symbols unless they are the same
 	if (nextSymbolRecord &&
@@ -383,6 +448,12 @@ void AlgorithmP::threadEmptySymbols(
 			sequenceArray[nextSymbolRecord->index - 1];
 		lastEmptyRecord->previous = leftSymbolRecord;
 		lastEmptyRecord->next = nextSymbolRecord;
+		//DEBUG
+		if (lastEmptyRecord->index == 136963 &&
+			lastEmptyRecord->next->index == 142806)
+		{
+			int x = 0;
+		}
 	}
 }
 
@@ -405,6 +476,12 @@ void AlgorithmP::replacePair(
 	rightSymbolRecord = sequenceArray[indexSymbolRight];
 
 	oldPair = activePairs[leftSymbolRecord->symbol][rightSymbolRecord->symbol].pairRecord;
+
+	//DEBUG
+	if (!oldPair)
+	{
+		int x = 0;
+	}
 	
 	oldPair->count--;
 
@@ -485,11 +562,23 @@ void AlgorithmP::incrementCountLeft(
 			{
 				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
 				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+				//DEBUG
+				if (sequenceArray[record->arrayIndexFirst]->index == 136963 &&
+					sequenceArray[record->arrayIndexFirst]->next->index == 142806)
+				{
+					int x = 0;
+				}
 			}
 			//Else we update the next pointer based on the previous pointer set in first pass
 			else
 			{
 				sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
+				//DEBUG
+				if (sequenceArray[indexSymbolPrevious]->previous->index == 136963 &&
+					sequenceArray[indexSymbolPrevious]->previous->next->index == 142806)
+				{
+					int x = 0;
+				}
 			}
 		}
 		//Check for normal pairs
@@ -512,11 +601,24 @@ void AlgorithmP::incrementCountLeft(
 			{
 				sequenceArray[indexSymbolPrevious]->previous = sequenceArray[record->arrayIndexFirst];
 				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolPrevious];
+				//DEBUG
+				if (sequenceArray[record->arrayIndexFirst]->index == 136963 &&
+					sequenceArray[record->arrayIndexFirst]->next->index == 142806)
+				{
+					int x = 0;
+				}
+
 			}
 			//Else we update the next pointer based on the previous pointer set in first pass
 			else
 			{
 				sequenceArray[indexSymbolPrevious]->previous->next = sequenceArray[indexSymbolPrevious];
+				//DEBUG
+				if (sequenceArray[indexSymbolPrevious]->previous->index == 136963 &&
+					sequenceArray[indexSymbolPrevious]->previous->next->index == 142806)
+				{
+					int x = 0;
+				}
 			}
 		}
 		else if (activePairs[symbolPrevious][Symbols].seenOnce &&
@@ -572,11 +674,23 @@ void AlgorithmP::incrementCountRight(
 			else if (!sequenceArray[indexSymbolLeft]->previous)
 			{
 				sequenceArray[record->arrayIndexFirst]->next = sequenceArray[indexSymbolLeft];
+				//DEBUG
+				if (sequenceArray[record->arrayIndexFirst]->index == 136963 &&
+					sequenceArray[record->arrayIndexFirst]->next->index == 142806)
+				{
+					int x = 0;
+				}
 				sequenceArray[indexSymbolLeft]->previous = sequenceArray[record->arrayIndexFirst];
 			}
 			else
 			{
 				sequenceArray[indexSymbolLeft]->previous->next = sequenceArray[indexSymbolLeft];
+				//DEBUG
+				if (sequenceArray[indexSymbolLeft]->previous->index == 136963 &&
+					sequenceArray[indexSymbolLeft]->previous->next->index == 142806)
+				{
+					int x = 0;
+				}
 			}
 		}
 		else
@@ -604,16 +718,8 @@ void AlgorithmP::replaceInstanceOfPair(
 		sequenceArray[indexSymbolLeft]->next == sequenceArray[indexSymbolNext])
 		skipright = true;
 
-	//Decrement count of xa
-	decrementCountLeft(
-		indexSymbolPrevious,
-		indexSymbolLeft,
-		indexSymbolRight,
-		activePairs,
-		sequenceArray,
-		priorityQueue,
-		Symbols,
-		c);
+
+	
 
 	//Decrement count of by
 	decrementCountRight(
@@ -779,16 +885,24 @@ void AlgorithmP::checkCountLeft(
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	long & Symbols,
+	bool activeLeft,
 	bool &skip,
 	Conditions& c)
 {
 	if (indexSymbolPrevious > -1)
 	{
-		if (sequenceArray[indexSymbolPrevious]->previous ||
-			sequenceArray[indexSymbolPrevious]->next)
+		if (activeLeft)
 			//Only do this for symbols that are left parts of pairs
 		{
 			skip = false;
+
+			//In this case the underlying pair will be consumed by the replacements
+			if (indexSymbolPreviousPrevious > -1 &&
+				sequenceArray[indexSymbolPreviousPrevious]->symbol == sequenceArray[indexSymbolLeft]->symbol &&
+				sequenceArray[indexSymbolPrevious]->symbol == sequenceArray[indexSymbolRight]->symbol)
+				return;
+
+			
 
 			long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
@@ -863,6 +977,12 @@ void AlgorithmP::checkCountLeft(
 				//Update threading pointers
 				sequenceArray[indexSymbolPreviousPrevious]->previous = sequenceArray[activePairs[Symbols][Symbols].pairRecord->arrayIndexFirst];
 
+				//DEBUG
+				if (sequenceArray[activePairs[Symbols][Symbols].pairRecord->arrayIndexFirst]->symbol == 0)
+				{
+					int x = 0;
+				}
+
 				//Update arrayIndexLast
 				activePairs[Symbols][Symbols].pairRecord->arrayIndexFirst = indexSymbolPreviousPrevious;
 			}
@@ -920,6 +1040,12 @@ void AlgorithmP::checkCountRight(
 			//Update threading pointers
 			sequenceArray[indexSymbolLeft]->previous = sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst];
 
+			//DEBUG
+			if (sequenceArray[activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst]->symbol == 0)
+			{
+				int x = 0;
+			}
+
 			//Update arrayIndexLast
 			activePairs[Symbols][symbolNext].pairRecord->arrayIndexFirst = indexSymbolLeft;
 		}
@@ -967,6 +1093,22 @@ void AlgorithmP::firstPass(
 			sequenceIndex,
 			sequenceArray);
 
+		bool activeLeft = false;
+		if (indexSymbolPrevious >= 0)
+			activeLeft = sequenceArray[indexSymbolPrevious]->next ||
+			sequenceArray[indexSymbolPrevious]->previous;
+		
+		//Decrement count of xa
+		decrementCountLeft(
+			indexSymbolPrevious,
+			indexSymbolLeft,
+			indexSymbolRight,
+			activePairs,
+			sequenceArray,
+			priorityQueue,
+			Symbols,
+			c);
+
 		//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
 		sequenceArray[indexSymbolLeft]->previous = nullptr;
 
@@ -979,6 +1121,7 @@ void AlgorithmP::firstPass(
 			activePairs,
 			sequenceArray,
 			Symbols,
+			activeLeft,
 			skip,
 			c);
 
@@ -1023,12 +1166,22 @@ void AlgorithmP::replaceAllPairs(
 
 	bool skip = false;
 
+	//DEBUG
+	int count = 0;
+
 	do
 	{
 		indexSymbolLeft = -1;
 		indexSymbolRight = -1;
 		indexSymbolPrevious = -1;
 		indexSymbolNext = -1;
+
+		//DEBUG
+		
+		if (count == 3140)
+		{
+			int x = 0;
+		}
 
 		sequenceIndex = nextSymbol->index;
 		//Store the pointer to the next symbol now, as the current symbol is changed as we go
@@ -1054,8 +1207,22 @@ void AlgorithmP::replaceAllPairs(
 			Symbols,
 			skip,
 			c);
+
 		
+		
+		//DEBUG
+		count++;
 	} while (nextSymbol);
+
+	//DEBUG
+	MyTest t;
+	int insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
+	if (insane)
+	{
+		string test = t.SanityCheckThreadingPointersDetailed(sequenceArray);
+		int x = 0;
+	}
+		
 }
 
 void AlgorithmP::newSymbol(long & Symbols)
@@ -1231,6 +1398,16 @@ void AlgorithmP::manageHighPriorityList(
 			long s1 = sequenceArray[i]->symbol;
 			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
 			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+		}
+
+		//DEBUG
+		if (Symbols == 297)
+		{
+			int x = 0;
+		}
+		if (Symbols == 298)
+		{
+			int x = 0;
 		}
 
 		replaceAllPairs(

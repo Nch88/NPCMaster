@@ -518,7 +518,7 @@ TEST(removeSymbolThreadingPointers, bothPreviousAndNextPointers)
 	trdPairLeft->next = nullptr;
 
 	indexSymbolLeft = 2;
-	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);
+	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray, false);
 
 	ASSERT_EQ(trdPairLeft, fstPairLeft->next);
 	ASSERT_EQ(fstPairLeft, trdPairLeft->previous);
@@ -580,7 +580,7 @@ TEST(removeSymbolThreadingPointers, onlyPreviousPointer)
 	trdPairLeft->next = nullptr;
 
 	indexSymbolLeft = 4;
-	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);
+	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray, false);
 
 	ASSERT_EQ(scdPairLeft, fstPairLeft->next);
 	ASSERT_EQ(fstPairLeft, scdPairLeft->previous);
@@ -643,7 +643,7 @@ TEST(removeSymbolThreadingPointers, onlyNextPointer)
 	trdPairLeft->next = nullptr;
 
 	indexSymbolLeft = 0;
-	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);
+	algP.removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray, false);
 
 	ASSERT_EQ(nullptr, fstPairLeft->next);
 	ASSERT_EQ(nullptr, scdPairLeft->previous);
@@ -1199,7 +1199,10 @@ TEST(incrementCountLeft, firstTimeSeen)
 	sequenceArray[0]->next = sequenceArray[4];
 	sequenceArray[4]->previous = sequenceArray[0];
 
-	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+	bool activeLeft = sequenceArray[previous]->previous ||
+		sequenceArray[previous]->next;
+
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, activeLeft, skip, c);
 
 	//Check that new pair was counted
 	if (activePairs[99].empty())
@@ -1286,7 +1289,10 @@ TEST(incrementCountLeft, secondTimeSeen)
 	sequenceArray[0]->next = sequenceArray[3];
 	sequenceArray[3]->previous = sequenceArray[0];
 
-	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
+	bool activeLeft = sequenceArray[previous]->previous ||
+		sequenceArray[previous]->next;
+
+	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, activeLeft, skip, c);
 	algo.incrementCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
 
@@ -1356,61 +1362,68 @@ TEST(incrementCountRight, secondTimeSeen)
 	ASSERT_TRUE(priorityQueue[0]->arrayIndexFirst == 1);
 }
 
-TEST(incrementCountLeft, thirdTimeSeen)
-{
-	using namespace google;
-	AlgorithmP algo;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue(2);
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols = 65;
-	Conditions c;
-
-	long previouspreviousFirst = -1, previousFirst = 0, leftFirst = 1, rightFirst = 3;
-	long previouspreviousSecond = 1, previousSecond = 3, leftSecond = 4, rightSecond = 6;
-	long previousprevious = 4, previous = 6, left = 7, right = 9;
-	bool skip = false;
-
-	long symbol;
-	long index;
-
-	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
-	mytest.buildSequenceArray(sequenceArray, a, 10);
-	
-	sequenceArray[0]->next = sequenceArray[3];
-	sequenceArray[3]->previous = sequenceArray[0];
-	sequenceArray[3]->next = sequenceArray[6];
-	sequenceArray[6]->previous = sequenceArray[3];
-
-	algo.checkCountLeft(previouspreviousFirst, previousFirst, leftFirst, rightFirst, activePairs, sequenceArray, symbols, skip, c);
-	algo.checkCountLeft(previouspreviousSecond, previousSecond, leftSecond, rightSecond, activePairs, sequenceArray, symbols, skip, c);
-	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, skip, c);
-
-	algo.incrementCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
-	algo.incrementCountLeft(previousSecond, leftSecond, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
-	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
-
-	//Check that seenOnce was reset
-	ASSERT_FALSE(activePairs[99][65].seenOnce);
-
-	//Check that a pair record was added
-	ASSERT_TRUE(NULL != activePairs[99][65].pairRecord);
-
-	//Check that threading pointers are correctly set
-	ASSERT_TRUE(sequenceArray[3]->next == sequenceArray[6]);
-	ASSERT_TRUE(sequenceArray[6]->previous == sequenceArray[3]);
-
-	//Check entry in priority queue
-	ASSERT_TRUE(priorityQueue[0] == nullptr);
-
-	ASSERT_TRUE(priorityQueue[1]->count == 3);
-	ASSERT_TRUE(priorityQueue[1]->arrayIndexFirst == 0);
-}
+//TEST(incrementCountLeft, thirdTimeSeen)
+//{
+//	using namespace google;
+//	AlgorithmP algo;
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue(2);
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long symbols = 65;
+//	Conditions c;
+//
+//	long previouspreviousFirst = -1, previousFirst = 0, leftFirst = 1, rightFirst = 3;
+//	long previouspreviousSecond = 1, previousSecond = 3, leftSecond = 4, rightSecond = 6;
+//	long previousprevious = 4, previous = 6, left = 7, right = 9;
+//	bool skip = false;
+//
+//	long symbol;
+//	long index;
+//
+//	long a[] = { 99, 65, 0, 99, 65, 0, 99, 65, 0, 100 };
+//	mytest.buildSequenceArray(sequenceArray, a, 10);
+//	
+//	sequenceArray[0]->next = sequenceArray[3];
+//	sequenceArray[3]->previous = sequenceArray[0];
+//	sequenceArray[3]->next = sequenceArray[6];
+//	sequenceArray[6]->previous = sequenceArray[3];
+//
+//	bool activeLeftFirst = sequenceArray[previousFirst]->previous ||
+//		sequenceArray[previousFirst]->next;
+//	bool activeLeftSecond = sequenceArray[previousSecond]->previous ||
+//		sequenceArray[previousSecond]->next;
+//	bool activeLeft = sequenceArray[previous]->previous ||
+//		sequenceArray[previous]->next;
+//
+//	algo.checkCountLeft(previouspreviousFirst, previousFirst, leftFirst, rightFirst, activePairs, sequenceArray, symbols, activeLeftFirst, skip, c);
+//	algo.checkCountLeft(previouspreviousSecond, previousSecond, leftSecond, rightSecond, activePairs, sequenceArray, symbols, activeLeftSecond, skip, c);
+//	algo.checkCountLeft(previousprevious, previous, left, right, activePairs, sequenceArray, symbols, activeLeft, skip, c);
+//
+//	algo.incrementCountLeft(previousFirst, leftFirst, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+//	algo.incrementCountLeft(previousSecond, leftSecond, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+//	algo.incrementCountLeft(previous, left, activePairs, sequenceArray, priorityQueue, symbols, skip, c);
+//
+//	//Check that seenOnce was reset
+//	ASSERT_FALSE(activePairs[99][65].seenOnce);
+//
+//	//Check that a pair record was added
+//	ASSERT_TRUE(NULL != activePairs[99][65].pairRecord);
+//
+//	//Check that threading pointers are correctly set
+//	ASSERT_TRUE(sequenceArray[3]->next == sequenceArray[6]);
+//	ASSERT_TRUE(sequenceArray[6]->previous == sequenceArray[3]);
+//
+//	//Check entry in priority queue
+//	ASSERT_TRUE(priorityQueue[0] == nullptr);
+//
+//	ASSERT_TRUE(priorityQueue[1]->count == 3);
+//	ASSERT_TRUE(priorityQueue[1]->arrayIndexFirst == 0);
+//}
 
 TEST(incrementCountRight, thirdTimeSeen)
 {
@@ -1720,6 +1733,7 @@ TEST(decrementCount, threePairsRemoveMiddle)
 		sequenceArray,
 		priorityQueue,
 		tracker,
+		false,
 		c);
 
 
@@ -1751,7 +1765,7 @@ TEST(decrementCountLeft, hasPrevious)
 	long sequenceIndex = 2;
 
 	PairTracker * tracker;
-
+	
 	vector<SymbolRecord*> sequenceArray;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
@@ -1759,7 +1773,7 @@ TEST(decrementCountLeft, hasPrevious)
 	long symbol;
 	long index;
 
-
+	//121212
 	//Setup symbol records in sequence array
 	symbol = 1;
 	index = 0;
@@ -2683,6 +2697,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 	bool activePairLeft = sequenceArray[fstPairRight->index]->next ||
 		sequenceArray[fstPairRight->index]->previous;
 
+
 	algP.decrementCountLeft(
 		fstPairRight->index,
 		scdPairLeft->index,
@@ -2693,13 +2708,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 		symbols,
 		c);
 
-	algP.decrementCountRight(
-		scdPairRight->index,
-		trdPairLeft->index,
-		activePairs,
-		sequenceArray,
-		priorityQueue,
-		c);
+
 
 	algP.checkCountLeft(
 		fstPairLeft->index,
@@ -2709,6 +2718,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, leftAndRightLowCount)
 		activePairs,
 		sequenceArray,
 		symbols,
+		activePairLeft,
 		skip,
 		c);
 
@@ -2860,13 +2870,6 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 		symbols,
 		c);
 
-	algP.decrementCountRight(
-		indexSymbolRight,
-		indexSymbolNext,
-		activePairs,
-		sequenceArray,
-		priorityQueue,
-		c);
 
 	algP.checkCountLeft(
 		indexSymbolPreviousPrevious,
@@ -2876,6 +2879,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 		activePairs,
 		sequenceArray,
 		symbols,
+		activePairLeft,
 		skip,
 		c);
 
@@ -2922,7 +2926,7 @@ TEST(replaceInstanceOfPairOnlyDecrementAndReplace, diddy)
 	ASSERT_EQ(5, currentPair->count);
 
 	ASSERT_EQ(nullptr, sequenceArray[indexSymbolLeft]->next);
-	ASSERT_EQ(nullptr, sequenceArray[indexSymbolLeft]->previous);
+	ASSERT_EQ(sequenceArray[14], sequenceArray[indexSymbolLeft]->previous);
 	ASSERT_EQ(symbols, sequenceArray[indexSymbolLeft]->symbol);
 
 	ASSERT_EQ(sequenceArray[indexSymbolNext], sequenceArray[indexSymbolLeft + 1]->next);
@@ -3036,7 +3040,7 @@ TEST(testingRun, diddy)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -3097,7 +3101,7 @@ TEST(testingRun, diddy_explicit)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -3162,21 +3166,48 @@ TEST(testingRun, diddy_explicit)
 				//Store the pointer to the next symbol now, as the current symbol is changed as we go
 				nextSymbol = nextSymbol->next;
 
-				if (sequenceIndex == 20)
-					int x = 0;
+				
 				if (sequenceIndex == 26)
 					int x = 0;
 				if (sequenceIndex == 36)
 					int x = 0;
 
-				algP.establishContext(
+				algP.establishExtendedContext(
 					indexSymbolLeft,
 					indexSymbolRight,
 					indexSymbolPrevious,
+					indexSymbolPreviousPrevious,
 					indexSymbolNext,
+					indexSymbolNextNext,
 					sequenceIndex,
 					sequenceArray);
 
+				if (indexSymbolLeft == 20)
+					int x = 0;
+				if (indexSymbolLeft == 26)
+					int x = 0;
+				if (indexSymbolLeft == 36)
+					int x = 0;
+
+				bool activeLeft = false;
+				if (indexSymbolPrevious >= 0)
+					activeLeft = sequenceArray[indexSymbolPrevious]->next ||
+					sequenceArray[indexSymbolPrevious]->previous;
+
+				//Decrement count of xa
+				algP.decrementCountLeft(
+					indexSymbolPrevious,
+					indexSymbolLeft,
+					indexSymbolRight,
+					activePairs,
+					sequenceArray,
+					priorityQueue,
+					Symbols,
+					c);
+
+
+				//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
+				sequenceArray[indexSymbolLeft]->previous = nullptr;
 
 				//Left pair
 				algP.checkCountLeft(
@@ -3187,6 +3218,7 @@ TEST(testingRun, diddy_explicit)
 					activePairs,
 					sequenceArray,
 					Symbols,
+					activeLeft,
 					skip,
 					c);
 
@@ -3203,6 +3235,11 @@ TEST(testingRun, diddy_explicit)
 
 			} while (nextSymbol);
 			//Firstpass - end
+
+
+			
+
+
 
 			skip = false;
 
@@ -3225,8 +3262,7 @@ TEST(testingRun, diddy_explicit)
 					int x = 0;
 				if (sequenceIndex == 26)
 					int x = 0;
-				if (sequenceIndex == 36)
-					int x = 0;
+				
 
 				algP.establishContext(
 					indexSymbolLeft,
@@ -3235,6 +3271,13 @@ TEST(testingRun, diddy_explicit)
 					indexSymbolNext,
 					sequenceIndex,
 					sequenceArray);
+
+				if (indexSymbolLeft == 20)
+					int x = 0;
+				if (indexSymbolLeft == 26)
+					int x = 0;
+				if (indexSymbolLeft == 36)
+					int x = 0;
 
 				algP.replaceInstanceOfPair(
 					indexSymbolLeft,
@@ -3277,32 +3320,107 @@ TEST(testingRun, diddy_explicit)
 
 			if (testCount == 0)
 			{
+				//singing.do.wah.diddy.diddy.dum.diddy.do -> singingAo.wahAiddyAiddyAumAiddyAo
 				ASSERT_EQ("singingAo.wahAiddyAiddyAumAiddyAo", t.SequenceToString(sequenceArray));
+
+				//Pair in
+				ASSERT_FALSE(sequenceArray[1]->previous);
+				ASSERT_EQ(sequenceArray[4], sequenceArray[1]->next);
+								
+				ASSERT_EQ(sequenceArray[1], sequenceArray[4]->previous);
+				ASSERT_FALSE(sequenceArray[4]->next);
+
+				//Pair ng
+				ASSERT_FALSE(sequenceArray[2]->previous);
+				ASSERT_EQ(sequenceArray[5], sequenceArray[2]->next);
+
+				ASSERT_EQ(sequenceArray[2], sequenceArray[5]->previous);
+				ASSERT_FALSE(sequenceArray[5]->next);
+
+				//Pair Ao
+				ASSERT_FALSE(sequenceArray[7]->previous);
+				ASSERT_EQ(sequenceArray[36], sequenceArray[7]->next);
+
+				ASSERT_EQ(sequenceArray[7], sequenceArray[36]->previous);
+				ASSERT_FALSE(sequenceArray[36]->next);
+
+				//Pair Ai
+				ASSERT_FALSE(sequenceArray[14]->previous);
+				ASSERT_EQ(sequenceArray[20], sequenceArray[14]->next);
+
+				ASSERT_EQ(sequenceArray[14], sequenceArray[20]->previous);
+				ASSERT_EQ(sequenceArray[30], sequenceArray[20]->next);
+
+				ASSERT_EQ(sequenceArray[20], sequenceArray[30]->previous);
+				ASSERT_FALSE(sequenceArray[30]->next);
+
+				//Pair id
+				ASSERT_FALSE(sequenceArray[16]->previous);
+				ASSERT_EQ(sequenceArray[22], sequenceArray[16]->next);
+
+				ASSERT_EQ(sequenceArray[16], sequenceArray[22]->previous);
+				ASSERT_EQ(sequenceArray[32], sequenceArray[22]->next);
+
+				ASSERT_EQ(sequenceArray[22], sequenceArray[32]->previous);
+				ASSERT_FALSE(sequenceArray[32]->next);
+
+				//Pair dd
+				ASSERT_FALSE(sequenceArray[17]->previous);
+				ASSERT_EQ(sequenceArray[23], sequenceArray[17]->next);
+
+				ASSERT_EQ(sequenceArray[17], sequenceArray[23]->previous);
+				ASSERT_EQ(sequenceArray[33], sequenceArray[23]->next);
+
+				ASSERT_EQ(sequenceArray[23], sequenceArray[33]->previous);
+				ASSERT_FALSE(sequenceArray[33]->next);
+
+				//Pair dy
+				ASSERT_FALSE(sequenceArray[18]->previous);
+				ASSERT_EQ(sequenceArray[24], sequenceArray[18]->next);
+
+				ASSERT_EQ(sequenceArray[18], sequenceArray[24]->previous);
+				ASSERT_EQ(sequenceArray[34], sequenceArray[24]->next);
+
+				ASSERT_EQ(sequenceArray[24], sequenceArray[34]->previous);
+				ASSERT_FALSE(sequenceArray[34]->next);
+
+				//Pair yA
+				ASSERT_FALSE(sequenceArray[19]->previous);
+				ASSERT_EQ(sequenceArray[25], sequenceArray[19]->next);
+
+				ASSERT_EQ(sequenceArray[19], sequenceArray[25]->previous);
+				ASSERT_EQ(sequenceArray[35], sequenceArray[25]->next);
+
+				ASSERT_EQ(sequenceArray[25], sequenceArray[35]->previous);
+				ASSERT_FALSE(sequenceArray[35]->next);
+
+
+				cout << "Insane: " << t.SanityCheckPairRecordsDetailed(sequenceArray,priorityQueue) << endl;
 
 				ASSERT_EQ(0, t.SanityCheck(sequenceArray, priorityQueue, activePairs));
 			}
 				
 
 			if (testCount == 1)
-				ASSERT_EQ("singingAo.wahBddyBddyAumBddyAo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("singingAo.wahAiddBiddBumAiddBo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 2)
-				ASSERT_EQ("singingAo.wahCdyCdyAumCdyAo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("singingAo.wahAidCidCumAidCo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 3)
-				ASSERT_EQ("singingAo.wahDyDyAumDyAo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("singingAo.wahAiDiDumAiDo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 4)
-				ASSERT_EQ("singingAo.wahEEAumEAo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("singingAo.wahAEEumAEo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 5)
-				ASSERT_EQ("singingAo.wahEFumFo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("singingAo.wahFEumFo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 6)
-				ASSERT_EQ("sGgGgAo.wahEFumFo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("sGgGgAo.wahFEumFo", t.SequenceToString(sequenceArray));
 
 			if (testCount == 7)
-				ASSERT_EQ("sHHAo.wahEFumFo", t.SequenceToString(sequenceArray));
+				ASSERT_EQ("sHHAo.wahFEumFo", t.SequenceToString(sequenceArray));
 
 			testCount++;
 		}

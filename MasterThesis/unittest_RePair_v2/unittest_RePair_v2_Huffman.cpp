@@ -47,7 +47,7 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -180,7 +180,7 @@ TEST(testingHuffman, collapseSymbols)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -265,7 +265,7 @@ TEST(testingHuffman, phaseThree)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
@@ -390,7 +390,7 @@ TEST(testingHuffman, generateCodes)
 	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
 
 	string string1 = "singing.do.wah.diddy.diddy.dum.diddy.do";
-	string string2 = "sHHAo.wahEFumFo";
+	string string2 = "sHHAo.wahFEumFo";
 
 	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
 
