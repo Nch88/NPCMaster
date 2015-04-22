@@ -201,7 +201,7 @@ void Outputter::huffmanDictionary(
 			if (symbol >= initialSymbolValue)
 			{
 				index = terminals.size();
-				for (int k = 0; k < gen - k; ++k)
+				for (int k = 0; k < gen - 1; ++k)
 					index += pairVectors[k].size();
 				index += dict.findNonTerminalIndex(pairVectors[gen - 1], (unsigned long*)symbol);
 			}

@@ -2,8 +2,8 @@
 #include "RePair_v2\stdafx.h"
 
 using namespace std;
-/*
-bool compareFiles(string file1, string file2, long &badChar)
+
+bool compareFiles(string file1, string file2, unsigned long &badChar)
 {
 	ifstream stream1(file1);
 	ifstream stream2(file2);
@@ -69,15 +69,12 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 
 TEST(decoder, diddy_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -96,11 +93,8 @@ TEST(decoder, diddy_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
+	unordered_set<unsigned long> terminals;
+	vector<vector<unsigned long*>> pairs;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -110,8 +104,7 @@ TEST(decoder, diddy_Nicolai)
 		file,
 		blockSize,
 		activePairs,
-		sequenceArray,
-		terminals);
+		sequenceArray);
 
 	priorityQueueSize = sqrt(sequenceArray.size());
 	priorityQueue.resize(priorityQueueSize);
@@ -124,7 +117,6 @@ TEST(decoder, diddy_Nicolai)
 		sequenceArray,
 		activePairs,
 		priorityQueue,
-		terminals,
 		symbols,
 		c);
 
@@ -132,10 +124,8 @@ TEST(decoder, diddy_Nicolai)
 		filename,
 		firstBlock,
 		sequenceArray,
-		dictionary,
 		activePairs,
 		priorityQueue,
-		terminals,
 		c);
 
 	string compressedFile = out.addFilenameEnding(filename, ".NPC");
@@ -145,7 +135,7 @@ TEST(decoder, diddy_Nicolai)
 
 	dec.decode(compressedFile);
 
-	long badChunk = 0;
+	unsigned long badChunk = 0;
 
 	if (compareFiles(input1, decompressedFile, badChunk))
 		ASSERT_TRUE(true);
@@ -158,15 +148,12 @@ TEST(decoder, diddy_Nicolai)
 
 TEST(decoder, bible_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -188,11 +175,8 @@ TEST(decoder, bible_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
+	unordered_set<unsigned long> terminals;
+	vector<vector<unsigned long*>> pairs;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -218,7 +202,6 @@ TEST(decoder, bible_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}	
@@ -227,7 +210,7 @@ TEST(decoder, bible_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	if (compareFiles(input1, decompressedFile, badChar))
 		ASSERT_TRUE(true);
@@ -235,17 +218,15 @@ TEST(decoder, bible_Nicolai)
 		ASSERT_TRUE(false);
 }
 
+
 TEST(decoder, world_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -266,11 +247,8 @@ TEST(decoder, world_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
+	unordered_set<unsigned long> terminals;
+	vector<vector<unsigned long*>> pairs;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -296,7 +274,6 @@ TEST(decoder, world_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -305,7 +282,7 @@ TEST(decoder, world_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	if (compareFiles(input1, decompressedFile, badChar))
 		ASSERT_TRUE(true);
@@ -315,15 +292,12 @@ TEST(decoder, world_Nicolai)
 
 TEST(decoder, ecoli_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -368,7 +342,6 @@ TEST(decoder, ecoli_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -377,7 +350,7 @@ TEST(decoder, ecoli_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -385,15 +358,12 @@ TEST(decoder, ecoli_Nicolai)
 
 TEST(decoder, dna50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -446,7 +416,6 @@ TEST(decoder, dna50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -455,7 +424,7 @@ TEST(decoder, dna50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -463,15 +432,12 @@ TEST(decoder, dna50MB_Nicolai)
 
 TEST(decoder,english50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -485,7 +451,7 @@ TEST(decoder,english50MB_Nicolai)
 	GammaCode gc;
 	Decoder dec;
 
-	//c.compact = true;
+	c.compact = true;
 	c.verbose = true;
 	string input1 = "english.50MB";
 
@@ -524,7 +490,6 @@ TEST(decoder,english50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -533,7 +498,7 @@ TEST(decoder,english50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -541,15 +506,12 @@ TEST(decoder,english50MB_Nicolai)
 
 TEST(decoder, sources50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -602,7 +564,6 @@ TEST(decoder, sources50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -611,7 +572,7 @@ TEST(decoder, sources50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -619,15 +580,12 @@ TEST(decoder, sources50MB_Nicolai)
 
 TEST(decoder, dblpxml50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -680,7 +638,6 @@ TEST(decoder, dblpxml50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -689,7 +646,7 @@ TEST(decoder, dblpxml50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -697,15 +654,12 @@ TEST(decoder, dblpxml50MB_Nicolai)
 
 TEST(decoder, proteins50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -758,7 +712,6 @@ TEST(decoder, proteins50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -767,7 +720,7 @@ TEST(decoder, proteins50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
@@ -775,15 +728,12 @@ TEST(decoder, proteins50MB_Nicolai)
 
 TEST(decoder, pitches50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols;
 
 	Initializer init;
 	Conditions c;
@@ -836,7 +786,6 @@ TEST(decoder, pitches50MB_Nicolai)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			dictionary,
 			symbols);
 		checkStream.close();
 	}
@@ -845,9 +794,8 @@ TEST(decoder, pitches50MB_Nicolai)
 	std::cout << "Starting decoding" << endl;
 	dec.decode(compressedFile);
 
-	long badChar = 0;
+	unsigned long badChar = 0;
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
 }
-*/
