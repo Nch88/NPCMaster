@@ -222,8 +222,8 @@ int Initializer::SequenceArray(
 			if (c.timing)
 			{
 				t.stop();
-				long long tmp = t.getTime();
-				if (tmp > 1)
+				boost::chrono::milliseconds tmp = t.getTime();
+				if (tmp > boost::chrono::milliseconds(1000))
 					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
 			
@@ -252,8 +252,8 @@ int Initializer::SequenceArray(
 				if (c.timing)
 				{
 					t.stop();
-					long long tmp = t.getTime();
-					if (tmp > 1)
+					boost::chrono::milliseconds tmp = t.getTime();
+					if (tmp > boost::chrono::milliseconds(1))
 						cout << " - Timing: Time of setting up pair record took " << tmp << " ms" << endl;
 				}
 
