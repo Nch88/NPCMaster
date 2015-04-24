@@ -189,6 +189,7 @@ int main(int argc, char* argv[])
 			cout << "Problem opening file: " << filename << endl;
 			return 5;
 		}
+		
 		return r;
 	}
 	else if (encodingDecoding == 2)

@@ -711,6 +711,8 @@ void AlgorithmP::replaceInstanceOfPair(
 	bool& skip,
 	Conditions& c)
 {
+	MyTimer clock;
+
 	//We must not increment a temporary pair
 	//aaaa -> Aaa, Aa is about to disappear so we must not count it
 	bool skipright = false;
@@ -719,7 +721,8 @@ void AlgorithmP::replaceInstanceOfPair(
 		skipright = true;
 
 
-	
+	//DEBUG		
+	clock.start();
 
 	//Decrement count of by
 	decrementCountRight(
@@ -730,7 +733,13 @@ void AlgorithmP::replaceInstanceOfPair(
 		priorityQueue,
 		c);
 
+	//DEBUG		
+	clock.stop();
+	c.decrementCountRight += clock.getTimeNano().count();
 	
+	//DEBUG		
+	clock.start();
+
 	//Replace xaby with xA_y
 	replacePair(
 		indexSymbolLeft,
@@ -741,7 +750,12 @@ void AlgorithmP::replaceInstanceOfPair(
 		dictionary,
 		Symbols,
 		c);
+	//DEBUG		
+	clock.stop();
+	c.replacePair += clock.getTimeNano().count();
 
+	//DEBUG		
+	clock.start();
 	//Increment count of xA
 	incrementCountLeft(
 		indexSymbolPrevious, 
@@ -752,7 +766,12 @@ void AlgorithmP::replaceInstanceOfPair(
 		Symbols, 
 		skip, 
 		c);
+	//DEBUG		
+	clock.stop();
+	c.incrementCountLeft += clock.getTimeNano().count();
 
+	//DEBUG		
+	clock.start();
 	//Increment count of Ay
 	incrementCountRight(
 		indexSymbolLeft, 
@@ -763,6 +782,9 @@ void AlgorithmP::replaceInstanceOfPair(
 		Symbols, 
 		c,
 		skipright);
+	//DEBUG		
+	clock.stop();
+	c.incrementCountRight += clock.getTimeNano().count();
 }
 
 void AlgorithmP::establishContext(
@@ -1060,6 +1082,8 @@ void AlgorithmP::firstPass(
 	long & Symbols,
 	Conditions& c)
 {
+	MyTimer clock;
+
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
@@ -1097,6 +1121,9 @@ void AlgorithmP::firstPass(
 		if (indexSymbolPrevious >= 0)
 			activeLeft = sequenceArray[indexSymbolPrevious]->next ||
 			sequenceArray[indexSymbolPrevious]->previous;
+
+		//DEBUG
+		clock.start();
 		
 		//Decrement count of xa
 		decrementCountLeft(
@@ -1109,9 +1136,16 @@ void AlgorithmP::firstPass(
 			Symbols,
 			c);
 
+		//DEBUG		
+		clock.stop();
+		c.decrementCountLeft += clock.getTimeNano().count();
+		
+
 		//We need to reset this as we no longer do it while replacing the pair. This is because we need to set this previous pointer in the first pass.
 		sequenceArray[indexSymbolLeft]->previous = nullptr;
 
+		//DEBUG		
+		clock.start();
 		//Left pair
 		checkCountLeft(
 			indexSymbolPreviousPrevious,
@@ -1125,6 +1159,13 @@ void AlgorithmP::firstPass(
 			skip,
 			c);
 
+		//DEBUG		
+		clock.stop();
+		c.checkCountLeft += clock.getTimeNano().count();
+
+		//DEBUG		
+		clock.start();
+
 		//Right pair
 		checkCountRight(
 			indexSymbolLeft,
@@ -1135,6 +1176,10 @@ void AlgorithmP::firstPass(
 			sequenceArray,
 			Symbols,
 			c);
+
+		//DEBUG		
+		clock.stop();
+		c.checkCountRight += clock.getTimeNano().count();
 
 	} while (nextSymbol);
 }
@@ -1171,10 +1216,13 @@ void AlgorithmP::replaceAllPairs(
 			<< activePairs[sequenceArray[indexSymbolLeft]->symbol][sequenceArray[indexSymbolRight]->symbol].pairRecord->count << endl;
 	}*/
 	
-	if (c.timing)
+	/*if (c.timing)
 	{
 		clock.start();
-	}
+	}*/
+
+	//DEBUG
+	c.pairCount++;
 
 	firstPass(
 		sequenceIndex,
@@ -1184,21 +1232,21 @@ void AlgorithmP::replaceAllPairs(
 		Symbols,
 		c);
 
-	if (c.timing)
+	/*if (c.timing)
 	{
 		clock.stop();
-		cout << "	Timing first pass: " << clock.getTime() << endl;
-	}
+		cout << "	Timing first pass: " << clock.getTimeNano() << endl;
+	}*/
 
 	bool skip = false;
 
 	//DEBUG
 	int count = 0;
 
-	if (c.timing)
+	/*if (c.timing)
 	{
 		clock.start();
-	}
+	}*/
 
 	do
 	{
@@ -1245,11 +1293,11 @@ void AlgorithmP::replaceAllPairs(
 		count++;
 	} while (nextSymbol);
 
-	if (c.timing)
+	/*if (c.timing)
 	{
 		clock.stop();
-		cout << "	Timing second pass: " << clock.getTime() << endl;
-	}
+		cout << "	Timing second pass: " << clock.getTimeNano() << endl;
+	}*/
 
 	//DEBUG
 	MyTest t;

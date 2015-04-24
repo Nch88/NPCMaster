@@ -84,6 +84,20 @@ int Algorithm::run(
 			symbols,
 			c);			
 
+		//DEBUG
+		if (c.pairCount > 0)
+		{
+			cout << "Avg time for check count left: " << c.checkCountLeft / c.pairCount << " ns" << endl;
+			cout << "Avg time for check count right: " << c.checkCountRight / c.pairCount << " ns" << endl;
+			cout << "Avg time for decrement count left: " << c.decrementCountLeft / c.pairCount << " ns" << endl;
+			cout << "Avg time for decrement count right: " << c.decrementCountRight / c.pairCount << " ns" << endl;
+			cout << "Avg time for increment count left: " << c.incrementCountLeft / c.pairCount << " ns" << endl;
+			cout << "Avg time for increment count right: " << c.incrementCountRight / c.pairCount << " ns" << endl;
+			cout << "Avg time for replace pair: " << c.replacePair / c.pairCount << " ns" << endl;
+		}
+		else
+			cout << "Problem timing program." << endl;
+
 		if (c.timing)
 		{
 			t.stop();
