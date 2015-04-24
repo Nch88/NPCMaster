@@ -33,13 +33,15 @@ int Algorithm::run(
 	Outputter out;
 	dense_hash_map<long, HuffmanNode *> huffmanCodes;
 	unordered_set<long> terminals;
-	cout << "Compressing file: " << filename << endl;
+	std::cout << "Compressing file: " << filename << endl;
+
+	int count = 1;
 
 	while (file.is_open())
 	{
 		if (c.verbose)
 		{
-			cout << " - Verbose: Initializing block" << endl;
+			std::cout << " - Verbose: Initializing block" << endl;
 		}
 		if (c.timing)
 		{
@@ -50,7 +52,7 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.stop();
-			cout << " - Timing: Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
+			std::cout << " - Timing: Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
 		priorityQueueSize = sqrt(sequenceArray.size());
 		priorityQueue.resize(priorityQueueSize);
@@ -62,7 +64,7 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.stop();
-			cout << " - Timing: priority queue initialized in " << t.getTime() << " ms" << endl;
+			std::cout << " - Timing: priority queue initialized in " << t.getTime() << " ms" << endl;
 		}
 
 		if (c.timing)
@@ -71,7 +73,7 @@ int Algorithm::run(
 		}
 		if (c.verbose)
 		{
-			cout << " - Verbose: Starting repair compression" << endl;
+			std::cout << " - Verbose: Starting repair compression" << endl;
 		}
 		algP.run(
 			sequenceArray,
@@ -85,7 +87,7 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.stop();
-			cout << " - Timing: repair compression done in " << t.getTime() << " ms" << endl;
+			std::cout << " - Timing: repair compression done in " << t.getTime() << " ms" << endl;
 		}
 
 		if (c.timing)
@@ -94,7 +96,7 @@ int Algorithm::run(
 		}
 		if (c.verbose)
 		{
-			cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
+			std::cout << " - Verbose: Starting Huffman encoding and outputting" << endl;
 		}
 		
 		out.all(
@@ -109,7 +111,7 @@ int Algorithm::run(
 		if (c.timing)
 		{
 			t.stop();
-			cout << " - Timing: Huffman encoding and outputting files done in " << t.getTime() << " ms" << endl;
+			std::cout << " - Timing: Huffman encoding and outputting files done in " << t.getTime() << " ms" << endl;
 		}
 
 		firstBlock = false;
@@ -119,19 +121,25 @@ int Algorithm::run(
 		}
 		if (c.verbose)
 		{
-			cout << " - Verbose: Resetting for next block" << endl;
+			std::cout << " - Verbose: Resetting for next block" << endl;
 		}
 		init.resetForNextBlock(activePairs, sequenceArray, priorityQueue, terminals, dictionary);
 		if (c.timing)
 		{
 			t.stop();
-			cout << " - Timing: Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
+			std::cout << " - Timing: Reset of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
 		file.peek();
 		if (file.eof())
 			file.close();
+
+		if (c.extraVerbose)
+		{
+			std::cout << "Finished block " << count << endl;
+		}
+		count++;
 	}
-	cout << "Completed compression of file: " << filename << endl;
+	std::cout << "Completed compression of file: " << filename << endl;
 	init.resetCompleted(blockSize, activePairs, sequenceArray);
 	return 0;
 }

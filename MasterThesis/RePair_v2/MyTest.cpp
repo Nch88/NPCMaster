@@ -334,6 +334,24 @@ bool MyTest::inPriorityQueueAtPosition(
 	return false;
 }
 
+int MyTest::entriesinPriorityQueueAtPosition(
+	vector<PairRecord*> & priorityQueue,
+	long index)
+{
+	PairRecord * tmpPairRecord;
+	int c = 0;
+
+	tmpPairRecord = priorityQueue[index];
+
+	while (tmpPairRecord)
+	{
+		++c;
+		tmpPairRecord = tmpPairRecord->nextPair;
+	}
+
+	return c;
+}
+
 bool MyTest::compareFiles(string file1, string file2, long &badChar)
 {
 	ifstream stream1(file1);

@@ -3361,272 +3361,272 @@ TEST(sameContext, diddy)
 	ASSERT_FALSE(algP.sameContext(index, sequenceArray));
 }
 
-TEST(checkLeft, recurring_pairs)
-{
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
-	activePairs.set_empty_key(-1);
-	activePairs.set_deleted_key(-2);
-	vector<SymbolRecord*> sequenceArray;
-	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
-	dictionary.set_empty_key(-1);
-	dictionary.set_deleted_key(-2);
-	long Symbols(65);
-
-	Initializer init;
-	Conditions c;
-	AlgorithmP algP;
-	MyTest t;
-	Huffman h;
-	Outputter out;
-	Dictionary finalDict;
-	GammaCode gc;
-	Decoder dec;
-
-	//c.compact = true;
-	c.verbose = true;
-	string input1 = "recurring_pairs.txt";
-
-	int priorityQueueSize;
-	int blockSize;
-	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
-	indices.set_empty_key(-1);
-	indices.set_deleted_key(-2);
-	string filename = input1;
-	ifstream file(filename);
-	bool firstBlock = true;
-
-	init.SequenceArray(
-		c,
-		file,
-		blockSize,
-		activePairs,
-		sequenceArray,
-		terminals);
-
-	priorityQueueSize = sqrt(sequenceArray.size());
-	priorityQueue.resize(priorityQueueSize);
-	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
-
-	//yxyabcdyxyefghxyxyijkyxy -> yAabcdyAefghAAijkyA -> BabcdBefghAAijkB
-
-	string string1 = "yxyabcdyxyefghxyxyijkyxy";
-	string string2 = "BabcdBefghAAijkB";
-
-	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
-
-	int insane = 0;
-	
-	//Run - start
-	CompactionData cData(sequenceArray.size());
-
-	//manageHighPriorityList - start
-	PairRecord * tmpPairRecord = nullptr;
-	PairRecord * tmpPairRecordSelected = nullptr;
-	long sequenceIndex = 0;
-	long last = priorityQueue.size() - 1;
-
-	while (priorityQueue[last])
-	{
-		tmpPairRecordSelected = priorityQueue[last];
-		tmpPairRecord = priorityQueue[last];
-
-		//Find pair with most occurences
-		while (tmpPairRecord->nextPair)
-		{
-			tmpPairRecord = tmpPairRecord->nextPair;
-			if (tmpPairRecord->count > tmpPairRecordSelected->count)
-				tmpPairRecordSelected = tmpPairRecord;
-		}
-		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
-
-		//Remove current pair from priority queue
-		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
-		{
-			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
-			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
-		}
-		else if (tmpPairRecordSelected->previousPair)
-		{
-			tmpPairRecordSelected->previousPair->nextPair = nullptr;
-		}
-		else if (tmpPairRecordSelected->nextPair)
-		{
-			priorityQueue[last] = tmpPairRecordSelected->nextPair;
-			priorityQueue[last]->previousPair = nullptr;
-		}
-		else
-			priorityQueue[last] = nullptr;
-		tmpPairRecordSelected->previousPair = nullptr;
-		tmpPairRecordSelected->nextPair = nullptr;
-
-		//Find the count of the pair to be replaced and update counter for compaction
-		if (c.compact)
-		{
-			long i = sequenceIndex;
-			long s1 = sequenceArray[i]->symbol;
-			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
-			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
-		}
-
-		//replaceAllPairs - start
-		long indexSymbolLeft = -1;
-		long indexSymbolRight = -1;
-		long indexSymbolPrevious = -1;
-		long indexSymbolNext = -1;
-
-		SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
-
-
-		algP.firstPass(
-			sequenceIndex,
-			sequenceArray,
-			activePairs,
-			priorityQueue,
-			Symbols,
-			c);
-
-		bool skip = false;
-
-		//DEBUG
-		int count = 0;
-
-		do
-		{
-			indexSymbolLeft = -1;
-			indexSymbolRight = -1;
-			indexSymbolPrevious = -1;
-			indexSymbolNext = -1;
-
-			sequenceIndex = nextSymbol->index;
-			//Store the pointer to the next symbol now, as the current symbol is changed as we go
-			nextSymbol = nextSymbol->next;
-
-			algP.establishContext(
-				indexSymbolLeft,
-				indexSymbolRight,
-				indexSymbolPrevious,
-				indexSymbolNext,
-				sequenceIndex,
-				sequenceArray);
-
-			algP.replaceInstanceOfPair(
-				indexSymbolLeft,
-				indexSymbolRight,
-				indexSymbolPrevious,
-				indexSymbolNext,
-				sequenceArray,
-				dictionary,
-				activePairs,
-				priorityQueue,
-				Symbols,
-				skip,
-				c);
-
-
-
-			//DEBUG
-			count++;
-		} while (nextSymbol);
-
-		//DEBUG
-		MyTest t;
-		int insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
-		if (insane)
-		{
-			string test = t.SanityCheckThreadingPointersDetailed(sequenceArray);
-			int x = 0;
-		}
-		//replaceAllPairs - end
-
-		t.ActivePairs("Active pairs: ", activePairs);
-		insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
-
-		//Compaction
-		if (c.compact)
-		{
-			if (cData.replaceCount > cData.compactTotal)
-			{
-				algP.compact(sequenceArray, activePairs, priorityQueue);
-				cData.updateCompactTotal();
-			}
-		}
-
-		//Pick new symbol
-		algP.newSymbol(Symbols);
-	}
-	//manageHighPriorityList - end
-
-
-	//manageLowerPriorityLists - start
-	//Runs through all entries from second last to first
-	for (long i = priorityQueue.size() - 2; i >= 0; i--)
-	{
-		//manageOneList - start
-		while (priorityQueue[i])
-		{
-			//manageOneEntryOnList - start
-			PairRecord * tmpPairRecord = nullptr;
-			long sequenceIndex = -1;
-
-			tmpPairRecord = priorityQueue[i];
-			sequenceIndex = tmpPairRecord->arrayIndexFirst;
-
-			//Remove current pair from priority queue
-			if (tmpPairRecord->nextPair)
-			{
-				priorityQueue[i] = tmpPairRecord->nextPair;
-				priorityQueue[i]->previousPair = nullptr;
-			}
-			else
-				priorityQueue[i] = nullptr;
-			tmpPairRecord->previousPair = nullptr;
-			tmpPairRecord->nextPair = nullptr;
-
-			//Find the count of the pair to be replaced and update counter for compaction
-			if (c.compact)
-			{
-				long idx = sequenceIndex;
-				long s1 = sequenceArray[idx]->symbol;
-				long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
-				cData.replaceCount += activePairs[s1][s2].pairRecord->count;
-			}
-
-			algP.replaceAllPairs(
-				sequenceIndex,
-				sequenceArray,
-				dictionary,
-				activePairs,
-				priorityQueue,
-				Symbols,
-				c);
-
-			t.ActivePairs("Active pairs: ", activePairs);
-			insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
-
-			//Compaction
-			if (c.compact)
-			{
-				if (cData.replaceCount > cData.compactTotal)
-				{
-					algP.compact(sequenceArray, activePairs, priorityQueue);
-					cData.updateCompactTotal();
-				}
-			}
-
-			//Pick new symbol
-			algP.newSymbol(Symbols);
-			//manageOneEntryOnList - end
-		}
-		//manageOneList - end
-	}
-	//manageLowerPriorityLists - end
-	//Run - end
-	
-	t.ActivePairs("Active pairs: ", activePairs);
-
-	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
-}
+//TEST(checkLeft, recurring_pairs)
+//{
+//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	activePairs.set_empty_key(-1);
+//	activePairs.set_deleted_key(-2);
+//	vector<SymbolRecord*> sequenceArray;
+//	vector<PairRecord*> priorityQueue;
+//	dense_hash_map<long, Pair> dictionary;
+//	dictionary.set_empty_key(-1);
+//	dictionary.set_deleted_key(-2);
+//	long Symbols(65);
+//
+//	Initializer init;
+//	Conditions c;
+//	AlgorithmP algP;
+//	MyTest t;
+//	Huffman h;
+//	Outputter out;
+//	Dictionary finalDict;
+//	GammaCode gc;
+//	Decoder dec;
+//
+//	//c.compact = true;
+//	c.verbose = true;
+//	string input1 = "recurring_pairs.txt";
+//
+//	int priorityQueueSize;
+//	int blockSize;
+//	blockSize = 1048576;
+//	unordered_set<long> terminals;
+//	vector<CompactPair> pairs;
+//	dense_hash_map <long, dense_hash_map<long, long>> indices;
+//	indices.set_empty_key(-1);
+//	indices.set_deleted_key(-2);
+//	string filename = input1;
+//	ifstream file(filename);
+//	bool firstBlock = true;
+//
+//	init.SequenceArray(
+//		c,
+//		file,
+//		blockSize,
+//		activePairs,
+//		sequenceArray,
+//		terminals);
+//
+//	priorityQueueSize = sqrt(sequenceArray.size());
+//	priorityQueue.resize(priorityQueueSize);
+//	init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+//
+//	//yxyabcdyxyefghxyxyijkyxy -> yAabcdyAefghAAijkyA -> BabcdBefghAAijkB
+//
+//	string string1 = "yxyabcdyxyefghxyxyijkyxy";
+//	string string2 = "BabcdBefghAAijkB";
+//
+//	ASSERT_EQ(string1, t.SequenceToString(sequenceArray));
+//
+//	int insane = 0;
+//	
+//	//Run - start
+//	CompactionData cData(sequenceArray.size());
+//
+//	//manageHighPriorityList - start
+//	PairRecord * tmpPairRecord = nullptr;
+//	PairRecord * tmpPairRecordSelected = nullptr;
+//	long sequenceIndex = 0;
+//	long last = priorityQueue.size() - 1;
+//
+//	while (priorityQueue[last])
+//	{
+//		tmpPairRecordSelected = priorityQueue[last];
+//		tmpPairRecord = priorityQueue[last];
+//
+//		//Find pair with most occurences
+//		while (tmpPairRecord->nextPair)
+//		{
+//			tmpPairRecord = tmpPairRecord->nextPair;
+//			if (tmpPairRecord->count > tmpPairRecordSelected->count)
+//				tmpPairRecordSelected = tmpPairRecord;
+//		}
+//		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
+//
+//		//Remove current pair from priority queue
+//		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
+//		{
+//			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
+//			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
+//		}
+//		else if (tmpPairRecordSelected->previousPair)
+//		{
+//			tmpPairRecordSelected->previousPair->nextPair = nullptr;
+//		}
+//		else if (tmpPairRecordSelected->nextPair)
+//		{
+//			priorityQueue[last] = tmpPairRecordSelected->nextPair;
+//			priorityQueue[last]->previousPair = nullptr;
+//		}
+//		else
+//			priorityQueue[last] = nullptr;
+//		tmpPairRecordSelected->previousPair = nullptr;
+//		tmpPairRecordSelected->nextPair = nullptr;
+//
+//		//Find the count of the pair to be replaced and update counter for compaction
+//		if (c.compact)
+//		{
+//			long i = sequenceIndex;
+//			long s1 = sequenceArray[i]->symbol;
+//			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+//			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+//		}
+//
+//		//replaceAllPairs - start
+//		long indexSymbolLeft = -1;
+//		long indexSymbolRight = -1;
+//		long indexSymbolPrevious = -1;
+//		long indexSymbolNext = -1;
+//
+//		SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+//
+//
+//		algP.firstPass(
+//			sequenceIndex,
+//			sequenceArray,
+//			activePairs,
+//			priorityQueue,
+//			Symbols,
+//			c);
+//
+//		bool skip = false;
+//
+//		//DEBUG
+//		int count = 0;
+//
+//		do
+//		{
+//			indexSymbolLeft = -1;
+//			indexSymbolRight = -1;
+//			indexSymbolPrevious = -1;
+//			indexSymbolNext = -1;
+//
+//			sequenceIndex = nextSymbol->index;
+//			//Store the pointer to the next symbol now, as the current symbol is changed as we go
+//			nextSymbol = nextSymbol->next;
+//
+//			algP.establishContext(
+//				indexSymbolLeft,
+//				indexSymbolRight,
+//				indexSymbolPrevious,
+//				indexSymbolNext,
+//				sequenceIndex,
+//				sequenceArray);
+//
+//			algP.replaceInstanceOfPair(
+//				indexSymbolLeft,
+//				indexSymbolRight,
+//				indexSymbolPrevious,
+//				indexSymbolNext,
+//				sequenceArray,
+//				dictionary,
+//				activePairs,
+//				priorityQueue,
+//				Symbols,
+//				skip,
+//				c);
+//
+//
+//
+//			//DEBUG
+//			count++;
+//		} while (nextSymbol);
+//
+//		//DEBUG
+//		MyTest t;
+//		int insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
+//		if (insane)
+//		{
+//			string test = t.SanityCheckThreadingPointersDetailed(sequenceArray);
+//			int x = 0;
+//		}
+//		//replaceAllPairs - end
+//
+//		t.ActivePairs("Active pairs: ", activePairs);
+//		insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
+//
+//		//Compaction
+//		if (c.compact)
+//		{
+//			if (cData.replaceCount > cData.compactTotal)
+//			{
+//				algP.compact(sequenceArray, activePairs, priorityQueue);
+//				cData.updateCompactTotal();
+//			}
+//		}
+//
+//		//Pick new symbol
+//		algP.newSymbol(Symbols);
+//	}
+//	//manageHighPriorityList - end
+//
+//
+//	//manageLowerPriorityLists - start
+//	//Runs through all entries from second last to first
+//	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+//	{
+//		//manageOneList - start
+//		while (priorityQueue[i])
+//		{
+//			//manageOneEntryOnList - start
+//			PairRecord * tmpPairRecord = nullptr;
+//			long sequenceIndex = -1;
+//
+//			tmpPairRecord = priorityQueue[i];
+//			sequenceIndex = tmpPairRecord->arrayIndexFirst;
+//
+//			//Remove current pair from priority queue
+//			if (tmpPairRecord->nextPair)
+//			{
+//				priorityQueue[i] = tmpPairRecord->nextPair;
+//				priorityQueue[i]->previousPair = nullptr;
+//			}
+//			else
+//				priorityQueue[i] = nullptr;
+//			tmpPairRecord->previousPair = nullptr;
+//			tmpPairRecord->nextPair = nullptr;
+//
+//			//Find the count of the pair to be replaced and update counter for compaction
+//			if (c.compact)
+//			{
+//				long idx = sequenceIndex;
+//				long s1 = sequenceArray[idx]->symbol;
+//				long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
+//				cData.replaceCount += activePairs[s1][s2].pairRecord->count;
+//			}
+//
+//			algP.replaceAllPairs(
+//				sequenceIndex,
+//				sequenceArray,
+//				dictionary,
+//				activePairs,
+//				priorityQueue,
+//				Symbols,
+//				c);
+//
+//			t.ActivePairs("Active pairs: ", activePairs);
+//			insane = t.SanityCheck(sequenceArray, priorityQueue, activePairs);
+//
+//			//Compaction
+//			if (c.compact)
+//			{
+//				if (cData.replaceCount > cData.compactTotal)
+//				{
+//					algP.compact(sequenceArray, activePairs, priorityQueue);
+//					cData.updateCompactTotal();
+//				}
+//			}
+//
+//			//Pick new symbol
+//			algP.newSymbol(Symbols);
+//			//manageOneEntryOnList - end
+//		}
+//		//manageOneList - end
+//	}
+//	//manageLowerPriorityLists - end
+//	//Run - end
+//	
+//	t.ActivePairs("Active pairs: ", activePairs);
+//
+//	ASSERT_EQ(string2, t.SequenceToString(sequenceArray));
+//}

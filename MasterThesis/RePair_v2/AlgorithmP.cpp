@@ -1148,13 +1148,33 @@ void AlgorithmP::replaceAllPairs(
 	long & Symbols,
 	Conditions& c)
 {
+	MyTimer clock;
+
 	long indexSymbolLeft = -1;
 	long indexSymbolRight = -1;
 	long indexSymbolPrevious = -1;
 	long indexSymbolNext = -1;
 
 	SymbolRecord * nextSymbol = sequenceArray[sequenceIndex];
+
+	/*if (c.extraVerbose)
+	{
+		establishContext(
+			indexSymbolLeft,
+			indexSymbolRight,
+			indexSymbolPrevious,
+			indexSymbolNext,
+			sequenceIndex,
+			sequenceArray);
+
+		cout << "Compressing pair (" << sequenceArray[indexSymbolLeft]->symbol << ", " << sequenceArray[indexSymbolRight]->symbol << ") with count: "
+			<< activePairs[sequenceArray[indexSymbolLeft]->symbol][sequenceArray[indexSymbolRight]->symbol].pairRecord->count << endl;
+	}*/
 	
+	if (c.timing)
+	{
+		clock.start();
+	}
 
 	firstPass(
 		sequenceIndex,
@@ -1164,10 +1184,21 @@ void AlgorithmP::replaceAllPairs(
 		Symbols,
 		c);
 
+	if (c.timing)
+	{
+		clock.stop();
+		cout << "	Timing first pass: " << clock.getTime() << endl;
+	}
+
 	bool skip = false;
 
 	//DEBUG
 	int count = 0;
+
+	if (c.timing)
+	{
+		clock.start();
+	}
 
 	do
 	{
@@ -1213,6 +1244,12 @@ void AlgorithmP::replaceAllPairs(
 		//DEBUG
 		count++;
 	} while (nextSymbol);
+
+	if (c.timing)
+	{
+		clock.stop();
+		cout << "	Timing second pass: " << clock.getTime() << endl;
+	}
 
 	//DEBUG
 	MyTest t;
@@ -1327,9 +1364,21 @@ void AlgorithmP::manageLowerPriorityLists(
 	CompactionData &cData,
 	Conditions& c)
 {
+	//DEBUG
+	MyTest t;
 	//Runs through all entries from second last to first
 	for (long i = priorityQueue.size() - 2; i >= 0; i--)
 	{		
+		if (c.extraVerbose)
+		{
+			int c = t.entriesinPriorityQueueAtPosition(priorityQueue, i);
+			cout << "Replacing " << c << " pairs with count " << i + 2 << endl;
+		}
+		//DEBUG
+		if (i == 60)
+		{
+			int x = 0;
+		}
 		manageOneList(
 			i,
 			sequenceArray,
@@ -1444,7 +1493,10 @@ void AlgorithmP::run(
 	Conditions& c)
 {
 	CompactionData cData(sequenceArray.size());
-
+	if (c.extraVerbose)
+	{
+		cout << "Compressing high priority pairs" << endl;
+	}
 	manageHighPriorityList(
 		sequenceArray,
 		dictionary,
@@ -1453,7 +1505,10 @@ void AlgorithmP::run(
 		Symbols,
 		cData,
 		c);
-
+	if (c.extraVerbose)
+	{
+		cout << "Compressing low priority pairs" << endl;
+	}
 	manageLowerPriorityLists(
 		sequenceArray,
 		dictionary,
