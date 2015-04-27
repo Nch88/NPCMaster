@@ -54,7 +54,7 @@ public:
 	///<param name="activePairs">Output: Contains all pairs that appear twice or more in the input data.</param>
 	///<param name="sequenceArray">Output: Contains the sequence of input characters are they were read from the stream.</param>
 	int SequenceArray(
-		Conditions c,
+		Conditions &c,
 		ifstream & file,
 		int & blockSize,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,

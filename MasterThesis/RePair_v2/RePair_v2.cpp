@@ -96,7 +96,7 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 		c.test = true;
 	else
 	{		
-		int mbs = 500;
+		int mbs = 1;
 		int error = stringToInt(argS, mbs);
 		if (error != 0)
 		{

@@ -149,7 +149,7 @@ void Initializer::addToSequenceArray(
 }
 
 int Initializer::SequenceArray(
-	Conditions c,
+	Conditions &c,
 	ifstream & file,
 	int & blockSize,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
