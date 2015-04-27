@@ -84,7 +84,8 @@ void Outputter::huffmanEncoding(
 	ofstream &myfile,
 	vector<SymbolRecord *>& sequenceArray,
 	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
-	bool firstBlock)
+	bool firstBlock,
+	Conditions &c)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	short chunkSize = sizeof(bitset<32>) * CHAR_BIT; //Bitset outputs a certain minimum nr of bytes
@@ -126,8 +127,10 @@ void Outputter::huffmanEncoding(
 		//Write chunk and reset for next chunk
 		//If last symbol then do not write yet as we need to pad the chunk, unless this chunk is full
 		if (seqIndex < sequenceArray.size() || chunk.size() == chunkSize)
-		{
+		{			
 			writeChunkFromString(myfile, chunk, bitsToWrite);
+			if (c.test)
+				c.ts->c_sequence += 4;
 			chunk = "";
 		}
 	}
@@ -148,6 +151,8 @@ void Outputter::huffmanEncoding(
 
 	//Write the last actual chunk
 	writeChunkFromString(myfile, chunk, bitsToWrite);
+	if (c.test)
+		c.ts->c_sequence += 4;
 	chunk = "";
 
 	//Write padding chunk
@@ -155,6 +160,8 @@ void Outputter::huffmanEncoding(
 	bitsToWrite = new bitset<32>(paddingBits);
 	bitsToWrite->set(bitsToWrite->size() - 1, true);
 	writeChunk(myfile, bitsToWrite);
+	if (c.test)
+		c.ts->c_sequence += 4;
 	delete bitsToWrite;
 
 	if (firstBlock)
@@ -170,7 +177,8 @@ void Outputter::huffmanDictionary(
 	vector<vector<unsigned long *>>& pairVectors,
 	dense_hash_map<unsigned long, unsigned long >& symbolToGen,
 	vector<unsigned long>& terminals,
-	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol,
+	Conditions &c)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
@@ -218,6 +226,8 @@ void Outputter::huffmanDictionary(
 			gammaCodes = gammaCodes.substr(32, string::npos);
 
 			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
+			if (c.test)
+				c.ts->c_huffmanDictionary += 4;
 		}
 	}
 	if (gammaCodes.size() != 0)
@@ -227,6 +237,8 @@ void Outputter::huffmanDictionary(
 			gammaCodes += '0';
 		}
 		writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
+		if (c.test)
+			c.ts->c_huffmanDictionary += 4;
 	}
 	
 	delete bitsToWrite;
@@ -298,7 +310,8 @@ void Outputter::dictionary2(
 	ofstream &myfile,
 	vector<vector<unsigned long *>>& pairVectors,
 	vector<unsigned long >& terminalVector,
-	bool firstBlock)
+	bool firstBlock,
+	Conditions &c)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
@@ -312,13 +325,23 @@ void Outputter::dictionary2(
 	{
 		output += gc.getGammaCode(terminalVector[i]);
 		while (output.size() >= 32)
+		{
 			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
+			
 	}
 
 	//Then a header w/ number of generations
 	output += gc.getGammaCode(pairVectors.size());
 	while (output.size() >= 32)
+	{
 		writeDictionaryChunk(myfile, output, bitsToWrite);
+		if (c.test)
+			c.ts->c_dictionary += 4;
+	}
+		
 
 	//Then for each generation
 	int maxIndex = terminalVector.size() - 1;
@@ -327,19 +350,31 @@ void Outputter::dictionary2(
 		//Header is size of generation + max possible index found in that generation
 		output += gc.getGammaCode(pairVectors[gen].size()) + gc.getGammaCode(maxIndex);
 		while (output.size() >= 32)
+		{
 			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
 
 		//Write first left element
 		output += gc.getGammaCode(pairVectors[gen][0][0]);
 		while (output.size() >= 32)
+		{
 			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
 
 		//Write differences between remaining lefts
 		for (int i = 1; i < pairVectors[gen].size(); ++i)
 		{
 			output += gc.getGammaCode((pairVectors[gen][i][0] - pairVectors[gen][i-1][0]));
 			while (output.size() >= 32)
+			{
 				writeDictionaryChunk(myfile, output, bitsToWrite);
+				if (c.test)
+					c.ts->c_dictionary += 4;
+			}
 		}
 
 		//Write rights
@@ -351,7 +386,11 @@ void Outputter::dictionary2(
 				binary = '0' + binary;
 			output += binary;
 			while (output.size() >= 32)
+			{
 				writeDictionaryChunk(myfile, output, bitsToWrite);
+				if (c.test)
+					c.ts->c_dictionary += 4;
+			}
 		}
 
 		//Increase maxindex by the size of the generation
@@ -364,6 +403,8 @@ void Outputter::dictionary2(
 			output += '0';
 		}
 		writeDictionaryChunk(myfile, output, bitsToWrite);						//Write the last gamma codes and possibly padding
+		if (c.test)
+			c.ts->c_dictionary += 4;
 	}
 }
 
@@ -426,7 +467,8 @@ void Outputter::all(
 		ofs_compressed,
 		sequenceArray,
 		huffmanCodes,
-		firstBlock);
+		firstBlock,
+		c);
 	if (c.test)
 	{
 		c.ts->testTimer.stop();
@@ -467,7 +509,8 @@ void Outputter::all(
 		ofs_dictionary,
 		pairs,
 		terminalVector,
-		firstBlock);
+		firstBlock,
+		c);
 	if (c.test)
 	{
 		c.ts->testTimer.stop();
@@ -488,7 +531,8 @@ void Outputter::all(
 		pairs,
 		StG,
 		terminalVector,
-		huffmanToSymbol);
+		huffmanToSymbol,
+		c);
 	if (c.test)
 	{
 		c.ts->testTimer.stop();

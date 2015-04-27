@@ -15,7 +15,8 @@ public:
 		ofstream &myfile,
 		vector<SymbolRecord *>& sequenceArray,
 		dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
-		bool firstBlock);
+		bool firstBlock,
+		Conditions &c);
 	void Outputter::huffmanDictionary(
 		string outFile,
 		ofstream &myfile,
@@ -25,7 +26,8 @@ public:
 		std::vector<std::vector<unsigned long *>>& pairVectors,
 		dense_hash_map<unsigned long, unsigned long >& symbolToGen,
 		vector<unsigned long >& terminals,
-		dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol);
+		dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol,
+		Conditions &c);
 	void compressedFile(
 		string inputFile,
 		vector<SymbolRecord>& sequenceArray,
@@ -40,7 +42,8 @@ public:
 		std::ofstream &myfile,
 		std::vector<std::vector<unsigned long *>>& pairVectors,
 		vector<unsigned long >& terminalVector,
-		bool firstBlock);
+		bool firstBlock,
+		Conditions &c);
 	void Outputter::all(
 		string filename,
 		bool firstBlock,

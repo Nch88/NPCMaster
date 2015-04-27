@@ -168,10 +168,14 @@ int Initializer::SequenceArray(
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
 		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
+		if (c.test)
+			c.ts->addMemory("initSeq", 3);
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
 			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
+			if (c.test)
+				c.ts->addMemory("initSeq", 3);
 			
 			setupPairRecord(
 				(unsigned long )previousSymbol,
@@ -184,19 +188,11 @@ int Initializer::SequenceArray(
 		//Read symbols until we reach the determined block size
 		while (symbolCount < blockSize && file >> noskipws >> rightSymbol && rightSymbol)
 		{
-			if (c.timing)
-			{
-				t.start();
-				cout << " - Timing: Timing push back onto Sequence array" << endl;
-			}
+			
 			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
-			if (c.timing)
-			{
-				t.stop();
-				long long tmp = t.getTime().count();
-				if (tmp > 1)
-					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
-			}
+			if (c.test)
+				c.ts->addMemory("initSeq", 3);
+			
 			
 			//Skip if the current symbols is the right part of a pair of identical symbols
 			if (leftSymbol == rightSymbol &&
@@ -209,24 +205,14 @@ int Initializer::SequenceArray(
 			}
 			else
 			{
-				if (c.timing)
-				{
-					t.start();
-					cout << " - Timing: Timing setup pair record" << endl;
-				}
+				
 				setupPairRecord(
 				(unsigned long )leftSymbol,
 				(unsigned long )rightSymbol,
 				index - 2,
 				activePairs,
 				sequenceArray);
-				if (c.timing)
-				{
-					t.stop();
-					long long tmp = t.getTime().count();
-					if (tmp > 1)
-						cout << " - Timing: Time of setting up pair record took " << tmp << " ms" << endl;
-				}
+				
 
 				skippedPair = false;
 				previousSymbol = leftSymbol;

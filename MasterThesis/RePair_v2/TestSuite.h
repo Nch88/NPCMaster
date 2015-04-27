@@ -16,6 +16,8 @@ public:
 
 	//Memory
 	//m_initialization;
+	long m_init_sequenceArray_current = 0;
+	long m_init_sequenceArray_max = 0;
 	// m_repair;
 	// m_huffmanEncoding;
 	// m_huffmanDictionary;
@@ -24,7 +26,9 @@ public:
 	// m_decompression;
 
 	//Compression
-	long compression = 0;
+	long c_sequence = 0;
+	long c_huffmanDictionary = 0;
+	long c_dictionary = 0;
 
 	//Statistics
 	long s_maxPairs = 0;
@@ -40,5 +44,6 @@ public:
 	~TestSuite();
 
 	void WriteToFileEncoding();
+	void addMemory(std::string part, long value);
 };
 
