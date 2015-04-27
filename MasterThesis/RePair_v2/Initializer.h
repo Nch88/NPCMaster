@@ -60,7 +60,7 @@ public:
 	///<param name="sequenceArray">Output: Contains the sequence of input characters are they were read from the stream.</param>
 	///<param name="terminals">Output: Contains all of the different characters from the input data.</param>
 	int SequenceArray(
-		Conditions c,
+		Conditions &c,
 		ifstream & file,
 		int & blockSize,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
