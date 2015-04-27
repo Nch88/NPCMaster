@@ -36,6 +36,10 @@ int Algorithm::run(
 
 	while (file.is_open())
 	{
+		if (c.test)
+		{
+			c.ts->s_nrOfBlocks++;
+		}
 		if (c.verbose)
 		{
 			cout << " - Verbose: Initializing block" << endl;
@@ -44,6 +48,11 @@ int Algorithm::run(
 		{
 			t.start();
 		}
+		if (c.test)
+		{
+			c.ts->testTimer.start();
+		}
+
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
 
 		if (c.timing)
@@ -58,6 +67,11 @@ int Algorithm::run(
 			t.start();
 		}
 		init.PriorityQueue(priorityQueueSize, activePairs, priorityQueue, c);
+		if (c.test)
+		{
+			c.ts->testTimer.stop();
+			c.ts->t_initialization += c.ts->testTimer.getTimeNano();
+		}
 		if (c.timing)
 		{
 			t.stop();
@@ -72,13 +86,21 @@ int Algorithm::run(
 		{
 			cout << " - Verbose: Starting repair compression" << endl;
 		}
+		if (c.test)
+		{
+			c.ts->testTimer.start();
+		}
 		algP.run(
 			sequenceArray,
 			activePairs,
 			priorityQueue,
 			symbols,
 			c);			
-
+		if (c.test)
+		{
+			c.ts->testTimer.stop();
+			c.ts->t_repair += c.ts->testTimer.getTimeNano();
+		}
 		if (c.timing)
 		{
 			t.stop();

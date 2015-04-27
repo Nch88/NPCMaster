@@ -376,10 +376,9 @@ void Outputter::all(
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
 {
-
 	//Create names for output files
-	string compressedFilename = this->addFilenameEnding(filename, ".NPC");
-	string compressedDictionaryName = this->addFilenameEnding(filename, ".dict.NPC");
+	string compressedFilename = filename + ".NPC";
+	string compressedDictionaryName = filename + ".dict.NPC";
 
 	ofstream ofs_compressed;
 	if (firstBlock)
@@ -405,9 +404,22 @@ void Outputter::all(
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
 
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 	//Generate Huffman codes
 	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_huffmanEncoding += c.ts->testTimer.getTimeNano();
+	}
 
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 	//Encode sequence array and write it to file
 	this->huffmanEncoding(
 		compressedFilename,
@@ -415,6 +427,11 @@ void Outputter::all(
 		sequenceArray,
 		huffmanCodes,
 		firstBlock);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_encodeSequence += c.ts->testTimer.getTimeNano();
+	}
 
 	//Encode generations for dictionary
 	Dictionary finalDict;
@@ -424,21 +441,43 @@ void Outputter::all(
 	unordered_set<unsigned long> terminals;
 	vector<unsigned long> terminalVector;
 
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 	finalDict.createSupportStructures(sequenceArray, terminals, StG, pairs);
 
 	finalDict.switchToOrdinalNumbers(terminals, StG, pairs, terminalVector);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_setupDictionary += c.ts->testTimer.getTimeNano();
+	}
 
 	//Write dictionary to file
 	GammaCode gc;
 	string output = "";
 
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 	this->dictionary2(
 		compressedDictionaryName,		
 		ofs_dictionary,
 		pairs,
 		terminalVector,
 		firstBlock);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_writeDictionary += c.ts->testTimer.getTimeNano();
+	}
 
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 	//Write Huffman dictionary to file
 	this->huffmanDictionary(
 		compressedDictionaryName,
@@ -450,6 +489,11 @@ void Outputter::all(
 		StG,
 		terminalVector,
 		huffmanToSymbol);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_writeHuffmanDictionary += c.ts->testTimer.getTimeNano();
+	}
 
 	//DEBUG
 	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);

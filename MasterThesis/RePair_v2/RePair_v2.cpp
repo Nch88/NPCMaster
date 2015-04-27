@@ -92,9 +92,11 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 		c.timing = true;
 	else if (argS == "c" || argS == "compact")
 		c.compact = true;
+	else if (argS == "test")
+		c.test = true;
 	else
 	{		
-		int mbs = 1;
+		int mbs = 500;
 		int error = stringToInt(argS, mbs);
 		if (error != 0)
 		{
@@ -166,6 +168,12 @@ int main(int argc, char* argv[])
 			interpretParameter(argv[i], c, blockSize);
 		}
 
+		if (c.test)
+		{
+			c.ts = new TestSuite();
+			c.ts->s_filename.assign(filename);
+		}
+
 		ifstream file(filename);
 
 		if (file.is_open())
@@ -182,6 +190,11 @@ int main(int argc, char* argv[])
 				sequenceArray,
 				priorityQueue,
 				symbols);
+
+			if (c.test)
+			{
+				c.ts->WriteToFileEncoding();
+			}
 		}
 		else
 		{

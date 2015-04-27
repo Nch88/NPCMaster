@@ -193,7 +193,7 @@ int Initializer::SequenceArray(
 			if (c.timing)
 			{
 				t.stop();
-				long long tmp = t.getTime();
+				long long tmp = t.getTime().count();
 				if (tmp > 1)
 					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
@@ -223,7 +223,7 @@ int Initializer::SequenceArray(
 				if (c.timing)
 				{
 					t.stop();
-					long long tmp = t.getTime();
+					long long tmp = t.getTime().count();
 					if (tmp > 1)
 						cout << " - Timing: Time of setting up pair record took " << tmp << " ms" << endl;
 				}
