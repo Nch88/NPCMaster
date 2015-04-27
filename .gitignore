@@ -30,3 +30,6 @@ MasterThesis/lib/boost_1_57_0/
 MasterThesis/unittest_RePair_v2/unittest_RePair_v2_Decoder_Nicolai_old.cpp
 MasterThesis/unittest_RePair_v2/TestPairs
 *.txt
+MasterThesis/RePair_v2/Debug/RePair_v2.res
+*.rc
+*.res
