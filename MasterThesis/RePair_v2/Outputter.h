@@ -8,7 +8,7 @@ public:
 	string createName(string inputFile, string addName);
 	string Outputter::addFilenameEnding(string inputFile, string addName);
 	void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite);
-	void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite);
+	void Outputter::writeChunkFromString(ofstream &myfile, string chunk);
 	void Outputter::huffmanEncoding(
 		string outFile,
 		ofstream &myfile,

@@ -47,20 +47,17 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 	}
 }
 
-void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite)
-{					
-	//DEBUG
-	if (chunk.size() != 32)
-		cerr << "Outputter::writeChunkFromString bad chunk size" << endl;
-	for (int i = 0; i < 32; i++)
+void Outputter::writeChunkFromString(ofstream &myfile, string chunk)
+{
+	for (int i = 0; i <= 3; ++i) 
 	{
-		if (chunk[i] == '1')
-			bitsToWrite->set(31 - i, true);
-		else
-			bitsToWrite->set(31 - i, false);
+		uint8_t byte = 0;
+		for (int j = 0; j <= 7; ++j)
+		{
+			byte = (byte << 1) | (chunk[i * 8 + j] == '1');
+		}
+		myfile.write((char*)&byte, 1);
 	}
-
-	writeChunk(myfile, bitsToWrite);
 }
 
 void Outputter::huffmanEncoding(
@@ -111,7 +108,7 @@ void Outputter::huffmanEncoding(
 		//If last symbol then do not write yet as we need to pad the chunk, unless this chunk is full
 		if (seqIndex < sequenceArray.size() || chunk.size() == chunkSize)
 		{
-			writeChunkFromString(myfile, chunk, bitsToWrite);
+			writeChunkFromString(myfile, chunk);
 			chunk = "";
 		}
 	}
@@ -131,7 +128,7 @@ void Outputter::huffmanEncoding(
 	}
 
 	//Write the last actual chunk
-	writeChunkFromString(myfile, chunk, bitsToWrite);
+	writeChunkFromString(myfile, chunk);
 	chunk = "";
 
 	//Write padding chunk
@@ -156,7 +153,6 @@ void Outputter::huffmanDictionary(
 	dense_hash_map<long, long> &terminalIndices,
 	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
 {
-	bitset<32> *bitsToWrite = new bitset<32>();
 	GammaCode gc;
 
 	string gammaCodes = "";
@@ -198,7 +194,7 @@ void Outputter::huffmanDictionary(
 			stringToWrite = gammaCodes.substr(0, 32);
 			gammaCodes = gammaCodes.substr(32, string::npos);
 
-			writeChunkFromString(myfile, stringToWrite, bitsToWrite);			//Write 4 bytes of the sequence of gamma codes
+			writeChunkFromString(myfile, stringToWrite);			//Write 4 bytes of the sequence of gamma codes
 		}
 	}
 	if (gammaCodes.size() != 0)
@@ -207,10 +203,8 @@ void Outputter::huffmanDictionary(
 		{
 			gammaCodes += '0';
 		}
-		writeChunkFromString(myfile, gammaCodes, bitsToWrite);						//Write the last gamma codes and possibly padding
+		writeChunkFromString(myfile, gammaCodes);						//Write the last gamma codes and possibly padding
 	}
-	
-	delete bitsToWrite;
 }
 
 void Outputter::compressedFile(
@@ -244,9 +238,6 @@ void Outputter::dictionary(
 	string& output,
 	bool firstBlock)
 {
-	bitset<32> *bitsToWrite = new bitset<32>();
-	
-	
 	string stringToWrite, rest;
 	rest.assign(output);
 
@@ -256,7 +247,7 @@ void Outputter::dictionary(
 		//Write 4 bytes of the sequence of gamma codes
 		stringToWrite = rest.substr(0, 32);
 		rest = rest.substr(32, string::npos);
-		writeChunkFromString(myfile, stringToWrite, bitsToWrite);
+		writeChunkFromString(myfile, stringToWrite);
 	}
 
 	//Write the last bit, if any is left
@@ -266,13 +257,11 @@ void Outputter::dictionary(
 		{
 			rest += '0';
 		}
-		writeChunkFromString(myfile, rest, bitsToWrite);
+		writeChunkFromString(myfile, rest);
 	}
 
 	if (firstBlock)
 		cout << "created dictionary file: " << outFile << endl;
-
-	delete bitsToWrite;
 }
 
 void Outputter::all(
