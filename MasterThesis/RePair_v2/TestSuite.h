@@ -25,6 +25,7 @@ public:
 	boost::chrono::nanoseconds t_decompression;
 
 	//Memory
+	long m_total = 0;
 	//m_initialization;
 	long m_init_sequenceArray_current = 0;
 	long m_init_sequenceArray_max = 0;
@@ -76,17 +77,28 @@ public:
 	long m_norDic_supportStructures_total = 0;
 	
 	// m_huffmanDictionary;
+	long m_huffDic_firstCodes_max = 0;
+	long m_huffDic_nrOfCodes_max = 0;
+	long m_huffDic_huffmanToSymbol_max = 0;
+	long m_huffDic_symbolToGen_max = 0;
+	long m_huffDic_pairVectors_max = 0;
+	long m_huffDic_terminalVector_max = 0;
 
-	//Compression
+	long m_huffDic_total = 0;
+
+	//Compression (in bytes)
+	long c_origSize = 0;
 	long c_sequence = 0;
 	long c_huffmanDictionary = 0;
 	long c_dictionary = 0;
 
 	//Statistics
 	long s_maxPairs = 0;
+	long s_nrOfGenerations = 0;
+	long s_nrOfPhrases = 0;
 	long s_avgNrOfPhrases = 0;
-	long s_longestPhrase = 0;
-	long s_avgPhraseLength = 0;
+	long s_largestGeneration = 0;
+	long s_largestGenerationCount = 0;
 	int s_nrOfBlocks = 0;
 	long s_huffmanCodeLength_max = 0;
 	std::string s_filename = "";
@@ -97,6 +109,7 @@ public:
 	~TestSuite();
 
 	void WriteToFileEncoding();
+	void updateMaxMemory(long localTotal);
 	void addMemory(std::string part, long value);
 };
 

@@ -538,6 +538,16 @@ void Outputter::all(
 		c.ts->testTimer.start();
 	}
 	//Write Huffman dictionary to file
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("huffDicFirstCodes", c.ts->m_norDic_firstCodes_max);
+		c.ts->addMemory("huffDicNrOfCodes", c.ts->m_norDic_nrOfCodes_max);
+		c.ts->addMemory("huffDicPairVectors", c.ts->m_norDic_pairVectors_max);
+		c.ts->addMemory("huffDicSymbolToGen", c.ts->m_norDic_symbolToGen_max);
+		c.ts->addMemory("huffDicTerminalVector", c.ts->m_norDic_terminalVector_max);
+		c.ts->addMemory("huffDicHuffmanToSymbol", c.ts->m_norDic_huffmanToSymbol_max);
+	}
+
 	this->huffmanDictionary(
 		compressedDictionaryName,
 		ofs_dictionary,

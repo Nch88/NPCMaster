@@ -111,7 +111,11 @@ void Initializer::setupPairRecord(
 		currentTracker->seenOnce = false;
 
 		if (c.test)
+		{
 			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
+			c.ts->s_maxPairs++;
+		}
+			
 	}
 	//Pair is already active, update its record
 	else if (currentTracker->pairRecord)
@@ -173,13 +177,20 @@ int Initializer::SequenceArray(
 	{
 		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
 		if (c.test)
+		{
 			c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+			c.ts->c_origSize++;
+		}
+			
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
 			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
+			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+				c.ts->c_origSize++;
+			}
 			
 			setupPairRecord(
 				(unsigned long )previousSymbol,
@@ -196,7 +207,10 @@ int Initializer::SequenceArray(
 			
 			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
+			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+				c.ts->c_origSize++;
+			}
 			
 			
 			//Skip if the current symbols is the right part of a pair of identical symbols

@@ -477,7 +477,11 @@ void AlgorithmP::incrementCountLeft(
 				activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
 
 				if (c.test)
+				{
 					c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
+					c.ts->s_maxPairs++;
+				}
+					
 
 				//Add to priority queue
 				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
@@ -548,7 +552,11 @@ void AlgorithmP::incrementCountRight(
 			activePairs[Symbols][symbolNext].pairRecord->count = 2;
 
 			if (c.test)
+			{
 				c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
+				c.ts->s_maxPairs++;
+			}
+				
 
 			//Add to priority queue
 			PairTracker* tracker = &activePairs[Symbols][symbolNext];
