@@ -3,7 +3,7 @@ class HuffmanNode
 {
 public:
 	unsigned long  symbol;
-	int frequency;
+	int frequency; //Used
 	string code;
 	HuffmanNode * leftChild = nullptr;
 	HuffmanNode * rightChild = nullptr;

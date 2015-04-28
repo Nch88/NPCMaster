@@ -78,7 +78,8 @@ void Initializer::setupPairRecord(
 	unsigned long  rightSymbol,
 	int index,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	Conditions &c)
 {
 	PairTracker * currentTracker;
 	SymbolRecord * previousOccurence;
@@ -108,6 +109,9 @@ void Initializer::setupPairRecord(
 
 		currentTracker->indexFirst = -1;
 		currentTracker->seenOnce = false;
+
+		if (c.test)
+			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
 	}
 	//Pair is already active, update its record
 	else if (currentTracker->pairRecord)
@@ -169,20 +173,21 @@ int Initializer::SequenceArray(
 	{
 		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
 		if (c.test)
-			c.ts->addMemory("initSeq", 3);
+			c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
 			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
-				c.ts->addMemory("initSeq", 3);
+				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 			
 			setupPairRecord(
 				(unsigned long )previousSymbol,
 				(unsigned long )leftSymbol,
 				0,
 				activePairs,
-				sequenceArray);
+				sequenceArray,
+				c);
 			
 		}
 		//Read symbols until we reach the determined block size
@@ -191,7 +196,7 @@ int Initializer::SequenceArray(
 			
 			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
-				c.ts->addMemory("initSeq", 3);
+				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 			
 			
 			//Skip if the current symbols is the right part of a pair of identical symbols
@@ -211,7 +216,8 @@ int Initializer::SequenceArray(
 				(unsigned long )rightSymbol,
 				index - 2,
 				activePairs,
-				sequenceArray);
+				sequenceArray,
+				c);
 				
 
 				skippedPair = false;

@@ -73,7 +73,8 @@ public:
 		unsigned long  rightSymbol,
 		int index,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<SymbolRecord*> & sequenceArray);
+		vector<SymbolRecord*> & sequenceArray,
+		Conditions &c);
 
 	///<summary>
 	///Scans though all active pairs and add them to a priority queue based on their frequency in the current block of data.

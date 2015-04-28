@@ -48,8 +48,6 @@ public:
 		string filename,
 		bool firstBlock,
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
 		Conditions& c);
 };
 

@@ -8,14 +8,16 @@ public:
 	int Dictionary::findGenerations(
 		unsigned long  symbol, 
 		google::dense_hash_map<unsigned long , unsigned long >& symbolToGen,
-		std::unordered_set<unsigned long >& terminals);
+		std::unordered_set<unsigned long >& terminals,
+		Conditions &c);
 
 	///<summary>Create the symbol to generation table and the pair vectors.</summary>
 	void Dictionary::createSupportStructures(
 		std::vector<SymbolRecord*> & sequenceArray,
 		std::unordered_set<unsigned long >& terminals,
 		google::dense_hash_map<unsigned long , unsigned long >& symbolToGen,
-		std::vector<std::vector<unsigned long *>>& pairVectors);
+		std::vector<std::vector<unsigned long *>>& pairVectors,
+		Conditions &c);
 
 	int Dictionary::findTerminalIndex(vector<unsigned long >& terminals, unsigned long  key);
 
@@ -26,7 +28,8 @@ public:
 		std::unordered_set<unsigned long >& terminals,
 		google::dense_hash_map<unsigned long , unsigned long >& symbolToGen,
 		vector<vector<unsigned long *>>& pairVectors,
-		std::vector<unsigned long >& terminalVector);
+		std::vector<unsigned long >& terminalVector,
+		Conditions &c);
 
 	///<summary>The main dictionary function. Create a dictionary from the output from RePair.</summary>
 	void Dictionary::createDictionary(
@@ -34,7 +37,8 @@ public:
 		unordered_set<unsigned long >& terminals,
 		dense_hash_map<unsigned long, unsigned long >& symbolToGen,
 		vector<vector<unsigned long *>>& pairVectors,
-		vector<unsigned long>& terminalVector);
+		vector<unsigned long>& terminalVector,
+		Conditions &c);
 	
 	///<summary>Find the sequence of terminals corresponding to one non-terminal. Used by expandDictionary.</summary>
 	///<param name="symbolIndex">Input: The index (in decodedPairs) of the current pair</param>

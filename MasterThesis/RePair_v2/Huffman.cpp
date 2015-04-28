@@ -14,7 +14,8 @@ Huffman::~Huffman()
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<unsigned long , HuffmanNode> & frequencies,
-	unsigned long  &cardinality)
+	unsigned long  &cardinality,
+	Conditions &c)
 {
 		for each (auto &symbolRecord in sequenceArray)
 		{
@@ -22,7 +23,12 @@ void Huffman::getFrequencies(
 			{
 				frequencies[symbolRecord->symbol].frequency++;
 				if (frequencies[symbolRecord->symbol].frequency == 1)
+				{
 					++cardinality;
+					if (c.test)
+						c.ts->addMemory("huffEncFreq", c.ts->huffmanNodeWords);
+				}
+					
 			}
 		}
 		if (cardinality <= 0)
@@ -247,7 +253,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 	unsigned long  *firstCode,
 	unsigned long  *numl,
 	dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
-	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol,
+	Conditions &c)
 {
 		if (maxLength <= 0)
 			cerr << ("Huffman::generateCanonicalHuffmanCodes, Maxlength is " + to_string(maxLength)) << endl;
@@ -265,6 +272,9 @@ void Huffman::generateCanonicalHuffmanCodes(
 
 		int *nextCode = new int[maxLength];
 
+		if (c.test)
+			c.ts->addMemory("huffEncNextCodes", maxLength);
+
 		for (int i = 0; i < maxLength; i++)
 			nextCode[i] = firstCode[i];
 
@@ -275,12 +285,17 @@ void Huffman::generateCanonicalHuffmanCodes(
 			string code = codeToString(nextCode[codeLength - 1], codeLength);
 			huffmanNode.second.code.assign(code);
 
+			if (c.test)
+				c.ts->addMemory("huffEncHuffmanCodes", codeLength / 4.0); //Because we count in words and not bytes.
+
 			if (huffmanToSymbol[codeLength].empty())
 			{
 				huffmanToSymbol[codeLength].set_empty_key(-1);
 				huffmanToSymbol[codeLength].set_deleted_key(-2);
 			}
 			huffmanToSymbol[codeLength][nextCode[codeLength - 1]] = huffmanNode.first;
+			if (c.test)
+				c.ts->addMemory("huffEncHuffmanToSymbol", 4);
 			++nextCode[codeLength - 1];
 			++codes;
 		}
@@ -295,16 +310,25 @@ void Huffman::encode(
 	unsigned long  *&firstCode,
 	unsigned long  *&numl,
 	unsigned long  &maxLength,
-	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol)
+	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &huffmanToSymbol,
+	Conditions &c)
 {	
 	unsigned long  cardinality = 0;
-	getFrequencies(sequenceArray, huffmanCodes, cardinality);					//+ cardinality of compressed sequence
+	getFrequencies(sequenceArray, huffmanCodes, cardinality, c);					//+ cardinality of compressed sequence
 	int *codeLengths = new int[cardinality * 2];	
+	if (c.test)
+		c.ts->addMemory("huffEncCodeLength", cardinality * 2);
 	getCodeLengths(cardinality, codeLengths, huffmanCodes, maxLength);
 
 	firstCode = new unsigned long [maxLength];
 	numl = new unsigned long [maxLength];
-	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+	if (c.test)
+	{
+		c.ts->s_huffmanCodeLength_max = maxLength;
+		c.ts->addMemory("huffEncFirstCodes", maxLength);
+		c.ts->addMemory("huffEncNrOfCodes", maxLength);
+	}
+	generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol, c);
 
 	delete[] codeLengths;
 }

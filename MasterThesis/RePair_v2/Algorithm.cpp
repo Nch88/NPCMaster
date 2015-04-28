@@ -62,6 +62,8 @@ int Algorithm::run(
 		}
 		priorityQueueSize = sqrt(sequenceArray.size());
 		priorityQueue.resize(priorityQueueSize);
+		if (c.test)
+			c.ts->addMemory("initPrio", priorityQueueSize);
 		if (c.timing)
 		{
 			t.start();
@@ -120,8 +122,6 @@ int Algorithm::run(
 			filename,
 			firstBlock,
 			sequenceArray,
-			activePairs,
-			priorityQueue,
 			c);
 		if (c.timing)
 		{

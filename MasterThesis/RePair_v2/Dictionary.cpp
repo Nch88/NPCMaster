@@ -25,13 +25,17 @@ bool comPairP(unsigned long * p1, unsigned long * p2)
 int Dictionary::findGenerations(
 	unsigned long  symbol, 
 	dense_hash_map<unsigned long , unsigned long >& symbolToGen, 
-	unordered_set<unsigned long >& terminals)
+	unordered_set<unsigned long >& terminals,
+	Conditions &c)
 {
 	if (symbol < initialSymbolValue)
 	{
 		//This is a terminal. Add it to the term set and return 0.
-		if(symbol != 0)
-			terminals.emplace(symbol);
+		if (symbol != 0)
+		{
+			terminals.emplace(symbol);			
+		}
+			
 		return 0;
 	}
 	else if (symbolToGen[symbol] != 0)
@@ -42,10 +46,14 @@ int Dictionary::findGenerations(
 	else
 	{
 		unsigned long * address = (unsigned long *)symbol;
-		int d1 = findGenerations(address[0], symbolToGen, terminals);
-		int d2 = findGenerations(address[1], symbolToGen, terminals);
+		int d1 = findGenerations(address[0], symbolToGen, terminals, c);
+		int d2 = findGenerations(address[1], symbolToGen, terminals, c);
 		int gen = max(d1, d2) + 1;
 		symbolToGen[symbol] = gen;
+		if (c.test)
+		{
+			c.ts->addMemory("norDicSymbolToGen", c.ts->symbolToGenWords);
+		}
 		return gen;
 	}
 }
@@ -54,7 +62,8 @@ void Dictionary::createSupportStructures(
 	vector<SymbolRecord*> & sequenceArray,
 	unordered_set<unsigned long >& terminals,
 	dense_hash_map<unsigned long ,unsigned long >& symbolToGen,
-	vector<vector<unsigned long *>>& pairVectors)
+	vector<vector<unsigned long *>>& pairVectors,
+	Conditions &c)
 {
 	//Create the symbol to gen table and count the number of generations
 	int genCount = 0;
@@ -62,19 +71,34 @@ void Dictionary::createSupportStructures(
 	for each (SymbolRecord* record in sequenceArray)
 	{
 		if (record->symbol > initialSymbolValue)
+		{
 			roots.emplace(record->symbol);
-		else if(record->symbol != 0)
-			terminals.emplace(record->symbol);
+			if (c.test)
+				c.ts->addMemory("norDicRoots", c.ts->rootsWords);
+		}
+			
+		else if (record->symbol != 0)
+		{
+			terminals.emplace(record->symbol);			
+		}
+			
 	}
-	//roots should be H + A + F + E
+	
 	for each (unsigned long  s in roots)
 	{
-		int d = findGenerations(s, symbolToGen, terminals);
+		int d = findGenerations(s, symbolToGen, terminals, c);
 		genCount = max(d, genCount);
 	}
 
+	if (c.test)
+		c.ts->addMemory("norDicTerminals", terminals.size() * c.ts->terminalsWords);
+
 	//Create pairVectors
 	pairVectors.reserve(genCount);
+	if (c.test)
+	{
+		c.ts->addMemory("norDicPairVectors", genCount);
+	}
 	for (int i = 0; i < genCount; ++i)
 	{
 		vector<unsigned long *> v;
@@ -84,6 +108,10 @@ void Dictionary::createSupportStructures(
 	{
 		//Push the address of each pair to their respective generation vectors
 		pairVectors[kvpair.second - 1].push_back((unsigned long *)(kvpair.first));
+		if (c.test)
+		{
+			c.ts->addMemory("norDicPairVectors", c.ts->pairVectorsWords);
+		}
 	}
 }
 
@@ -135,10 +163,16 @@ void Dictionary::switchToOrdinalNumbers(
 	unordered_set<unsigned long >& terminals,
 	dense_hash_map<unsigned long , unsigned long >& symbolToGen,
 	vector<vector<unsigned long *>>& pairVectors,
-	vector<unsigned long >& terminalVector)
+	vector<unsigned long >& terminalVector,
+	Conditions &c)
 {
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
+
+	if (c.test)
+	{
+		c.ts->addMemory("norDicTerminalVector", terminalVector.size() * c.ts->terminalsWords);
+	}
 
 	//Replace the terminal symbols in the phrase table with ordinal numbers and sort them
 	for (int i = 0; i < pairVectors[0].size(); ++i)
@@ -154,8 +188,19 @@ void Dictionary::switchToOrdinalNumbers(
 	//Make a vector of offsets
 	vector<int> offsets;
 	offsets.push_back(terminals.size());
+	if (c.test)
+	{
+		c.ts->addMemory("norDicOffsets", terminals.size() * c.ts->offsetWords);
+	}
 	for (int i = 0; i < pairVectors.size() - 1; ++i)
+	{
 		offsets.push_back(offsets[i] + pairVectors[i].size());
+		if (c.test)
+		{
+			c.ts->addMemory("norDicOffsets", c.ts->offsetWords);
+		}
+	}
+		
 	
 	for (int gen = 1; gen < pairVectors.size(); ++gen)
 	{
@@ -200,22 +245,19 @@ void Dictionary::createDictionary(
 	unordered_set<unsigned long >& terminals,
 	dense_hash_map<unsigned long, unsigned long >& symbolToGen,
 	vector<vector<unsigned long *>>& pairVectors,
-	vector<unsigned long>& terminalVector)
+	vector<unsigned long>& terminalVector,
+	Conditions &c)
 {
-	createSupportStructures(sequenceArray, terminals, symbolToGen, pairVectors);
-	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector);
+	createSupportStructures(sequenceArray, terminals, symbolToGen, pairVectors, c);
+
+	if (c.test)
+	{
+		c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
+		c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
+	}
+
+	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector, c);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 void Dictionary::decodeSymbol(

@@ -413,10 +413,8 @@ void Outputter::all(
 	string filename,
 	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
-{
+{	
 	//Create names for output files
 	string compressedFilename = filename + ".NPC";
 	string compressedDictionaryName = filename + ".dict.NPC";
@@ -450,7 +448,12 @@ void Outputter::all(
 		c.ts->testTimer.start();
 	}
 	//Generate Huffman codes
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("huffEncSeq", c.ts->m_repair_sequenceArray_current);
+		c.ts->addMemory("huffEncPhrase", c.ts->m_repair_phraseTable_max);
+	}
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 	if (c.test)
 	{
 		c.ts->testTimer.stop();
@@ -461,7 +464,7 @@ void Outputter::all(
 	{
 		c.ts->testTimer.start();
 	}
-	//Encode sequence array and write it to file
+	//Encode sequence array and write it to file	
 	this->huffmanEncoding(
 		compressedFilename,
 		ofs_compressed,
@@ -483,13 +486,26 @@ void Outputter::all(
 	unordered_set<unsigned long> terminals;
 	vector<unsigned long> terminalVector;
 
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("norDicSeq", c.ts->m_huffEnc_sequenceArray_current);
+		c.ts->addMemory("norDicPhrase", c.ts->m_huffEnc_phraseTable_max);
+		c.ts->addMemory("norDicFirstCodes", c.ts->m_huffEnc_firstCodes_max);
+		c.ts->addMemory("norDicNrOfCodes", c.ts->m_huffEnc_nrOfCodes_max);
+		c.ts->addMemory("norDicHuffmanToSymbol", c.ts->m_huffEnc_huffmanToSymbol_max);
+	}
 	if (c.test)
 	{
 		c.ts->testTimer.start();
 	}
-	finalDict.createSupportStructures(sequenceArray, terminals, StG, pairs);
+	finalDict.createDictionary(
+		sequenceArray,
+		terminals,
+		StG,
+		pairs,
+		terminalVector,
+		c);
 
-	finalDict.switchToOrdinalNumbers(terminals, StG, pairs, terminalVector);
 	if (c.test)
 	{
 		c.ts->testTimer.stop();
