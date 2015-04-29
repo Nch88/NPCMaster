@@ -29,15 +29,21 @@ void Dictionary::generateCompactDictionary(
 	vector<long>& terminalVector,
 	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices)
+	dense_hash_map<long, long> &terminalIndices,
+	Conditions &c)
 {
 	terminalVector.assign(terminals.begin(), terminals.end());
 	sort(terminalVector.begin(), terminalVector.end());
 
-	//Split map by generation
-	createGenerationVectors(dictionary, pairVectors);
+	if (c.test)
+	{
+		c.ts->addMemory("norDicTerminalVector", terminalVector.size() * c.ts->terminalsWords);
+	}
 
-	createFinalPairVectors(dictionary, terminalVector, pairVectors, indices, terminalIndices);
+	//Split map by generation
+	createGenerationVectors(dictionary, pairVectors, c);
+
+	createFinalPairVectors(dictionary, terminalVector, pairVectors, indices, terminalIndices, c);
 }
 
 void Dictionary::createFinalPairVectors(
@@ -45,12 +51,17 @@ void Dictionary::createFinalPairVectors(
 	vector<long>& terminals,
 	vector<vector<CompactPair>>& pairVectors,
 	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices)
+	dense_hash_map<long, long> &terminalIndices,
+	Conditions &c)
 {
 	//Record indices of terminals
 	for (int i = 0; i < terminals.size(); ++(i))
 	{
 		terminalIndices[terminals[i]] = i;
+		if (c.test)
+		{
+			c.ts->addMemory("norDicTerminalIndices", c.ts->terminalIndicesWords);
+		}
 	}
 
 	int offset = terminals.size();
@@ -96,6 +107,11 @@ void Dictionary::createFinalPairVectors(
 			//Make a pair out of the indices we found
 			NamedPair p = { leftIndex, rightIndex, leftSymbol, rightSymbol };
 			vec.push_back(p);
+
+			if (c.test)
+			{
+				c.ts->addMemory("norDicNamedPairVector", c.ts->namedPairWords);
+			}
 		}
 
 		//Sort the new vector
@@ -117,6 +133,10 @@ void Dictionary::createFinalPairVectors(
 				indices[vec[i].nameLeft].set_deleted_key(-2);
 			}
 			indices[vec[i].nameLeft][vec[i].nameRight] = offset + i;
+			if (c.test)
+			{
+				c.ts->addMemory("norDicIndices", c.ts->indicesWords);
+			}
 		}
 
 		//Update the offset
@@ -126,7 +146,8 @@ void Dictionary::createFinalPairVectors(
 
 void Dictionary::createGenerationVectors(
 	dense_hash_map<long, Pair>& dictionary,
-	vector<vector<CompactPair>>& generationVectors)
+	vector<vector<CompactPair>>& generationVectors,
+	Conditions &c)
 {
 	//Distribute pairs in vectors
 	for each (std::pair<const long, Pair> p in dictionary)
@@ -136,11 +157,19 @@ void Dictionary::createGenerationVectors(
 		{
 			vector<CompactPair> v;
 			generationVectors.push_back(v);
+			if (c.test)
+			{
+				c.ts->addMemory("norDicPairVector", c.ts->pairVectorsOuterWords);
+			}
 		}
 
 		//Add this pair to a vector
 		CompactPair cp(p.second.leftSymbol, p.second.rightSymbol);
 		generationVectors[p.second.generation - 1].push_back(cp);
+		if (c.test)
+		{
+			c.ts->addMemory("norDicPairVector", c.ts->pairVectorsInnerWords);
+		}
 	}
 }
 

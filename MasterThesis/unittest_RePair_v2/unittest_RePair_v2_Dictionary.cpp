@@ -6,6 +6,7 @@ using namespace std;
 TEST(createCompactDictionary, createGenerationVectors_diddy)
 {
 	AlgorithmP algo;
+	Conditions c;
 	Dictionary dc;
 
 	dense_hash_map<long, Pair> dictionary;
@@ -29,7 +30,7 @@ TEST(createCompactDictionary, createGenerationVectors_diddy)
 	dictionary[307] = H;
 
 	vector<vector<CompactPair>> generationVectors;
-	dc.createGenerationVectors(dictionary, generationVectors);
+	dc.createGenerationVectors(dictionary, generationVectors, c);
 
 	vector<CompactPair*> gen0;
 	gen0.push_back(new CompactPair(105, 110));
@@ -64,6 +65,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 {
 	AlgorithmP algo;
 	Dictionary dc;
+	Conditions c;
 
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
@@ -86,7 +88,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dictionary[307] = H;
 
 	vector<vector<CompactPair>> generationVectors;
-	dc.createGenerationVectors(dictionary, generationVectors);
+	dc.createGenerationVectors(dictionary, generationVectors, c);
 
 	vector<long> terminals = { 's', 'i', 'n', 'g', '.', 'd', 'o', 'w', 'a', 'h', 'y', 'u', 'm' };
 	sort(terminals.begin(), terminals.end());
@@ -98,7 +100,7 @@ TEST(createCompactDictionary, createFinalPairVector)
 	dense_hash_map<long, long> tIndices;
 	tIndices.set_empty_key(-1);
 	tIndices.set_deleted_key(-2);
-	dc.createFinalPairVectors(dictionary, terminals, pairs, indices, tIndices);
+	dc.createFinalPairVectors(dictionary, terminals, pairs, indices, tIndices, c);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;
@@ -129,6 +131,7 @@ TEST(createCompactDictionary, generateCompactDictionary)
 {
 	AlgorithmP algo;
 	Dictionary dc;
+	Conditions c;
 
 	dense_hash_map<long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
@@ -163,7 +166,7 @@ TEST(createCompactDictionary, generateCompactDictionary)
 
 	vector<vector<CompactPair>> generationVectors;
 	vector<long> terminalVector;
-	dc.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, tIndices);
+	dc.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, tIndices, c);
 
 	vector<vector<CompactPair>> expected;
 	vector<CompactPair> v1, v2, v3;

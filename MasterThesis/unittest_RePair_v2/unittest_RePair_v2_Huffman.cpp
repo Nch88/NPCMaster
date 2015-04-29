@@ -66,7 +66,8 @@ TEST(testingHuffman, getFrequenciesAndCodeLengths)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality,
+		c);
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -199,7 +200,8 @@ TEST(testingHuffman, collapseSymbols)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality,
+		c);
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -285,7 +287,8 @@ TEST(testingHuffman, phaseThree)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality,
+		c);
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -409,7 +412,8 @@ TEST(testingHuffman, generateCodes)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality,
+		c);
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -437,7 +441,8 @@ TEST(testingHuffman, generateCodes)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol,
+		c);
 
 	vector<long> testhuffmanCodessymbols;
 	vector<string> testhuffmanCodes;
@@ -521,7 +526,7 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality, c);
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -551,7 +556,7 @@ TEST(testingHuffman, generateCodesExampleFromBook1)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol, c);
 
 	vector<long> testhuffmanCodessymbols;
 	vector<string> testhuffmanCodes;
@@ -636,7 +641,7 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	huffmanCodes.set_deleted_key(-2);
 	priority_queue<HuffmanNode, vector<HuffmanNode>, CompareNodes> pq;
 	long cardinality = 0;
-	h.getFrequencies(sequenceArray, huffmanCodes, cardinality);								//Get the frequency of symbols
+	h.getFrequencies(sequenceArray, huffmanCodes, cardinality, c);								//Get the frequency of symbols
 
 	int *codeLengths = new int[cardinality * 2];
 	h.initCodeLengthsArray(cardinality, codeLengths, huffmanCodes);
@@ -653,7 +658,7 @@ TEST(testingHuffman, generateCodesExampleFromBook2)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol);
+	h.generateCanonicalHuffmanCodes(cardinality, maxLength, codeLengths, firstCode, numl, huffmanCodes, huffmanToSymbol, c);
 
 	vector<long> testhuffmanCodessymbols;
 	vector<string> testhuffmanCodes;
@@ -759,7 +764,7 @@ TEST(huffman, decoder)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 	ASSERT_EQ(2, firstCode[0]);
 	ASSERT_EQ(4, firstCode[1]);
@@ -775,7 +780,7 @@ TEST(huffman, decoder)
 		myfile,
 		sequenceArray,
 		huffmanCodes,
-		true);
+		true, c);
 
 	
 	string expected1 = "00000100100001110101010100001000";
@@ -929,7 +934,8 @@ TEST(huffman, decodeDictionaryDiddy)
 			terminalVector,
 			pairs,
 			indices,
-			terminalIndices);
+			terminalIndices,
+			c);
 
 		vector<long> testIndices;
 
@@ -953,7 +959,7 @@ TEST(huffman, decodeDictionaryDiddy)
 		dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 		huffmanToSymbol.set_empty_key(-1);
 		huffmanToSymbol.set_deleted_key(-2);
-		h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+		h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 		vector<long> testdictionarysymbol;
 		vector<Pair> testdictionary;
@@ -987,7 +993,7 @@ TEST(huffman, decodeDictionaryDiddy)
 			dictionary,
 			indices,
 			terminalIndices,
-			huffmanToSymbol);
+			huffmanToSymbol, c);
 
 		myfile.close();
 
@@ -1135,7 +1141,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 		terminalVector,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices, c);
 
 	dense_hash_map<long, HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);
@@ -1146,7 +1152,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 	string outstring = "testDuplicatesLongCompressed";
 
@@ -1161,7 +1167,7 @@ TEST(huffman, decodeDictionaryDuplicates)
 		dictionary,
 		indices,
 		terminalIndices,
-		huffmanToSymbol);
+		huffmanToSymbol, c);
 	myfile.close();
 
 	ifstream ifs;

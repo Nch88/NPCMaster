@@ -106,7 +106,7 @@ TEST(gammaCodes, encode_diddy_explicit)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices, c);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -352,7 +352,7 @@ TEST(gammaCodes, encode_diddy)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices, c);
 
 	string terminalsGamma = "";
 	vector<string> leftElementsGammas;
@@ -535,7 +535,7 @@ TEST(gammaCodes, diddy_makeFinalString)
 	terminalIndices.set_empty_key(-1);
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
-	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	dict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices, c);
 
 	//Test variables
 	string terminalsGammaResult = "";
@@ -727,9 +727,10 @@ TEST(gammaCodes, writeToFile)
 {
 	GammaCode gc;
 	Outputter out;
+	Conditions c;
 	string gamma = "100100100100100100100100100100100100";
 
 	ofstream myfile;
 	myfile.open("gammafun.npc", ios::binary);
-	out.dictionary("gammafun.npc", myfile, gamma, true);
+	out.dictionary("gammafun.npc", myfile, gamma, true, c);
 }

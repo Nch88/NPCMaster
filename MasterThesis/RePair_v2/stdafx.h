@@ -23,12 +23,14 @@
 #include <queue>
 #include <bitset>
 #include <sparsehash/dense_hash_map>
+#include <boost\chrono.hpp>
 
 #include "MyTimer.h"
 #include "PairRecord.h"
 #include "SymbolRecord.h"
 #include "PairTracker.h"
 #include "Pair.h"
+#include "TestSuite.h"
 #include "Conditions.h"
 #include "CompactPair.h"
 #include "GammaCode.h"

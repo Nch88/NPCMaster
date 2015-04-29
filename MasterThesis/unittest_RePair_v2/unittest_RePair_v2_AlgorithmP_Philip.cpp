@@ -60,7 +60,7 @@ TEST(compaction, diddy)
 	ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 
 	//Setup complete, we can now test compaction
-	algP.compact(sequenceArray, activePairs, priorityQueue);
+	algP.compact(sequenceArray, activePairs, priorityQueue, c);
 
 	expected = { 's', 'i', 'n', 'g', 'i', 'n', 'g', 'A', 'o', '.', 'w', 'a', 'h', 'A', 'i', 'd', 'd', 'y', 'A', 'i', 'd', 'd', 'y', 'A', 'u', 'm', 'A', 'i', 'd', 'd', 'y', 'A', 'o'};
 	result = mtest.SequenceToCompleteString(sequenceArray);
@@ -135,7 +135,7 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 				c);
 
 			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
-			algP.compact(sequenceArray, activePairs, priorityQueue);
+			algP.compact(sequenceArray, activePairs, priorityQueue, c);
 			ASSERT_EQ(0, mtest.SanityCheck(sequenceArray, priorityQueue, activePairs));
 		}
 

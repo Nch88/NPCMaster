@@ -134,8 +134,6 @@ TEST(decoder, diddy_Nicolai)
 		firstBlock,
 		sequenceArray,
 		dictionary,
-		activePairs,
-		priorityQueue,
 		terminals,
 		c);
 

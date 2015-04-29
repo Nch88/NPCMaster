@@ -65,7 +65,8 @@ void Outputter::huffmanEncoding(
 	ofstream &myfile,
 	vector<SymbolRecord *>& sequenceArray,
 	dense_hash_map<long, HuffmanNode> &huffmanCodes,
-	bool firstBlock)
+	bool firstBlock,
+	Conditions & c)
 {
 	bitset<32> *bitsToWrite = new bitset<32>();
 	short chunkSize = sizeof(bitset<32>) * CHAR_BIT; //Bitset outputs a certain minimum nr of bytes
@@ -109,6 +110,8 @@ void Outputter::huffmanEncoding(
 		if (seqIndex < sequenceArray.size() || chunk.size() == chunkSize)
 		{
 			writeChunkFromString(myfile, chunk);
+			if (c.test)
+				c.ts->c_sequence += 4;
 			chunk = "";
 		}
 	}
@@ -129,6 +132,8 @@ void Outputter::huffmanEncoding(
 
 	//Write the last actual chunk
 	writeChunkFromString(myfile, chunk);
+	if (c.test)
+		c.ts->c_sequence += 4;
 	chunk = "";
 
 	//Write padding chunk
@@ -136,6 +141,8 @@ void Outputter::huffmanEncoding(
 	bitsToWrite = new bitset<32>(paddingBits);
 	bitsToWrite->set(bitsToWrite->size() - 1, true);
 	writeChunk(myfile, bitsToWrite);
+	if (c.test)
+		c.ts->c_sequence += 4;
 	delete bitsToWrite;
 
 	if (firstBlock)
@@ -151,7 +158,8 @@ void Outputter::huffmanDictionary(
 	dense_hash_map<long, Pair> &dictionary,
 	dense_hash_map <long, dense_hash_map<long, long>> &indices,
 	dense_hash_map<long, long> &terminalIndices,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol)
+	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+	Conditions &c)
 {
 	GammaCode gc;
 
@@ -195,6 +203,8 @@ void Outputter::huffmanDictionary(
 			gammaCodes = gammaCodes.substr(32, string::npos);
 
 			writeChunkFromString(myfile, stringToWrite);			//Write 4 bytes of the sequence of gamma codes
+			if (c.test)
+				c.ts->c_huffmanDictionary += 4;
 		}
 	}
 	if (gammaCodes.size() != 0)
@@ -204,6 +214,8 @@ void Outputter::huffmanDictionary(
 			gammaCodes += '0';
 		}
 		writeChunkFromString(myfile, gammaCodes);						//Write the last gamma codes and possibly padding
+		if (c.test)
+			c.ts->c_huffmanDictionary += 4;
 	}
 }
 
@@ -236,7 +248,8 @@ void Outputter::dictionary(
 	string outFile,
 	ofstream &myfile,
 	string& output,
-	bool firstBlock)
+	bool firstBlock,
+	Conditions &c)
 {
 	string stringToWrite, rest;
 	rest.assign(output);
@@ -248,6 +261,8 @@ void Outputter::dictionary(
 		stringToWrite = rest.substr(0, 32);
 		rest = rest.substr(32, string::npos);
 		writeChunkFromString(myfile, stringToWrite);
+		if (c.test)
+			c.ts->c_dictionary += 4;
 	}
 
 	//Write the last bit, if any is left
@@ -258,6 +273,8 @@ void Outputter::dictionary(
 			rest += '0';
 		}
 		writeChunkFromString(myfile, rest);
+		if (c.test)
+			c.ts->c_dictionary += 4;
 	}
 
 	if (firstBlock)
@@ -269,8 +286,6 @@ void Outputter::all(
 	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
-	vector<PairRecord*>& priorityQueue,
 	unordered_set<long>& terminals,
 	Conditions& c)
 {
@@ -304,15 +319,42 @@ void Outputter::all(
 	huffmanToSymbol.set_deleted_key(-2);
 
 	//Generate Huffman codes
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("huffEncSeq", c.ts->m_repair_sequenceArray_current);
+		c.ts->addMemory("huffDictionary", c.ts->m_repair_dictionary_max);
+		c.ts->addMemory("huffTerminals", c.ts->m_repair_terminals_max);
+	}
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
+
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_huffmanEncoding += c.ts->testTimer.getTimeNano();
+	}
 
 	//Encode sequence array and write it to file
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
+
 	this->huffmanEncoding(
 		compressedFilename,
 		ofs_compressed,
 		sequenceArray,
 		huffmanCodes,
-		firstBlock);
+		firstBlock,
+		c);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_encodeSequence += c.ts->testTimer.getTimeNano();
+	}
 
 	//Encode generations for dictionary
 	Dictionary finalDict;
@@ -325,17 +367,41 @@ void Outputter::all(
 	terminalIndices.set_deleted_key(-2);
 	vector<long> terminalVector;
 
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("norDicSeq", c.ts->m_huffEnc_sequenceArray_current);
+		c.ts->addMemory("norDicDictionary", c.ts->m_huffEnc_dictionary_max);
+		c.ts->addMemory("norDicFirstCodes", c.ts->m_huffEnc_firstCodes_max);
+		c.ts->addMemory("norDicNrOfCodes", c.ts->m_huffEnc_nrOfCodes_max);
+		c.ts->addMemory("norDicHuffmanToSymbol", c.ts->m_huffEnc_huffmanToSymbol_max);
+		c.ts->addMemory("norDicTerminals", c.ts->m_huffEnc_terminals_max);
+	}
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
+
 	finalDict.generateCompactDictionary(
 		dictionary,
 		terminals,
 		terminalVector,
 		pairs,
 		indices,
-		terminalIndices);	
+		terminalIndices, c);	
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_setupDictionary += c.ts->testTimer.getTimeNano();
+	}
 
 	//Write dictionary to file
 	GammaCode gc;
 	string output = "";
+
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
 
 	gc.makeFinalString(
 		pairs,
@@ -346,9 +412,30 @@ void Outputter::all(
 		compressedDictionaryName,		
 		ofs_dictionary,
 		output,
-		firstBlock);
+		firstBlock,
+		c);
+
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_writeDictionary += c.ts->testTimer.getTimeNano();
+	}
 
 	//Write Huffman dictionary to file
+	if (c.test) //Carry over data structures
+	{
+		c.ts->addMemory("huffDicDict", c.ts->m_norDic_dictionary_max);
+		c.ts->addMemory("huffDicFirstCodes", c.ts->m_norDic_firstCodes_max);
+		c.ts->addMemory("huffDicNrOfCodes", c.ts->m_norDic_nrOfCodes_max);
+		c.ts->addMemory("huffDicIndices", c.ts->m_norDic_indices_max);
+		c.ts->addMemory("huffDicTerminalIndices", c.ts->m_norDic_terminalIndices_max);
+		c.ts->addMemory("huffDicHuffmanToSymbol", c.ts->m_norDic_huffmanToSymbol_max);
+	}
+	if (c.test)
+	{
+		c.ts->testTimer.start();
+	}
+
 	this->huffmanDictionary(
 		compressedDictionaryName,
 		ofs_dictionary,
@@ -358,7 +445,13 @@ void Outputter::all(
 		dictionary,
 		indices,
 		terminalIndices,
-		huffmanToSymbol);
+		huffmanToSymbol,
+		c);
+	if (c.test)
+	{
+		c.ts->testTimer.stop();
+		c.ts->t_writeHuffmanDictionary += c.ts->testTimer.getTimeNano();
+	}
 
 	//DEBUG
 	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);

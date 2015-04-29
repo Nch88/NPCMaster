@@ -32,7 +32,8 @@ public:
 		std::vector<long>& terminalVector,
 		std::vector<vector<CompactPair>>& pairVectors,
 		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices);
+		google::dense_hash_map<long, long> &terminalIndices,
+		Conditions &c);
 
 	///<summary>Change each pair in each generation to be a pair of indices into a hypothetical sequence consisting
 	/// of all the terminals followed by all the pairs of the previous generation, each generation sorted by their left elements.</summary>
@@ -46,7 +47,8 @@ public:
 		std::vector<long>& terminals,
 		std::vector<std::vector<CompactPair>>& pairVectors,
 		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices);
+		google::dense_hash_map<long, long> &terminalIndices,
+		Conditions &c);
 
 	///<summary>Split the entries in a RePair dictionary into generations</summary>
 	///<param name="dictionary">Input: The dictionary created by RePair</param>
@@ -54,7 +56,8 @@ public:
 	///split into a vector for each generation</param>
 	void Dictionary::createGenerationVectors(
 		google::dense_hash_map<long, Pair>& dictionary,
-		std::vector<std::vector<CompactPair>>& generationVectors);
+		std::vector<std::vector<CompactPair>>& generationVectors,
+		Conditions &c);
 	
 	///<summary>Find the sequence of terminals corresponding to one non-terminal. Used by expandDictionary.</summary>
 	///<param name="symbolIndex">Input: The index (in decodedPairs) of the current pair</param>

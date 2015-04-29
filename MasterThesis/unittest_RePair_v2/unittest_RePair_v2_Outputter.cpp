@@ -70,7 +70,7 @@ TEST(outputter, diddyHuffmanCode)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 	string filenameout = out.addFilenameEnding(input1, ".NPC");
 	ofstream myfile;
@@ -81,7 +81,7 @@ TEST(outputter, diddyHuffmanCode)
 		myfile,
 		sequenceArray,
 		huffmanCodes,
-		true);
+		true, c);
 
 	//Actual test
 	string expected1 = "00000100100001110101010100001000";
@@ -206,7 +206,7 @@ TEST(outputter, randomHuffmanCode)
 		myfile,
 		sequenceArray,
 		huffmanCodes,
-		true);
+		true, c);
 	myfile.close();
 
 	//Actual test
@@ -318,7 +318,7 @@ TEST(outputter, diddyHuffmanDictionary)
 		terminalVector,
 		pairs,
 		indices,
-		terminalIndices);
+		terminalIndices, c);
 
 	vector<long> testterminalindicessymbols;
 	vector<long> testterminalindices;
@@ -338,7 +338,7 @@ TEST(outputter, diddyHuffmanDictionary)
 	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
-	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol);
+	h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 	string outstring = "testHuffmanDictionary";
 	ofstream myfile;
@@ -353,7 +353,7 @@ TEST(outputter, diddyHuffmanDictionary)
 		dictionary,
 		indices,
 		terminalIndices,
-		huffmanToSymbol);
+		huffmanToSymbol, c);
 	myfile.close();
 	//Actual test
 	string expected1 = "11001010101100111001110011111000";
@@ -517,8 +517,6 @@ TEST(outputter, diddyAll)
 		firstBlock,
 		sequenceArray,
 		dictionary,
-		activePairs,
-		priorityQueue,
 		terminals,
 		c);
 
@@ -604,7 +602,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 
 	vector<long> terminalVector;
 
-	finalDict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices);
+	finalDict.generateCompactDictionary(dictionary, terminals, terminalVector, pairs, indices, terminalIndices, c);
 
 	string finalstring = "";
 	gc.makeFinalString(pairs, terminalVector, finalstring);
@@ -612,7 +610,7 @@ TEST(outputter, readAndWriteDictionary_diddy)
 	ofstream myfile;
 	myfile.open(outstring, ios::binary);
 
-	out.dictionary(outstring, myfile, finalstring, true);
+	out.dictionary(outstring, myfile, finalstring, true, c);
 	myfile.close();
 
 	vector<CompactPair> decodedPairs;

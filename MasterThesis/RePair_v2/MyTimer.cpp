@@ -13,22 +13,35 @@ MyTimer::~MyTimer()
 
 void MyTimer::start()
 {
-	tStart = duration_cast< milliseconds >(
-		high_resolution_clock::now().time_since_epoch()
-		);
+	tStart = boost::chrono::high_resolution_clock::now();
+	tStop = boost::chrono::high_resolution_clock::now();
 }
 
 void MyTimer::stop()
 {
-	tStop = duration_cast< milliseconds >(
-		high_resolution_clock::now().time_since_epoch()
-		);
+	tStop = boost::chrono::high_resolution_clock::now();
 }
 
-long long MyTimer::getTime()
+boost::chrono::milliseconds MyTimer::getTime()
 {
-	milliseconds result = tStop - tStart;
-	tStart = (milliseconds)0;
-	tStop = (milliseconds)0;
-	return result.count();
+	boost::chrono::milliseconds result =
+		boost::chrono::duration_cast<boost::chrono::milliseconds>
+		(this->tStop - this->tStart);
+	return result;
+}
+
+boost::chrono::microseconds MyTimer::getTimeMicro()
+{
+	boost::chrono::microseconds result =
+		boost::chrono::duration_cast<boost::chrono::microseconds>
+		(this->tStop - this->tStart);
+	return result;
+}
+
+boost::chrono::nanoseconds MyTimer::getTimeNano()
+{
+	boost::chrono::nanoseconds result =
+		boost::chrono::duration_cast<boost::chrono::nanoseconds>
+		(this->tStop - this->tStart);
+	return result;
 }

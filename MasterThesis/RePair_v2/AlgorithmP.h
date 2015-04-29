@@ -19,7 +19,8 @@ public:
 	void AlgorithmP::compact(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue);
+		vector<PairRecord*>& priorityQueue,
+		Conditions &c);
 
 	void removeSymbolThreadingPointers(
 		long & indexSymbolLeft,
@@ -35,7 +36,8 @@ public:
 		long & indexSymbolRight,
 		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		PairTracker *& tracker);
+		PairTracker *& tracker,
+		Conditions &c);
 
 	void removeFromPriorityQueueList(
 		long index,

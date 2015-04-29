@@ -84,7 +84,8 @@ void Initializer::setupPairRecord(
 	long rightSymbol,
 	int index,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	Conditions &c)
 {
 	PairTracker * currentTracker;
 	SymbolRecord * previousOccurence;
@@ -106,6 +107,12 @@ void Initializer::setupPairRecord(
 		currentTracker->pairRecord->arrayIndexLast = index;
 		currentTracker->pairRecord->nextPair = NULL;
 		currentTracker->pairRecord->previousPair = NULL;
+
+		if (c.test)
+		{
+			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
+			c.ts->s_maxPairs++;
+		}
 
 		sequenceArray[currentTracker->pairRecord->arrayIndexFirst]->next =
 			sequenceArray[currentTracker->pairRecord->arrayIndexLast];
@@ -177,17 +184,28 @@ int Initializer::SequenceArray(
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
 		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray, terminals);
+		if (c.test)
+		{
+			c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+			c.ts->c_origSize++;
+		}
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
 			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray, terminals);
+			if (c.test)
+			{
+				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+				c.ts->c_origSize++;
+			}
 			
 			setupPairRecord(
 				(long)previousSymbol,
 				(long)leftSymbol,
 				0,
 				activePairs,
-				sequenceArray);
+				sequenceArray,
+				c);
 			
 		}
 		//Read symbols until we reach the determined block size
@@ -199,10 +217,15 @@ int Initializer::SequenceArray(
 				cout << " - Timing: Timing push back onto Sequence array" << endl;
 			}
 			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray, terminals);
+			if (c.test)
+			{
+				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+				c.ts->c_origSize++;
+			}
 			if (c.timing)
 			{
 				t.stop();
-				long long tmp = t.getTime();
+				long long tmp = t.getTime().count();
 				if (tmp > 1)
 					cout << " - Timing: Time of push back onto Sequence array took " << tmp << " ms" << endl;
 			}
@@ -228,11 +251,12 @@ int Initializer::SequenceArray(
 				(long)rightSymbol,
 				index - 2,
 				activePairs,
-				sequenceArray);
+				sequenceArray,
+				c);
 				if (c.timing)
 				{
 					t.stop();
-					long long tmp = t.getTime();
+					long long tmp = t.getTime().count();
 					if (tmp > 1)
 						cout << " - Timing: Time of setting up pair record took " << tmp << " ms" << endl;
 				}
@@ -251,6 +275,8 @@ int Initializer::SequenceArray(
 	else
 		file.close();
 
+	if (c.test)
+		c.ts->addMemory("initTerminals", terminals.size() * c.ts->terminalsWords);
 	return 0;
 }
 

@@ -52,7 +52,8 @@ SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  
 void AlgorithmP::compact(
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
-	vector<PairRecord*>& priorityQueue)
+	vector<PairRecord*>& priorityQueue,
+	Conditions &c)
 {
 	SymbolRecord *empty = nullptr;// , *tmpnxt = nullptr, *tmppre = nullptr;
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -107,6 +108,8 @@ void AlgorithmP::compact(
 	for (int i = empty->index; i < sequenceArray.size(); i++)
 	{
 		delete sequenceArray[i];
+		if (c.test)
+			c.ts->addMemory("repairSeq", -c.ts->symbolRecordWords);
 	}
 	sequenceArray.resize(index);
 }
@@ -154,7 +157,8 @@ void AlgorithmP::updatePairRecord(
 	long & indexSymbolRight,
 	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	PairTracker *& tracker)
+	PairTracker *& tracker,
+	Conditions &c)
 {
 	tracker->pairRecord->count--;
 	
@@ -170,6 +174,9 @@ void AlgorithmP::updatePairRecord(
 			activePairs);
 		tracker->pairRecord = nullptr;
 		tracker = nullptr;
+
+		if (c.test)
+			c.ts->addMemory("repairPair", c.ts->pairRecordSubtractWords);
 	}
 	//If we are removing the first or last symbol in the sequence update the pair record to reflect this
 	else
@@ -294,7 +301,8 @@ void AlgorithmP::decrementCount(
 		indexSymbolRight,
 		activePairs,
 		sequenceArray,
-		tracker);
+		tracker,
+		c);
 
 	removeSymbolThreadingPointers(indexSymbolLeft, sequenceArray);	
 }
@@ -428,6 +436,9 @@ void AlgorithmP::replacePair(
 			leftSymbolRecord->symbol,
 			rightSymbolRecord->symbol,
 			activePairs);
+
+		if (c.test)
+			c.ts->addMemory("repairPair", c.ts->pairRecordSubtractWords);
 	}
 
 	if (indexSymbolNext >= 0)
@@ -444,6 +455,9 @@ void AlgorithmP::replacePair(
 	dictionary[Symbols] = pairToReplace;
 	leftSymbolRecord->symbol = Symbols;
 	rightSymbolRecord->symbol = 0;
+
+	if (c.test)
+		c.ts->addMemory("repairDict", c.ts->dictionaryWords);
 
 	//The right symbol of the old pair is now empty and must be threaded
 	threadEmptySymbols(
@@ -496,6 +510,12 @@ void AlgorithmP::incrementCountLeft(
 				activePairs[symbolPrevious][Symbols].seenOnce = false;
 				activePairs[symbolPrevious][Symbols].pairRecord = new PairRecord(activePairs[symbolPrevious][Symbols].indexFirst, indexSymbolPrevious);
 				activePairs[symbolPrevious][Symbols].pairRecord->count = 2;
+
+				if (c.test)
+				{
+					c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
+					c.ts->s_maxPairs++;
+				}
 
 				//Add to priority queue
 				PairTracker* tracker = &activePairs[symbolPrevious][Symbols];
@@ -564,6 +584,12 @@ void AlgorithmP::incrementCountRight(
 			activePairs[Symbols][symbolNext].seenOnce = false;
 			activePairs[Symbols][symbolNext].pairRecord = new PairRecord(activePairs[Symbols][symbolNext].indexFirst, indexSymbolLeft);
 			activePairs[Symbols][symbolNext].pairRecord->count = 2;
+
+			if (c.test)
+			{
+				c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
+				c.ts->s_maxPairs++;
+			}
 
 			//Add to priority queue
 			PairTracker* tracker = &activePairs[Symbols][symbolNext];
@@ -813,7 +839,7 @@ void AlgorithmP::manageOneEntryOnList(
 	{
 		if (cData.replaceCount > cData.compactTotal)
 		{
-			compact(sequenceArray, activePairs, priorityQueue);
+			compact(sequenceArray, activePairs, priorityQueue, c);
 			cData.updateCompactTotal();
 		}
 	}
@@ -942,7 +968,7 @@ void AlgorithmP::manageHighPriorityList(
 		{
 			if (cData.replaceCount > cData.compactTotal)
 			{
-				compact(sequenceArray, activePairs, priorityQueue);
+				compact(sequenceArray, activePairs, priorityQueue, c);
 				cData.updateCompactTotal();
 			}
 		}
@@ -962,6 +988,14 @@ void AlgorithmP::run(
 	Conditions& c)
 {
 	CompactionData cData(sequenceArray.size());
+
+	if (c.test)
+	{
+		c.ts->addMemory("repairSeq", c.ts->m_init_sequenceArray_current);
+		c.ts->addMemory("repairPair", c.ts->m_init_pairRecord_current);
+		c.ts->addMemory("repairPrio", c.ts->m_init_priorityQueue_max);
+		c.ts->addMemory("repairTerminals", c.ts->m_init_terminals_max);
+	}
 
 	manageHighPriorityList(
 		sequenceArray,

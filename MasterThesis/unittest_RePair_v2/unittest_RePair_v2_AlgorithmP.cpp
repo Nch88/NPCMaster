@@ -665,6 +665,7 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 	PairTracker * tracker;
 
 	AlgorithmP algP;
+	Conditions c;
 
 	vector<SymbolRecord*> sequenceArray;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -732,7 +733,8 @@ TEST(updatePairRecord, countMoreThanTwoMiddlePair)
 		scdPairRight->index,
 		activePairs,
 		sequenceArray,
-		tracker);
+		tracker,
+		c);
 
 	ASSERT_EQ(2, tracker->pairRecord->count);
 	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
@@ -753,6 +755,7 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 	PairTracker * tracker;
 
 	AlgorithmP algP;
+	Conditions c;
 
 	vector<SymbolRecord*> sequenceArray;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -820,7 +823,8 @@ TEST(updatePairRecord, countMoreThanTwoFirstPair)
 		fstPairRight->index,
 		activePairs,
 		sequenceArray,
-		tracker);
+		tracker,
+		c);
 
 	ASSERT_EQ(2, tracker->pairRecord->count);
 	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
@@ -841,6 +845,7 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 	PairTracker * tracker;
 
 	AlgorithmP algP;
+	Conditions c;
 
 	vector<SymbolRecord*> sequenceArray;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -908,7 +913,8 @@ TEST(updatePairRecord, countMoreThanTwoLastPair)
 		trdPairRight->index,
 		activePairs,
 		sequenceArray,
-		tracker);
+		tracker,
+		c);
 
 	ASSERT_EQ(2, tracker->pairRecord->count);
 	ASSERT_EQ(2, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord->count);
@@ -929,6 +935,7 @@ TEST(updatePairRecord, countTwoFirstPair)
 	PairTracker * tracker;
 
 	AlgorithmP algP;
+	Conditions c;
 
 	vector<SymbolRecord*> sequenceArray;
 	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
@@ -984,7 +991,8 @@ TEST(updatePairRecord, countTwoFirstPair)
 		fstPairRight->index,
 		activePairs,
 		sequenceArray,
-		tracker);
+		tracker,
+		c);
 
 	ASSERT_EQ(nullptr, tracker);
 	ASSERT_EQ(nullptr, activePairs[scdPairLeft->symbol][scdPairRight->symbol].pairRecord);
