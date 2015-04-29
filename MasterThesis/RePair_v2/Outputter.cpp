@@ -577,4 +577,13 @@ void Outputter::all(
 	//Clean up
 	delete[] firstCode;
 	delete[] numl;
+
+	//Clean up phrase table
+	for each (auto gen in pairs)
+	{
+		for each (auto ptr in gen)
+		{
+			delete[] ptr;
+		}
+	}
 }
