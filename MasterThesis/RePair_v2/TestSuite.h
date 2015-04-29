@@ -77,6 +77,7 @@ public:
 	long m_norDic_supportStructures_total = 0;
 	
 	// m_huffmanDictionary;
+	long m_huffDic_phraseTable_max = 0;
 	long m_huffDic_firstCodes_max = 0;
 	long m_huffDic_nrOfCodes_max = 0;
 	long m_huffDic_huffmanToSymbol_max = 0;

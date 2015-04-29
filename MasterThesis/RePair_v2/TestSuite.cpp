@@ -56,7 +56,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Original file size (mb); " << c_origSize / mb << endl;
 	ofs << "Compressed file size; " << c_dictionary + c_huffmanDictionary + c_sequence << endl;
 	ofs << "Compressed file size (mb); " << (c_dictionary + c_huffmanDictionary + c_sequence) / mb << endl;
-	ofs << "Compression ratio; " << ((double)c_sequence / (double)c_origSize) << endl;
+	ofs << "Compression ratio; " << ((double)c_origSize / (double)c_sequence) << endl;
 	ofs << endl;
 
 	ofs << "memory (in words):" << endl;
@@ -101,6 +101,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Normal dictionary - total; " << max(m_norDic_supportStructures_total, m_norDic_total) << endl;
 	ofs << "Normal dictionary - total (mb); " << (max(m_norDic_supportStructures_total, m_norDic_total) * 4) / mb << endl;
 
+	ofs << "Huffman dictionary - phrase table; " << m_huffDic_phraseTable_max << endl;
 	ofs << "Huffman dictionary - first codes array; " << m_huffDic_firstCodes_max << endl;
 	ofs << "Huffman dictionary - nr of codes array; " << m_huffDic_nrOfCodes_max << endl;
 	ofs << "Huffman dictionary - Huffman to symbol; " << m_huffDic_huffmanToSymbol_max << endl;
@@ -122,7 +123,7 @@ void TestSuite::WriteToFileEncoding()
 
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
 	ofs << "Total nr of pairs created; " << s_maxPairs << endl;
-	ofs << "Total nr of generations; " << s_nrOfGenerations << endl;
+	ofs << "Max nr of generations; " << s_nrOfGenerations << endl;
 	ofs << "Total nr of phrases; " << s_nrOfPhrases << endl;
 	ofs << "Avg nr of phrases per generation; " << s_avgNrOfPhrases << endl;
 	ofs << "Largest generation; " << s_largestGeneration << endl;
@@ -351,6 +352,12 @@ void TestSuite::addMemory(std::string part, long value)
 	}
 
 	//Huffman dictionary
+	else if (part == "huffDicPhrase")
+	{
+		m_huffDic_phraseTable_max += value;
+		m_huffDic_total += value;
+		updateMaxMemory(m_huffDic_total);
+	}
 	else if (part == "huffDicFirstCodes")
 	{
 		m_huffDic_firstCodes_max += value;

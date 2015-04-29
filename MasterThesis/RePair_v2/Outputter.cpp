@@ -540,6 +540,7 @@ void Outputter::all(
 	//Write Huffman dictionary to file
 	if (c.test) //Carry over data structures
 	{
+		c.ts->addMemory("huffDicPhrase", c.ts->m_norDic_phraseTable_max);
 		c.ts->addMemory("huffDicFirstCodes", c.ts->m_norDic_firstCodes_max);
 		c.ts->addMemory("huffDicNrOfCodes", c.ts->m_norDic_nrOfCodes_max);
 		c.ts->addMemory("huffDicPairVectors", c.ts->m_norDic_pairVectors_max);
