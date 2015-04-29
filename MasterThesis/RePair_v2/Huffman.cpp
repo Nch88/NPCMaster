@@ -324,7 +324,10 @@ void Huffman::encode(
 	numl = new unsigned long [maxLength];
 	if (c.test)
 	{
-		c.ts->s_huffmanCodeLength_max = maxLength;
+		if (maxLength > c.ts->s_huffmanCodeLength_max)
+		{
+			c.ts->s_huffmanCodeLength_max = maxLength;
+		}		
 		c.ts->addMemory("huffEncFirstCodes", maxLength);
 		c.ts->addMemory("huffEncNrOfCodes", maxLength);
 	}

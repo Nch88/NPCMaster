@@ -147,6 +147,8 @@ int Algorithm::run(
 		file.peek();
 		if (file.eof())
 			file.close();
+
+		c.ts->firstBlock = false;
 	}
 	cout << "Completed compression of file: " << filename << endl;
 	init.resetCompleted(blockSize, activePairs, sequenceArray);

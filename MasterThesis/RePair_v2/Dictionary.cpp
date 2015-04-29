@@ -203,7 +203,10 @@ void Dictionary::switchToOrdinalNumbers(
 		
 	if (c.test)
 	{
-		c.ts->s_nrOfGenerations = pairVectors.size() - 1;
+		if (pairVectors.size() - 1 > c.ts->s_nrOfGenerations && c.ts->firstBlock)
+		{
+			c.ts->s_nrOfGenerations = pairVectors.size() - 1;
+		}		
 	}
 	
 	for (int gen = 1; gen < pairVectors.size(); ++gen)
@@ -212,12 +215,15 @@ void Dictionary::switchToOrdinalNumbers(
 		{
 			if (c.test)
 			{
-				c.ts->s_nrOfPhrases++;
-				if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
+				if (c.ts->firstBlock)
 				{
-					c.ts->s_largestGenerationCount = pairVectors[gen].size();
-					c.ts->s_largestGeneration = gen;
-				}
+					c.ts->s_nrOfPhrases++;
+					if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
+					{
+						c.ts->s_largestGenerationCount = pairVectors[gen].size();
+						c.ts->s_largestGeneration = gen;
+					}
+				}				
 			}
 			//First symbol
 			if (pairVectors[gen][i][0] > initialSymbolValue)
@@ -254,7 +260,10 @@ void Dictionary::switchToOrdinalNumbers(
 
 	if (c.test)
 	{
-		c.ts->s_avgNrOfPhrases = c.ts->s_nrOfPhrases / c.ts->s_nrOfGenerations;
+		if (c.ts->firstBlock)
+		{
+			c.ts->s_avgNrOfPhrases = c.ts->s_nrOfPhrases / c.ts->s_nrOfGenerations;
+		}		
 	}
 }
 

@@ -2,6 +2,8 @@
 class TestSuite
 {
 public:
+	bool firstBlock = true;
+
 	long pairRecordWords = 2 + 4;
 	long pairRecordSubtractWords = -4;
 	long symbolRecordWords = 4;
@@ -109,6 +111,8 @@ public:
 	TestSuite();
 	~TestSuite();
 
+	void resetForNextBlock();
+	double totalTime(double offset);
 	void WriteToFileEncoding();
 	void updateMaxMemory(long localTotal);
 	void addMemory(std::string part, long value);
