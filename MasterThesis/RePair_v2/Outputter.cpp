@@ -322,8 +322,8 @@ void Outputter::all(
 	if (c.test) //Carry over data structures
 	{
 		c.ts->addMemory("huffEncSeq", c.ts->m_repair_sequenceArray_current);
-		c.ts->addMemory("huffDictionary", c.ts->m_repair_dictionary_max);
-		c.ts->addMemory("huffTerminals", c.ts->m_repair_terminals_max);
+		c.ts->addMemory("huffEncDictionary", c.ts->m_repair_dictionary_max);
+		c.ts->addMemory("huffEncTerminals", c.ts->m_repair_terminals_max);
 	}
 	if (c.test)
 	{
@@ -424,7 +424,7 @@ void Outputter::all(
 	//Write Huffman dictionary to file
 	if (c.test) //Carry over data structures
 	{
-		c.ts->addMemory("huffDicDict", c.ts->m_norDic_dictionary_max);
+		c.ts->addMemory("huffDicDictionary", c.ts->m_norDic_dictionary_max);
 		c.ts->addMemory("huffDicFirstCodes", c.ts->m_norDic_firstCodes_max);
 		c.ts->addMemory("huffDicNrOfCodes", c.ts->m_norDic_nrOfCodes_max);
 		c.ts->addMemory("huffDicIndices", c.ts->m_norDic_indices_max);

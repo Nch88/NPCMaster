@@ -66,12 +66,27 @@ void Dictionary::createFinalPairVectors(
 
 	int offset = terminals.size();
 
+	if (c.test)
+	{
+		c.ts->s_nrOfGenerations = pairVectors.size() - 1;
+	}
+
 	//For each generation
 	for (int gen = 0; gen < pairVectors.size(); ++gen)
 	{
 		vector<NamedPair> vec;
 		for (int j = 0; j < pairVectors[gen].size(); ++j)
 		{
+			if (c.test && gen != 0)
+			{
+				c.ts->s_nrOfPhrases++;
+				if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
+				{
+					c.ts->s_largestGenerationCount = pairVectors[gen].size();
+					c.ts->s_largestGeneration = gen;
+				}
+			}
+
 			//Find the new indices of the two symbols in this pair
 			long leftSymbol = pairVectors[gen][j].leftSymbol;
 
@@ -142,6 +157,11 @@ void Dictionary::createFinalPairVectors(
 		//Update the offset
 		offset += pairVectors[gen].size();
 	}
+	if (c.test)
+	{
+		c.ts->s_avgNrOfPhrases = c.ts->s_nrOfPhrases / c.ts->s_nrOfGenerations;
+	}
+
 }
 
 void Dictionary::createGenerationVectors(

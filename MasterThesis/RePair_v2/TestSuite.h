@@ -75,13 +75,11 @@ public:
 	long m_norDic_nrOfCodes_max = 0;
 	long m_norDic_huffmanToSymbol_max = 0;
 	long m_norDic_terminals_max = 0;
-	long m_norDic_roots_max = 0;
 	long m_norDic_pairVector_max = 0;
 	long m_norDic_indices_max = 0;
 	long m_norDic_terminalIndices_max = 0;
 	long m_norDic_terminalVector_max = 0;
 	long m_norDic_namedPairVector_max = 0;
-	long m_norDic_offsets_max = 0;
 
 	long m_norDic_total = 0;
 	long m_norDic_supportStructures_total = 0;

@@ -56,7 +56,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Original file size (mb); " << c_origSize / mb << endl;
 	ofs << "Compressed file size; " << c_dictionary + c_huffmanDictionary + c_sequence << endl;
 	ofs << "Compressed file size (mb); " << (c_dictionary + c_huffmanDictionary + c_sequence) / mb << endl;
-	ofs << "Compression ratio; " << ((double)c_sequence / (double)c_origSize) << endl;
+	ofs << "Compression ratio; " << ((double)c_origSize / (double)c_sequence) << endl;
 	ofs << endl;
 
 	ofs << "memory (in words):" << endl;
@@ -66,7 +66,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Initialization - priority queue; " << m_init_priorityQueue_max << endl;
 	ofs << "Initialization - terminals; " << m_init_terminals_max << endl;
 	ofs << "Initialization - total; " << m_init_total << endl;
-	ofs << "Initialization - total (mb); " << (m_init_total * 4) / mb << endl;
+	ofs << "Initialization - total (mb); " << (m_init_total / mb) * 4 << endl;
 
 	ofs << "Re-Pair - sequence array; " << m_repair_sequenceArray_max << endl;
 	ofs << "Re-Pair - active pairs; " << m_repair_pairRecord_max << endl;
@@ -74,7 +74,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Re-Pair - dictionary; " << m_repair_dictionary_max << endl;
 	ofs << "Re-Pair - terminals; " << m_repair_terminals_max << endl;
 	ofs << "Re-Pair - total; " << m_repair_total << endl;
-	ofs << "Re-Pair - total (mb); " << (m_repair_total * 4) / mb << endl;
+	ofs << "Re-Pair - total (mb); " << (m_repair_total / mb) * 4 << endl;
 
 	ofs << "Huffman encoding - sequence array; " << m_huffEnc_sequenceArray_max << endl;
 	ofs << "Huffman encoding - dictionary; " << m_huffEnc_dictionary_max << endl;
@@ -87,7 +87,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Huffman encoding - combined Huffman codes as strings; " << m_huffEnc_huffmanCodes_max << endl;
 	ofs << "Huffman encoding - Huffman to symbol; " << m_huffEnc_huffmanToSymbol_max << endl;
 	ofs << "Huffman encoding - total; " << m_huffEnc_total << endl;
-	ofs << "Huffman encoding - total (mb); " << (m_huffEnc_total * 4) / mb << endl;
+	ofs << "Huffman encoding - total (mb); " << (m_huffEnc_total / mb) * 4 << endl;
 
 	ofs << "Normal dictionary - sequence array; " << m_norDic_sequenceArray_max << endl;
 	ofs << "Normal dictionary - dictionary; " << m_norDic_dictionary_max << endl;
@@ -95,14 +95,12 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Normal dictionary - nr of codes array; " << m_norDic_nrOfCodes_max << endl;
 	ofs << "Normal dictionary - Huffman to symbol; " << m_norDic_huffmanToSymbol_max << endl;
 	ofs << "Normal dictionary - terminals set; " << m_norDic_terminals_max << endl;
-	ofs << "Normal dictionary - roots; " << m_norDic_roots_max << endl;
 	ofs << "Normal dictionary - terminal vector; " << m_norDic_terminalVector_max << endl;
 	ofs << "Normal dictionary - terminal indices; " << m_norDic_terminalIndices_max << endl;
 	ofs << "Normal dictionary - indices; " << m_norDic_indices_max << endl;
-	ofs << "Normal dictionary - offset array; " << m_norDic_offsets_max << endl;
 
 	ofs << "Normal dictionary - total; " << max(m_norDic_supportStructures_total, m_norDic_total) << endl;
-	ofs << "Normal dictionary - total (mb); " << (max(m_norDic_supportStructures_total, m_norDic_total) * 4) / mb << endl;
+	ofs << "Normal dictionary - total (mb); " << (max(m_norDic_supportStructures_total, m_norDic_total) / mb) * 4 << endl;
 
 	ofs << "Huffman dictionary - dictionary; " << m_huffDic_dictionary_max << endl;
 	ofs << "Huffman dictionary - first codes array; " << m_huffDic_firstCodes_max << endl;
@@ -112,12 +110,12 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Huffman dictionary - indices; " << m_huffDic_indices_max << endl;
 
 	ofs << "Huffman dictionary - total; " << m_huffDic_total << endl;
-	ofs << "Huffman dictionary - total (mb); " << (m_huffDic_total * 4) / mb << endl;
+	ofs << "Huffman dictionary - total (mb); " << (m_huffDic_total / mb) * 4 << endl;
 	ofs << endl;
 	ofs << endl;
 
 	ofs << "Maximum amount of memory used; " << m_total << endl;
-	ofs << "Maximum amount of memory used (mb); " << (m_total * 4) / mb << endl;
+	ofs << "Maximum amount of memory used (mb); " << (m_total / mb) * 4 << endl;
 	ofs << endl;
 
 
@@ -125,7 +123,7 @@ void TestSuite::WriteToFileEncoding()
 
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
 	ofs << "Total nr of pairs created; " << s_maxPairs << endl;
-	ofs << "Total nr of generations; " << s_nrOfGenerations << endl;
+	ofs << "Max nr of generations; " << s_nrOfGenerations << endl;
 	ofs << "Total nr of phrases; " << s_nrOfPhrases << endl;
 	ofs << "Avg nr of phrases per generation; " << s_avgNrOfPhrases << endl;
 	ofs << "Largest generation; " << s_largestGeneration << endl;
@@ -340,12 +338,6 @@ void TestSuite::addMemory(std::string part, long value)
 		m_norDic_total += value;
 		updateMaxMemory(m_norDic_total);
 	}
-	else if (part == "norDicRoots")
-	{
-		m_norDic_roots_max += value;
-		m_norDic_total += value;
-		updateMaxMemory(m_norDic_total);
-	}
 	else if (part == "norDicPairVector")
 	{
 		m_norDic_pairVector_max += value;
@@ -373,12 +365,6 @@ void TestSuite::addMemory(std::string part, long value)
 	else if (part == "norDicNamedPairVector")
 	{
 		m_norDic_namedPairVector_max += value;
-		m_norDic_total += value;
-		updateMaxMemory(m_norDic_total);
-	}
-	else if (part == "norDicOffsets")
-	{
-		m_norDic_offsets_max += value;
 		m_norDic_total += value;
 		updateMaxMemory(m_norDic_total);
 	}
