@@ -17,6 +17,12 @@ public:
 		dense_hash_map<unsigned long , HuffmanNode> &huffmanCodes,
 		bool firstBlock,
 		Conditions &c);
+	void Outputter::writeBuffer(
+		ofstream &myfile,
+		string &gammaCodes,
+		string &stringToWrite,
+		bitset<32> *bitsToWrite,
+		Conditions &c);
 	void Outputter::huffmanDictionary(
 		string outFile,
 		ofstream &myfile,
