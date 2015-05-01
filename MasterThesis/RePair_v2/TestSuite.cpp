@@ -139,6 +139,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Avg nr of phrases per generation; " << s_avgNrOfPhrases << endl;
 	ofs << "Largest generation; " << s_largestGeneration << endl;
 	ofs << "Largest generation count; " << s_largestGenerationCount << endl;
+	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
 	ofs << endl;
 
 	ofs.close();
