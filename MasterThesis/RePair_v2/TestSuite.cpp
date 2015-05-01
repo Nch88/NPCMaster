@@ -11,6 +11,16 @@ TestSuite::~TestSuite()
 {
 }
 
+double TestSuite::totalTime(double offset)
+{
+	return t_initialization.count() / offset +
+		t_repair.count() / offset +
+		t_huffmanEncoding.count() / offset +
+		t_encodeSequence.count() / offset +
+		t_writeHuffmanDictionary.count() / offset +
+		t_setupDictionary.count() / offset +
+		t_writeDictionary.count() / offset;
+}
 
 void TestSuite::WriteToFileEncoding()
 {
@@ -44,6 +54,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Write Huffman dictionary; " << t_writeHuffmanDictionary.count() / offset << endl;
 	ofs << "Setup dictionary; " << t_setupDictionary.count() / offset << endl;
 	ofs << "Write dictionary; " << t_writeDictionary.count() / offset << endl;
+	ofs << "Total time; " << totalTime(offset) << endl;
 	ofs << endl;
 
 	ofs << "Compression (in bytes):" << endl;

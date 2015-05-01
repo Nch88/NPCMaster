@@ -149,6 +149,23 @@ void Outputter::huffmanEncoding(
 		cout << "created compressed file: " << outFile << endl;
 }
 
+void Outputter::writeBuffer(
+	ofstream &myfile,
+	string &gammaCodes,
+	string &stringToWrite,
+	Conditions &c)
+{
+	while (gammaCodes.size() >= 32)											//Write as much as possible to file
+	{
+		stringToWrite = gammaCodes.substr(0, 32);
+		gammaCodes = gammaCodes.substr(32, string::npos);
+
+		writeChunkFromString(myfile, stringToWrite);			//Write 4 bytes of the sequence of gamma codes
+		if (c.test)
+			c.ts->c_huffmanDictionary += 4;
+	}
+}
+
 void Outputter::huffmanDictionary(
 	string outFile,
 	ofstream &myfile,
@@ -170,6 +187,12 @@ void Outputter::huffmanDictionary(
 	
 	gammaCodes += gc.getGammaCode(maxLength);									//Write this many "items"
 	
+	writeBuffer(
+		myfile,
+		gammaCodes,
+		stringToWrite,
+		c);
+
 	for (long i = 0; i < maxLength; i++)
 	{
 		toWrite = gc.getGammaCode(numl[i]);
@@ -194,18 +217,20 @@ void Outputter::huffmanDictionary(
 				index = terminalIndices[symbol];
 			
 			toWrite = gc.getGammaCode(index);
-			gammaCodes += toWrite;												//Write the index corresponding to a specific huffman code (as gamma code)
+			gammaCodes += toWrite;	//Write the index corresponding to a specific huffman code (as gamma code)
+
+			writeBuffer(
+				myfile,
+				gammaCodes,
+				stringToWrite,
+				c);
 		}
 
-		while (gammaCodes.size() >= 32)											//Write as much as possible to file
-		{
-			stringToWrite = gammaCodes.substr(0, 32);
-			gammaCodes = gammaCodes.substr(32, string::npos);
-
-			writeChunkFromString(myfile, stringToWrite);			//Write 4 bytes of the sequence of gamma codes
-			if (c.test)
-				c.ts->c_huffmanDictionary += 4;
-		}
+		writeBuffer(
+			myfile,
+			gammaCodes,
+			stringToWrite,
+			c);
 	}
 	if (gammaCodes.size() != 0)
 	{

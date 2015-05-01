@@ -117,6 +117,7 @@ public:
 	TestSuite();
 	~TestSuite();
 
+	double TestSuite::totalTime(double offset);
 	void WriteToFileEncoding();
 	void updateMaxMemory(long localTotal);
 	void addMemory(std::string part, long value);
