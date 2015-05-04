@@ -841,7 +841,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	Conditions& c)
 {
 	//Runs through all entries from second last to first
-	for (long i = priorityQueue.size() - 2; i >= 0; i--)
+	for (long i = priorityQueue.size() - 2; i >= cutoffValue - 2; i--)
 	{		
 		manageOneList(
 			i,

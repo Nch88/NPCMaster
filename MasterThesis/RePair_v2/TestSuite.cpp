@@ -125,7 +125,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Original file size (mb); " << c_origSize / mb << endl;
 	ofs << "Compressed file size; " << c_dictionary + c_huffmanDictionary + c_sequence << endl;
 	ofs << "Compressed file size (mb); " << (c_dictionary + c_huffmanDictionary + c_sequence) / mb << endl;
-	ofs << "Compression ratio; " << ((double)c_origSize / (double)c_sequence) << endl;
+	ofs << "Compression ratio; " << ((double)c_origSize / ((double)c_dictionary + (double)c_huffmanDictionary + (double)c_sequence)) << endl;
 	ofs << endl;
 
 	ofs << "memory (in words):" << endl;
@@ -474,4 +474,5 @@ void TestSuite::addMemory(std::string part, long value)
 	{
 		cout << "Testing, add memory - program part not supported" << endl;
 	}
+
 }

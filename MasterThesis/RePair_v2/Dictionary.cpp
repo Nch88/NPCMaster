@@ -203,9 +203,9 @@ void Dictionary::switchToOrdinalNumbers(
 		
 	if (c.test)
 	{
-		if (pairVectors.size() - 1 > c.ts->s_nrOfGenerations && c.ts->firstBlock)
+		if (pairVectors.size() > c.ts->s_nrOfGenerations && c.ts->firstBlock)
 		{
-			c.ts->s_nrOfGenerations = pairVectors.size() - 1;
+			c.ts->s_nrOfGenerations = pairVectors.size();
 		}		
 	}
 	
@@ -279,8 +279,11 @@ void Dictionary::createDictionary(
 
 	if (c.test)
 	{
-		c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
-		c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
+		if (c.ts->firstBlock)
+		{
+			c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
+			c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
+		}		
 	}
 
 	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector, c);
