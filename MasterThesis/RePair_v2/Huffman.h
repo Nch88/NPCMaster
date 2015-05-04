@@ -27,7 +27,7 @@ public:
 
 	void Huffman::getFrequencies(
 		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, HuffmanNode> & frequencies,
+		dense_hash_map<unsigned long, HuffmanNode> & frequencies,
 		long &cardinality,
 		Conditions &c);
 	void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild);
@@ -38,7 +38,7 @@ public:
 	void Huffman::initCodeLengthsArray(
 		int cardinality,
 		int *codeLengths,
-		dense_hash_map<long, HuffmanNode> &huffmanCodes);
+		dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes);
 	void Huffman::initMinHeap(
 		int heapSize,
 		int *codeLengths);
@@ -52,7 +52,7 @@ public:
 	void Huffman::getCodeLengths(
 		long cardinality,
 		int *codeLengths,
-		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
 		long &maxLength);
 	string Huffman::codeToString(int intCode, int length);
 	void Huffman::generateCanonicalHuffmanCodes(
@@ -61,15 +61,15 @@ public:
 		int *codeLengths,
 		long *firstCode,
 		long *numl,
-		dense_hash_map<long, HuffmanNode> &huffmanCodes,
-		dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+		dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &huffmanToSymbol,
 		Conditions &c);
 	void encode(vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<long, HuffmanNode> &huffmanCodes,
+		dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
 		long *&firstCode,
 		long *&numl,
 		long &maxLength,
-		dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &huffmanToSymbol,
 		Conditions &c);
 	void Huffman::fillBitset(int rawChunk, bitset<32> *chunk);
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);

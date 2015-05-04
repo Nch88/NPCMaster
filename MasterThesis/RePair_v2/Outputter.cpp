@@ -64,7 +64,7 @@ void Outputter::huffmanEncoding(
 	string outFile,
 	ofstream &myfile,
 	vector<SymbolRecord *>& sequenceArray,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
 	bool firstBlock,
 	Conditions & c)
 {
@@ -172,13 +172,14 @@ void Outputter::huffmanDictionary(
 	long maxLength,
 	long *firstCode,
 	long *numl,
-	dense_hash_map<long, Pair> &dictionary,
-	dense_hash_map <long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+	vector<unsigned long> terminalVector,
+	dense_hash_map<unsigned long, Pair> &dictionary,
+	dense_hash_map<unsigned long, unsigned long> &indices,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &huffmanToSymbol,
 	Conditions &c)
 {
 	GammaCode gc;
+	Dictionary dict;
 
 	string gammaCodes = "";
 	string toWrite = "";
@@ -209,12 +210,10 @@ void Outputter::huffmanDictionary(
 			long index;
 			if (symbol >= initialSymbolValue)
 			{
-				long symbolLeft = dictionary[symbol].leftSymbol;
-				long symbolRight = dictionary[symbol].rightSymbol;
-				index = indices[symbolLeft][symbolRight];
+				index = indices[symbol];
 			}
 			else
-				index = terminalIndices[symbol];
+				index = dict.findTerminalIndex(terminalVector, symbol);
 			
 			toWrite = gc.getGammaCode(index);
 			gammaCodes += toWrite;	//Write the index corresponding to a specific huffman code (as gamma code)
@@ -306,12 +305,132 @@ void Outputter::dictionary(
 		cout << "created dictionary file: " << outFile << endl;
 }
 
+void Outputter::writeDictionaryChunk(ofstream &myfile, string &inchunk, bitset<32> *&bitsToWrite)
+{
+	//DEBUG
+	string chunk = inchunk.substr(0, 32);
+	inchunk = inchunk.substr(32, string::npos);
+	for (int i = 0; i < 32; i++)
+	{
+		if (chunk[i] == '1')
+			bitsToWrite->set(31 - i, true);
+		else
+			bitsToWrite->set(31 - i, false);
+	}
+
+	writeChunk(myfile, bitsToWrite);
+}
+
+void Outputter::dictionary2(
+	string outFile,
+	ofstream &myfile,
+	vector<vector<unsigned long>>& pairVectors,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	vector<unsigned long>& terminalVector,
+	bool firstBlock,
+	Conditions &c)
+{
+	bitset<32> *bitsToWrite = new bitset<32>();
+	GammaCode gc;
+	string output;
+
+	//Set terminal header
+	output = gc.getGammaCode(terminalVector.size());
+
+	//Write terminals
+	for (int i = 0; i < terminalVector.size(); ++i)
+	{
+		output += gc.getGammaCode(terminalVector[i]);
+		while (output.size() >= 32)
+		{
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
+
+	}
+
+	//Then a header w/ number of generations
+	output += gc.getGammaCode(pairVectors.size());
+	while (output.size() >= 32)
+	{
+		writeDictionaryChunk(myfile, output, bitsToWrite);
+		if (c.test)
+			c.ts->c_dictionary += 4;
+	}
+
+
+	//Then for each generation
+	int maxIndex = terminalVector.size() - 1;
+	for (int gen = 0; gen < pairVectors.size(); ++gen)
+	{
+		//Header is size of generation + max possible index found in that generation
+		output += gc.getGammaCode(pairVectors[gen].size()) + gc.getGammaCode(maxIndex);
+		while (output.size() >= 32)
+		{
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
+
+		//Write first left element
+		output += gc.getGammaCode(dictionary[pairVectors[gen][0]].leftSymbol);
+		while (output.size() >= 32)
+		{
+			writeDictionaryChunk(myfile, output, bitsToWrite);
+			if (c.test)
+				c.ts->c_dictionary += 4;
+		}
+
+		//Write differences between remaining lefts
+		for (int i = 1; i < pairVectors[gen].size(); ++i)
+		{
+			output += gc.getGammaCode((dictionary[pairVectors[gen][i]].leftSymbol - dictionary[pairVectors[gen][i - 1]].leftSymbol));
+			while (output.size() >= 32)
+			{
+				writeDictionaryChunk(myfile, output, bitsToWrite);
+				if (c.test)
+					c.ts->c_dictionary += 4;
+			}
+		}
+
+		//Write rights
+		int binarySize = 1 + floor(log2(maxIndex));
+		for (int i = 0; i < pairVectors[gen].size(); ++i)
+		{
+			string binary = gc.getBinaryCode(dictionary[pairVectors[gen][i]].rightSymbol);
+			while (binary.size() < binarySize)
+				binary = '0' + binary;
+			output += binary;
+			while (output.size() >= 32)
+			{
+				writeDictionaryChunk(myfile, output, bitsToWrite);
+				if (c.test)
+					c.ts->c_dictionary += 4;
+			}
+		}
+
+		//Increase maxindex by the size of the generation
+		maxIndex += pairVectors[gen].size();
+	}
+	if (output.size() != 0)
+	{
+		while (output.size() < 32)
+		{
+			output += '0';
+		}
+		writeDictionaryChunk(myfile, output, bitsToWrite);						//Write the last gamma codes and possibly padding
+		if (c.test)
+			c.ts->c_dictionary += 4;
+	}
+}
+
 void Outputter::all(
 	string filename,
 	bool firstBlock,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	unordered_set<long>& terminals,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	unordered_set<unsigned long>& terminals,
 	Conditions& c)
 {
 
@@ -333,13 +452,13 @@ void Outputter::all(
 
 	//Do Huffman encoding
 	Huffman h;
-	dense_hash_map<long, HuffmanNode> huffmanCodes;
+	dense_hash_map<unsigned long, HuffmanNode> huffmanCodes;
 	huffmanCodes.set_empty_key(-1);
 	huffmanCodes.set_deleted_key(-2);
 	long *firstCode = nullptr;
 	long *numl = nullptr;
 	long maxLength = 0;
-	dense_hash_map<long, dense_hash_map<long, long>> huffmanToSymbol;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> huffmanToSymbol;
 	huffmanToSymbol.set_empty_key(-1);
 	huffmanToSymbol.set_deleted_key(-2);
 
@@ -383,14 +502,11 @@ void Outputter::all(
 
 	//Encode generations for dictionary
 	Dictionary finalDict;
-	vector<vector<CompactPair>> pairs;
-	dense_hash_map<long, dense_hash_map<long, long>> indices;
+	vector<vector<unsigned long>> pairs;
+	dense_hash_map<unsigned long, unsigned long> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
-	dense_hash_map<long, long> terminalIndices;
-	terminalIndices.set_empty_key(-1);
-	terminalIndices.set_deleted_key(-2);
-	vector<long> terminalVector;
+	vector<unsigned long> terminalVector;
 
 	if (c.test) //Carry over data structures
 	{
@@ -411,8 +527,8 @@ void Outputter::all(
 		terminals,
 		terminalVector,
 		pairs,
-		indices,
-		terminalIndices, c);	
+		indices, 
+		c);	
 	if (c.test)
 	{
 		c.ts->testTimer.stop();
@@ -428,15 +544,12 @@ void Outputter::all(
 		c.ts->testTimer.start();
 	}
 
-	gc.makeFinalString(
-		pairs,
-		terminalVector,
-		output);
-
-	this->dictionary(
+	this->dictionary2(
 		compressedDictionaryName,		
 		ofs_dictionary,
-		output,
+		pairs,
+		dictionary,
+		terminalVector,
 		firstBlock,
 		c);
 
@@ -467,9 +580,9 @@ void Outputter::all(
 		maxLength,
 		firstCode,
 		numl,
+		terminalVector,
 		dictionary,
 		indices,
-		terminalIndices,
 		huffmanToSymbol,
 		c);
 	if (c.test)

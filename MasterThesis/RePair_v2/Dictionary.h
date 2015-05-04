@@ -11,6 +11,21 @@ struct NamedPair
 	long nameRight;
 };
 
+struct ComPairD
+{
+	dense_hash_map<unsigned long, Pair>* dic;
+
+	bool operator() (unsigned long fst, unsigned long snd)
+	{
+		if ((*dic)[fst].leftSymbol < (*dic)[snd].leftSymbol)
+			return true;
+		else if ((*dic)[fst].leftSymbol == (*dic)[snd].leftSymbol)
+			return (*dic)[fst].rightSymbol < (*dic)[snd].rightSymbol;
+		else
+			return false;
+	}
+};
+
 class Dictionary
 {
 public:
@@ -27,12 +42,11 @@ public:
 	///<param name="terminalIndices">Output: The index of each terminal.</param>
 	///<param name="generationVectors">Output: The output from createGenerationVectors.</param>
 	void generateCompactDictionary(
-		google::dense_hash_map<long, Pair>& dictionary,
-		std::unordered_set<long>& terminals,
-		std::vector<long>& terminalVector,
-		std::vector<vector<CompactPair>>& pairVectors,
-		google::dense_hash_map<long, google::dense_hash_map<long, long>> &indices,
-		google::dense_hash_map<long, long> &terminalIndices,
+		google::dense_hash_map<unsigned long, Pair>& dictionary,
+		std::unordered_set<unsigned long>& terminals,
+		std::vector<unsigned long>& terminalVector,
+		std::vector<vector<unsigned long>>& pairVectors,
+		google::dense_hash_map<unsigned long, unsigned long> &indices,
 		Conditions &c);
 
 	///<summary>Change each pair in each generation to be a pair of indices into a hypothetical sequence consisting
@@ -55,10 +69,27 @@ public:
 	///<param name="generationVectors">Output: The pairs of symbols that each dictionary entry corresponds to, 
 	///split into a vector for each generation</param>
 	void Dictionary::createGenerationVectors(
-		google::dense_hash_map<long, Pair>& dictionary,
+		google::dense_hash_map<unsigned long, Pair>& dictionary,
 		std::vector<std::vector<CompactPair>>& generationVectors,
 		Conditions &c);
+
+	void Dictionary::createGenerationVectors2(
+		dense_hash_map<unsigned long, Pair>& dictionary,
+		vector<vector<unsigned long>>& generationVectors,
+		Conditions &c);
 	
+	int Dictionary::findTerminalIndex(vector<unsigned long >& terminals, unsigned long  key);
+
+	int Dictionary::findNonTerminalIndex(vector<CompactPair>& gen, CompactPair& key);
+
+	void Dictionary::switchToOrdinalNumbers(
+		unordered_set<unsigned long >& terminals,
+		dense_hash_map<unsigned long, Pair>& dictionary,
+		vector<vector<unsigned long>>& pairVectors,
+		vector<unsigned long >& terminalVector,
+		dense_hash_map<unsigned long, unsigned long> &indices,
+		Conditions &c);
+
 	///<summary>Find the sequence of terminals corresponding to one non-terminal. Used by expandDictionary.</summary>
 	///<param name="symbolIndex">Input: The index (in decodedPairs) of the current pair</param>
 	///<param name="decodedPairs">Input: The vector of pairs produced by GammaCode::decodeDictionaryFile</param>

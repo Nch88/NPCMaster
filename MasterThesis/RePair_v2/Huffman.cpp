@@ -13,7 +13,7 @@ Huffman::~Huffman()
 
 void Huffman::getFrequencies(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, HuffmanNode> & frequencies,
+	dense_hash_map<unsigned long, HuffmanNode> & frequencies,
 	long &cardinality,
 	Conditions &c)
 {
@@ -127,7 +127,7 @@ void Huffman::sift(
 void Huffman::initCodeLengthsArray(
 	int cardinality,
 	int *codeLengths,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes)
+	dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes)
 {
 		if (cardinality <= 0)
 			cerr << ("Huffman::initCodeLengthsArray cardinality is " + to_string(cardinality)) << endl;
@@ -214,7 +214,7 @@ void Huffman::expandHuffmanTree(
 void Huffman::getCodeLengths(
 	long cardinality,
 	int *codeLengths,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
 	long &maxLength)																//Assigns a value to maxLength as an output
 {
 	int heapSize = cardinality;
@@ -252,8 +252,8 @@ void Huffman::generateCanonicalHuffmanCodes(
 	int *codeLengths,
 	long *firstCode,
 	long *numl,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+	dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &huffmanToSymbol,
 	Conditions &c)
 {
 		if (maxLength <= 0)
@@ -306,11 +306,11 @@ void Huffman::generateCanonicalHuffmanCodes(
 
 void Huffman::encode(
 	vector<SymbolRecord*> &sequenceArray,
-	dense_hash_map<long, HuffmanNode> &huffmanCodes,
+	dense_hash_map<unsigned long, HuffmanNode> &huffmanCodes,
 	long *&firstCode,
 	long *&numl,
 	long &maxLength,
-	dense_hash_map<long, dense_hash_map<long, long>> &huffmanToSymbol,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &huffmanToSymbol,
 	Conditions &c)
 {	
 	long cardinality = 0;
