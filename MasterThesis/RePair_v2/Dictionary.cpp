@@ -173,7 +173,7 @@ void Dictionary::switchToOrdinalNumbers(
 	{
 		if (c.ts->firstBlock)
 		{
-			c.ts->s_nrOfTerminals++;
+			c.ts->s_nrOfTerminals = terminalVector.size();
 		}
 	}
 
