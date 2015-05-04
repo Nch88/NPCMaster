@@ -479,7 +479,8 @@ void AlgorithmP::incrementCountLeft(
 				if (c.test)
 				{
 					c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
-					c.ts->s_maxPairs++;
+					if (c.ts->firstBlock)
+						c.ts->s_maxPairs++;
 				}
 					
 
@@ -552,9 +553,10 @@ void AlgorithmP::incrementCountRight(
 			activePairs[Symbols][symbolNext].pairRecord->count = 2;
 
 			if (c.test)
-			{
+			{				
 				c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
-				c.ts->s_maxPairs++;
+				if (c.ts->firstBlock)
+					c.ts->s_maxPairs++;
 			}
 				
 

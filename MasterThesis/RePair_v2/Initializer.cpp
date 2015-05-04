@@ -113,7 +113,8 @@ void Initializer::setupPairRecord(
 		if (c.test)
 		{
 			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
-			c.ts->s_maxPairs++;
+			if (c.ts->firstBlock)
+				c.ts->s_maxPairs++;
 		}
 			
 	}
