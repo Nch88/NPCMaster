@@ -191,6 +191,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Statistics:" << endl;
 
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
+	ofs << "Nr of terminals; " << s_nrOfTerminals << endl;
 	ofs << "Total nr of pairs created; " << s_maxPairs << endl;
 	ofs << "Max nr of generations; " << s_nrOfGenerations << endl;
 	ofs << "Total nr of phrases; " << s_nrOfPhrases << endl;

@@ -171,6 +171,14 @@ void Dictionary::switchToOrdinalNumbers(
 
 	if (c.test)
 	{
+		if (c.ts->firstBlock)
+		{
+			c.ts->s_nrOfTerminals = terminalVector.size();
+		}
+	}
+
+	if (c.test)
+	{
 		c.ts->addMemory("norDicTerminalVector", terminalVector.size() * c.ts->terminalsWords);
 	}
 
