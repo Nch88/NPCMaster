@@ -97,6 +97,7 @@ public:
 
 	//Statistics
 	long s_maxPairs = 0;
+	long s_nrOfTerminals = 0;
 	long s_nrOfGenerations = 0;
 	long s_nrOfPhrases = 0;
 	long s_avgNrOfPhrases = 0;

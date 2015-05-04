@@ -171,6 +171,14 @@ void Dictionary::switchToOrdinalNumbers(
 
 	if (c.test)
 	{
+		if (c.ts->firstBlock)
+		{
+			c.ts->s_nrOfTerminals++;
+		}
+	}
+
+	if (c.test)
+	{
 		c.ts->addMemory("norDicTerminalVector", terminalVector.size() * c.ts->terminalsWords);
 	}
 
@@ -279,8 +287,11 @@ void Dictionary::createDictionary(
 
 	if (c.test)
 	{
-		c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
-		c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
+		if (c.ts->firstBlock)
+		{
+			c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
+			c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
+		}		
 	}
 
 	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector, c);

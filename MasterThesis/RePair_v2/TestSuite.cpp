@@ -125,7 +125,7 @@ void TestSuite::WriteToFileEncoding()
 	ofs << "Original file size (mb); " << c_origSize / mb << endl;
 	ofs << "Compressed file size; " << c_dictionary + c_huffmanDictionary + c_sequence << endl;
 	ofs << "Compressed file size (mb); " << (c_dictionary + c_huffmanDictionary + c_sequence) / mb << endl;
-	ofs << "Compression ratio; " << ((double)c_origSize / (double)c_sequence) << endl;
+	ofs << "Compression ratio; " << ((double)c_origSize / ((double)c_dictionary + (double)c_huffmanDictionary + (double)c_sequence)) << endl;
 	ofs << endl;
 
 	ofs << "memory (in words):" << endl;
@@ -192,6 +192,7 @@ void TestSuite::WriteToFileEncoding()
 
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
 	ofs << "Total nr of pairs created; " << s_maxPairs << endl;
+	ofs << "Nr of terminals; " << s_nrOfTerminals << endl;
 	ofs << "Max nr of generations; " << s_nrOfGenerations << endl;
 	ofs << "Total nr of phrases; " << s_nrOfPhrases << endl;
 	ofs << "Avg nr of phrases per generation; " << s_avgNrOfPhrases << endl;
