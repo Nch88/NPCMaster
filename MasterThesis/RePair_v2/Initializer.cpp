@@ -73,6 +73,29 @@ void Initializer::resetForNextBlock(
 	activePairs.clear();
 }
 
+void Initializer::resetBeforeOutput(
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
+	vector<PairRecord*> & priorityQueue)
+{
+
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		priorityQueue[i] = nullptr;
+	}
+
+	//Here we need to free memory between blocks
+	for each (auto leftSymbol in activePairs)
+	{
+		for each (auto rightSymbol in leftSymbol.second)
+		{
+			delete rightSymbol.second.pairRecord;
+			rightSymbol.second.indexFirst = -1;
+			rightSymbol.second.seenOnce = false;
+		}
+	}
+	activePairs.clear();
+}
+
 void Initializer::setupPairRecord(
 	unsigned long  leftSymbol,
 	unsigned long  rightSymbol,

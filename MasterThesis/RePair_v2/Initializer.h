@@ -32,6 +32,10 @@ public:
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue);
 
+	void Initializer::resetBeforeOutput(
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
+		vector<PairRecord*> & priorityQueue);
+
 	///<summary>
 	///Adds a symbol to the sequence array. If a record does not yet exist, memory is allocated for a new one.
 	///</summary>

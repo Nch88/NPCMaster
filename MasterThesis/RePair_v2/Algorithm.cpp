@@ -109,6 +109,8 @@ int Algorithm::run(
 			cout << " - Timing: repair compression done in " << t.getTime() << " ms" << endl;
 		}
 
+		init.resetBeforeOutput(activePairs, priorityQueue);
+
 		if (c.timing)
 		{
 			t.start();

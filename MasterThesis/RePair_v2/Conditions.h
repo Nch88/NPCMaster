@@ -8,6 +8,8 @@ public:
 	bool compact = false;
 	bool test = false;
 
+	int runs = 1;
+
 	TestSuite *ts = nullptr;
 
 	Conditions();
