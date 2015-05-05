@@ -18,7 +18,8 @@ public:
 	void Initializer::resetCompleted(
 		int blockSize,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<SymbolRecord*> & sequenceArray);
+		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*> & priorityQueue);
 
 	///<summary>
 	///Resets all the major structure after compression of a block is done, only some memory is deallocated the rest is reused.
@@ -30,6 +31,10 @@ public:
 	void Initializer::resetForNextBlock(
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
+		vector<PairRecord*> & priorityQueue);
+
+	void Initializer::resetBeforeOutput(
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<PairRecord*> & priorityQueue);
 
 	///<summary>

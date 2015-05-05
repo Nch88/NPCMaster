@@ -15,7 +15,8 @@ Initializer::~Initializer()
 void Initializer::resetCompleted(
 	int blockSize,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-	vector<SymbolRecord*> & sequenceArray)
+	vector<SymbolRecord*> & sequenceArray,
+	vector<PairRecord*> & priorityQueue)
 {
 	//Reset sequence array when we are done
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -37,6 +38,12 @@ void Initializer::resetCompleted(
 		}
 	}
 	activePairs.clear();
+
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		priorityQueue[i] = nullptr;
+	}
+	priorityQueue.clear();
 }
 
 void Initializer::resetForNextBlock(
@@ -54,6 +61,29 @@ void Initializer::resetForNextBlock(
 			sequenceArray[i]->symbol = 0;
 		}
 	}
+
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		priorityQueue[i] = nullptr;
+	}
+
+	//Here we need to free memory between blocks
+	for each (auto leftSymbol in activePairs)
+	{
+		for each (auto rightSymbol in leftSymbol.second)
+		{
+			delete rightSymbol.second.pairRecord;
+			rightSymbol.second.indexFirst = -1;
+			rightSymbol.second.seenOnce = false;
+		}
+	}
+	activePairs.clear();
+}
+
+void Initializer::resetBeforeOutput(
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
+	vector<PairRecord*> & priorityQueue)
+{
 
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{

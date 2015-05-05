@@ -109,6 +109,8 @@ int Algorithm::run(
 			cout << " - Timing: repair compression done in " << t.getTime() << " ms" << endl;
 		}
 
+		init.resetBeforeOutput(activePairs, priorityQueue);
+
 		if (c.timing)
 		{
 			t.start();
@@ -154,6 +156,6 @@ int Algorithm::run(
 		}		
 	}
 	cout << "Completed compression of file: " << filename << endl;
-	init.resetCompleted(blockSize, activePairs, sequenceArray);
+	init.resetCompleted(blockSize, activePairs, sequenceArray, priorityQueue);
 	return 0;
 }

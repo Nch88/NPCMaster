@@ -11,15 +11,15 @@ TestSuite::~TestSuite()
 {
 }
 
-double TestSuite::totalTime(double offset)
+long double TestSuite::totalTime(double offset)
 {
-	return t_initialization.count() / offset +
-		t_repair.count() / offset +
-		t_huffmanEncoding.count() / offset +
-		t_encodeSequence.count() / offset +
-		t_writeHuffmanDictionary.count() / offset +
-		t_setupDictionary.count() / offset +
-		t_writeDictionary.count() / offset;
+	return t_initialization_count / offset +
+		t_repair_count / offset +
+		t_huffmanEncoding_count / offset +
+		t_encodeSequence_count / offset +
+		t_writeHuffmanDictionary_count / offset +
+		t_setupDictionary_count / offset +
+		t_writeDictionary_count / offset;
 }
 
 void TestSuite::resetForNextBlock()
@@ -78,8 +78,95 @@ void TestSuite::resetForNextBlock()
 	m_huffDic_terminalVector_max = 0;
 }
 
+void TestSuite::resetForNextTest()
+{
+	//Timing
+	t_initialization -= t_initialization;
+	t_repair -= t_repair;
+	t_huffmanEncoding -= t_huffmanEncoding;
+	t_encodeSequence -= t_encodeSequence;
+	t_writeHuffmanDictionary -= t_writeHuffmanDictionary;
+	t_setupDictionary -= t_setupDictionary;
+	t_writeDictionary -= t_writeDictionary;
 
-void TestSuite::WriteToFileEncoding()
+	t_readDictionary -= t_readDictionary;
+	t_decompression -= t_decompression;
+
+	//m_init
+	m_init_sequenceArray_current = 0;
+	m_init_sequenceArray_max = 0;
+	m_init_pairRecord_current = 0;
+	m_init_pairRecord_max = 0;
+	m_init_priorityQueue_max = 0;
+
+
+	// m_repair;
+	m_repair_sequenceArray_current = 0;
+	m_repair_sequenceArray_max = 0;
+	m_repair_pairRecord_current = 0;
+	m_repair_pairRecord_max = 0;
+	m_repair_priorityQueue_max = 0;
+	m_repair_phraseTable_max = 0;
+
+
+	// m_huffmanEncoding;
+	m_huffEnc_sequenceArray_current = 0;
+	m_huffEnc_sequenceArray_max = 0;
+	m_huffEnc_phraseTable_max = 0;
+	m_huffEnc_frequencies_max = 0;
+	m_huffEnc_codeLengths_max = 0;
+	m_huffEnc_firstCodes_max = 0;
+	m_huffEnc_nrOfCodes_max = 0;
+	m_huffEnc_nextCodes_max = 0;
+	m_huffEnc_huffmanCodes_max = 0;
+	m_huffEnc_huffmanToSymbol_max = 0;
+
+
+	// m_normalDictionary;
+	m_norDic_sequenceArray_current = 0;
+	m_norDic_sequenceArray_max = 0;
+	m_norDic_phraseTable_max = 0;
+	m_norDic_firstCodes_max = 0;
+	m_norDic_nrOfCodes_max = 0;
+	m_norDic_huffmanToSymbol_max = 0;
+	m_norDic_terminals_max = 0;
+	m_norDic_roots_max = 0;
+	m_norDic_symbolToGen_max = 0;
+	m_norDic_pairVectors_max = 0;
+	m_norDic_terminalVector_max = 0;
+	m_norDic_offsets_max = 0;
+
+
+	// m_huffmanDictionary;
+	m_huffDic_phraseTable_max = 0;
+	m_huffDic_firstCodes_max = 0;
+	m_huffDic_nrOfCodes_max = 0;
+	m_huffDic_huffmanToSymbol_max = 0;
+	m_huffDic_symbolToGen_max = 0;
+	m_huffDic_pairVectors_max = 0;
+	m_huffDic_terminalVector_max = 0;
+
+
+	//Compression (in bytes)
+	c_origSize = 0;
+	c_sequence = 0;
+	c_huffmanDictionary = 0;
+	c_dictionary = 0;
+
+	//Statistics
+	s_maxPairs = 0;
+	s_nrOfTerminals = 0;
+	s_nrOfGenerations = 0;
+	s_nrOfPhrases = 0;
+	s_avgNrOfPhrases = 0;
+	s_largestGeneration = 0;
+	s_largestGenerationCount = 0;
+	s_nrOfBlocks = 0;
+	s_huffmanCodeLength_max = 0;
+}
+
+
+void TestSuite::WriteToFileEncoding(int runs)
 {
 	double offset = 1000000.000;
 	double mb = 1000000.0;
@@ -95,7 +182,11 @@ void TestSuite::WriteToFileEncoding()
 		unit = "ns";
 
 	ofstream ofs;
-	string file = "TestData.csv";
+	string file = "TestData - ";
+	file += s_filename;
+	file += "_avg";
+	file += to_string(runs);
+	file += ".csv";
 	ofs.open(file, ios::trunc);
 
 	ofs << "sep=;" << endl;
@@ -104,13 +195,13 @@ void TestSuite::WriteToFileEncoding()
 
 	ofs << "Timing (in " << unit << "):" << endl;
 
-	ofs << "Initialization" << "; " << t_initialization.count() / offset << endl;
-	ofs << "Re-Pair; " << t_repair.count() / offset << endl;
-	ofs << "Huffman encoding; " << t_huffmanEncoding.count() / offset << endl;
-	ofs << "Encode sequence; " << t_encodeSequence.count() / offset << endl;
-	ofs << "Write Huffman dictionary; " << t_writeHuffmanDictionary.count() / offset << endl;
-	ofs << "Setup dictionary; " << t_setupDictionary.count() / offset << endl;
-	ofs << "Write dictionary; " << t_writeDictionary.count() / offset << endl;
+	ofs << "Initialization" << "; " << t_initialization_count / offset << endl;
+	ofs << "Re-Pair; " << t_repair_count / offset << endl;
+	ofs << "Huffman encoding; " << t_huffmanEncoding_count / offset << endl;
+	ofs << "Encode sequence; " << t_encodeSequence_count / offset << endl;
+	ofs << "Write Huffman dictionary; " << t_writeHuffmanDictionary_count / offset << endl;
+	ofs << "Setup dictionary; " << t_setupDictionary_count / offset << endl;
+	ofs << "Write dictionary; " << t_writeDictionary_count / offset << endl;
 	ofs << "Total time; " << totalTime(offset) << endl;
 
 	ofs << endl;

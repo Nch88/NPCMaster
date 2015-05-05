@@ -76,6 +76,88 @@ int stringToInt(string &arg, int &result)
 	return 0;
 }
 
+void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
+{
+	for (int i = 0; i < testResults.size(); i++)
+	{
+		if (i == 0)
+		{
+			avgResult.c_dictionary = testResults[i].c_dictionary;
+			avgResult.c_huffmanDictionary = testResults[i].c_huffmanDictionary;
+			avgResult.c_origSize = testResults[i].c_origSize;
+			avgResult.c_sequence = testResults[i].c_sequence;
+			avgResult.m_huffDic_firstCodes_max = testResults[i].m_huffDic_firstCodes_max;
+			avgResult.m_huffDic_huffmanToSymbol_max = testResults[i].m_huffDic_huffmanToSymbol_max;
+			avgResult.m_huffDic_nrOfCodes_max = testResults[i].m_huffDic_nrOfCodes_max;
+			avgResult.m_huffDic_pairVectors_max = testResults[i].m_huffDic_pairVectors_max;
+			avgResult.m_huffDic_phraseTable_max = testResults[i].m_huffDic_phraseTable_max;
+			avgResult.m_huffDic_symbolToGen_max = testResults[i].m_huffDic_symbolToGen_max;
+			avgResult.m_huffDic_terminalVector_max = testResults[i].m_huffDic_terminalVector_max;
+			avgResult.m_huffDic_total = testResults[i].m_huffDic_total;
+			avgResult.m_huffEnc_codeLengths_max = testResults[i].m_huffEnc_codeLengths_max;
+			avgResult.m_huffEnc_firstCodes_max = testResults[i].m_huffEnc_firstCodes_max;
+			avgResult.m_huffEnc_frequencies_max = testResults[i].m_huffEnc_frequencies_max;
+			avgResult.m_huffEnc_huffmanCodes_max = testResults[i].m_huffEnc_huffmanCodes_max;
+			avgResult.m_huffEnc_huffmanToSymbol_max = testResults[i].m_huffEnc_huffmanToSymbol_max;
+			avgResult.m_huffEnc_nextCodes_max = testResults[i].m_huffEnc_nextCodes_max;
+			avgResult.m_huffEnc_nrOfCodes_max = testResults[i].m_huffEnc_nrOfCodes_max;
+			avgResult.m_huffEnc_phraseTable_max = testResults[i].m_huffEnc_phraseTable_max;
+			avgResult.m_huffEnc_sequenceArray_current = testResults[i].m_huffEnc_sequenceArray_current;
+			avgResult.m_huffEnc_sequenceArray_max = testResults[i].m_huffEnc_sequenceArray_max;
+			avgResult.m_huffEnc_total = testResults[i].m_huffEnc_total;
+			avgResult.m_init_pairRecord_current = testResults[i].m_init_pairRecord_current;
+			avgResult.m_init_pairRecord_max = testResults[i].m_init_pairRecord_max;
+			avgResult.m_init_priorityQueue_max = testResults[i].m_init_priorityQueue_max;
+			avgResult.m_init_sequenceArray_current = testResults[i].m_init_sequenceArray_current;
+			avgResult.m_init_sequenceArray_max = testResults[i].m_init_sequenceArray_max;
+			avgResult.m_init_total = testResults[i].m_init_total;
+			avgResult.m_norDic_firstCodes_max = testResults[i].m_norDic_firstCodes_max;
+			avgResult.m_norDic_huffmanToSymbol_max = testResults[i].m_norDic_huffmanToSymbol_max;
+			avgResult.m_norDic_nrOfCodes_max = testResults[i].m_norDic_nrOfCodes_max;
+			avgResult.m_norDic_offsets_max = testResults[i].m_norDic_offsets_max;
+			avgResult.m_norDic_pairVectors_max = testResults[i].m_norDic_pairVectors_max;
+			avgResult.m_norDic_phraseTable_max = testResults[i].m_norDic_phraseTable_max;
+			avgResult.m_norDic_roots_max = testResults[i].m_norDic_roots_max;
+			avgResult.m_norDic_sequenceArray_current = testResults[i].m_norDic_sequenceArray_current;
+			avgResult.m_norDic_sequenceArray_max = testResults[i].m_norDic_sequenceArray_max;
+			avgResult.m_norDic_supportStructures_total = testResults[i].m_norDic_supportStructures_total;
+			avgResult.m_norDic_symbolToGen_max = testResults[i].m_norDic_symbolToGen_max;
+			avgResult.m_norDic_terminals_max = testResults[i].m_norDic_terminals_max;
+			avgResult.m_norDic_terminalVector_max = testResults[i].m_norDic_terminalVector_max;
+			avgResult.m_norDic_total = testResults[i].m_norDic_total;
+			avgResult.m_repair_pairRecord_current = testResults[i].m_repair_pairRecord_current;
+			avgResult.m_repair_pairRecord_max = testResults[i].m_repair_pairRecord_max;
+			avgResult.m_repair_phraseTable_max = testResults[i].m_repair_phraseTable_max;
+			avgResult.m_repair_priorityQueue_max = testResults[i].m_repair_priorityQueue_max;
+			avgResult.m_repair_sequenceArray_current = testResults[i].m_repair_sequenceArray_current;
+			avgResult.m_repair_sequenceArray_max = testResults[i].m_repair_sequenceArray_max;
+			avgResult.m_repair_total = testResults[i].m_repair_total;
+			avgResult.m_total = testResults[i].m_total;
+			avgResult.s_avgNrOfPhrases = testResults[i].s_avgNrOfPhrases;
+			avgResult.s_filename = testResults[i].s_filename;
+			avgResult.s_huffmanCodeLength_max = testResults[i].s_huffmanCodeLength_max;
+			avgResult.s_largestGeneration = testResults[i].s_largestGeneration;
+			avgResult.s_largestGenerationCount = testResults[i].s_largestGenerationCount;
+			avgResult.s_maxPairs = testResults[i].s_maxPairs;
+			avgResult.s_nrOfBlocks = testResults[i].s_nrOfBlocks;
+			avgResult.s_nrOfGenerations = testResults[i].s_nrOfGenerations;
+			avgResult.s_nrOfPhrases = testResults[i].s_nrOfPhrases;
+			avgResult.s_nrOfTerminals = testResults[i].s_nrOfTerminals;
+		}
+		
+		avgResult.t_decompression_count += testResults[i].t_decompression.count() / testResults.size();
+		avgResult.t_encodeSequence_count += testResults[i].t_encodeSequence.count() / testResults.size();
+		avgResult.t_huffmanEncoding_count += testResults[i].t_huffmanEncoding.count() / testResults.size();
+		avgResult.t_initialization_count += testResults[i].t_initialization.count() / testResults.size();
+		avgResult.t_readDictionary_count += testResults[i].t_readDictionary.count() / testResults.size();
+		avgResult.t_repair_count += testResults[i].t_repair.count() / testResults.size();
+		avgResult.t_setupDictionary_count += testResults[i].t_setupDictionary.count() / testResults.size();
+		avgResult.t_writeDictionary_count += testResults[i].t_writeDictionary.count() / testResults.size();
+		avgResult.t_writeHuffmanDictionary_count += testResults[i].t_writeHuffmanDictionary.count() / testResults.size();
+	}
+
+}
+
 int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 {
 	string argS;
@@ -93,7 +175,25 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 	else if (argS == "c" || argS == "compact")
 		c.compact = true;
 	else if (argS == "test")
+	{
 		c.test = true;
+		c.runs = 1;
+	}
+	else if (argS == "test2")
+	{
+		c.test = true;
+		c.runs = 2;
+	}
+	else if (argS == "test5")
+	{
+		c.test = true;
+		c.runs = 5;
+	}
+	else if (argS == "test10")
+	{
+		c.test = true;
+		c.runs = 10;
+	}
 	else
 	{		
 		int mbs = 1;
@@ -128,7 +228,10 @@ int main(int argc, char* argv[])
 	bool verbose = false;
 	bool extraVerbose = false;
 	bool timer = false;
+	int runs = 1;
+	int currentRun = 1;
 	
+	vector<TestSuite> testResults;
 
 	if (argc <= 2)
 	{
@@ -148,9 +251,6 @@ int main(int argc, char* argv[])
 
 		vector<SymbolRecord*> sequenceArray;
 		vector<PairRecord*> priorityQueue;
-		dense_hash_map<unsigned long , Pair> dictionary;
-		dictionary.set_empty_key(-1);
-		dictionary.set_deleted_key(-2);
 
 		unsigned long  symbols(initialSymbolValue);
 
@@ -172,34 +272,54 @@ int main(int argc, char* argv[])
 		{
 			c.ts = new TestSuite();
 			c.ts->s_filename.assign(filename);
+			runs = c.runs;
 		}
 
-		ifstream file(filename);
-
-		if (file.is_open())
+		//When testing we can do multiple runs
+		while (currentRun <= runs)
 		{
-			r = algorithm.run(
-				filename,
-				file,
-				c,
-				init,
-				algP,
-				t,
-				blockSize,
-				activePairs,
-				sequenceArray,
-				priorityQueue,
-				symbols);
+			
+			ifstream file(filename);
 
-			if (c.test)
+			if (file.is_open())
 			{
-				c.ts->WriteToFileEncoding();
+				if (c.test)
+				{
+					cout << endl << "Test run " << currentRun << " of " << runs << endl << endl;
+				}
+				r = algorithm.run(
+					filename,
+					file,
+					c,
+					init,
+					algP,
+					t,
+					blockSize,
+					activePairs,
+					sequenceArray,
+					priorityQueue,
+					symbols);
+
+				//Save the test results from the current run
+				if (c.test)
+				{
+					testResults.push_back(*c.ts);
+					c.ts->resetForNextTest();
+				}
+				
 			}
+			else
+			{
+				cout << "Problem opening file: " << filename << endl;
+				return 5;
+			}
+			++currentRun;
 		}
-		else
+		if (c.test)
 		{
-			cout << "Problem opening file: " << filename << endl;
-			return 5;
+			TestSuite avgResult;
+			getAvgResult(avgResult, testResults);
+			avgResult.WriteToFileEncoding(runs);
 		}
 		return r;
 	}
