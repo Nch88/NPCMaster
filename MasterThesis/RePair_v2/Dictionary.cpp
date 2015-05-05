@@ -106,11 +106,11 @@ void Dictionary::switchToOrdinalNumbers(
 	terminalVector.assign(terminals.begin(), terminals.end());
 	std::sort(terminalVector.begin(), terminalVector.end());
 
-	cout << endl << "Dictionary initially:" << endl;
+	/*cout << endl << "Dictionary initially:" << endl;
 	for each(auto var in dictionary)
 	{
 		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
-	}
+	}*/
 
 	//Replace the terminal symbols in the phrase table with ordinal numbers and sort them
 	for (int i = 0; i < pairVectors[0].size(); ++i)
@@ -119,11 +119,11 @@ void Dictionary::switchToOrdinalNumbers(
 		dictionary[pairVectors[0][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[0][i]].rightSymbol);
 	}
 
-	cout << endl << "Dictionary after first gen replacements:" << endl;
+	/*cout << endl << "Dictionary after first gen replacements:" << endl;
 	for each(auto var in dictionary)
 	{
 		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
-	}
+	}*/
 
 	ComPairD cpd;
 	cpd.dic = &dictionary;
@@ -143,35 +143,35 @@ void Dictionary::switchToOrdinalNumbers(
 		for (int i = 0; i < pairVectors[gen].size(); ++i)
 		{
 			//First symbol
-			if (dictionary[pairVectors[gen][i]].leftSymbol > initialSymbolValue)
+			if (dictionary[pairVectors[gen][i]].leftSymbol >= initialSymbolValue)
 			{
 				//Non-terminal
-				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				//unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].leftSymbol = indices[dictionary[pairVectors[gen][i]].leftSymbol];
-				cout << endl << "Case: NtermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
+				//cout << endl << "Case: NtermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
 			}
 			else
 			{
 				//Terminal
-				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				//unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].leftSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].leftSymbol);
-				cout << endl << "Case: TermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
+				//cout << endl << "Case: TermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
 			}
 
 			//Second symbol
-			if (dictionary[pairVectors[gen][i]].rightSymbol > initialSymbolValue)
+			if (dictionary[pairVectors[gen][i]].rightSymbol >= initialSymbolValue)
 			{
 				//Non-terminal
-				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				//unsigned long sym = dictionary[pairVectors[gen][i]].rightSymbol;
 				dictionary[pairVectors[gen][i]].rightSymbol = indices[dictionary[pairVectors[gen][i]].rightSymbol];
-				cout << endl << "Case: NtermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
+				//cout << endl << "Case: NtermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
 			}
 			else
 			{
 				//Terminal
-				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				//unsigned long sym = dictionary[pairVectors[gen][i]].rightSymbol;
 				dictionary[pairVectors[gen][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].rightSymbol);
-				cout << endl << "Case: TermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
+				//cout << endl << "Case: TermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
 			}
 
 			if (dictionary[pairVectors[gen][i]].leftSymbol < 0 || dictionary[pairVectors[gen][i]].rightSymbol < 0)

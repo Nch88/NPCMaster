@@ -154,7 +154,7 @@ TEST(decoder, diddy_Nicolai)
 
 
 }
-
+/*
 TEST(decoder, bible_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -848,4 +848,4 @@ TEST(decoder, pitches50MB_Nicolai)
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
-}
+}*/

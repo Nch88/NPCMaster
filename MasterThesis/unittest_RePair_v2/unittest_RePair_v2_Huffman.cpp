@@ -932,18 +932,18 @@ TEST(huffman, decodeDictionaryDiddy)
 			indices,
 			c);
 
-		/*vector<unsigned long> testIndices;
-
-		for (auto &entry : indices)
-		{
-			for (auto &subentry : entry.second)
-			{
-				testIndices.push_back(entry.first);
-				testIndices.push_back(subentry.first);
-				testIndices.push_back(subentry.second);
-				testIndices.push_back(-1);
-			}
-		}*/
+		//vector<unsigned long> testIndices;
+		//
+		//for (auto &entry : indices)
+		//{
+		//	for (auto &subentry : entry.second)
+		//	{
+		//		testIndices.push_back(entry.first);
+		//		testIndices.push_back(subentry.first);
+		//		testIndices.push_back(subentry.second);
+		//		testIndices.push_back(-1);
+		//	}
+		//}
 
 		dense_hash_map<unsigned long, HuffmanNode> huffmanCodes;
 		huffmanCodes.set_empty_key(-1);
@@ -1025,7 +1025,7 @@ TEST(huffman, decodeDictionaryDiddy)
 		long nrOfCodes = 4;
 		long codeStart = firstCodes[2];
 		long code = 4;
-		long symbol = (huffmanToSymbol[3])[4];
+		long symbol = huffmanToSymbol[3][4];
 		long index;
 		Dictionary dict;
 
@@ -1034,14 +1034,14 @@ TEST(huffman, decodeDictionaryDiddy)
 		for (int i = codeStart; i < codeStart + nrOfCodes; i++)
 		{
 			code = i;
-			symbol = (huffmanToSymbol[codeLength])[code];
+			symbol = huffmanToSymbol[codeLength][code];
 
 			if (symbol >= initialSymbolValue)
 				index = indices[symbol];
 			else
 				index = dict.findTerminalIndex(terminalVector, symbol);
 
-			ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
+			ASSERT_EQ(index, symbolIndices[codeLength][code]);
 		}
 
 		//Test codes of length 4
@@ -1051,14 +1051,22 @@ TEST(huffman, decodeDictionaryDiddy)
 		for (int i = codeStart; i < codeStart + nrOfCodes; i++)
 		{
 			code = i;
-			symbol = (huffmanToSymbol[codeLength])[code];
+			symbol = huffmanToSymbol[codeLength][code];
+
+			for each(auto var in huffmanToSymbol)
+			{
+				for each(auto var2 in var.second)
+				{
+					cout << "(" << var.first << "," << var2.first << ")" << " -> " << var2.second << endl;
+				}
+			}
 
 			if (symbol >= initialSymbolValue)
 				index = indices[symbol];
 			else
 				index = dict.findTerminalIndex(terminalVector, symbol);
 
-			ASSERT_EQ(index, (symbolIndices)[codeLength][code]);
+			ASSERT_EQ(index, symbolIndices[codeLength][code]);
 		}
 		ifs.close();
 	
