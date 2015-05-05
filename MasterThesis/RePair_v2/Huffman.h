@@ -75,12 +75,12 @@ public:
 	void Huffman::fillBitset(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, bitset<32> *chunk);
 	void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char rawChunk4, string &chunk);
 	void Huffman::readFromGammaCodes(
-		long symbolsToRead,
+		unsigned long symbolsToRead,
 		ifstream &bitstream,
 		GammaCode &gc,
 		string &chunk,
 		string &prefix,
-		vector<long> &intValues);
+		vector<unsigned long> &intValues);
 
 	///<summary>
 	///Decodes a dictionary from Huffman codes to indices into the dictionary of generations needed to decode a 
@@ -92,7 +92,7 @@ public:
 	void Huffman::decodeDictionary(
 		ifstream &bitstream,
 		long *&firstCodes,
-		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices);
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &symbolIndices);
 
 	///<summary>
 	///Decodes a block of compressed Huffman codes based on the available Huffman dictionary, 
@@ -105,7 +105,7 @@ public:
 	void Huffman::decode(
 		long *firstCode,
 		ifstream &bitstream,
-		dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
-		vector<long> &symbolIndexSequence);
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &symbolIndices,
+		vector<unsigned long> &symbolIndexSequence);
 };
 

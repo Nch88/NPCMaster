@@ -37,124 +37,6 @@ void Dictionary::generateCompactDictionary(
 	switchToOrdinalNumbers(terminals, dictionary, pairVectors, terminalVector, indices, c);
 }
 
-void Dictionary::createFinalPairVectors(
-	dense_hash_map<long, Pair>& dictionary,
-	vector<long>& terminals,
-	vector<vector<CompactPair>>& pairVectors,
-	dense_hash_map<long, dense_hash_map<long, long>> &indices,
-	dense_hash_map<long, long> &terminalIndices,
-	Conditions &c)
-{
-	//Record indices of terminals
-	for (int i = 0; i < terminals.size(); ++(i))
-	{
-		terminalIndices[terminals[i]] = i;
-		if (c.test)
-		{
-			c.ts->addMemory("norDicTerminalIndices", c.ts->terminalIndicesWords);
-		}
-	}
-
-	int offset = terminals.size();
-
-	if (c.test)
-	{
-		c.ts->s_nrOfGenerations = pairVectors.size() - 1;
-	}
-
-	//For each generation
-	for (int gen = 0; gen < pairVectors.size(); ++gen)
-	{
-		vector<NamedPair> vec;
-		for (int j = 0; j < pairVectors[gen].size(); ++j)
-		{
-			if (c.test && gen != 0)
-			{
-				c.ts->s_nrOfPhrases++;
-				if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
-				{
-					c.ts->s_largestGenerationCount = pairVectors[gen].size();
-					c.ts->s_largestGeneration = gen;
-				}
-			}
-
-			//Find the new indices of the two symbols in this pair
-			long leftSymbol = pairVectors[gen][j].leftSymbol;
-
-			long leftIndex;
-
-			//Check for terminal symbol or composite symbol
-			if (leftSymbol < initialSymbolValue) //Terminal
-			{
-				leftIndex = terminalIndices[leftSymbol];
-			}
-			else //Composite
-			{
-				long leftSymbolLeftPart = dictionary[leftSymbol].leftSymbol;
-				long leftSymbolRightPart = dictionary[leftSymbol].rightSymbol;
-				leftIndex = indices[leftSymbolLeftPart][leftSymbolRightPart];
-			}
-
-			long rightSymbol = pairVectors[gen][j].rightSymbol;
-			long rightIndex;
-
-			//Check for terminal symbol or composite symbol
-			if (rightSymbol < initialSymbolValue) //Terminal
-			{
-				rightIndex = terminalIndices[rightSymbol];
-			}
-			else //Composite
-			{
-				long rightSymbolLeftPart = dictionary[rightSymbol].leftSymbol;
-				long rightSymbolRightPart = dictionary[rightSymbol].rightSymbol;
-				rightIndex = indices[rightSymbolLeftPart][rightSymbolRightPart];
-			}
-
-			//Make a pair out of the indices we found
-			NamedPair p = { leftIndex, rightIndex, leftSymbol, rightSymbol };
-			vec.push_back(p);
-
-			if (c.test)
-			{
-				c.ts->addMemory("norDicNamedPairVector", c.ts->namedPairWords);
-			}
-		}
-
-		//Sort the new vector
-		std::sort(vec.begin(), vec.end(), comPairN);
-
-		//Change the values in pairVectors to the new indices
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			pairVectors[gen][i].leftSymbol = vec[i].leftSymbol;
-			pairVectors[gen][i].rightSymbol = vec[i].rightSymbol;
-		}
-
-		//Record the new indices
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			if (indices[vec[i].nameLeft].empty())
-			{
-				indices[vec[i].nameLeft].set_empty_key(-1);
-				indices[vec[i].nameLeft].set_deleted_key(-2);
-			}
-			indices[vec[i].nameLeft][vec[i].nameRight] = offset + i;
-			if (c.test)
-			{
-				c.ts->addMemory("norDicIndices", c.ts->indicesWords);
-			}
-		}
-
-		//Update the offset
-		offset += pairVectors[gen].size();
-	}
-	if (c.test)
-	{
-		c.ts->s_avgNrOfPhrases = c.ts->s_nrOfPhrases / c.ts->s_nrOfGenerations;
-	}
-
-}
-
 void Dictionary::createGenerationVectors2(
 	dense_hash_map<unsigned long, Pair>& dictionary,
 	vector<vector<unsigned long>>& generationVectors,
@@ -224,13 +106,28 @@ void Dictionary::switchToOrdinalNumbers(
 	terminalVector.assign(terminals.begin(), terminals.end());
 	std::sort(terminalVector.begin(), terminalVector.end());
 
+	cout << endl << "Dictionary initially:" << endl;
+	for each(auto var in dictionary)
+	{
+		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
+	}
+
 	//Replace the terminal symbols in the phrase table with ordinal numbers and sort them
 	for (int i = 0; i < pairVectors[0].size(); ++i)
 	{
-		dictionary[pairVectors[0][i]].leftSymbol = findTerminalIndex(terminalVector, pairVectors[0][i]);
-		dictionary[pairVectors[0][i]].rightSymbol = findTerminalIndex(terminalVector, pairVectors[0][i]);
+		dictionary[pairVectors[0][i]].leftSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[0][i]].leftSymbol);
+		dictionary[pairVectors[0][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[0][i]].rightSymbol);
 	}
-	std::sort(pairVectors[0].begin(), pairVectors[0].end(), comPair);
+
+	cout << endl << "Dictionary after first gen replacements:" << endl;
+	for each(auto var in dictionary)
+	{
+		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
+	}
+
+	ComPairD cpd;
+	cpd.dic = &dictionary;
+	std::sort(pairVectors[0].begin(), pairVectors[0].end(), cpd);
 
 	unsigned long offset = terminals.size();
 
@@ -249,32 +146,38 @@ void Dictionary::switchToOrdinalNumbers(
 			if (dictionary[pairVectors[gen][i]].leftSymbol > initialSymbolValue)
 			{
 				//Non-terminal
+				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].leftSymbol = indices[dictionary[pairVectors[gen][i]].leftSymbol];
+				cout << endl << "Case: NtermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
 			}
 			else
 			{
 				//Terminal
+				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].leftSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].leftSymbol);
+				cout << endl << "Case: TermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
 			}
 
 			//Second symbol
 			if (dictionary[pairVectors[gen][i]].rightSymbol > initialSymbolValue)
 			{
 				//Non-terminal
+				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].rightSymbol = indices[dictionary[pairVectors[gen][i]].rightSymbol];
+				cout << endl << "Case: NtermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
 			}
 			else
 			{
 				//Terminal
+				unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
 				dictionary[pairVectors[gen][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].rightSymbol);
+				cout << endl << "Case: TermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
 			}
 
 			if (dictionary[pairVectors[gen][i]].leftSymbol < 0 || dictionary[pairVectors[gen][i]].rightSymbol < 0)
 				//Error, one of the symbols was not found
 				throw new exception();
 		}
-		ComPairD cpd;
-		cpd.dic = &dictionary;
 		std::sort(pairVectors[gen].begin(), pairVectors[gen].end(), cpd);
 
 		for (int i = 0; i < pairVectors[gen].size(); ++i)
@@ -289,8 +192,8 @@ void Dictionary::switchToOrdinalNumbers(
 void Dictionary::decodeSymbol(
 	long symbolIndex, 
 	vector<CompactPair> &decodedPairs,
-	vector<long> &decodedTerms,
-	dense_hash_map<long, string> &expandedDict,
+	vector<unsigned long> &decodedTerms,
+	dense_hash_map<unsigned long, string> &expandedDict,
 	string &finalOutput)
 {
 	//Handle left part
@@ -316,8 +219,8 @@ void Dictionary::decodeSymbol(
 
 void Dictionary::expandDictionary(
 	vector<CompactPair> &decodedPairs, 
-	vector<long> &decodedTerms, 
-	dense_hash_map<long, string> &expandedDict)
+	vector<unsigned long> &decodedTerms,
+	dense_hash_map<unsigned long, string> &expandedDict)
 {
 	string s;
 	for (long i = 0; i < decodedPairs.size(); ++i)

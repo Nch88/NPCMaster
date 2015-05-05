@@ -8,11 +8,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
-//	long symbols(65);
+//	//dense_hash_map<unsigned long, Pair> dictionary;
+//	unsigned long symbols(65);
 //
 //	Initializer init;
 //	Conditions c;
@@ -128,11 +128,11 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
-//	long symbols(65);
+//	//dense_hash_map<unsigned long, Pair> dictionary;
+//	unsigned long symbols(65);
 //
 //	Initializer init;
 //	Conditions c;
@@ -225,10 +225,10 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
+//	//dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;
@@ -309,10 +309,10 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
+//	//dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;
@@ -391,10 +391,10 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
+//	//dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;
@@ -481,10 +481,10 @@
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
+//	//dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;
@@ -572,10 +572,10 @@
 //	string filename;
 //	int blockSize;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	//dense_hash_map<long, Pair> dictionary;
+//	//dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;

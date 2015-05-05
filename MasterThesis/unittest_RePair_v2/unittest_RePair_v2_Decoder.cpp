@@ -5,12 +5,12 @@ using namespace std;
 
 //TEST(decoder, diddyAll)
 //{
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	activePairs.set_empty_key(-1);
 //	activePairs.set_deleted_key(-2);
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	dense_hash_map<long, Pair> dictionary;
+//	dense_hash_map<unsigned long, Pair> dictionary;
 //	dictionary.set_empty_key(-1);
 //	dictionary.set_deleted_key(-2);
 //	long symbols(initialSymbolValue);//256
@@ -29,7 +29,7 @@ using namespace std;
 //	int priorityQueueSize;
 //	int blockSize;
 //	blockSize = 1048576;
-//	unordered_set<long> terminals;
+//	unordered_set<unsigned long> terminals;
 //	vector<CompactPair> pairs;
 //	dense_hash_map <long, dense_hash_map<long, long>> indices;
 //	indices.set_empty_key(-1);
@@ -112,12 +112,12 @@ using namespace std;
 
 //TEST(decoder, ecoli_mini)
 //{
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	activePairs.set_empty_key(-1);
 //	activePairs.set_deleted_key(-2);
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	dense_hash_map<long, Pair> dictionary;
+//	dense_hash_map<unsigned long, Pair> dictionary;
 //	dictionary.set_empty_key(-1);
 //	dictionary.set_deleted_key(-2);
 //	long symbols(initialSymbolValue);//256
@@ -138,7 +138,7 @@ using namespace std;
 //
 //	int priorityQueueSize;
 //	int blockSize = 1048576;
-//	unordered_set<long> terminals;
+//	unordered_set<unsigned long> terminals;
 //	vector<CompactPair> pairs;
 //	dense_hash_map <long, dense_hash_map<long, long>> indices;
 //	indices.set_empty_key(-1);

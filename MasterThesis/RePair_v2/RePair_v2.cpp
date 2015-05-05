@@ -142,17 +142,17 @@ int main(int argc, char* argv[])
 	if (encodingDecoding == 1)
 		//Do encoding
 	{
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 		activePairs.set_empty_key(-1);
 		activePairs.set_deleted_key(-2);
 
 		vector<SymbolRecord*> sequenceArray;
 		vector<PairRecord*> priorityQueue;
-		dense_hash_map<long, Pair> dictionary;
+		dense_hash_map<unsigned long, Pair> dictionary;
 		dictionary.set_empty_key(-1);
 		dictionary.set_deleted_key(-2);
 
-		long symbols(initialSymbolValue);
+		unsigned long symbols(initialSymbolValue);
 
 		Algorithm algorithm;
 		AlgorithmP algP;

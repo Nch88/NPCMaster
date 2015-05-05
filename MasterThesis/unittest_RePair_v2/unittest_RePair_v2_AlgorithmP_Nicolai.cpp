@@ -6,15 +6,15 @@ using namespace std;
 TEST(manageOneList, oneEntry)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -31,7 +31,7 @@ TEST(manageOneList, oneEntry)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -67,15 +67,15 @@ TEST(manageOneList, oneEntry)
 TEST(manageOneList, multipleEntries)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -92,7 +92,7 @@ TEST(manageOneList, multipleEntries)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -128,15 +128,15 @@ TEST(manageOneList, multipleEntries)
 TEST(replaceAllPairsThorough, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long Symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -154,7 +154,7 @@ TEST(replaceAllPairsThorough, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -286,7 +286,7 @@ TEST(replaceAllPairsThorough, diddy)
 			activePairs,
 			sequenceArray,
 			dictionary,
-			Symbols,
+			symbols,
 			c);
 
 		if (count == 0)
@@ -329,7 +329,7 @@ TEST(replaceAllPairsThorough, diddy)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			Symbols,
+			symbols,
 			skip,
 			c);
 
@@ -361,7 +361,7 @@ TEST(replaceAllPairsThorough, diddy)
 			activePairs,
 			sequenceArray,
 			priorityQueue,
-			Symbols,
+			symbols,
 			c);
 
 		if (count == 0)
@@ -405,15 +405,15 @@ TEST(replaceAllPairsThorough, diddy)
 TEST(testingLowerPriority, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -431,7 +431,7 @@ TEST(testingLowerPriority, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -490,15 +490,15 @@ TEST(testingLowerPriority, diddy)
 TEST(testingLowerPriority, duplicates)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -516,7 +516,7 @@ TEST(testingLowerPriority, duplicates)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -573,15 +573,15 @@ TEST(testingLowerPriority, duplicates)
 TEST(testingRun, duplicates2)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -599,7 +599,7 @@ TEST(testingRun, duplicates2)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -634,15 +634,15 @@ TEST(testingRun, duplicates2)
 TEST(testingRun, duplicates3)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -660,7 +660,7 @@ TEST(testingRun, duplicates3)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -696,15 +696,15 @@ TEST(testingRun, duplicates3)
 TEST(testingRun, duplicatesLong)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -722,7 +722,7 @@ TEST(testingRun, duplicatesLong)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -757,15 +757,15 @@ TEST(testingRun, duplicatesLong)
 TEST(testingRun, duplicatesLong3)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -783,7 +783,7 @@ TEST(testingRun, duplicatesLong3)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -819,15 +819,15 @@ TEST(testingRun, duplicatesLong3)
 TEST(crashPossiblePointerError, 264a)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -845,7 +845,7 @@ TEST(crashPossiblePointerError, 264a)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,

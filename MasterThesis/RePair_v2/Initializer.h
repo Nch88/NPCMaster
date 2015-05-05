@@ -17,7 +17,7 @@ public:
 	///<param name="sequenceArray">Output: Holds the symbol records that we want to delete.</param>
 	void Initializer::resetCompleted(
 		int blockSize,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray);
 
 	///<summary>
@@ -29,11 +29,11 @@ public:
 	///<param name="terminals">Output: Clears the recorded terminal symbols.</param>
 	///<param name="dictionary">Output: Clears the recorded dictionary entries.</param>
 	void Initializer::resetForNextBlock(
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		vector<PairRecord*> & priorityQueue,
-		unordered_set<long> & terminals,
-		dense_hash_map<long, Pair> &dictionary);
+		unordered_set<unsigned long> & terminals,
+		dense_hash_map<unsigned long, Pair> &dictionary);
 
 	///<summary>
 	///Adds a symbol to the sequence array. If a record does not yet exist, memory is allocated for a new one.
@@ -48,7 +48,7 @@ public:
 		long & index,
 		int & symbolCount,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_set<long>& terminals);
+		unordered_set<unsigned long>& terminals);
 
 	///<summary>
 	///Initializes the sequence array and active pairs structures by reading input characters one by one and adding them as we go.
@@ -63,9 +63,9 @@ public:
 		Conditions &c,
 		ifstream & file,
 		int & blockSize,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		unordered_set<long>& terminals);
+		unordered_set<unsigned long>& terminals);
 
 	///<summary>
 	///Based on the number of occurences a new record for a pair of characters is created or the count for the old one incremented.
@@ -76,10 +76,10 @@ public:
 	///<param name="activePairs">Output: Structure that holds all records of active pairs.</param>
 	///<param name="sequenceArray">Output: Threading between instances of a pair is updated when new instances are seen.</param>
 	void setupPairRecord(
-		long leftSymbol,
-		long rightSymbol,
+		unsigned long leftSymbol,
+		unsigned long rightSymbol,
 		int index,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
 		Conditions &c);
 
@@ -93,7 +93,7 @@ public:
 	///<param name="c">Input: Conditions used by the program like verbose, timing etc.</param>
 	void PriorityQueue(
 		int priorityQueueSize,
-		dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 		vector<PairRecord*> & priorityQueue,
 		Conditions & c);
 };

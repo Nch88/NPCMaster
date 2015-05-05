@@ -8,15 +8,15 @@ MyTest mtest;
 TEST(compaction, diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -33,7 +33,7 @@ TEST(compaction, diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -72,15 +72,15 @@ TEST(compaction, diddy)
 TEST(compaction, compactingAfterEachNewSymbol_diddy)
 {
 	using namespace google;
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(65);//A
+	unsigned long symbols(65);//A
 
 	Initializer init;
 	Conditions c;
@@ -97,7 +97,7 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 	string filename = input1;
 	ifstream file(filename);
 
-	unordered_set<long> terminals;
+	unordered_set<unsigned long> terminals;
 
 	init.SequenceArray(
 		c,
@@ -153,10 +153,10 @@ TEST(compaction, compactingAfterEachNewSymbol_diddy)
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	dense_hash_map<long, Pair> dictionary;
+//	dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //	
 //	
@@ -204,7 +204,7 @@ TEST(compaction, findNextEmpty)
 	vector<SymbolRecord*> sequenceArray;
 	AlgorithmP algP;
 
-	long a[] = { 97, 0, 98, 0, 0, 99, 100, 0, 101, 102, 103, 0 };
+	unsigned long a[] = { 97, 0, 98, 0, 0, 99, 100, 0, 101, 102, 103, 0 };
 	mtest.buildSequenceArray(sequenceArray, a, 12);
 	SymbolRecord *sr = sequenceArray[0];
 
@@ -244,10 +244,10 @@ TEST(compaction, calculateCompactionTime)
 //	int blockSize;
 //	blockSize = 1048576;
 //
-//	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+//	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 //	vector<SymbolRecord*> sequenceArray;
 //	vector<PairRecord*> priorityQueue;
-//	dense_hash_map<long, Pair> dictionary;
+//	dense_hash_map<unsigned long, Pair> dictionary;
 //	long symbols(256);
 //
 //	Initializer init;
@@ -293,7 +293,7 @@ TEST(createCompactDictionary, findGeneration_diddy)
 {
 	AlgorithmP algo;
 
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
 	Pair A('.', 'd', 1);

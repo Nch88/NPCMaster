@@ -14,7 +14,7 @@ Initializer::~Initializer()
 
 void Initializer::resetCompleted(
 	int blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
 	//Reset sequence array when we are done
@@ -40,11 +40,11 @@ void Initializer::resetCompleted(
 }
 
 void Initializer::resetForNextBlock(
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	unordered_set<long> & terminals,
-	dense_hash_map<long, Pair> &dictionary)
+	unordered_set<unsigned long> & terminals,
+	dense_hash_map<unsigned long, Pair> &dictionary)
 {
 	//We do not free the memory between blocks as entries will be reused
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -80,10 +80,10 @@ void Initializer::resetForNextBlock(
 }
 
 void Initializer::setupPairRecord(
-	long leftSymbol,
-	long rightSymbol,
+	unsigned long leftSymbol,
+	unsigned long rightSymbol,
 	int index,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	Conditions &c)
 {
@@ -148,7 +148,7 @@ void Initializer::addToSequenceArray(
 	long & index,
 	int & symbolCount,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_set<long>& terminals)
+	unordered_set<unsigned long>& terminals)
 {
 	terminals.emplace(symbol);													//Record all terminal symbols
 	if (index < sequenceArray.size())
@@ -167,9 +167,9 @@ int Initializer::SequenceArray(
 	Conditions &c,
 	ifstream & file,
 	int & blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	unordered_set<long>& terminals)
+	unordered_set<unsigned long>& terminals)
 {
 	unsigned char previousSymbol;
 	unsigned char leftSymbol;
@@ -281,7 +281,7 @@ int Initializer::SequenceArray(
 }
 
 void Initializer::PriorityQueue(int priorityQueueSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<PairRecord*> & priorityQueue,
 	Conditions & c)
 {

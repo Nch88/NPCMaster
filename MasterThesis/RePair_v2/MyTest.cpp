@@ -13,8 +13,8 @@ MyTest::~MyTest()
 
 int MyTest::SanityCheck(
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*>& priorityQueue, dense_hash_map<long,
-	dense_hash_map<long, PairTracker >> &activePairs)
+	vector<PairRecord*>& priorityQueue, 
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker >> &activePairs)
 {
 	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(sequenceArray, priorityQueue, activePairs);
 }
@@ -187,7 +187,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 	return result + "\n\n";
 }
 
-int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs)
+int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs)
 {
 	bool sane = true;
 	int result = 0;
@@ -216,8 +216,8 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 		result = 10;
 	sane = true;
 	//Check active pairs
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>::iterator iterone;
-	dense_hash_map<long, PairTracker>::iterator itertwo;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>::iterator iterone;
+	dense_hash_map<unsigned long, PairTracker>::iterator itertwo;
 	for (iterone = activePairs.begin(); iterone != activePairs.end(); iterone++)
 	{
 		for (itertwo = iterone->second.begin(); itertwo != iterone->second.end(); itertwo++)
@@ -231,7 +231,7 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 	return result;
 }
 
-void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numbers[], int count)
+void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, unsigned long numbers[], int count)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -242,10 +242,10 @@ void MyTest::buildSequenceArray(vector<SymbolRecord*> & sequenceArray, long numb
 
 void MyTest::charArrayToSequence(vector<SymbolRecord*> &  sequence, string input, int size)
 {
-	long * numbers = new long[size];
+	unsigned long * numbers = new unsigned long[size];
 	for (int i = 0; i < size; i++)
 	{
-		numbers[i] = (long)input[i];
+		numbers[i] = (unsigned long)input[i];
 	}
 	buildSequenceArray(sequence, numbers, size);
 }
@@ -278,7 +278,7 @@ string MyTest::SequenceToString(vector<SymbolRecord*> & sequenceArray)
 	//End Test
 }
 
-void MyTest::ActivePairs(string msg, dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs)
+void MyTest::ActivePairs(string msg, dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs)
 {
 	cout << msg << ": ";
 	for each (auto leftSymbol in activePairs)
@@ -331,7 +331,7 @@ bool MyTest::inPriorityQueueAtPosition(
 	return false;
 }
 
-bool MyTest::compareFiles(string file1, string file2, long &badChar)
+bool MyTest::compareFiles(string file1, string file2, unsigned long &badChar)
 {
 	ifstream stream1(file1);
 	ifstream stream2(file2);

@@ -8,14 +8,14 @@ SymbolRecord::SymbolRecord()
 	next = nullptr;
 }
 
-SymbolRecord::SymbolRecord(long s)
+SymbolRecord::SymbolRecord(unsigned long s)
 {
 	symbol = s;
 	previous = nullptr;
 	next = nullptr;
 }
 
-SymbolRecord::SymbolRecord(long s, long i)
+SymbolRecord::SymbolRecord(unsigned long s, long i)
 {
 	symbol = s;
 	index = i;
@@ -23,14 +23,14 @@ SymbolRecord::SymbolRecord(long s, long i)
 	next = nullptr;
 }
 
-SymbolRecord::SymbolRecord(long s, SymbolRecord * p, SymbolRecord * n)
+SymbolRecord::SymbolRecord(unsigned long s, SymbolRecord * p, SymbolRecord * n)
 {
 	symbol = s;
 	previous = p;
 	next = n;
 }
 
-SymbolRecord::SymbolRecord(long s, long i, SymbolRecord * p, SymbolRecord * n)
+SymbolRecord::SymbolRecord(unsigned long s, long i, SymbolRecord * p, SymbolRecord * n)
 {
 	symbol = s;
 	previous = p;

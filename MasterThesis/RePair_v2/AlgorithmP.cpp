@@ -12,9 +12,9 @@ AlgorithmP::~AlgorithmP()
 }
 
 long AlgorithmP::findGeneration(
-	dense_hash_map<long, Pair>& dictionary, 
-	long left, 
-	long right
+	dense_hash_map<unsigned unsigned long, Pair>& dictionary, 
+	unsigned unsigned long left, 
+	unsigned unsigned long right
 	)
 {
 	if (left < initialSymbolValue)
@@ -51,7 +51,7 @@ SymbolRecord* AlgorithmP::findNextEmpty(vector<SymbolRecord*> & sequenceArray,  
 
 void AlgorithmP::compact(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
 	Conditions &c)
 {
@@ -78,8 +78,8 @@ void AlgorithmP::compact(
 			if ((sequenceArray[i]->next || sequenceArray[i]->previous) && i < (sequenceArray.size() - 1))
 			{
 				//Figure out the pair
-				long s1 = sequenceArray[i]->symbol;
-				long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+				unsigned long s1 = sequenceArray[i]->symbol;
+				unsigned long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
 
 				if (activePairs[s1].empty())
 				{
@@ -142,9 +142,9 @@ void AlgorithmP::removeSymbolThreadingPointers(
 }
 
 void AlgorithmP::deletePairRecord(
-	long & symbolLeft,
-	long & symbolRight,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs)
+	unsigned long & symbolLeft,
+	unsigned long & symbolRight,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs)
 {
 	delete activePairs[symbolLeft][symbolRight].pairRecord;
 	activePairs[symbolLeft][symbolRight].pairRecord = nullptr;
@@ -155,15 +155,15 @@ void AlgorithmP::deletePairRecord(
 void AlgorithmP::updatePairRecord(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	PairTracker *& tracker,
 	Conditions &c)
 {
 	tracker->pairRecord->count--;
 	
-	long symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
-	long symbolRight = sequenceArray[indexSymbolRight]->symbol;
+	unsigned long symbolLeft = sequenceArray[indexSymbolLeft]->symbol;
+	unsigned long symbolRight = sequenceArray[indexSymbolRight]->symbol;
 
 	//Delete pair record if the pair is no longer active
 	if (tracker->pairRecord->count < 2) 
@@ -288,7 +288,7 @@ void AlgorithmP::moveUpInPriorityQueue(
 void AlgorithmP::decrementCount(
 	long & indexSymbolLeft,
 	long & indexSymbolRight, 
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
 	PairTracker *& tracker,
@@ -310,7 +310,7 @@ void AlgorithmP::decrementCount(
 void AlgorithmP::decrementCountLeft(
 	long & indexSymbolPrevious, 
 	long & indexSymbolLeft, 
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
@@ -352,7 +352,7 @@ void AlgorithmP::decrementCountLeft(
 void AlgorithmP::decrementCountRight(
 	long & indexSymbolRight,
 	long & indexSymbolNext,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray, 
 	vector<PairRecord*>& priorityQueue,
 	Conditions& c)
@@ -411,10 +411,10 @@ void AlgorithmP::replacePair(
 	long & indexSymbolLeft,
 	long & indexSymbolRight,
 	long & indexSymbolNext,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	long & Symbols,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	unsigned long & Symbols,
 	Conditions& c)
 {
 	SymbolRecord * leftSymbolRecord = nullptr;
@@ -473,16 +473,16 @@ void AlgorithmP::replacePair(
 void AlgorithmP::incrementCountLeft(
 	long & indexSymbolPrevious,
 	long & indexSymbolLeft,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	bool &skip,
 	Conditions& c)
 {
 	if (indexSymbolPrevious > -1)
 	{
-		long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
+		unsigned long symbolPrevious = sequenceArray[indexSymbolPrevious]->symbol;
 
 		if (activePairs[symbolPrevious].empty())
 		{
@@ -554,17 +554,17 @@ void AlgorithmP::incrementCountLeft(
 void AlgorithmP::incrementCountRight(
 	long & indexSymbolLeft,
 	long & indexSymbolNext,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	Conditions& c)
 {
 	
 	if (indexSymbolNext > -1)
 	//Only do this if there is a next symbol
 	{
-		long symbolNext = sequenceArray[indexSymbolNext]->symbol;
+		unsigned long symbolNext = sequenceArray[indexSymbolNext]->symbol;
 
 		if (activePairs[Symbols].empty())
 		{
@@ -626,10 +626,10 @@ void AlgorithmP::replaceInstanceOfPair(
 	long & indexSymbolPrevious,
 	long & indexSymbolNext,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	bool& skip,
 	Conditions& c)
 {
@@ -730,10 +730,10 @@ void AlgorithmP::establishContext(
 void AlgorithmP::replaceAllPairs(
 	long sequenceIndex,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	Conditions& c)
 {
 	long indexSymbolLeft = -1;
@@ -779,12 +779,12 @@ void AlgorithmP::replaceAllPairs(
 	} while (nextSymbol);
 }
 
-void AlgorithmP::newSymbol(long & Symbols)
+void AlgorithmP::newSymbol(unsigned long & Symbols)
 {
 	if (Symbols == LONG_MAX - 1)
 	{
 		cerr << "Ran out of symbols, aborting compression" << endl;
-		exit;
+		exit(1);
 	}
 	Symbols++;
 }
@@ -792,10 +792,10 @@ void AlgorithmP::newSymbol(long & Symbols)
 void AlgorithmP::manageOneEntryOnList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -820,8 +820,8 @@ void AlgorithmP::manageOneEntryOnList(
 	if (c.compact)
 	{
 		long idx = sequenceIndex;
-		long s1 = sequenceArray[idx]->symbol;
-		long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
+		unsigned long s1 = sequenceArray[idx]->symbol;
+		unsigned long s2 = sequenceArray[idx + 1]->symbol != 0 ? sequenceArray[idx + 1]->symbol : sequenceArray[idx + 1]->next->symbol;
 		cData.replaceCount += activePairs[s1][s2].pairRecord->count;
 	}
 
@@ -851,10 +851,10 @@ void AlgorithmP::manageOneEntryOnList(
 void AlgorithmP::manageOneList(
 	long i,
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -874,10 +874,10 @@ void AlgorithmP::manageOneList(
 
 void AlgorithmP::manageLowerPriorityLists(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -899,10 +899,10 @@ void AlgorithmP::manageLowerPriorityLists(
 //Manages active pairs with frequencies greater than sqrt(n)
 void AlgorithmP::manageHighPriorityList(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	long & Symbols,
+	unsigned long & Symbols,
 	CompactionData &cData,
 	Conditions& c)
 {
@@ -949,8 +949,8 @@ void AlgorithmP::manageHighPriorityList(
 		if (c.compact)
 		{
 			long i = sequenceIndex;
-			long s1 = sequenceArray[i]->symbol;
-			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
+			unsigned long s1 = sequenceArray[i]->symbol;
+			unsigned long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
 			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
 		}
 
@@ -980,11 +980,11 @@ void AlgorithmP::manageHighPriorityList(
 
 void AlgorithmP::run(
 	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<long, Pair>& dictionary,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>>& activePairs,
+	dense_hash_map<unsigned long, Pair>& dictionary,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
-	unordered_set<long>& terminals,
-	long & Symbols,
+	unordered_set<unsigned long>& terminals,
+	unsigned long & Symbols,
 	Conditions& c)
 {
 	CompactionData cData(sequenceArray.size());

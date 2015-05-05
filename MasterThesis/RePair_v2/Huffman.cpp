@@ -391,12 +391,12 @@ void Huffman::fillString(char rawChunk1, char rawChunk2, char rawChunk3, char ra
 }
 
 void Huffman::readFromGammaCodes(
-	long symbolsToRead,
+	unsigned long symbolsToRead,
 	ifstream &bitstream,
 	GammaCode &gc,
 	string &chunk,
 	string &prefix,
-	vector<long> &intValues)
+	vector<unsigned long> &intValues)
 {
 	char rawChunk1 = 0;
 	char rawChunk2 = 0;
@@ -435,7 +435,7 @@ void Huffman::readFromGammaCodes(
 void Huffman::decodeDictionary(
 	ifstream &bitstream,
 	long *&firstCodes,
-	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices)
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &symbolIndices)
 	//Outputs symbolIndices
 {
 	//DEBUG
@@ -455,7 +455,7 @@ void Huffman::decodeDictionary(
 		long symbolsToRead = 0;
 		long firstCode = 0;
 		long lastCode = 0;
-		vector<long> intValues;
+		vector<unsigned long> intValues;
 
 		symbolsToRead = 1;
 
@@ -537,8 +537,8 @@ void Huffman::decodeDictionary(
 void Huffman::decode(
 	long *firstCode,
 	ifstream &bitstream,
-	dense_hash_map<long, dense_hash_map<long, long>> &symbolIndices,
-	vector<long> &symbolIndexSequence)
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> &symbolIndices,
+	vector<unsigned long> &symbolIndexSequence)
 {
 	if (bitstream.is_open())
 	{

@@ -21,18 +21,18 @@ int Algorithm::run(
 	AlgorithmP &algP,
 	MyTimer &t,
 	int blockSize,
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> &activePairs,
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
 	vector<PairRecord*> & priorityQueue,
-	dense_hash_map<long, Pair> & dictionary,
-	long & symbols)
+	dense_hash_map<unsigned long, Pair> & dictionary,
+	unsigned long & symbols)
 {
 	int priorityQueueSize;
 	bool firstBlock = true;
 	Huffman h;
 	Outputter out;
-	dense_hash_map<long, HuffmanNode *> huffmanCodes;
-	unordered_set<long> terminals;
+	dense_hash_map<unsigned long, HuffmanNode *> huffmanCodes;
+	unordered_set<unsigned long> terminals;
 	cout << "Compressing file: " << filename << endl;
 
 	while (file.is_open())

@@ -69,15 +69,15 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 
 TEST(decoder, diddy_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -96,9 +96,9 @@ TEST(decoder, diddy_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	unordered_set<unsigned long> terminals;
+	vector<unsigned long> pairs;
+	dense_hash_map<unsigned long, unsigned long> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
 	string filename = input1;
@@ -157,15 +157,15 @@ TEST(decoder, diddy_Nicolai)
 
 TEST(decoder, bible_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -187,8 +187,8 @@ TEST(decoder, bible_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
+	unordered_set<unsigned long> terminals;
+	vector<unsigned long> pairs;
 	dense_hash_map <long, dense_hash_map<long, long>> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
@@ -236,15 +236,15 @@ TEST(decoder, bible_Nicolai)
 
 TEST(decoder, world_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -265,9 +265,9 @@ TEST(decoder, world_Nicolai)
 	int priorityQueueSize;
 	int blockSize;
 	blockSize = 1048576;
-	unordered_set<long> terminals;
-	vector<CompactPair> pairs;
-	dense_hash_map <long, dense_hash_map<long, long>> indices;
+	unordered_set<unsigned long> terminals;
+	vector<unsigned long> pairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> indices;
 	indices.set_empty_key(-1);
 	indices.set_deleted_key(-2);
 	string filename = input1;
@@ -314,15 +314,15 @@ TEST(decoder, world_Nicolai)
 
 TEST(decoder, ecoli_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -384,15 +384,15 @@ TEST(decoder, ecoli_Nicolai)
 
 TEST(decoder, dna50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -462,15 +462,15 @@ TEST(decoder, dna50MB_Nicolai)
 
 TEST(decoder,english50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -540,15 +540,15 @@ TEST(decoder,english50MB_Nicolai)
 
 TEST(decoder, sources50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -618,15 +618,15 @@ TEST(decoder, sources50MB_Nicolai)
 
 TEST(decoder, dblpxml50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -696,15 +696,15 @@ TEST(decoder, dblpxml50MB_Nicolai)
 
 TEST(decoder, proteins50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
@@ -774,15 +774,15 @@ TEST(decoder, proteins50MB_Nicolai)
 
 TEST(decoder, pitches50MB_Nicolai)
 {
-	dense_hash_map<long, dense_hash_map<long, PairTracker>> activePairs;
+	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
 	activePairs.set_empty_key(-1);
 	activePairs.set_deleted_key(-2);
 	vector<SymbolRecord*> sequenceArray;
 	vector<PairRecord*> priorityQueue;
-	dense_hash_map<long, Pair> dictionary;
+	dense_hash_map<unsigned long, Pair> dictionary;
 	dictionary.set_empty_key(-1);
 	dictionary.set_deleted_key(-2);
-	long symbols(initialSymbolValue);//256
+	unsigned long symbols(initialSymbolValue);//256
 
 	Initializer init;
 	Conditions c;
