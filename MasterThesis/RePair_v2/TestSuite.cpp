@@ -165,7 +165,7 @@ void TestSuite::resetForNextTest()
 	s_huffmanCodeLength_max = 0;
 }
 
-void TestSuite::WriteToFileEncoding()
+void TestSuite::WriteToFileEncoding(int runs)
 {
 	double offset = 1000000.000;
 	double mb = 1000000.0;
@@ -181,7 +181,12 @@ void TestSuite::WriteToFileEncoding()
 		unit = "ns";
 
 	ofstream ofs;
-	string file = "TestData.csv";
+	string file = "TestData - ";
+	file += s_filename;
+	file += "_avg";
+	file += to_string(runs);
+	file += ".csv";
+
 	ofs.open(file, ios::trunc);
 
 	ofs << "sep=;" << endl;

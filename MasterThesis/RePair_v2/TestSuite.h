@@ -114,7 +114,7 @@ public:
 	long double s_avgNrOfPhrases = 0;
 	long double s_largestGeneration = 0;
 	long double s_largestGenerationCount = 0;
-	int s_nrOfBlocks = 0;
+	double s_nrOfBlocks = 0;
 	long double s_huffmanCodeLength_max = 0;
 	std::string s_filename = "";
 
@@ -126,7 +126,7 @@ public:
 	void resetForNextBlock();
 	void resetForNextTest();
 	long double totalTime(double offset);
-	void WriteToFileEncoding();
+	void WriteToFileEncoding(int runs);
 	void updateMaxMemory(long localTotal);
 	void addMemory(std::string part, long value);
 };
