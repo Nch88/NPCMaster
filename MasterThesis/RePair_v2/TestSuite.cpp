@@ -180,9 +180,14 @@ void TestSuite::WriteToFileEncoding(int runs)
 	if (offset == 1.0)
 		unit = "ns";
 
+	string folder = "TestData/";
+
 	ofstream ofs;
-	string file = "TestData - ";
+	string file = folder;
+	file += "TestData - ";
 	file += s_filename;
+	file += "_blocksize";
+	file += to_string(blocksizemb);
 	file += "_avg";
 	file += to_string(runs);
 	file += ".csv";
@@ -222,7 +227,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "memory (in words):" << endl;
 
 	ofs << "Initialization - sequence array; " << m_init_sequenceArray_max << endl;
-	ofs << "Initialization - active pairs; " << m_init_pairRecord_max << endl;
+	ofs << "Initialization - active pairs; " << m_init_pairRecord_max + m_init_pairTracker_max << endl;
 	ofs << "Initialization - priority queue; " << m_init_priorityQueue_max << endl;
 	ofs << "Initialization - total; " << m_init_total << endl;
 	ofs << "Initialization - total (mb); " << (m_init_total / mb) * 4 << endl;
@@ -323,6 +328,18 @@ void TestSuite::addMemory(std::string part, long value)
 			m_init_total += m_init_sequenceArray_max;
 			updateMaxMemory(m_init_total);
 		}
+	}
+	else if (part == "initTracker")
+	{
+		m_init_pairTracker_current += value;
+		if (m_init_pairTracker_current > m_init_pairTracker_max)
+		{
+			m_init_total -= m_init_pairTracker_max;
+			m_init_pairTracker_max = m_init_pairTracker_current;
+			m_init_total += m_init_pairTracker_max;
+			updateMaxMemory(m_init_total);
+		}
+
 	}
 	else if (part == "initPair")
 	{

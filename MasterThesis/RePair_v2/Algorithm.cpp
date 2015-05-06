@@ -52,7 +52,7 @@ int Algorithm::run(
 		{
 			c.ts->testTimer.start();
 		}
-
+		//sequenceArray.reserve(blockSize);
 		init.SequenceArray(c, file, blockSize, activePairs, sequenceArray);
 
 		if (c.timing)

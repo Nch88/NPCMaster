@@ -49,4 +49,4 @@
 
 //Constants
 const unsigned long initialSymbolValue = 256;
-const int cutoffValue = 10; //Must be >= 2
+const int cutoffValue = 2; //Must be >= 2

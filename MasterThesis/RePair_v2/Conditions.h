@@ -9,6 +9,7 @@ public:
 	bool test = false;
 
 	int runs = 1;
+	int blocksizemb = 1;
 
 	TestSuite *ts = nullptr;
 

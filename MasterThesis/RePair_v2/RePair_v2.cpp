@@ -82,6 +82,7 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 	{
 		if (i == 0)
 		{
+			avgResult.blocksizemb = testResults[i].blocksizemb;
 			avgResult.c_dictionary = testResults[i].c_dictionary;
 			avgResult.c_huffmanDictionary = testResults[i].c_huffmanDictionary;
 			avgResult.c_origSize = testResults[i].c_origSize;
@@ -107,6 +108,8 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.m_huffEnc_total = testResults[i].m_huffEnc_total;
 			avgResult.m_init_pairRecord_current = testResults[i].m_init_pairRecord_current;
 			avgResult.m_init_pairRecord_max = testResults[i].m_init_pairRecord_max;
+			avgResult.m_init_pairTracker_current = testResults[i].m_init_pairTracker_current;
+			avgResult.m_init_pairTracker_max = testResults[i].m_init_pairTracker_max;
 			avgResult.m_init_priorityQueue_max = testResults[i].m_init_priorityQueue_max;
 			avgResult.m_init_sequenceArray_current = testResults[i].m_init_sequenceArray_current;
 			avgResult.m_init_sequenceArray_max = testResults[i].m_init_sequenceArray_max;
@@ -213,7 +216,11 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 			
 		}
 		if (mbs <= 1000)
+		{
 			blockSize = blockSize * mbs;
+			c.blocksizemb = mbs;
+		}
+			
 		else
 			cout << "Block size is too large, using default of 1MB." << endl;
 	}
@@ -276,6 +283,7 @@ int main(int argc, char* argv[])
 		{
 			c.ts = new TestSuite();
 			c.ts->s_filename.assign(filename);
+			c.ts->blocksizemb = c.blocksizemb;
 			runs = c.runs;
 		}
 
