@@ -954,6 +954,7 @@ TEST(huffman, decodeDictionaryDiddy)
 		dense_hash_map<unsigned long, dense_hash_map<unsigned long, unsigned long>> huffmanToSymbol;
 		huffmanToSymbol.set_empty_key(-1);
 		huffmanToSymbol.set_deleted_key(-2);
+
 		h.encode(sequenceArray, huffmanCodes, firstCode, numl, maxLength, huffmanToSymbol, c);
 
 		vector<unsigned long> testdictionarysymbol;
@@ -1047,19 +1048,12 @@ TEST(huffman, decodeDictionaryDiddy)
 		//Test codes of length 4
 		nrOfCodes = 8;
 		codeStart = firstCodes[3];
+		codeLength = 4;
 
 		for (int i = codeStart; i < codeStart + nrOfCodes; i++)
 		{
 			code = i;
 			symbol = huffmanToSymbol[codeLength][code];
-
-			for each(auto var in huffmanToSymbol)
-			{
-				for each(auto var2 in var.second)
-				{
-					cout << "(" << var.first << "," << var2.first << ")" << " -> " << var2.second << endl;
-				}
-			}
 
 			if (symbol >= initialSymbolValue)
 				index = indices[symbol];
