@@ -48,5 +48,5 @@
 #include "Decoder.h"
 
 //Constants
-const unsigned long initialSymbolValue = 256;
+const unsigned long initialSymbolValue = 130561;//max of Cantor is 2*x*(x+1) which is 130560 for x = 256
 const int cutoffValue = 2; //Must be >= 2

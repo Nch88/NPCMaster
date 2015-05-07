@@ -297,6 +297,24 @@ void Dictionary::createDictionary(
 	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector, c);
 }
 
+string getReverseCantor(unsigned long in)
+{
+	Decoder d;
+	unsigned long fst, snd;
+	d.reverseCantor(in, fst, snd);
+	if (snd != 0) //not the last char in an odd-length sequence
+	{
+		char c[] = { (char)fst, (char)snd };
+		string s(c, 2);
+		return s;
+	}
+	else
+	{
+		char c[] = { (char)fst };
+		string s(c, 1);
+		return s;
+	}
+}
 
 void Dictionary::decodeSymbol(
 	unsigned long  symbolIndex, 
@@ -308,7 +326,7 @@ void Dictionary::decodeSymbol(
 	//Handle left part
 	unsigned long  indexLeft = decodedPairs[symbolIndex].leftSymbol;
 	if (indexLeft < decodedTerms.size())
-		finalOutput += decodedTerms[indexLeft];
+		finalOutput += getReverseCantor(decodedTerms[indexLeft]);
 	else
 	{
 		//Decode left symbol
@@ -318,7 +336,7 @@ void Dictionary::decodeSymbol(
 	//Handle right part
 	unsigned long  indexRight = decodedPairs[symbolIndex].rightSymbol;
 	if (indexRight < decodedTerms.size())
-		finalOutput += decodedTerms[indexRight];
+		finalOutput += getReverseCantor(decodedTerms[indexRight]);
 	else
 	{
 		//Decode right symbol
@@ -336,6 +354,6 @@ void Dictionary::expandDictionary(
 	{
 		s.assign("");
 		decodeSymbol(i, decodedPairs, decodedTerms, expandedDict, s);
-		expandedDict[i].assign(s);
+		expandedDict[i] = s;
 	}
 }

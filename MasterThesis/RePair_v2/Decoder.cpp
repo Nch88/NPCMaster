@@ -5,6 +5,14 @@ Decoder::Decoder(){}
 
 Decoder::~Decoder(){}
 
+void Decoder::reverseCantor(unsigned long& z, unsigned long& x, unsigned long& y)
+{
+	double w = floor((sqrt(8.0 * ((double)z) + 1.0)-1.0)/2.0);
+	unsigned long t = (pow(w, 2.0) + w) / 2.0;
+	y = z - t;
+	x = w - y;
+}
+
 string Decoder::getDictionaryName(string in)
 {
 	if (in.substr(in.size() - 4, 4) == ".NPC")
@@ -56,7 +64,8 @@ void Decoder::decode(string inFile)
 		//Read dictionary
 		gc.decodeDictionaryFile(bitstreamDict, decodedPairs, decodedTerms);
 		
-		finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
+		//THIS IS EATING ALL MY MEMORY!!!!!! WHYYYYYYY!!!!!!!!!!!!!!!!!
+		//finalDict.expandDictionary(decodedPairs, decodedTerms, expandedDictionary);
 
 		//Read huffman dictionary
 		h.decodeDictionary(bitstreamDict, firstCodes, symbolIndices);			
@@ -69,9 +78,24 @@ void Decoder::decode(string inFile)
 		{
 			string toWrite;
 			if (n < decodedTerms.size())
-				toWrite = decodedTerms[n];
+			{
+				unsigned long part1, part2;
+				reverseCantor(decodedTerms[n], part1, part2);
+				if (part2 != 0)
+				{
+					char c[] = { (char)part1, (char)part2 };
+					string s(c, 2);
+					toWrite = s;
+				}
+				else
+				{
+					char c[] = { (char)part1 };
+					string s(c, 1);
+					toWrite = s;
+				}
+			}
 			else
-				toWrite = expandedDictionary[n - decodedTerms.size()];
+				toWrite = "";//expandedDictionary[n - decodedTerms.size()];
 			
 			outstream << toWrite;
 		}

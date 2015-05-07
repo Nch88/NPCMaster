@@ -11,11 +11,9 @@ TEST(cantor, testCantorFunction)
 	{
 		for (unsigned long j = 0; j <= i; ++j)
 		{
-			unsigned long res;
-			unsigned long fst = i - j;
-			unsigned long snd = j;
-			init.cantor(fst, snd, res);
-			ASSERT_EQ(expected, res);
+			unsigned char fst = i - j;
+			unsigned char snd = j;
+			ASSERT_EQ(expected, init.cantor(fst, snd));
 			expected++;
 		}
 	}

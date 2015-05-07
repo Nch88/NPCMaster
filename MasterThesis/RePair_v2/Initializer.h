@@ -14,8 +14,7 @@ public:
 	///</summary>
 	///<param name="fst">Input: The first input number.</param>
 	///<param name="snd">Input: The second input number.</param>
-	///<param name="res">Output: The result.</param>
-	void Initializer::cantor(unsigned long& fst, unsigned long& snd, unsigned long& res);
+	unsigned long Initializer::cantor(unsigned char& fst, unsigned char& snd);
 
 	///<summary>
 	///Resets all the major structure after compression is done, deleting allocated memory.
@@ -52,7 +51,7 @@ public:
 	///<param name="symbolCount">Output: Incremented to reflect the addition of another symbol.</param>
 	///<param name="sequenceArray">Output: Array of symbol records to which the new symbol is added.</param>
 	void addToSequenceArray(		
-		unsigned char & symbol,
+		unsigned long & symbol,
 		long & index,
 		int & symbolCount,
 		vector<SymbolRecord*> & sequenceArray);
