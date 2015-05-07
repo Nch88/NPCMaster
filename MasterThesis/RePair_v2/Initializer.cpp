@@ -12,6 +12,11 @@ Initializer::~Initializer()
 {
 }
 
+void Initializer::cantor(unsigned long& fst, unsigned long& snd, unsigned long& res)
+{
+	res = (0.5 * (double)(fst + snd) * (double)(fst + snd + 1)) + snd;
+}
+
 void Initializer::resetCompleted(
 	int blockSize,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
