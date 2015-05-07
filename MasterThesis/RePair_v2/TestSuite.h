@@ -6,9 +6,9 @@ public:
 	int blocksizemb = 1;
 
 	double pairRecordWords = 5;
-	double pairTrackerWords = 2 * 4.0;
+	double pairTrackerWords = 2.25 * 4.0;
 	double pairRecordSubtractWords = -4;
-	double symbolRecordWords = 6;
+	double symbolRecordWords = 4 + 2;
 	double huffmanNodeWords = 2 * 1;
 	double terminalsWords = 2 * 1;
 	double rootsWords = 2 * 1;
