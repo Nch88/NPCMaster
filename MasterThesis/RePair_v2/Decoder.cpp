@@ -13,6 +13,37 @@ void Decoder::reverseCantor(unsigned long& z, unsigned long& x, unsigned long& y
 	x = w - y;
 }
 
+void Decoder::writeSymbols(vector<CompactPair>& pairs, int index, ofstream& out, vector<unsigned long>& terms)
+{
+	writeSymbol(pairs,pairs[index].leftSymbol, out, terms);
+	writeSymbol(pairs,pairs[index].rightSymbol, out, terms);
+}
+
+void Decoder::writeSymbol(vector<CompactPair>& pairs, int index, ofstream& outstream, vector<unsigned long>& terms)
+{
+	if (index < terms.size())
+	{
+		unsigned long part1, part2;
+		reverseCantor(terms[index], part1, part2);
+		if (part2 != 0)
+		{
+			char c[] = { (char)part1, (char)part2 };
+			string s(c, 2);
+			outstream << s;
+		}
+		else
+		{
+			char c[] = { (char)part1 };
+			string s(c, 1);
+			outstream << s;
+		}
+	}
+	else //non-terminal
+	{
+		writeSymbols(pairs, index - terms.size(), outstream, terms);
+	}
+}
+
 string Decoder::getDictionaryName(string in)
 {
 	if (in.substr(in.size() - 4, 4) == ".NPC")
@@ -74,30 +105,9 @@ void Decoder::decode(string inFile)
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
 
 		//Decode and write
-		for each (unsigned long  n in symbolIndexSequence)
+		for (int i = 0; i < symbolIndexSequence.size(); ++i)
 		{
-			string toWrite;
-			if (n < decodedTerms.size())
-			{
-				unsigned long part1, part2;
-				reverseCantor(decodedTerms[n], part1, part2);
-				if (part2 != 0)
-				{
-					char c[] = { (char)part1, (char)part2 };
-					string s(c, 2);
-					toWrite = s;
-				}
-				else
-				{
-					char c[] = { (char)part1 };
-					string s(c, 1);
-					toWrite = s;
-				}
-			}
-			else
-				toWrite = "";//expandedDictionary[n - decodedTerms.size()];
-			
-			outstream << toWrite;
+			writeSymbol(decodedPairs, symbolIndexSequence[i], outstream, decodedTerms);
 		}
 		
 		//Reset for next block
