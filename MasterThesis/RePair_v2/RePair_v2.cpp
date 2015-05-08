@@ -146,6 +146,9 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.s_nrOfGenerations = testResults[i].s_nrOfGenerations;
 			avgResult.s_nrOfPhrases = testResults[i].s_nrOfPhrases;
 			avgResult.s_nrOfTerminals = testResults[i].s_nrOfTerminals;
+			//DEBUG
+			cout << "Optimal cutoff - done: " << testResults[i].offset_optimalCutoff << endl;
+			avgResult.offset_optimalCutoff = testResults[i].offset_optimalCutoff;
 		}
 
 		avgResult.t_decompression_count += testResults[i].t_decompression.count() / testResults.size();

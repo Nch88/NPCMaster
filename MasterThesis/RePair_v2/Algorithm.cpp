@@ -80,6 +80,12 @@ int Algorithm::run(
 			cout << " - Timing: priority queue initialized in " << t.getTime() << " ms" << endl;
 		}
 
+		if (c.test && c.ts->firstBlock)
+		{
+			c.ts->offset_sequenceSize = sequenceArray.size();
+			c.ts->offset_minCompressedSize = sequenceArray.size();
+		}
+
 		if (c.timing)
 		{
 			t.start();

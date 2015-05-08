@@ -424,6 +424,11 @@ void AlgorithmP::replacePair(
 	leftSymbolRecord->symbol = Symbols;
 	rightSymbolRecord->symbol = 0;
 
+	if (c.test && c.ts->firstBlock)
+	{
+		c.ts->offset_sequenceSize--;
+	}
+
 	//The right symbol of the old pair is now empty and must be threaded
 	threadEmptySymbols(
 		leftSymbolRecord,
@@ -729,6 +734,11 @@ void AlgorithmP::replaceAllPairs(
 		newPair[1] = sequenceArray[sequenceIndex + 1]->next->symbol;
 	Symbols = (unsigned long)newPair;
 
+	if (c.test && c.ts->firstBlock)
+	{
+		c.ts->offset_dictionaryEntries++;
+	}
+
 	if (c.test)
 		c.ts->addMemory("repairPhrase", 2);
 
@@ -861,6 +871,17 @@ void AlgorithmP::manageLowerPriorityLists(
 			Symbols,
 			cData,
 			c);
+
+		if (c.test && c.ts->firstBlock)
+		{
+			if (c.ts->estimatedResultSize() < c.ts->offset_minCompressedSize)
+			{
+				c.ts->offset_minCompressedSize = c.ts->estimatedResultSize();
+				c.ts->offset_optimalCutoff = i + 2;
+				//DEBUG
+				cout << "Optimal cutoff: " << c.ts->offset_optimalCutoff << ", min value: " << c.ts->offset_minCompressedSize << endl;
+			}			
+		}
 	}
 }
 

@@ -22,6 +22,11 @@ long double TestSuite::totalTime(double offset)
 		t_writeDictionary_count / offset;
 }
 
+long double TestSuite::estimatedResultSize()
+{
+	return offset_dictionaryEntries + 0.25 * offset_sequenceSize;
+}
+
 void TestSuite::resetForNextBlock()
 {
 	m_init_sequenceArray_current = 0;
@@ -298,6 +303,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Largest generation count; " << s_largestGenerationCount << endl;
 	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
 	ofs << "Cutoff frequency; " << cutoffValue << endl;
+	ofs << "Optimal cutoff; " << offset_optimalCutoff << endl;
 	ofs << endl;
 
 	ofs.close();
