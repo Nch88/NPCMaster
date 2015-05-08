@@ -188,6 +188,8 @@ void TestSuite::WriteToFileEncoding(int runs)
 	file += s_filename;
 	file += "_blocksize";
 	file += to_string(blocksizemb);
+	file += "_cutoff";
+	file += to_string(cutoffValue);
 	file += "_avg";
 	file += to_string(runs);
 	file += ".csv";
@@ -295,6 +297,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Largest generation; " << s_largestGeneration << endl;
 	ofs << "Largest generation count; " << s_largestGenerationCount << endl;
 	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
+	ofs << "Cutoff frequency; " << cutoffValue << endl;
 	ofs << endl;
 
 	ofs.close();
