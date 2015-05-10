@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AlgorithmP.h"
 
+unsigned long paircount = 0;//DEBUG
 
 AlgorithmP::AlgorithmP()
 {
@@ -728,10 +729,15 @@ void AlgorithmP::replaceAllPairs(
 	else
 		newPair[1] = sequenceArray[sequenceIndex + 1]->next->symbol;
 	Symbols = (unsigned long)newPair;
+	++paircount;
 
 	if (Symbols < initialSymbolValue)
+	{
 		while (true)
+		{
 			cout << " (T_T) ";
+		}
+	}
 
 	if (c.test)
 		c.ts->addMemory("repairPhrase", 2);
@@ -976,4 +982,8 @@ void AlgorithmP::run(
 		Symbols,
 		cData,
 		c);
+
+	//DEBUG
+	cout << endl << "Paircount is " << paircount << endl;
+	paircount = 0;
 }

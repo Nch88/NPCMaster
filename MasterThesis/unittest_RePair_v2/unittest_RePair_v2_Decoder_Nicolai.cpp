@@ -433,6 +433,7 @@ TEST(decoder, dna50MB_Nicolai)
 	ASSERT_TRUE(result);
 }
 */
+/*
 TEST(decoder,english50MB_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -505,7 +506,7 @@ TEST(decoder,english50MB_Nicolai)
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
-}
+}*/
 
 /*
 TEST(decoder, sources50MB_Nicolai)
