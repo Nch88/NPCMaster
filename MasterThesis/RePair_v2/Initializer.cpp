@@ -200,10 +200,12 @@ int Initializer::SequenceArray(
 	bool skippedPair = false;
 	MyTimer t;
 	c.timing = false;
+	unordered_set<unsigned char> terminals;
 
 	//We read two symbols ahead to check for sequences of duplicate symbols
 	if (file >> noskipws >> previousSymbol && previousSymbol)
 	{
+		terminals.insert(previousSymbol);
 		addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
 		if (c.test)
 		{
@@ -214,6 +216,7 @@ int Initializer::SequenceArray(
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
 		{
+			terminals.insert(leftSymbol);
 			addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
 			{
@@ -233,7 +236,7 @@ int Initializer::SequenceArray(
 		//Read symbols until we reach the determined block size
 		while (symbolCount < blockSize && file >> noskipws >> rightSymbol && rightSymbol)
 		{
-			
+			terminals.insert(rightSymbol);
 			addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
 			if (c.test)
 			{
@@ -276,6 +279,13 @@ int Initializer::SequenceArray(
 	}
 	else
 		file.close();
+
+	if (c.test)
+	{
+		c.ts->offset_terminals = terminals.size();
+		//DEBUG
+		cout << "Terminals: " << c.ts->offset_terminals << endl;
+	}
 
 	return 0;
 }

@@ -476,7 +476,7 @@ TEST(decoder,english50MB_Nicolai)
 	testofs2.close();
 
 
-	if (!checkStream.is_open())
+	//if (!checkStream.is_open())
 	{
 		algo.run(
 			filename,

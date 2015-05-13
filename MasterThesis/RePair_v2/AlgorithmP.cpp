@@ -874,13 +874,22 @@ void AlgorithmP::manageLowerPriorityLists(
 
 		if (c.test && c.ts->firstBlock)
 		{
-			if (c.ts->estimatedResultSize() < c.ts->offset_minCompressedSize)
+			if (i < 60)
 			{
-				c.ts->offset_minCompressedSize = c.ts->estimatedResultSize();
-				c.ts->offset_optimalCutoff = i + 2;
-				//DEBUG
-				cout << "Optimal cutoff: " << c.ts->offset_optimalCutoff << ", min value: " << c.ts->offset_minCompressedSize << endl;
-			}			
+				c.ts->offset_vector_dictionaryEntries.push_back(c.ts->offset_dictionaryEntries);
+				c.ts->offset_vector_sequenceSizes.push_back(c.ts->offset_sequenceSize);
+			}
+			//if (c.ts->estimatedResultSize() < c.ts->offset_minCompressedSize)
+			//{
+			//	c.ts->offset_minCompressedSize = c.ts->estimatedResultSize();
+			//	c.ts->offset_optimalCutoff = i + 2;
+			//	//DEBUG
+			//	if (i < 60)
+			//	{
+			//		cout << "Optimal cutoff (in repair): " << c.ts->offset_optimalCutoff << ", min value: " << c.ts->offset_minCompressedSize << endl;
+			//		cout << "Dictionary entries: " << c.ts->offset_dictionaryEntries << ", sequence size: " << c.ts->offset_sequenceSize << endl;
+			//	}				
+			//}			
 		}
 	}
 }

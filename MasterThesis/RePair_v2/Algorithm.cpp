@@ -83,7 +83,7 @@ int Algorithm::run(
 		if (c.test && c.ts->firstBlock)
 		{
 			c.ts->offset_sequenceSize = sequenceArray.size();
-			c.ts->offset_minCompressedSize = sequenceArray.size();
+			c.ts->offset_minCompressedSize = LONG_MAX;
 		}
 
 		if (c.timing)

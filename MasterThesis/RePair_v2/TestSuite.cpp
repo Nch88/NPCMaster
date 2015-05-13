@@ -24,7 +24,24 @@ long double TestSuite::totalTime(double offset)
 
 long double TestSuite::estimatedResultSize()
 {
-	return offset_dictionaryEntries + 0.25 * offset_sequenceSize;
+	double approxGens = 2;
+	return (1/(offset_terminals/100)) * offset_dictionaryEntries + 0.25 * offset_sequenceSize;
+	//return (log((1 / 3) * offset_dictionaryEntries + 2) +	//Binaries (+2 in log is because we cannot call with 0)
+	//	(approxGens * 2 * log(offset_dictionaryEntries + 2)) +			//Long gammas
+	//	(3)) *												//Short gammas
+	//	(offset_dictionaryEntries / 100) +					//Pairs created, multiplied by the above
+	//	(offset_sequenceSize / 100)* 8;						
+}
+
+long double TestSuite::estimatedResultSize(long double dictEntries, long double seqSize)
+{
+	//return (1 / (offset_terminals / 100)) * dictEntries + 0.25 * seqSize;
+	return (log((1 / 3) * dictEntries + 2) * dictEntries) +		//Binaries (+2 in log is because we cannot call with 0)
+		(offset_nrOfGenerations * 2 * log(dictEntries + 2)) +	//Long gammas
+		(3 * (dictEntries - offset_nrOfGenerations)) +			//Short gammas
+		(4 * offset_nrOfGenerations) +							//Dict header
+		(seqSize / 3 * log(dictEntries)) +						//Huffman dict
+		((seqSize) * offset_huffmanCodeLength_max);			//Estimated avg nr of bits per symbol in sequence
 }
 
 void TestSuite::resetForNextBlock()

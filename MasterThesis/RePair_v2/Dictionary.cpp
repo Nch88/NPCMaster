@@ -214,6 +214,7 @@ void Dictionary::switchToOrdinalNumbers(
 		if (pairVectors.size() > c.ts->s_nrOfGenerations && c.ts->firstBlock)
 		{
 			c.ts->s_nrOfGenerations = pairVectors.size();
+			c.ts->offset_nrOfGenerations = pairVectors.size();
 		}		
 	}
 	
