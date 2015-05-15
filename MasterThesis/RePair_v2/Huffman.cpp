@@ -327,7 +327,6 @@ void Huffman::encode(
 		if (maxLength > c.ts->s_huffmanCodeLength_max && c.ts->firstBlock)
 		{
 			c.ts->s_huffmanCodeLength_max = maxLength;
-			c.ts->offset_huffmanCodeLength_max = maxLength;
 		}		
 		c.ts->addMemory("huffEncFirstCodes", maxLength);
 		c.ts->addMemory("huffEncNrOfCodes", maxLength);

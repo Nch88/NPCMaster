@@ -424,10 +424,12 @@ void AlgorithmP::replacePair(
 	leftSymbolRecord->symbol = Symbols;
 	rightSymbolRecord->symbol = 0;
 
-	if (c.test && c.ts->firstBlock)
+	if (c.firstblock)
 	{
-		c.ts->offset_sequenceSize--;
+		c.offset_sequenceSize--;
 	}
+	
+	
 
 	//The right symbol of the old pair is now empty and must be threaded
 	threadEmptySymbols(
@@ -734,10 +736,12 @@ void AlgorithmP::replaceAllPairs(
 		newPair[1] = sequenceArray[sequenceIndex + 1]->next->symbol;
 	Symbols = (unsigned long)newPair;
 
-	if (c.test && c.ts->firstBlock)
+	if (c.firstblock)
 	{
-		c.ts->offset_dictionaryEntries++;
+		c.offset_dictionaryEntries++;
 	}
+	
+	
 
 	if (c.test)
 		c.ts->addMemory("repairPhrase", 2);
@@ -861,7 +865,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	Conditions& c)
 {
 	//Runs through all entries from second last to first
-	for (long i = priorityQueue.size() - 2; i >= cutoffValue - 2; i--)
+	for (long i = priorityQueue.size() - 2; i >= c.optimalCutoff - 2; i--)
 	{		
 		manageOneList(
 			i,
@@ -872,25 +876,22 @@ void AlgorithmP::manageLowerPriorityLists(
 			cData,
 			c);
 
-		if (c.test && c.ts->firstBlock)
+		if (c.firstblock)
 		{
-			if (i < 60)
+			if (c.estimatedResultSize() < c.offset_minCompressedSize)
 			{
-				c.ts->offset_vector_dictionaryEntries.push_back(c.ts->offset_dictionaryEntries);
-				c.ts->offset_vector_sequenceSizes.push_back(c.ts->offset_sequenceSize);
+				c.offset_minCompressedSize = c.estimatedResultSize();
+				c.offset_optimalCutoff = i + 2;
+				//DEBUG
+				if (i < 60)
+				{
+					cout << "Optimal cutoff (in repair): " << c.offset_optimalCutoff << ", min value: " << c.offset_minCompressedSize << endl;
+					cout << "Dictionary entries: " << c.offset_dictionaryEntries << ", sequence size: " << c.offset_sequenceSize << endl;
+				}
 			}
-			//if (c.ts->estimatedResultSize() < c.ts->offset_minCompressedSize)
-			//{
-			//	c.ts->offset_minCompressedSize = c.ts->estimatedResultSize();
-			//	c.ts->offset_optimalCutoff = i + 2;
-			//	//DEBUG
-			//	if (i < 60)
-			//	{
-			//		cout << "Optimal cutoff (in repair): " << c.ts->offset_optimalCutoff << ", min value: " << c.ts->offset_minCompressedSize << endl;
-			//		cout << "Dictionary entries: " << c.ts->offset_dictionaryEntries << ", sequence size: " << c.ts->offset_sequenceSize << endl;
-			//	}				
-			//}			
 		}
+		
+		
 	}
 }
 
@@ -1002,4 +1003,14 @@ void AlgorithmP::run(
 		Symbols,
 		cData,
 		c);
+
+	if (c.firstblock)
+	{
+		c.optimalCutoff = c.offset_optimalCutoff;
+		if (c.test)
+		{
+			c.ts->cutoffValue = c.offset_optimalCutoff;
+		}
+	}
+	
 }

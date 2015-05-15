@@ -122,16 +122,7 @@ public:
 	long double s_huffmanCodeLength_max = 0;
 	std::string s_filename = "";
 
-	//Automatic offset
-	long double offset_sequenceSize = 0;
-	long double offset_dictionaryEntries = 0;
-	long double offset_minCompressedSize = 0;
-	long double offset_optimalCutoff = 2;
-	long double offset_terminals = 0;
-	long double offset_nrOfGenerations = 0;
-	long double offset_huffmanCodeLength_max = 0;
-	std::vector<long double> offset_vector_sequenceSizes;
-	std::vector<long double> offset_vector_dictionaryEntries;
+	int cutoffValue = 2;
 
 	MyTimer testTimer;
 
@@ -141,8 +132,7 @@ public:
 	void resetForNextBlock();
 	void resetForNextTest();
 	long double totalTime(double offset);
-	long double estimatedResultSize();
-	long double TestSuite::estimatedResultSize(long double dictEntries, long double seqSize);
+	
 	void WriteToFileEncoding(int runs);
 	void updateMaxMemory(long localTotal);
 	void addMemory(std::string part, long value);

@@ -597,22 +597,6 @@ void Outputter::all(
 		c.ts->t_writeHuffmanDictionary += c.ts->testTimer.getTimeNano();
 	}
 
-	if (c.test && c.ts->firstBlock)
-	{
-		for (int i = 0; i < c.ts->offset_vector_dictionaryEntries.size(); ++i)
-		{
-			long double size = c.ts->estimatedResultSize(c.ts->offset_vector_dictionaryEntries[i], c.ts->offset_vector_sequenceSizes[i]);
-			if (size < c.ts->offset_minCompressedSize)
-			{
-				c.ts->offset_minCompressedSize = size;
-				c.ts->offset_optimalCutoff = (c.ts->offset_vector_dictionaryEntries.size() - 1 - i) + 2;
-				//DEBUG
-				cout << "Optimal cutoff: " << c.ts->offset_optimalCutoff << ", min value: " << c.ts->offset_minCompressedSize << endl;
-				cout << "Dictionary entries: " << c.ts->offset_vector_dictionaryEntries[i] <<
-					", sequence size: " << c.ts->offset_vector_sequenceSizes[i] << endl;
-			}
-		}
-	}
 
 	//DEBUG
 	/*ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);

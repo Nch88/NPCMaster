@@ -22,3 +22,9 @@ Conditions::~Conditions()
 		delete ts;
 	}
 }
+
+long double Conditions::estimatedResultSize()
+{
+	//+ (100.0 - offset_terminals) / 2.0
+	return (1.0 / ((offset_terminals + (100.0 - offset_terminals) / 8.0) / 100.0)) * offset_dictionaryEntries + 0.25 * offset_sequenceSize;
+}

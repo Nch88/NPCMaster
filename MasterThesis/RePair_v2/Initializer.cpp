@@ -280,12 +280,11 @@ int Initializer::SequenceArray(
 	else
 		file.close();
 
-	if (c.test)
-	{
-		c.ts->offset_terminals = terminals.size();
-		//DEBUG
-		cout << "Terminals: " << c.ts->offset_terminals << endl;
-	}
+	
+	c.offset_terminals = terminals.size();
+	//DEBUG
+	cout << "Terminals: " << c.offset_terminals << endl;
+	
 
 	return 0;
 }
