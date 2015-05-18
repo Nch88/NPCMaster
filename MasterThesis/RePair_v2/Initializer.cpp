@@ -217,7 +217,7 @@ int Initializer::SequenceArray(
 			if (c.test)
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
-				c.ts->c_origSize++;
+				c.ts->c_origSize += 2;
 			}
 
 
@@ -230,7 +230,7 @@ int Initializer::SequenceArray(
 					if (c.test)
 					{
 						c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
-						c.ts->c_origSize++;
+						c.ts->c_origSize += 2;
 					}
 
 					setupPairRecord(
@@ -258,7 +258,7 @@ int Initializer::SequenceArray(
 				if (c.test)
 				{
 					c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
-					c.ts->c_origSize++;
+					c.ts->c_origSize += 2;
 				}
 
 
