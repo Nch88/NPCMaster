@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "AlgorithmP.h"
 
-unsigned long paircount = 0;//DEBUG
-
 AlgorithmP::AlgorithmP()
 {
 }
@@ -729,7 +727,6 @@ void AlgorithmP::replaceAllPairs(
 	else
 		newPair[1] = sequenceArray[sequenceIndex + 1]->next->symbol;
 	Symbols = (unsigned long)newPair;
-	++paircount;
 
 	if (Symbols < initialSymbolValue)
 	{
@@ -982,8 +979,4 @@ void AlgorithmP::run(
 		Symbols,
 		cData,
 		c);
-
-	//DEBUG
-	cout << endl << "Paircount is " << paircount << endl;
-	paircount = 0;
 }

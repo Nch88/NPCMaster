@@ -5,8 +5,6 @@ Decoder::Decoder(){}
 
 Decoder::~Decoder(){}
 
-unsigned long recdepth = 0;//TEST CODE
-
 void Decoder::reverseCantor(unsigned long& z, unsigned long& x, unsigned long& y)
 {
 	double w = floor((sqrt(8.0 * ((double)z) + 1.0)-1.0)/2.0);
@@ -15,21 +13,16 @@ void Decoder::reverseCantor(unsigned long& z, unsigned long& x, unsigned long& y
 	x = w - y;
 }
 
-void Decoder::writeSymbols(vector<CompactPair>& pairs, int index, ofstream& out, vector<unsigned long>& terms, unsigned long rdepth)
+void Decoder::writeSymbols(vector<CompactPair>& pairs, int index, ofstream& out, vector<unsigned long>& terms)
 {
-	writeSymbol(pairs,pairs[index].leftSymbol, out, terms,rdepth + 1);
-	writeSymbol(pairs,pairs[index].rightSymbol, out, terms,rdepth + 1);
+	writeSymbol(pairs,pairs[index].leftSymbol, out, terms);
+	writeSymbol(pairs,pairs[index].rightSymbol, out, terms);
 }
 
-void Decoder::writeSymbol(vector<CompactPair>& pairs, int index, ofstream& outstream, vector<unsigned long>& terms, unsigned long rdepth)
+void Decoder::writeSymbol(vector<CompactPair>& pairs, int index, ofstream& outstream, vector<unsigned long>& terms)
 {
 	if (index < terms.size())
 	{
-		if (rdepth > recdepth)
-		{
-			recdepth = rdepth;
-			cout << recdepth << endl;
-		}
 		unsigned long part1, part2;
 		reverseCantor(terms[index], part1, part2);
 		if (part2 != 0)
@@ -47,7 +40,7 @@ void Decoder::writeSymbol(vector<CompactPair>& pairs, int index, ofstream& outst
 	}
 	else //non-terminal
 	{
-		writeSymbols(pairs, index - terms.size(), outstream, terms,rdepth);
+		writeSymbols(pairs, index - terms.size(), outstream, terms);
 	}
 }
 
@@ -112,10 +105,9 @@ void Decoder::decode(string inFile)
 		h.decode(firstCodes, bitstream, symbolIndices, symbolIndexSequence);
 
 		//Decode and write
-		unsigned long rdepth = 0;
 		for (int i = 0; i < symbolIndexSequence.size(); ++i)
 		{
-			writeSymbol(decodedPairs, symbolIndexSequence[i], outstream, decodedTerms,rdepth);
+			writeSymbol(decodedPairs, symbolIndexSequence[i], outstream, decodedTerms);
 		}
 		
 		//Reset for next block

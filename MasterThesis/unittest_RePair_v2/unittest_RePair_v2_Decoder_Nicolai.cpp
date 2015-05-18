@@ -221,7 +221,7 @@ TEST(decoder, bible_Nicolai)
 		ASSERT_TRUE(false);
 }
 
-/*
+
 TEST(decoder, world_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -432,8 +432,8 @@ TEST(decoder, dna50MB_Nicolai)
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
 }
-*/
-/*
+
+
 TEST(decoder,english50MB_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -460,7 +460,7 @@ TEST(decoder,english50MB_Nicolai)
 	string input1 = "english.50MB";
 
 	int blockSize;
-	blockSize = 1048576;
+	blockSize = 1048576/2;
 	string filename = input1;
 	ifstream file(filename);
 	bool firstBlock = true;
@@ -506,9 +506,9 @@ TEST(decoder,english50MB_Nicolai)
 
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
-}*/
+}
 
-/*
+
 TEST(decoder, sources50MB_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -804,4 +804,3 @@ TEST(decoder, pitches50MB_Nicolai)
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
 }
-*/
