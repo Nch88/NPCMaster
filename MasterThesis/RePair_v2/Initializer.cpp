@@ -283,7 +283,16 @@ int Initializer::SequenceArray(
 		file.close();
 
 	if (c.test)
+	{
 		c.ts->addMemory("initTerminals", terminals.size() * c.ts->terminalsWords);
+		
+		if (terminals.size() > c.ts->s_nrOfTerminalsMax)
+		{
+			c.ts->s_nrOfTerminalsMax = terminals.size();
+		}
+		c.ts->s_nrOfTerminals = terminals.size();
+	}
+		
 	return 0;
 }
 

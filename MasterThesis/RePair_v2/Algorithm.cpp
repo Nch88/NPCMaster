@@ -168,6 +168,7 @@ int Algorithm::run(
 		if (c.test)
 		{
 			c.ts->resetForNextBlock();
+			
 		}
 	}
 	if (c.test)

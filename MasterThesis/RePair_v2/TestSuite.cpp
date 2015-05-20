@@ -48,7 +48,7 @@ void TestSuite::calculateAverages()
 	m_repair_pairTracker_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	m_repair_total_acrossBlocks /= nrOfBlocksCorrected;
-
+	
 	m_repair_dictionary_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_repair_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
 
@@ -120,7 +120,7 @@ void TestSuite::resetForNextBlock()
 {
 	//Transfer data for this block and reset for the next
 	//Memory
-
+	
 	m_total_acrossBlocks += m_total;
 	m_total = 0;
 
@@ -129,6 +129,7 @@ void TestSuite::resetForNextBlock()
 	m_init_pairRecord_max_acrossBlocks += m_init_pairRecord_max;
 	m_init_pairTracker_max_acrossBlocks += m_init_pairTracker_max;
 	m_init_priorityQueue_max_acrossBlocks += m_init_priorityQueue_max;
+	m_init_terminals_max_acrossBlocks += m_init_terminals_max;
 
 	m_init_total_acrossBlocks += m_init_total;
 
@@ -139,9 +140,9 @@ void TestSuite::resetForNextBlock()
 	m_init_pairTracker_current = 0;
 	m_init_pairTracker_max = 0;
 	m_init_priorityQueue_max = 0;
+	m_init_terminals_max = 0;
 
 	m_init_total = 0;
-
 
 
 	// m_repair;
@@ -167,7 +168,6 @@ void TestSuite::resetForNextBlock()
 
 	m_repair_total = 0;
 
-
 	// m_huffmanEncoding;
 	m_huffEnc_sequenceArray_max_acrossBlocks += m_huffEnc_sequenceArray_max;
 	m_huffEnc_phraseTable_max_acrossBlocks += m_huffEnc_phraseTable_max;
@@ -178,8 +178,8 @@ void TestSuite::resetForNextBlock()
 	m_huffEnc_nextCodes_max_acrossBlocks += m_huffEnc_nextCodes_max;
 	m_huffEnc_huffmanCodes_max_acrossBlocks += m_huffEnc_huffmanCodes_max;
 	m_huffEnc_huffmanToSymbol_max_acrossBlocks += m_huffEnc_huffmanToSymbol_max;
-	m_huffEnc_dictionary_max_acrossBlocks += m_repair_dictionary_max;
-	m_huffEnc_terminals_max_acrossBlocks += m_repair_terminals_max;
+	m_huffEnc_dictionary_max_acrossBlocks += m_huffEnc_dictionary_max;
+	m_huffEnc_terminals_max_acrossBlocks += m_huffEnc_terminals_max;
 
 	m_huffEnc_total_acrossBlocks += m_huffEnc_total;
 
@@ -210,8 +210,8 @@ void TestSuite::resetForNextBlock()
 	m_norDic_pairVectors_max_acrossBlocks += m_norDic_pairVectors_max;
 	m_norDic_terminalVector_max_acrossBlocks += m_norDic_terminalVector_max;
 	m_norDic_offsets_max_acrossBlocks += m_norDic_offsets_max;
-	m_norDic_dictionary_max_acrossBlocks += m_repair_dictionary_max;
-	m_norDic_terminals_max_acrossBlocks += m_repair_terminals_max;
+	m_norDic_dictionary_max_acrossBlocks += m_norDic_dictionary_max;
+	m_norDic_terminals_max_acrossBlocks += m_norDic_terminals_max;
 	m_norDic_indices_max_acrossBlocks += m_norDic_indices_max;
 	m_norDic_terminalIndices_max_acrossBlocks += m_norDic_terminalIndices_max;
 
@@ -239,7 +239,7 @@ void TestSuite::resetForNextBlock()
 
 
 	// m_huffmanDictionary;
-	m_huffDic_phraseTable_max_acrossBlocks += m_huffDic_phraseTable_max;
+	m_huffDic_dictionary_max_acrossBlocks += m_huffDic_dictionary_max;
 	m_huffDic_firstCodes_max_acrossBlocks += m_huffDic_firstCodes_max;
 	m_huffDic_nrOfCodes_max_acrossBlocks += m_huffDic_nrOfCodes_max;
 	m_huffDic_huffmanToSymbol_max_acrossBlocks += m_huffDic_huffmanToSymbol_max;
@@ -251,7 +251,7 @@ void TestSuite::resetForNextBlock()
 
 	m_huffDic_total_acrossBlocks += m_huffDic_total;
 
-	m_huffDic_phraseTable_max = 0;
+	m_huffDic_dictionary_max = 0;
 	m_huffDic_firstCodes_max = 0;
 	m_huffDic_nrOfCodes_max = 0;
 	m_huffDic_huffmanToSymbol_max = 0;
@@ -537,13 +537,14 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Initialization - sequence array; " << m_init_sequenceArray_max_acrossBlocks << endl;
 	ofs << "Initialization - active pairs; " << m_init_pairRecord_max_acrossBlocks + m_init_pairTracker_max_acrossBlocks << endl;
 	ofs << "Initialization - priority queue; " << m_init_priorityQueue_max_acrossBlocks << endl;
+	ofs << "Initialization - terminals; " << m_init_terminals_max_acrossBlocks << endl;
 	ofs << "Initialization - total; " << m_init_total_acrossBlocks << endl;
 	ofs << "Initialization - total (mb); " << (m_init_total_acrossBlocks / mb) * 4 << endl;
 
 	ofs << "Re-Pair - sequence array; " << m_repair_sequenceArray_max_acrossBlocks << endl;
 	ofs << "Re-Pair - active pairs; " << m_repair_pairRecord_max_acrossBlocks + m_repair_pairTracker_max_acrossBlocks << endl;
 	ofs << "Re-Pair - priority queue; " << m_repair_priorityQueue_max_acrossBlocks << endl;
-	ofs << "Re-Pair - dictinary; " << m_repair_dictionary_max_acrossBlocks << endl;
+	ofs << "Re-Pair - dictionary; " << m_repair_dictionary_max_acrossBlocks << endl;
 	ofs << "Re-Pair - terminals; " << m_repair_terminals_max_acrossBlocks << endl;
 	ofs << "Re-Pair - total; " << m_repair_total_acrossBlocks << endl;
 	ofs << "Re-Pair - total (mb); " << (m_repair_total_acrossBlocks / mb) * 4 << endl;
@@ -566,14 +567,10 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Normal dictionary - first codes array; " << m_norDic_firstCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - nr of codes array; " << m_norDic_nrOfCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - Huffman to symbol; " << m_norDic_huffmanToSymbol_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - terminals set; " << m_norDic_terminals_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - roots; " << m_norDic_roots_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - symbol to generation; " << m_norDic_symbolToGen_max_acrossBlocks << endl;
+	ofs << "Normal dictionary - terminal vector; " << m_norDic_terminalVector_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - pair vectors; " << m_norDic_pairVectors_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - terminals; " << m_norDic_terminals_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - offset array; " << m_norDic_offsets_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - indices; " << m_norDic_indices_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - terminal indices; " << m_norDic_terminalIndices_max_acrossBlocks << endl;
 
 	ofs << "Normal dictionary - total; " << max(m_norDic_supportStructures_total_acrossBlocks, m_norDic_total_acrossBlocks) << endl;
 	ofs << "Normal dictionary - total (mb); " << (max(m_norDic_supportStructures_total_acrossBlocks, m_norDic_total_acrossBlocks) / mb) * 4 << endl;
@@ -582,11 +579,8 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Huffman dictionary - first codes array; " << m_huffDic_firstCodes_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - nr of codes array; " << m_huffDic_nrOfCodes_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - Huffman to symbol; " << m_huffDic_huffmanToSymbol_max_acrossBlocks << endl;
-	ofs << "Huffman dictionary - symbol to generation; " << m_huffDic_symbolToGen_max_acrossBlocks << endl;
-	ofs << "Huffman dictionary - pair vectors; " << m_huffDic_pairVectors_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - terminal vector; " << m_huffDic_terminalVector_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - indices; " << m_huffDic_indices_max_acrossBlocks << endl;
-	ofs << "Huffman dictionary - terminal indices; " << m_huffDic_terminalIndices_max_acrossBlocks << endl;
 
 	ofs << "Huffman dictionary - total; " << m_huffDic_total_acrossBlocks << endl;
 	ofs << "Huffman dictionary - total (mb); " << (m_huffDic_total_acrossBlocks / mb) * 4 << endl;
@@ -602,7 +596,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 
 	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
 
-	ofs << "Average across blocks:" << endl;
+	ofs << endl << "Average across blocks:" << endl;
 
 	ofs << "Nr of terminals; " << s_nrOfTerminals_acrossBlocks << endl;
 	ofs << "Nr of pairs created; " << s_maxPairs_acrossBlocks << endl;
@@ -612,7 +606,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Largest generation; " << s_largestGeneration_acrossBlocks << endl;
 	ofs << "Largest generation count; " << s_largestGenerationCount_acrossBlocks << endl;
 
-	ofs << "Max seen in one block:" << endl;
+	ofs << endl << "Max seen in one block:" << endl;
 
 	ofs << "Nr of terminals; " << s_nrOfTerminalsMax << endl;
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
@@ -680,6 +674,12 @@ void TestSuite::addMemory(std::string part, long value)
 	else if (part == "initPrio")
 	{
 		m_init_priorityQueue_max += value;
+		m_init_total += m_init_priorityQueue_max;
+		updateMaxMemory(m_init_total);
+	}
+	else if (part == "initTerminals")
+	{
+		m_init_terminals_max += value;
 		m_init_total += m_init_priorityQueue_max;
 		updateMaxMemory(m_init_total);
 	}
@@ -954,7 +954,7 @@ void TestSuite::addMemory(std::string part, long value)
 
 	else
 	{
-		cout << "Testing, add memory - program part not supported" << endl;
+		cout << "Testing, add memory - \"" << part << "\" not supported" << endl;
 	}
 
 }

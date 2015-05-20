@@ -121,6 +121,40 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.m_repair_sequenceArray_max = testResults[i].m_repair_sequenceArray_max;
 			avgResult.m_repair_total = testResults[i].m_repair_total;
 			avgResult.m_total = testResults[i].m_total;
+
+			//Special for master
+			avgResult.m_init_terminals_max = testResults[i].m_init_terminals_max;
+			avgResult.m_init_terminals_max_acrossBlocks = testResults[i].m_init_terminals_max_acrossBlocks;
+
+			avgResult.m_repair_dictionary_max = testResults[i].m_repair_dictionary_max;
+			avgResult.m_repair_dictionary_max_acrossBlocks = testResults[i].m_repair_dictionary_max_acrossBlocks;
+			avgResult.m_repair_terminals_max = testResults[i].m_repair_terminals_max;
+			avgResult.m_repair_terminals_max_acrossBlocks = testResults[i].m_repair_terminals_max_acrossBlocks;
+
+			avgResult.m_huffEnc_dictionary_max = testResults[i].m_huffEnc_dictionary_max;
+			avgResult.m_huffEnc_dictionary_max_acrossBlocks = testResults[i].m_huffEnc_dictionary_max_acrossBlocks;
+			avgResult.m_huffEnc_terminals_max = testResults[i].m_huffEnc_terminals_max;
+			avgResult.m_huffEnc_terminals_max_acrossBlocks = testResults[i].m_huffEnc_terminals_max_acrossBlocks;
+		
+
+			avgResult.m_norDic_dictionary_max = testResults[i].m_norDic_dictionary_max;
+			avgResult.m_norDic_dictionary_max_acrossBlocks = testResults[i].m_norDic_dictionary_max_acrossBlocks;
+			avgResult.m_norDic_terminals_max = testResults[i].m_norDic_terminals_max;
+			avgResult.m_norDic_terminals_max_acrossBlocks = testResults[i].m_norDic_terminals_max_acrossBlocks;
+			avgResult.m_norDic_indices_max = testResults[i].m_norDic_indices_max;
+			avgResult.m_norDic_indices_max_acrossBlocks = testResults[i].m_norDic_indices_max_acrossBlocks;
+			avgResult.m_norDic_terminalIndices_max = testResults[i].m_norDic_terminalIndices_max;
+			avgResult.m_norDic_terminalIndices_max_acrossBlocks = testResults[i].m_norDic_terminalIndices_max_acrossBlocks;
+
+			avgResult.m_huffDic_dictionary_max = testResults[i].m_huffDic_dictionary_max;
+			avgResult.m_huffDic_dictionary_max_acrossBlocks = testResults[i].m_huffDic_dictionary_max_acrossBlocks;
+			avgResult.m_huffDic_terminals_max = testResults[i].m_huffDic_terminals_max;
+			avgResult.m_huffDic_terminals_max_acrossBlocks = testResults[i].m_huffDic_terminals_max_acrossBlocks;
+			avgResult.m_huffDic_indices_max = testResults[i].m_huffDic_indices_max;
+			avgResult.m_huffDic_indices_max_acrossBlocks = testResults[i].m_huffDic_indices_max_acrossBlocks;
+			avgResult.m_huffDic_terminalIndices_max = testResults[i].m_huffDic_terminalIndices_max;
+			avgResult.m_huffDic_terminalIndices_max_acrossBlocks = testResults[i].m_huffDic_terminalIndices_max_acrossBlocks;
+
 			avgResult.s_avgNrOfPhrases_acrossBlocks = testResults[i].s_avgNrOfPhrases_acrossBlocks;
 			avgResult.s_filename = testResults[i].s_filename;
 			avgResult.s_huffmanCodeLength_max_acrossBlocks = testResults[i].s_huffmanCodeLength_max_acrossBlocks;
@@ -295,6 +329,10 @@ int main(int argc, char* argv[])
 	bool extraVerbose = false;
 	bool timer = false;
 	
+	int runs = 1;
+	int currentRun = 1;
+
+	vector<TestSuite> testResults;
 
 	if (argc <= 2)
 	{
@@ -364,12 +402,13 @@ int main(int argc, char* argv[])
 					activePairs,
 					sequenceArray,
 					priorityQueue,
+					dictionary,
 					symbols);
-
+				
 				//Save the test results from the current run
 				if (c.test)
 				{
-					testResults.push_back(*c.ts);
+					testResults.push_back(*c.ts);					
 					c.ts->resetForNextTest();
 				}
 
@@ -382,17 +421,12 @@ int main(int argc, char* argv[])
 			++currentRun;
 		}
 		if (c.test)
-		{
+		{			
 			TestSuite avgResult;
 			getAvgResult(avgResult, testResults);
 			avgResult.WriteToFileEncoding(runs);
 		}
-		}
-		else
-		{
-			cout << "Problem opening file: " << filename << endl;
-			return 5;
-		}
+		
 		return r;
 	}
 	else if (encodingDecoding == 2)

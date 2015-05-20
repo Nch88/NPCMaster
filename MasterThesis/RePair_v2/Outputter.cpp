@@ -563,11 +563,11 @@ void Outputter::all(
 	if (c.test) //Carry over data structures
 	{
 		c.ts->addMemory("huffDicDictionary", c.ts->m_norDic_dictionary_max);
+		c.ts->addMemory("huffDicTerminalVector", c.ts->m_norDic_terminalVector_max);
 		c.ts->addMemory("huffDicFirstCodes", c.ts->m_norDic_firstCodes_max);
 		c.ts->addMemory("huffDicNrOfCodes", c.ts->m_norDic_nrOfCodes_max);
 		c.ts->addMemory("huffDicIndices", c.ts->m_norDic_indices_max);
-		c.ts->addMemory("huffDicTerminalIndices", c.ts->m_norDic_terminalIndices_max);
-		c.ts->addMemory("huffDicHuffmanToSymbol", c.ts->m_norDic_huffmanToSymbol_max);
+		c.ts->addMemory("huffDicHuffmanToSymbol", c.ts->m_norDic_huffmanToSymbol_max);		
 	}
 	if (c.test)
 	{
