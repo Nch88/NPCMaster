@@ -13,8 +13,10 @@ public:
 	double terminalsWords = 2 * 1;
 	double rootsWords = 2 * 1;
 	double symbolToGenWords = 2 * 1;
-	double pairVectorsWords = 2 * 1;
+	double pairVectorsWords = 2 * 2 * 1;
 	double offsetWords = 2 * 1;
+	double indicesWords = 2 * 1;
+	double dictionaryWords = 2 * 3;
 
 	//Timing
 	boost::chrono::nanoseconds t_initialization;
@@ -81,7 +83,11 @@ public:
 	long double m_repair_phraseTable_max = 0;
 
 	long double m_repair_total = 0;
-
+	//Special for master version
+	long double m_repair_dictionary_max_acrossBlocks = 0;
+	long double m_repair_terminals_max_acrossBlocks = 0;
+	long double m_repair_dictionary_max = 0;
+	long double m_repair_terminals_max = 0;
 
 
 	// m_huffmanEncoding;
@@ -110,6 +116,11 @@ public:
 
 	long double m_huffEnc_total = 0;
 
+	//Special for master version
+	long double m_huffEnc_dictionary_max_acrossBlocks = 0;
+	long double m_huffEnc_terminals_max_acrossBlocks = 0;
+	long double m_huffEnc_dictionary_max = 0;
+	long double m_huffEnc_terminals_max = 0;
 
 	// m_normalDictionary;
 	long double m_norDic_sequenceArray_max_acrossBlocks = 0;
@@ -133,7 +144,6 @@ public:
 	long double m_norDic_firstCodes_max = 0;
 	long double m_norDic_nrOfCodes_max = 0;
 	long double m_norDic_huffmanToSymbol_max = 0;
-	long double m_norDic_terminals_max = 0;
 	long double m_norDic_roots_max = 0;
 	long double m_norDic_symbolToGen_max = 0;
 	long double m_norDic_pairVectors_max = 0;
@@ -143,7 +153,15 @@ public:
 	long double m_norDic_total = 0;
 	long double m_norDic_supportStructures_total = 0;
 
-
+	//Special for master version
+	long double m_norDic_dictionary_max_acrossBlocks = 0;
+	long double m_norDic_terminals_max_acrossBlocks = 0;
+	long double m_norDic_dictionary_max = 0;
+	long double m_norDic_terminals_max = 0;
+	long double m_norDic_indices_max_acrossBlocks = 0;
+	long double m_norDic_terminalIndices_max_acrossBlocks = 0;
+	long double m_norDic_indices_max = 0;
+	long double m_norDic_terminalIndices_max = 0;
 
 	// m_huffmanDictionary;
 	long double m_huffDic_phraseTable_max_acrossBlocks = 0;
@@ -166,7 +184,15 @@ public:
 
 	long double m_huffDic_total = 0;
 
-
+	//Special for master version
+	long double m_huffDic_dictionary_max_acrossBlocks = 0;
+	long double m_huffDic_terminals_max_acrossBlocks = 0;
+	long double m_huffDic_dictionary_max = 0;
+	long double m_huffDic_terminals_max = 0;
+	long double m_huffDic_indices_max_acrossBlocks = 0;
+	long double m_huffDic_terminalIndices_max_acrossBlocks = 0;
+	long double m_huffDic_indices_max = 0;
+	long double m_huffDic_terminalIndices_max = 0;
 
 	//Compression (in bytes)
 	long double c_origSize = 0;

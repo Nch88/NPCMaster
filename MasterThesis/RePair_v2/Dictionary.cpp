@@ -54,6 +54,11 @@ void Dictionary::createGenerationVectors2(
 
 		//Add this pair to a vector
 		generationVectors[p.second.generation - 1].push_back(p.first);
+
+		if (c.test)
+		{
+			c.ts->addMemory("norDicPairVectors", c.ts->pairVectorsWords);
+		}
 	}
 }
 
@@ -106,24 +111,17 @@ void Dictionary::switchToOrdinalNumbers(
 	terminalVector.assign(terminals.begin(), terminals.end());
 	std::sort(terminalVector.begin(), terminalVector.end());
 
-	/*cout << endl << "Dictionary initially:" << endl;
-	for each(auto var in dictionary)
+	if (c.test)
 	{
-		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
-	}*/
+		c.ts->addMemory("norDicTerminalVector", terminalVector.size() * c.ts->terminalsWords);
+	}
 
-	//Replace the terminal symbols in the phrase table with ordinal numbers and sort them
+	//Replace the terminal symbols in the dictionary with ordinal numbers and sort them
 	for (int i = 0; i < pairVectors[0].size(); ++i)
 	{
 		dictionary[pairVectors[0][i]].leftSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[0][i]].leftSymbol);
 		dictionary[pairVectors[0][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[0][i]].rightSymbol);
 	}
-
-	/*cout << endl << "Dictionary after first gen replacements:" << endl;
-	for each(auto var in dictionary)
-	{
-		cout << var.first << " -> (" << var.second.leftSymbol << "," << var.second.rightSymbol << ")" << endl;
-	}*/
 
 	ComPairD cpd;
 	cpd.dic = &dictionary;
@@ -134,44 +132,77 @@ void Dictionary::switchToOrdinalNumbers(
 	for (int i = 0; i < pairVectors[0].size(); ++i)
 	{
 		indices[pairVectors[0][i]] = offset + i;
+		if (c.test)
+		{
+			c.ts->addMemory("norDicIndices", c.ts->indicesWords);
+		}
 	}
 
 	offset += pairVectors[0].size();
+
+	if (c.test)
+	{
+		if (c.ts->firstBlock)
+		{
+			if (pairVectors.size() > c.ts->s_nrOfGenerationsMax)
+			{
+				c.ts->s_nrOfGenerationsMax = pairVectors.size();
+			}
+			c.ts->s_nrOfGenerations += pairVectors.size();
+		}
+	}
 
 	for (int gen = 1; gen < pairVectors.size(); ++gen)
 	{
 		for (int i = 0; i < pairVectors[gen].size(); ++i)
 		{
+			if (c.test)
+			{
+				if (c.ts->firstBlock)
+				{
+					c.ts->s_nrOfPhrases++;
+					if (pairVectors[gen].size() > c.ts->s_largestGenerationCountMax)
+					{
+						c.ts->s_largestGenerationCountMax = pairVectors[gen].size();
+						c.ts->s_largestGenerationMax = gen;
+					}
+					if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
+					{
+						c.ts->s_largestGenerationCount = pairVectors[gen].size();
+						c.ts->s_largestGeneration = gen;
+					}
+				}
+			}
+
 			//First symbol
 			if (dictionary[pairVectors[gen][i]].leftSymbol >= initialSymbolValue)
 			{
 				//Non-terminal
-				//unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				
 				dictionary[pairVectors[gen][i]].leftSymbol = indices[dictionary[pairVectors[gen][i]].leftSymbol];
-				//cout << endl << "Case: NtermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
+				
 			}
 			else
 			{
 				//Terminal
-				//unsigned long sym = dictionary[pairVectors[gen][i]].leftSymbol;
+				
 				dictionary[pairVectors[gen][i]].leftSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].leftSymbol);
-				//cout << endl << "Case: TermL, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].leftSymbol;
+				
 			}
 
 			//Second symbol
 			if (dictionary[pairVectors[gen][i]].rightSymbol >= initialSymbolValue)
 			{
 				//Non-terminal
-				//unsigned long sym = dictionary[pairVectors[gen][i]].rightSymbol;
 				dictionary[pairVectors[gen][i]].rightSymbol = indices[dictionary[pairVectors[gen][i]].rightSymbol];
-				//cout << endl << "Case: NtermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
+				
 			}
 			else
 			{
 				//Terminal
-				//unsigned long sym = dictionary[pairVectors[gen][i]].rightSymbol;
+				
 				dictionary[pairVectors[gen][i]].rightSymbol = findTerminalIndex(terminalVector, dictionary[pairVectors[gen][i]].rightSymbol);
-				//cout << endl << "Case: TermR, Gen :" << gen << ", i: " << i << ", Sym: " << sym << ", Res: " << dictionary[pairVectors[gen][i]].rightSymbol;
+			
 			}
 
 			if (dictionary[pairVectors[gen][i]].leftSymbol < 0 || dictionary[pairVectors[gen][i]].rightSymbol < 0)
@@ -183,9 +214,21 @@ void Dictionary::switchToOrdinalNumbers(
 		for (int i = 0; i < pairVectors[gen].size(); ++i)
 		{
 			indices[pairVectors[gen][i]] = offset + i;
+			if (c.test)
+			{
+				c.ts->addMemory("norDicIndices", c.ts->indicesWords);
+			}
 		}
 
 		offset += pairVectors[gen].size();
+	}
+
+	if (c.test)
+	{
+		if (c.ts->firstBlock)
+		{
+			c.ts->s_avgNrOfPhrases = c.ts->s_nrOfPhrases / c.ts->s_nrOfGenerations;
+		}
 	}
 }
 

@@ -192,6 +192,7 @@ int Initializer::SequenceArray(
 		{
 			c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 			c.ts->c_origSize++;
+			c.ts->s_currentBlockSize++;
 		}
 
 		if (file >> noskipws >> leftSymbol && leftSymbol)
@@ -201,6 +202,7 @@ int Initializer::SequenceArray(
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 				c.ts->c_origSize++;
+				c.ts->s_currentBlockSize++;
 			}
 			
 			setupPairRecord(
@@ -225,6 +227,7 @@ int Initializer::SequenceArray(
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 				c.ts->c_origSize++;
+				c.ts->s_currentBlockSize++;
 			}
 			if (c.timing)
 			{

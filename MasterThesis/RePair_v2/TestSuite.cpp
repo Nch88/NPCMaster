@@ -48,6 +48,9 @@ void TestSuite::calculateAverages()
 
 	m_repair_total_acrossBlocks /= nrOfBlocksCorrected;
 
+	m_repair_dictionary_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_repair_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
+
 
 	// m_huffmanEncoding;
 	m_huffEnc_sequenceArray_max_acrossBlocks /= nrOfBlocksCorrected;
@@ -62,6 +65,8 @@ void TestSuite::calculateAverages()
 
 	m_huffEnc_total_acrossBlocks /= nrOfBlocksCorrected;
 
+	m_huffEnc_dictionary_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_huffEnc_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	// m_normalDictionary;
 	m_norDic_sequenceArray_max_acrossBlocks /= nrOfBlocksCorrected;
@@ -69,7 +74,6 @@ void TestSuite::calculateAverages()
 	m_norDic_firstCodes_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_nrOfCodes_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_huffmanToSymbol_max_acrossBlocks /= nrOfBlocksCorrected;
-	m_norDic_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_roots_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_symbolToGen_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_pairVectors_max_acrossBlocks /= nrOfBlocksCorrected;
@@ -79,7 +83,10 @@ void TestSuite::calculateAverages()
 	m_norDic_total_acrossBlocks /= nrOfBlocksCorrected;
 	m_norDic_supportStructures_total_acrossBlocks /= nrOfBlocksCorrected;
 
-
+	m_norDic_dictionary_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_norDic_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_norDic_indices_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_norDic_terminalIndices_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	// m_huffmanDictionary;
 	m_huffDic_phraseTable_max_acrossBlocks /= nrOfBlocksCorrected;
@@ -91,6 +98,11 @@ void TestSuite::calculateAverages()
 	m_huffDic_terminalVector_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	m_huffDic_total_acrossBlocks /= nrOfBlocksCorrected;
+
+	m_huffDic_dictionary_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_huffDic_terminals_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_huffDic_indices_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_huffDic_terminalIndices_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	//Statistics
 	s_maxPairs_acrossBlocks /= nrOfBlocksCorrected;
@@ -136,6 +148,8 @@ void TestSuite::resetForNextBlock()
 	m_repair_pairRecord_max_acrossBlocks += m_repair_pairRecord_max;
 	m_repair_priorityQueue_max_acrossBlocks += m_repair_priorityQueue_max;
 	m_repair_phraseTable_max_acrossBlocks += m_repair_phraseTable_max;
+	m_repair_dictionary_max_acrossBlocks += m_repair_dictionary_max;
+	m_repair_terminals_max_acrossBlocks += m_repair_terminals_max;
 
 	m_repair_total_acrossBlocks += m_repair_total;
 
@@ -145,9 +159,10 @@ void TestSuite::resetForNextBlock()
 	m_repair_pairRecord_max = 0;
 	m_repair_priorityQueue_max = 0;
 	m_repair_phraseTable_max = 0;
+	m_repair_dictionary_max = 0;
+	m_repair_terminals_max = 0;
 
 	m_repair_total = 0;
-
 
 
 	// m_huffmanEncoding;
@@ -160,6 +175,8 @@ void TestSuite::resetForNextBlock()
 	m_huffEnc_nextCodes_max_acrossBlocks += m_huffEnc_nextCodes_max;
 	m_huffEnc_huffmanCodes_max_acrossBlocks += m_huffEnc_huffmanCodes_max;
 	m_huffEnc_huffmanToSymbol_max_acrossBlocks += m_huffEnc_huffmanToSymbol_max;
+	m_huffEnc_dictionary_max_acrossBlocks += m_repair_dictionary_max;
+	m_huffEnc_terminals_max_acrossBlocks += m_repair_terminals_max;
 
 	m_huffEnc_total_acrossBlocks += m_huffEnc_total;
 
@@ -173,6 +190,8 @@ void TestSuite::resetForNextBlock()
 	m_huffEnc_nextCodes_max = 0;
 	m_huffEnc_huffmanCodes_max = 0;
 	m_huffEnc_huffmanToSymbol_max = 0;
+	m_huffEnc_dictionary_max = 0;
+	m_huffEnc_terminals_max = 0;
 
 	m_huffEnc_total = 0;
 
@@ -183,12 +202,15 @@ void TestSuite::resetForNextBlock()
 	m_norDic_firstCodes_max_acrossBlocks += m_norDic_firstCodes_max;
 	m_norDic_nrOfCodes_max_acrossBlocks += m_norDic_nrOfCodes_max;
 	m_norDic_huffmanToSymbol_max_acrossBlocks += m_norDic_huffmanToSymbol_max;
-	m_norDic_terminals_max_acrossBlocks += m_norDic_terminals_max;
 	m_norDic_roots_max_acrossBlocks += m_norDic_roots_max;
 	m_norDic_symbolToGen_max_acrossBlocks += m_norDic_symbolToGen_max;
 	m_norDic_pairVectors_max_acrossBlocks += m_norDic_pairVectors_max;
 	m_norDic_terminalVector_max_acrossBlocks += m_norDic_terminalVector_max;
 	m_norDic_offsets_max_acrossBlocks += m_norDic_offsets_max;
+	m_norDic_dictionary_max_acrossBlocks += m_repair_dictionary_max;
+	m_norDic_terminals_max_acrossBlocks += m_repair_terminals_max;
+	m_norDic_indices_max_acrossBlocks += m_norDic_indices_max;
+	m_norDic_terminalIndices_max_acrossBlocks += m_norDic_terminalIndices_max;
 
 	m_norDic_total_acrossBlocks += m_norDic_total;
 	m_norDic_supportStructures_total_acrossBlocks += m_norDic_supportStructures_total;
@@ -199,16 +221,18 @@ void TestSuite::resetForNextBlock()
 	m_norDic_firstCodes_max = 0;
 	m_norDic_nrOfCodes_max = 0;
 	m_norDic_huffmanToSymbol_max = 0;
-	m_norDic_terminals_max = 0;
 	m_norDic_roots_max = 0;
 	m_norDic_symbolToGen_max = 0;
 	m_norDic_pairVectors_max = 0;
 	m_norDic_terminalVector_max = 0;
 	m_norDic_offsets_max = 0;
+	m_norDic_dictionary_max = 0;
+	m_norDic_terminals_max = 0;
+	m_norDic_indices_max = 0;
+	m_norDic_terminalIndices_max = 0;
 
 	m_norDic_total = 0;
 	m_norDic_supportStructures_total = 0;
-
 
 
 	// m_huffmanDictionary;
@@ -219,6 +243,8 @@ void TestSuite::resetForNextBlock()
 	m_huffDic_symbolToGen_max_acrossBlocks += m_huffDic_symbolToGen_max;
 	m_huffDic_pairVectors_max_acrossBlocks += m_huffDic_pairVectors_max;
 	m_huffDic_terminalVector_max_acrossBlocks += m_huffDic_terminalVector_max;
+	m_huffDic_indices_max_acrossBlocks += m_huffDic_indices_max;
+	m_huffDic_terminalIndices_max_acrossBlocks += m_huffDic_terminalIndices_max;
 
 	m_huffDic_total_acrossBlocks += m_huffDic_total;
 
@@ -229,6 +255,8 @@ void TestSuite::resetForNextBlock()
 	m_huffDic_symbolToGen_max = 0;
 	m_huffDic_pairVectors_max = 0;
 	m_huffDic_terminalVector_max = 0;
+	m_huffDic_indices_max = 0;
+	m_huffDic_terminalIndices_max = 0;
 
 	m_huffDic_total = 0;
 
@@ -291,6 +319,8 @@ void TestSuite::resetForNextTest()
 	m_repair_pairRecord_max_acrossBlocks = 0;
 	m_repair_priorityQueue_max_acrossBlocks = 0;
 	m_repair_phraseTable_max_acrossBlocks = 0;
+	m_repair_dictionary_max_acrossBlocks = 0;
+	m_repair_terminals_max_acrossBlocks = 0;
 
 	m_repair_total_acrossBlocks = 0;
 
@@ -300,8 +330,11 @@ void TestSuite::resetForNextTest()
 	m_repair_pairRecord_max = 0;
 	m_repair_priorityQueue_max = 0;
 	m_repair_phraseTable_max = 0;
+	m_repair_dictionary_max = 0;
+	m_repair_terminals_max = 0;
 
 	m_repair_total = 0;
+
 
 	// m_huffmanEncoding;
 	m_huffEnc_sequenceArray_max_acrossBlocks = 0;
@@ -313,6 +346,8 @@ void TestSuite::resetForNextTest()
 	m_huffEnc_nextCodes_max_acrossBlocks = 0;
 	m_huffEnc_huffmanCodes_max_acrossBlocks = 0;
 	m_huffEnc_huffmanToSymbol_max_acrossBlocks = 0;
+	m_huffEnc_dictionary_max_acrossBlocks = 0;
+	m_huffEnc_terminals_max_acrossBlocks = 0;
 
 	m_huffEnc_total_acrossBlocks = 0;
 
@@ -326,6 +361,8 @@ void TestSuite::resetForNextTest()
 	m_huffEnc_nextCodes_max = 0;
 	m_huffEnc_huffmanCodes_max = 0;
 	m_huffEnc_huffmanToSymbol_max = 0;
+	m_huffEnc_dictionary_max = 0;
+	m_huffEnc_terminals_max = 0;
 
 	m_huffEnc_total = 0;
 
@@ -335,12 +372,15 @@ void TestSuite::resetForNextTest()
 	m_norDic_firstCodes_max_acrossBlocks = 0;
 	m_norDic_nrOfCodes_max_acrossBlocks = 0;
 	m_norDic_huffmanToSymbol_max_acrossBlocks = 0;
-	m_norDic_terminals_max_acrossBlocks = 0;
 	m_norDic_roots_max_acrossBlocks = 0;
 	m_norDic_symbolToGen_max_acrossBlocks = 0;
 	m_norDic_pairVectors_max_acrossBlocks = 0;
 	m_norDic_terminalVector_max_acrossBlocks = 0;
 	m_norDic_offsets_max_acrossBlocks = 0;
+	m_norDic_dictionary_max_acrossBlocks = 0;
+	m_norDic_terminals_max_acrossBlocks = 0;
+	m_norDic_indices_max_acrossBlocks = 0;
+	m_norDic_terminalIndices_max_acrossBlocks = 0;
 
 	m_norDic_total_acrossBlocks = 0;
 	m_norDic_supportStructures_total_acrossBlocks = 0;
@@ -351,12 +391,15 @@ void TestSuite::resetForNextTest()
 	m_norDic_firstCodes_max = 0;
 	m_norDic_nrOfCodes_max = 0;
 	m_norDic_huffmanToSymbol_max = 0;
-	m_norDic_terminals_max = 0;
 	m_norDic_roots_max = 0;
 	m_norDic_symbolToGen_max = 0;
 	m_norDic_pairVectors_max = 0;
 	m_norDic_terminalVector_max = 0;
 	m_norDic_offsets_max = 0;
+	m_norDic_dictionary_max = 0;
+	m_norDic_terminals_max = 0;
+	m_norDic_indices_max = 0;
+	m_norDic_terminalIndices_max = 0;
 
 	m_norDic_total = 0;
 	m_norDic_supportStructures_total = 0;
@@ -369,6 +412,8 @@ void TestSuite::resetForNextTest()
 	m_huffDic_symbolToGen_max_acrossBlocks = 0;
 	m_huffDic_pairVectors_max_acrossBlocks = 0;
 	m_huffDic_terminalVector_max_acrossBlocks = 0;
+	m_huffDic_indices_max_acrossBlocks = 0;
+	m_huffDic_terminalIndices_max_acrossBlocks = 0;
 
 	m_huffDic_total_acrossBlocks = 0;
 
@@ -379,6 +424,8 @@ void TestSuite::resetForNextTest()
 	m_huffDic_symbolToGen_max = 0;
 	m_huffDic_pairVectors_max = 0;
 	m_huffDic_terminalVector_max = 0;
+	m_huffDic_indices_max = 0;
+	m_huffDic_terminalIndices_max = 0;
 
 	m_huffDic_total = 0;
 
@@ -491,12 +538,14 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Re-Pair - sequence array; " << m_repair_sequenceArray_max_acrossBlocks << endl;
 	ofs << "Re-Pair - active pairs; " << m_repair_pairRecord_max_acrossBlocks << endl;
 	ofs << "Re-Pair - priority queue; " << m_repair_priorityQueue_max_acrossBlocks << endl;
-	ofs << "Re-Pair - phrase table; " << m_repair_phraseTable_max_acrossBlocks << endl;
+	ofs << "Re-Pair - dictinary; " << m_repair_dictionary_max_acrossBlocks << endl;
+	ofs << "Re-Pair - terminals; " << m_repair_terminals_max_acrossBlocks << endl;
 	ofs << "Re-Pair - total; " << m_repair_total_acrossBlocks << endl;
 	ofs << "Re-Pair - total (mb); " << (m_repair_total_acrossBlocks / mb) * 4 << endl;
 
 	ofs << "Huffman encoding - sequence array; " << m_huffEnc_sequenceArray_max_acrossBlocks << endl;
-	ofs << "Huffman encoding - phrase table; " << m_huffEnc_phraseTable_max_acrossBlocks << endl;
+	ofs << "Huffman encoding - dictionary; " << m_huffEnc_dictionary_max_acrossBlocks << endl;
+	ofs << "Huffman encoding - terminals; " << m_huffEnc_terminals_max_acrossBlocks << endl;
 	ofs << "Huffman encoding - symbol frequencies; " << m_huffEnc_frequencies_max_acrossBlocks << endl;
 	ofs << "Huffman encoding - code lengths array; " << m_huffEnc_codeLengths_max_acrossBlocks << endl;
 	ofs << "Huffman encoding - first codes array; " << m_huffEnc_firstCodes_max_acrossBlocks << endl;
@@ -508,7 +557,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Huffman encoding - total (mb); " << (m_huffEnc_total_acrossBlocks / mb) * 4 << endl;
 
 	ofs << "Normal dictionary - sequence array; " << m_norDic_sequenceArray_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - phrase table; " << m_norDic_phraseTable_max_acrossBlocks << endl;
+	ofs << "Normal dictionary - dictionary; " << m_norDic_dictionary_max_acrossBlocks< endl;
 	ofs << "Normal dictionary - first codes array; " << m_norDic_firstCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - nr of codes array; " << m_norDic_nrOfCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - Huffman to symbol; " << m_norDic_huffmanToSymbol_max_acrossBlocks << endl;
@@ -516,19 +565,23 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Normal dictionary - roots; " << m_norDic_roots_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - symbol to generation; " << m_norDic_symbolToGen_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - pair vectors; " << m_norDic_pairVectors_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - terminal vector; " << m_norDic_terminalVector_max_acrossBlocks << endl;
+	ofs << "Normal dictionary - terminals; " << m_norDic_terminals_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - offset array; " << m_norDic_offsets_max_acrossBlocks << endl;
+	ofs << "Normal dictionary - indices; " << m_norDic_indices_max_acrossBlocks << endl;
+	ofs << "Normal dictionary - terminal indices; " << m_norDic_terminalIndices_max_acrossBlocks << endl;
 
 	ofs << "Normal dictionary - total; " << max(m_norDic_supportStructures_total_acrossBlocks, m_norDic_total_acrossBlocks) << endl;
 	ofs << "Normal dictionary - total (mb); " << (max(m_norDic_supportStructures_total_acrossBlocks, m_norDic_total_acrossBlocks) / mb) * 4 << endl;
 
-	ofs << "Huffman dictionary - phrase table; " << m_huffDic_phraseTable_max_acrossBlocks << endl;
+	ofs << "Huffman dictionary - dictionary; " << m_huffDic_dictionary_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - first codes array; " << m_huffDic_firstCodes_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - nr of codes array; " << m_huffDic_nrOfCodes_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - Huffman to symbol; " << m_huffDic_huffmanToSymbol_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - symbol to generation; " << m_huffDic_symbolToGen_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - pair vectors; " << m_huffDic_pairVectors_max_acrossBlocks << endl;
 	ofs << "Huffman dictionary - terminal vector; " << m_huffDic_terminalVector_max_acrossBlocks << endl;
+	ofs << "Huffman dictionary - indices; " << m_huffDic_indices_max_acrossBlocks << endl;
+	ofs << "Huffman dictionary - terminal indices; " << m_huffDic_terminalIndices_max_acrossBlocks << endl;
 
 	ofs << "Huffman dictionary - total; " << m_huffDic_total_acrossBlocks << endl;
 	ofs << "Huffman dictionary - total (mb); " << (m_huffDic_total_acrossBlocks / mb) * 4 << endl;
@@ -543,7 +596,6 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Statistics:" << endl;
 
 	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
-	ofs << "Cutoff frequency; " << cutoffValue << endl;
 
 	ofs << "Average across blocks:" << endl;
 
@@ -658,12 +710,13 @@ void TestSuite::addMemory(std::string part, long value)
 		m_repair_total += value;
 		updateMaxMemory(m_repair_total);
 	}
-	else if (part == "repairPhrase")
+	else if (part == "repairDict")
 	{
-		m_repair_phraseTable_max += value;
+		m_repair_dictionary_max += value;
 		m_repair_total += value;
 		updateMaxMemory(m_repair_total);
 	}
+
 
 	//Huffman encoding
 	else if (part == "huffEncSeq")
@@ -678,9 +731,15 @@ void TestSuite::addMemory(std::string part, long value)
 		}
 
 	}
-	else if (part == "huffEncPhrase")
+	else if (part == "huffEncDictionary")
 	{
-		m_huffEnc_phraseTable_max += value;
+		m_huffEnc_dictionary_max += value;
+		m_huffEnc_total += value;
+		updateMaxMemory(m_huffEnc_total);
+	}
+	else if (part == "huffEncTerminals")
+	{
+		m_huffEnc_terminals_max += value;
 		m_huffEnc_total += value;
 		updateMaxMemory(m_huffEnc_total);
 	}
@@ -740,9 +799,15 @@ void TestSuite::addMemory(std::string part, long value)
 		}
 
 	}
-	else if (part == "norDicPhrase")
+	else if (part == "norDicDictionary")
 	{
-		m_norDic_phraseTable_max += value;
+		m_norDic_dictionary_max += value;
+		m_norDic_total += value;
+		updateMaxMemory(m_norDic_total);
+	}
+	else if (part == "norDicTerminals")
+	{
+		m_norDic_terminals_max += value;
 		m_norDic_total += value;
 		updateMaxMemory(m_norDic_total);
 	}
@@ -776,6 +841,18 @@ void TestSuite::addMemory(std::string part, long value)
 		m_norDic_total += value;
 		updateMaxMemory(m_norDic_total);
 	}
+	else if (part == "norDicIndices")
+	{
+		m_norDic_indices_max += value;
+		m_norDic_total += value;
+		updateMaxMemory(m_norDic_total);
+	}
+	else if (part == "norDicTerminalIndices")
+	{
+		m_norDic_terminalIndices_max += value;
+		m_norDic_total += value;
+		updateMaxMemory(m_norDic_total);
+	}
 	else if (part == "norDicSymbolToGen")
 	{
 		m_norDic_symbolToGen_max += value;
@@ -802,9 +879,9 @@ void TestSuite::addMemory(std::string part, long value)
 	}
 
 	//Huffman dictionary
-	else if (part == "huffDicPhrase")
+	else if (part == "huffDicDictionary")
 	{
-		m_huffDic_phraseTable_max += value;
+		m_huffDic_dictionary_max += value;
 		m_huffDic_total += value;
 		updateMaxMemory(m_huffDic_total);
 	}
@@ -817,6 +894,18 @@ void TestSuite::addMemory(std::string part, long value)
 	else if (part == "huffDicNrOfCodes")
 	{
 		m_huffDic_nrOfCodes_max += value;
+		m_huffDic_total += value;
+		updateMaxMemory(m_huffDic_total);
+	}
+	else if (part == "huffDicIndices")
+	{
+		m_huffDic_indices_max += value;
+		m_huffDic_total += value;
+		updateMaxMemory(m_huffDic_total);
+	}
+	else if (part == "huffDicTerminalIndices")
+	{
+		m_huffDic_terminalIndices_max += value;
 		m_huffDic_total += value;
 		updateMaxMemory(m_huffDic_total);
 	}

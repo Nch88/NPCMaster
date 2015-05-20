@@ -591,11 +591,6 @@ void Outputter::all(
 		c.ts->t_writeHuffmanDictionary += c.ts->testTimer.getTimeNano();
 	}
 
-	//DEBUG
-	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
-	testofs << "Stream at pos: " << ofs_dictionary.tellp() << "\n";
-	testofs.close();
-
 	ofs_compressed.close();
 	ofs_dictionary.close();
 
