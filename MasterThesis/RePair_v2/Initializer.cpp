@@ -140,6 +140,10 @@ void Initializer::setupPairRecord(
 	{
 		currentTracker->seenOnce = true;
 		currentTracker->indexFirst = index;
+		if (c.test)
+		{
+			c.ts->addMemory("initTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+		}
 	}
 }
 
