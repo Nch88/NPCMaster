@@ -49,9 +49,6 @@ void Outputter::writeChunk(ofstream &myfile, bitset<32> *&bitsToWrite)
 
 void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> *&bitsToWrite)
 {					
-	//DEBUG
-	if (chunk.size() != 32)
-		cerr << "Outputter::writeChunkFromString bad chunk size" << endl;
 	for (int i = 0; i < 32; i++)
 	{
 		if (chunk[i] == '1')
@@ -65,7 +62,6 @@ void Outputter::writeChunkFromString(ofstream &myfile, string chunk, bitset<32> 
 
 void Outputter::writeDictionaryChunk(ofstream &myfile, string &inchunk, bitset<32> *&bitsToWrite)
 {
-	//DEBUG
 	string chunk = inchunk.substr(0, 32);
 	inchunk = inchunk.substr(32,string::npos);
 	for (int i = 0; i < 32; i++)
@@ -594,11 +590,6 @@ void Outputter::all(
 		c.ts->testTimer.stop();
 		c.ts->t_writeHuffmanDictionary += c.ts->testTimer.getTimeNano();
 	}
-
-	//DEBUG
-	ofstream testofs("TestHeadersEncodeFun.txt", ios::binary | ios::app);
-	testofs << "Stream at pos: " << ofs_dictionary.tellp() << "\n";
-	testofs.close();
 
 	ofs_compressed.close();
 	ofs_dictionary.close();
