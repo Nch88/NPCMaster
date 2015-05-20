@@ -45,6 +45,7 @@ void TestSuite::calculateAverages()
 	m_repair_pairRecord_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_repair_priorityQueue_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_repair_phraseTable_max_acrossBlocks /= nrOfBlocksCorrected;
+	m_repair_pairTracker_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	m_repair_total_acrossBlocks /= nrOfBlocksCorrected;
 
@@ -150,6 +151,7 @@ void TestSuite::resetForNextBlock()
 	m_repair_phraseTable_max_acrossBlocks += m_repair_phraseTable_max;
 	m_repair_dictionary_max_acrossBlocks += m_repair_dictionary_max;
 	m_repair_terminals_max_acrossBlocks += m_repair_terminals_max;
+	m_repair_pairTracker_max_acrossBlocks += m_repair_pairTracker_max;
 
 	m_repair_total_acrossBlocks += m_repair_total;
 
@@ -161,6 +163,7 @@ void TestSuite::resetForNextBlock()
 	m_repair_phraseTable_max = 0;
 	m_repair_dictionary_max = 0;
 	m_repair_terminals_max = 0;
+	m_repair_pairTracker_max = 0;
 
 	m_repair_total = 0;
 
@@ -321,6 +324,7 @@ void TestSuite::resetForNextTest()
 	m_repair_phraseTable_max_acrossBlocks = 0;
 	m_repair_dictionary_max_acrossBlocks = 0;
 	m_repair_terminals_max_acrossBlocks = 0;
+	m_repair_pairTracker_max_acrossBlocks = 0;
 
 	m_repair_total_acrossBlocks = 0;
 
@@ -332,6 +336,7 @@ void TestSuite::resetForNextTest()
 	m_repair_phraseTable_max = 0;
 	m_repair_dictionary_max = 0;
 	m_repair_terminals_max = 0;
+	m_repair_pairTracker_max = 0;
 
 	m_repair_total = 0;
 
@@ -536,7 +541,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Initialization - total (mb); " << (m_init_total_acrossBlocks / mb) * 4 << endl;
 
 	ofs << "Re-Pair - sequence array; " << m_repair_sequenceArray_max_acrossBlocks << endl;
-	ofs << "Re-Pair - active pairs; " << m_repair_pairRecord_max_acrossBlocks << endl;
+	ofs << "Re-Pair - active pairs; " << m_repair_pairRecord_max_acrossBlocks + m_repair_pairTracker_max_acrossBlocks << endl;
 	ofs << "Re-Pair - priority queue; " << m_repair_priorityQueue_max_acrossBlocks << endl;
 	ofs << "Re-Pair - dictinary; " << m_repair_dictionary_max_acrossBlocks << endl;
 	ofs << "Re-Pair - terminals; " << m_repair_terminals_max_acrossBlocks << endl;
@@ -557,7 +562,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Huffman encoding - total (mb); " << (m_huffEnc_total_acrossBlocks / mb) * 4 << endl;
 
 	ofs << "Normal dictionary - sequence array; " << m_norDic_sequenceArray_max_acrossBlocks << endl;
-	ofs << "Normal dictionary - dictionary; " << m_norDic_dictionary_max_acrossBlocks< endl;
+	ofs << "Normal dictionary - dictionary; " << m_norDic_dictionary_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - first codes array; " << m_norDic_firstCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - nr of codes array; " << m_norDic_nrOfCodes_max_acrossBlocks << endl;
 	ofs << "Normal dictionary - Huffman to symbol; " << m_norDic_huffmanToSymbol_max_acrossBlocks << endl;
@@ -692,6 +697,13 @@ void TestSuite::addMemory(std::string part, long value)
 		}
 
 	}
+	else if (part == "repairTracker")
+	{
+		m_repair_pairTracker_max += value;
+		m_repair_total += value;
+		updateMaxMemory(m_repair_total);
+
+	}
 	else if (part == "repairPair")
 	{
 		m_repair_pairRecord_current += value;
@@ -716,7 +728,12 @@ void TestSuite::addMemory(std::string part, long value)
 		m_repair_total += value;
 		updateMaxMemory(m_repair_total);
 	}
-
+	else if (part == "repairTerminals")
+	{
+		m_repair_terminals_max += value;
+		m_repair_total += value;
+		updateMaxMemory(m_repair_total);
+	}
 
 	//Huffman encoding
 	else if (part == "huffEncSeq")

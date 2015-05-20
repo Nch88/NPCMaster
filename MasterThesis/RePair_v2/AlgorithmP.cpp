@@ -502,6 +502,10 @@ void AlgorithmP::incrementCountLeft(
 			{
 				activePairs[symbolPrevious][Symbols].seenOnce = true;
 				activePairs[symbolPrevious][Symbols].indexFirst = indexSymbolPrevious;
+				if (c.test)
+				{
+					c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+				}
 			}
 
 			else if (activePairs[symbolPrevious][Symbols].seenOnce)
@@ -576,6 +580,10 @@ void AlgorithmP::incrementCountRight(
 		{
 			activePairs[Symbols][symbolNext].seenOnce = true;
 			activePairs[Symbols][symbolNext].indexFirst = indexSymbolLeft;
+			if (c.test)
+			{
+				c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+			}
 		}
 
 		else if (activePairs[Symbols][symbolNext].seenOnce)
