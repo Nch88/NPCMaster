@@ -313,7 +313,10 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 			
 		}
 		if (mbs <= 1000)
+		{
 			blockSize = blockSize * mbs;
+			c.blocksizemb = mbs;
+		}			
 		else
 			cout << "Block size is too large, using default of 1MB." << endl;
 	}
