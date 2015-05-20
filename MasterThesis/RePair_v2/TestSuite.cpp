@@ -92,7 +92,7 @@ void TestSuite::calculateAverages()
 	m_huffDic_terminalVector_max_acrossBlocks /= nrOfBlocksCorrected;
 
 	m_huffDic_total_acrossBlocks /= nrOfBlocksCorrected;
-
+	
 	//Statistics
 	s_maxPairs_acrossBlocks /= nrOfBlocksCorrected;
 	s_nrOfTerminals_acrossBlocks /= nrOfBlocksCorrected;
@@ -552,7 +552,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Nr of blocks; " << s_nrOfBlocks << endl;
 	ofs << "Cutoff frequency; " << cutoffValue << endl;
 
-	ofs << "Average across blocks:" << endl;
+	ofs << endl << "Average across blocks:" << endl;
 	
 	ofs << "Nr of terminals; " << s_nrOfTerminals_acrossBlocks << endl;	
 	ofs << "Nr of pairs created; " << s_maxPairs_acrossBlocks << endl;
@@ -562,7 +562,7 @@ void TestSuite::WriteToFileEncoding(int runs)
 	ofs << "Largest generation; " << s_largestGeneration_acrossBlocks << endl;	
 	ofs << "Largest generation count; " << s_largestGenerationCount_acrossBlocks << endl;	
 	
-	ofs << "Max seen in one block:" << endl;
+	ofs << endl << "Max seen in one block:" << endl;
 
 	ofs << "Nr of terminals; " << s_nrOfTerminalsMax << endl;
 	ofs << "Huffman code max length; " << s_huffmanCodeLength_max << endl;
