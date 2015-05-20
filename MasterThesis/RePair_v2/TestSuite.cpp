@@ -27,6 +27,10 @@ void TestSuite::calculateAverages()
 	double nrOfBlocksCorrected = (s_nrOfBlocks - 1.0) +
 		(s_lastBlockSize / s_fullBlockSize);
 
+	cout << "Blocks: " << s_nrOfBlocks << endl;
+	cout << "Blocks: " << s_lastBlockSize << endl;
+	cout << "Blocks: " << s_fullBlockSize << endl;
+
 	//calculate avgs of all values kept across blocks
 	//Memory
 	m_total_acrossBlocks /= nrOfBlocksCorrected;
@@ -105,6 +109,7 @@ void TestSuite::calculateAverages()
 	m_huffDic_indices_max_acrossBlocks /= nrOfBlocksCorrected;
 	m_huffDic_terminalIndices_max_acrossBlocks /= nrOfBlocksCorrected;
 
+	cout << "Terminals: " << s_nrOfTerminals_acrossBlocks << endl;
 	//Statistics
 	s_maxPairs_acrossBlocks /= nrOfBlocksCorrected;
 	s_nrOfTerminals_acrossBlocks /= nrOfBlocksCorrected;

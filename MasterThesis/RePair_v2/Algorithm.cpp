@@ -70,11 +70,11 @@ int Algorithm::run(
 			//For calculating averages across blocks
 			if (c.ts->s_nrOfBlocks == 1)
 			{
-				c.ts->s_fullBlockSize = c.ts->c_origSize;
+				c.ts->s_fullBlockSize = c.ts->s_currentBlockSize;
 			}
 			else
 			{
-				c.ts->s_lastBlockSize = c.ts->c_origSize;
+				c.ts->s_lastBlockSize = c.ts->s_currentBlockSize;
 			}
 		}
 		if (c.timing)
