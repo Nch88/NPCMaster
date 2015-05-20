@@ -70,6 +70,7 @@ public:
 	long double m_repair_pairRecord_max_acrossBlocks = 0;
 	long double m_repair_priorityQueue_max_acrossBlocks = 0;
 	long double m_repair_phraseTable_max_acrossBlocks = 0;
+	long double m_repair_pairTracker_max_acrossBlocks = 0;
 
 	long double m_repair_total_acrossBlocks = 0;
 
@@ -77,6 +78,7 @@ public:
 	long double m_repair_sequenceArray_max = 0;
 	long double m_repair_pairRecord_current = 0;
 	long double m_repair_pairRecord_max = 0;
+	long double m_repair_pairTracker_max = 0;
 	long double m_repair_priorityQueue_max = 0;
 	long double m_repair_phraseTable_max = 0;
 
