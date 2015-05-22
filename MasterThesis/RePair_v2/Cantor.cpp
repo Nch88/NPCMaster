@@ -66,24 +66,28 @@ namespace Cantor
 
 	bool isTerminal(unsigned long& input)
 	{
-		unsigned long fst, snd, thrd;
-		reverseCantor(input, fst, snd, thrd);
-		return !(snd == 256 && thrd == 0);
+		unsigned long fst, snd;
+		reverseCantor2(input, fst, snd);
+		return !(snd == 256);
 	}
 
 	bool tryGetNonTerminal(unsigned long& input, unsigned long result)
 	{
-		unsigned long fst, snd, thrd;
-		reverseCantor(input, fst, snd, thrd);
-		result = (snd == 256 && thrd == 0) ? fst : -1;
-		return (snd == 256 && thrd == 0);
+		unsigned long fst, snd;
+		reverseCantor2(input, fst, snd);
+		result = (snd == 256) ? fst : -1;
+		return (snd == 256);
 	}
 
 	unsigned long getNonTerminal(unsigned long input)
 	{
-		unsigned long fst, snd, thrd;
-		reverseCantor(input, fst, snd, thrd);
-		return (snd == 256 && thrd == 0) ? fst : -1;
+		unsigned long fst, snd;
+		reverseCantor2(input, fst, snd);
+		return (snd == 256) ? fst : -1;
 	}
 
+	unsigned long addressMerge(unsigned long in)
+	{
+
+	}
 }

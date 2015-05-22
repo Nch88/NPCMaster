@@ -9,4 +9,6 @@ namespace Cantor
 	bool isTerminal(unsigned long& input);
 	bool tryGetNonTerminal(unsigned long& input, unsigned long result);
 	unsigned long getNonTerminal(unsigned long input);
+	unsigned long cantor2(unsigned long& fst, unsigned long& snd);
+	void reverseCantor2(unsigned long& z, unsigned long& x, unsigned long& y);
 }

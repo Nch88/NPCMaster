@@ -72,26 +72,22 @@ TEST(cantor, codeAndReverse)
 {
 	unsigned long a = 1;
 	unsigned long b = 2;
-	unsigned long c = 3;
-	unsigned long ctr = Cantor::cantor(a, b, c);
-	unsigned long x, y, z;
-	Cantor::reverseCantor(ctr, x, y, z);
+	unsigned long ctr = Cantor::cantor2(a, b);
+	unsigned long x, y;
+	Cantor::reverseCantor2(ctr, x, y);
 	ASSERT_EQ(a, x);
 	ASSERT_EQ(b, y);
-	ASSERT_EQ(c, z);
 }
 
 TEST(cantor, nonTerm)
 {
 	unsigned long a = 1;
 	unsigned long b = 256;
-	unsigned long c = 0;
-	unsigned long ctr = Cantor::cantor(a, b, c);
-	unsigned long x, y, z;
-	Cantor::reverseCantor(ctr, x, y, z);
+	unsigned long ctr = Cantor::cantor2(a, b);
+	unsigned long x, y;
+	Cantor::reverseCantor2(ctr, x, y);
 	ASSERT_EQ(a, x);
 	ASSERT_EQ(b, y);
-	ASSERT_EQ(c, z);
 	ASSERT_TRUE(!Cantor::isTerminal(ctr));
 }
 
@@ -100,13 +96,11 @@ TEST(cantor, address)
 	unsigned long a;
 	a = (unsigned long)&a;
 	unsigned long b = 256;
-	unsigned long c = 0;
-	unsigned long ctr = Cantor::cantor(a, b, c);
-	unsigned long x, y, z;
-	Cantor::reverseCantor(ctr, x, y, z);
+	unsigned long ctr = Cantor::cantor2(a, b);
+	unsigned long x, y;
+	Cantor::reverseCantor2(ctr, x, y);
 	ASSERT_EQ(a, x);
 	ASSERT_EQ(b, y);
-	ASSERT_EQ(c, z);
 	ASSERT_TRUE(!Cantor::isTerminal(ctr));
 }
 
