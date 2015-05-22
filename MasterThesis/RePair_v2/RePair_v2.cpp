@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
 		dictionary.set_empty_key(-1);
 		dictionary.set_deleted_key(-2);
 
-		unsigned long  symbols(initialSymbolValue);
+		unsigned long  symbols;
 
 		Algorithm algorithm;
 		AlgorithmP algP;

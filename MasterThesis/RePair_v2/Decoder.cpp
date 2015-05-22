@@ -5,14 +5,6 @@ Decoder::Decoder(){}
 
 Decoder::~Decoder(){}
 
-void Decoder::reverseCantor(unsigned long& z, unsigned long& x, unsigned long& y)
-{
-	double w = floor((sqrt(8.0 * ((double)z) + 1.0)-1.0)/2.0);
-	unsigned long t = (pow(w, 2.0) + w) / 2.0;
-	y = z - t;
-	x = w - y;
-}
-
 void Decoder::writeSymbols(vector<CompactPair>& pairs, int index, ofstream& out, vector<unsigned long>& terms)
 {
 	writeSymbol(pairs,pairs[index].leftSymbol, out, terms);
@@ -23,9 +15,15 @@ void Decoder::writeSymbol(vector<CompactPair>& pairs, int index, ofstream& outst
 {
 	if (index < terms.size())
 	{
-		unsigned long part1, part2;
-		reverseCantor(terms[index], part1, part2);
-		if (part2 != 0)
+		unsigned long part1, part2, part3;
+		Cantor::reverseCantor(terms[index], part1, part2, part3);
+		if (part3 != 0)
+		{
+			char c[] = { (char)part1, (char)part2, (char)part3 };
+			string s(c, 3);
+			outstream << s;
+		}
+		else if (part2 != 0)
 		{
 			char c[] = { (char)part1, (char)part2 };
 			string s(c, 2);

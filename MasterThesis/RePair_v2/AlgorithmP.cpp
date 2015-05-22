@@ -726,15 +726,10 @@ void AlgorithmP::replaceAllPairs(
 		newPair[1] = sequenceArray[sequenceIndex + 1]->symbol;
 	else
 		newPair[1] = sequenceArray[sequenceIndex + 1]->next->symbol;
-	Symbols = (unsigned long)newPair;
-
-	if (Symbols < initialSymbolValue)
-	{
-		while (true)
-		{
-			cout << " (T_T) ";
-		}
-	}
+	unsigned long cast = (unsigned long)newPair;
+	unsigned long flag = 256;
+	unsigned long zero = 0;
+	Symbols = Cantor::cantor(cast,flag,zero);
 
 	if (c.test)
 		c.ts->addMemory("repairPhrase", 2);

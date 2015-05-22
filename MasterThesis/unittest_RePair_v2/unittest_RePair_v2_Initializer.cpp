@@ -3,22 +3,6 @@
 
 using namespace std;
 
-TEST(cantor, testCantorFunction)
-{
-	Initializer init;
-	unsigned long expected = 0;
-	for (unsigned long i = 0; i <= 20; ++i)
-	{
-		for (unsigned long j = 0; j <= i; ++j)
-		{
-			unsigned char fst = i - j;
-			unsigned char snd = j;
-			ASSERT_EQ(expected, init.cantor(fst, snd));
-			expected++;
-		}
-	}
-}
-
 //TEST(testInitialization, diddyTest)
 //{
 //	string filename;

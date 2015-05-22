@@ -12,11 +12,6 @@ Initializer::~Initializer()
 {
 }
 
-unsigned long Initializer::cantor(unsigned char& fst, unsigned char& snd)
-{
-	return ((0.5 * (((double)fst) + ((double)snd)) * (((double)fst) + ((double)snd) + 1.0)) + ((double)snd));
-}
-
 void Initializer::resetCompleted(
 	int blockSize,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
@@ -197,9 +192,9 @@ int Initializer::SequenceArray(
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray)
 {
-	unsigned char previousSymbol1, previousSymbol2;
-	unsigned char leftSymbol1, leftSymbol2;
-	unsigned char rightSymbol1, rightSymbol2;
+	unsigned char previousSymbol1, previousSymbol2, previousSymbol3;
+	unsigned char leftSymbol1, leftSymbol2, leftSymbol3;
+	unsigned char rightSymbol1, rightSymbol2, rightSymbol3;
 	unsigned long previousSymbol, leftSymbol, rightSymbol;
 	int symbolCount = 0;
 	long index = 0;
@@ -212,49 +207,10 @@ int Initializer::SequenceArray(
 	{
 		if (file >> noskipws >> previousSymbol2 && previousSymbol2)
 		{
-			previousSymbol = cantor(previousSymbol1, previousSymbol2);
-			addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
-			if (c.test)
+			if (file >> noskipws >> previousSymbol3 && previousSymbol3)
 			{
-				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
-				c.ts->c_origSize += 2;
-			}
-
-
-			if (file >> noskipws >> leftSymbol1 && leftSymbol1)
-			{
-				if (file >> noskipws >> leftSymbol2 && leftSymbol2)
-				{
-					leftSymbol = cantor(leftSymbol1, leftSymbol2);
-					addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
-					if (c.test)
-					{
-						c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
-						c.ts->c_origSize += 2;
-					}
-
-					setupPairRecord(
-						previousSymbol,
-						leftSymbol,
-						0,
-						activePairs,
-						sequenceArray,
-						c);
-				}
-			}
-			//Read symbols until we reach the determined block size
-			while (symbolCount < blockSize && file >> noskipws >> rightSymbol1 && rightSymbol1)
-			{
-				if (file >> noskipws >> rightSymbol2)
-				{
-					rightSymbol = cantor(rightSymbol1,rightSymbol2);
-				}
-				else //last symbol
-				{
-					rightSymbol2 = 0;
-					rightSymbol = cantor(rightSymbol1, rightSymbol2);
-				}
-				addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
+				previousSymbol = Cantor::cantorC(previousSymbol1, previousSymbol2, previousSymbol3);
+				addToSequenceArray(previousSymbol, index, symbolCount, sequenceArray);
 				if (c.test)
 				{
 					c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
@@ -262,30 +218,84 @@ int Initializer::SequenceArray(
 				}
 
 
-				//Skip if the current symbols is the right part of a pair of identical symbols
-				if (leftSymbol == rightSymbol &&
-					leftSymbol == previousSymbol &&
-					!skippedPair)
+				if (file >> noskipws >> leftSymbol1 && leftSymbol1)
 				{
-					skippedPair = true;
-					previousSymbol = leftSymbol;
-					leftSymbol = rightSymbol;
+					if (file >> noskipws >> leftSymbol2 && leftSymbol2)
+					{
+						if (file >> noskipws >> leftSymbol3 && leftSymbol3)
+						{
+							leftSymbol = Cantor::cantorC(leftSymbol1, leftSymbol2, leftSymbol3);
+							addToSequenceArray(leftSymbol, index, symbolCount, sequenceArray);
+							if (c.test)
+							{
+								c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+								c.ts->c_origSize += 2;
+							}
+
+							setupPairRecord(
+								previousSymbol,
+								leftSymbol,
+								0,
+								activePairs,
+								sequenceArray,
+								c);
+						}
+					}
 				}
-				else
+				//Read symbols until we reach the determined block size
+				while (symbolCount < blockSize && file >> noskipws >> rightSymbol1 && rightSymbol1)
 				{
+					if (file >> noskipws >> rightSymbol2)
+					{
+						if (file >> noskipws >> rightSymbol3)
+						{
+							rightSymbol = Cantor::cantorC(rightSymbol1, rightSymbol2, rightSymbol3);
+						}
+						else //two symbols left
+						{
+							rightSymbol3 = 0;
+							rightSymbol = Cantor::cantorC(rightSymbol1, rightSymbol2, rightSymbol3);
+						}						
+					}
+					else //last symbol
+					{
+						rightSymbol2 = 0;
+						rightSymbol3 = 0;
+						rightSymbol = Cantor::cantorC(rightSymbol1, rightSymbol2, rightSymbol3);
+					}
+					addToSequenceArray(rightSymbol, index, symbolCount, sequenceArray);
+					if (c.test)
+					{
+						c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
+						c.ts->c_origSize += 2;
+					}
 
-					setupPairRecord(
-						(unsigned long)leftSymbol,
-						(unsigned long)rightSymbol,
-						index - 2,
-						activePairs,
-						sequenceArray,
-						c);
+
+					//Skip if the current symbols is the right part of a pair of identical symbols
+					if (leftSymbol == rightSymbol &&
+						leftSymbol == previousSymbol &&
+						!skippedPair)
+					{
+						skippedPair = true;
+						previousSymbol = leftSymbol;
+						leftSymbol = rightSymbol;
+					}
+					else
+					{
+
+						setupPairRecord(
+							(unsigned long)leftSymbol,
+							(unsigned long)rightSymbol,
+							index - 2,
+							activePairs,
+							sequenceArray,
+							c);
 
 
-					skippedPair = false;
-					previousSymbol = leftSymbol;
-					leftSymbol = rightSymbol;
+						skippedPair = false;
+						previousSymbol = leftSymbol;
+						leftSymbol = rightSymbol;
+					}
 				}
 			}
 

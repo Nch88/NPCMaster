@@ -25,7 +25,7 @@
 #include <sparsehash/dense_hash_map>
 #include <boost\chrono.hpp>
 
-
+#include "Cantor.h"
 #include "MyTimer.h"
 #include "PairRecord.h"
 #include "SymbolRecord.h"
@@ -48,6 +48,5 @@
 #include "Decoder.h"
 
 //Constants
-const int mergeLevel = 3;
-const unsigned long initialSymbolValue = 34092610564;//130561;//max of Cantor is 2*x*(x+1) which is 130560 for x = 256
-const int cutoffValue = 6; //Must be >= 2
+//const unsigned long initialSymbolValue = 34092610564;//130561;//max of Cantor is 2*x*(x+1) which is 130560 for x = 256
+const int cutoffValue = 2; //Must be >= 2

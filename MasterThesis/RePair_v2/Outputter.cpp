@@ -231,12 +231,12 @@ void Outputter::huffmanDictionary(
 			unsigned long  symbol = huffmanToSymbol[i + 1][firstCode[i] + j];
 			long index;
 			int gen = symbolToGen[symbol];
-			if (symbol >= initialSymbolValue)
+			if (!Cantor::isTerminal(symbol))
 			{
 				index = terminals.size();
 				for (int k = 0; k < gen - 1; ++k)
 					index += pairVectors[k].size();
-				index += dict.findNonTerminalIndex(pairVectors[gen - 1], (unsigned long*)symbol);
+				index += dict.findNonTerminalIndex(pairVectors[gen - 1], (unsigned long*)Cantor::getNonTerminal(symbol));
 			}
 			else
 				index = dict.findTerminalIndex(terminals, symbol);

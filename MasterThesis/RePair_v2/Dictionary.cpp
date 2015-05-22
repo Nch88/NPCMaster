@@ -28,7 +28,7 @@ int Dictionary::findGenerations(
 	unordered_set<unsigned long >& terminals,
 	Conditions &c)
 {
-	if (symbol < initialSymbolValue)
+	if (Cantor::isTerminal(symbol))
 	{
 		//This is a terminal. Add it to the term set and return 0.
 		if (symbol != 0)
@@ -45,7 +45,7 @@ int Dictionary::findGenerations(
 	}
 	else
 	{
-		unsigned long * address = (unsigned long *)symbol;
+		unsigned long * address = (unsigned long *)Cantor::getNonTerminal(symbol);
 		int d1 = findGenerations(address[0], symbolToGen, terminals, c);
 		int d2 = findGenerations(address[1], symbolToGen, terminals, c);
 		int gen = max(d1, d2) + 1;
@@ -70,7 +70,7 @@ void Dictionary::createSupportStructures(
 	unordered_set<unsigned long > roots;
 	for each (SymbolRecord* record in sequenceArray)
 	{
-		if (record->symbol > initialSymbolValue)
+		if (!Cantor::isTerminal(record->symbol))
 		{
 			roots.emplace(record->symbol);
 			if (c.test)
@@ -107,7 +107,7 @@ void Dictionary::createSupportStructures(
 	for each (auto kvpair in symbolToGen)
 	{
 		//Push the address of each pair to their respective generation vectors
-		pairVectors[kvpair.second - 1].push_back((unsigned long *)(kvpair.first));
+		pairVectors[kvpair.second - 1].push_back((unsigned long *)Cantor::getNonTerminal(kvpair.first));
 		if (c.test)
 		{
 			c.ts->addMemory("norDicPairVectors", c.ts->pairVectorsWords);
@@ -234,11 +234,11 @@ void Dictionary::switchToOrdinalNumbers(
 				}				
 			}
 			//First symbol
-			if (pairVectors[gen][i][0] > initialSymbolValue)
+			if (!Cantor::isTerminal(pairVectors[gen][i][0]))
 			{
 				//Non-terminal
 				int gen1 = symbolToGen[pairVectors[gen][i][0]];
-				pairVectors[gen][i][0] = offsets[gen1 - 1] + findNonTerminalIndex(pairVectors[gen1 - 1], (unsigned long *)pairVectors[gen][i][0]);
+				pairVectors[gen][i][0] = offsets[gen1 - 1] + findNonTerminalIndex(pairVectors[gen1 - 1], (unsigned long *)Cantor::getNonTerminal(pairVectors[gen][i][0]));
 			}
 			else
 			{
@@ -247,11 +247,11 @@ void Dictionary::switchToOrdinalNumbers(
 			}
 
 			//Second symbol
-			if (pairVectors[gen][i][1] > initialSymbolValue)
+			if (!Cantor::isTerminal(pairVectors[gen][i][1]))
 			{
 				//Non-terminal
 				int gen2 = symbolToGen[pairVectors[gen][i][1]];
-				pairVectors[gen][i][1] = offsets[gen2 - 1] + findNonTerminalIndex(pairVectors[gen2 - 1], (unsigned long *)pairVectors[gen][i][1]);
+				pairVectors[gen][i][1] = offsets[gen2 - 1] + findNonTerminalIndex(pairVectors[gen2 - 1], (unsigned long *)Cantor::getNonTerminal(pairVectors[gen][i][1]));
 			}
 			else
 			{
@@ -297,25 +297,6 @@ void Dictionary::createDictionary(
 	switchToOrdinalNumbers(terminals, symbolToGen, pairVectors, terminalVector, c);
 }
 
-string getReverseCantor(unsigned long in)
-{
-	Decoder d;
-	unsigned long fst, snd;
-	d.reverseCantor(in, fst, snd);
-	if (snd != 0) //not the last char in an odd-length sequence
-	{
-		char c[] = { (char)fst, (char)snd };
-		string s(c, 2);
-		return s;
-	}
-	else
-	{
-		char c[] = { (char)fst };
-		string s(c, 1);
-		return s;
-	}
-}
-
 void Dictionary::decodeSymbol(
 	unsigned long  symbolIndex, 
 	vector<CompactPair> &decodedPairs,
@@ -326,7 +307,7 @@ void Dictionary::decodeSymbol(
 	//Handle left part
 	unsigned long  indexLeft = decodedPairs[symbolIndex].leftSymbol;
 	if (indexLeft < decodedTerms.size())
-		finalOutput += getReverseCantor(decodedTerms[indexLeft]);
+		finalOutput += Cantor::reverseCantorS(decodedTerms[indexLeft]);
 	else
 	{
 		//Decode left symbol
@@ -336,7 +317,7 @@ void Dictionary::decodeSymbol(
 	//Handle right part
 	unsigned long  indexRight = decodedPairs[symbolIndex].rightSymbol;
 	if (indexRight < decodedTerms.size())
-		finalOutput += getReverseCantor(decodedTerms[indexRight]);
+		finalOutput += Cantor::reverseCantorS(decodedTerms[indexRight]);
 	else
 	{
 		//Decode right symbol

@@ -861,7 +861,7 @@ TEST(huffman, decodeDictionaryDiddy)
 		dense_hash_map<long, Pair> dictionary;
 		dictionary.set_empty_key(-1);
 		dictionary.set_deleted_key(-2);
-		long symbols(initialSymbolValue);//256
+		long symbols;
 
 		Initializer init;
 		Conditions c;

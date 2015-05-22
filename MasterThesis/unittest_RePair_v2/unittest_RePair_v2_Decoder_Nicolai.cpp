@@ -3,14 +3,6 @@
 
 using namespace std;
 
-string gReverseCantor(unsigned long in)
-{
-	Decoder d;
-	unsigned long fst, snd;
-	d.reverseCantor(in, fst, snd);
-	char c[] = { (char)fst, (char)snd };
-	return c;
-}
 
 bool compareFiles(string file1, string file2, unsigned long &badChar)
 {
@@ -76,6 +68,49 @@ bool compareFilesExtended(string file1, string file2, string &fromFile1, string 
 	return false;
 }
 
+TEST(cantor, codeAndReverse)
+{
+	unsigned long a = 1;
+	unsigned long b = 2;
+	unsigned long c = 3;
+	unsigned long ctr = Cantor::cantor(a, b, c);
+	unsigned long x, y, z;
+	Cantor::reverseCantor(ctr, x, y, z);
+	ASSERT_EQ(a, x);
+	ASSERT_EQ(b, y);
+	ASSERT_EQ(c, z);
+}
+
+TEST(cantor, nonTerm)
+{
+	unsigned long a = 1;
+	unsigned long b = 256;
+	unsigned long c = 0;
+	unsigned long ctr = Cantor::cantor(a, b, c);
+	unsigned long x, y, z;
+	Cantor::reverseCantor(ctr, x, y, z);
+	ASSERT_EQ(a, x);
+	ASSERT_EQ(b, y);
+	ASSERT_EQ(c, z);
+	ASSERT_TRUE(!Cantor::isTerminal(ctr));
+}
+
+TEST(cantor, address)
+{
+	unsigned long a;
+	a = (unsigned long)&a;
+	unsigned long b = 256;
+	unsigned long c = 0;
+	unsigned long ctr = Cantor::cantor(a, b, c);
+	unsigned long x, y, z;
+	Cantor::reverseCantor(ctr, x, y, z);
+	ASSERT_EQ(a, x);
+	ASSERT_EQ(b, y);
+	ASSERT_EQ(c, z);
+	ASSERT_TRUE(!Cantor::isTerminal(ctr));
+}
+
+/*
 TEST(decoder, diddy_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -124,6 +159,8 @@ TEST(decoder, diddy_Nicolai)
 		symbols,
 		c);
 
+	algP.compact(sequenceArray, activePairs, priorityQueue, c);
+
 	out.all(
 		filename,
 		firstBlock,
@@ -143,11 +180,9 @@ TEST(decoder, diddy_Nicolai)
 		ASSERT_TRUE(true);
 	else
 		ASSERT_TRUE(false);
-
-
-
 }
-
+*/
+/*
 TEST(decoder, bible_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -177,7 +212,7 @@ TEST(decoder, bible_Nicolai)
 	c.verbose = true;
 	int priorityQueueSize;
 	int blockSize;
-	blockSize = 1048576;
+	blockSize = 1048576/2;
 	unordered_set<unsigned long> terminals;
 	vector<vector<unsigned long*>> pairs;
 	string filename = input1;
@@ -192,7 +227,7 @@ TEST(decoder, bible_Nicolai)
 	ifstream checkStream(compressedFile);
 
 	
-	if (!checkStream.is_open())
+	//if (!checkStream.is_open())
 	{
 		algo.run(
 			filename,
@@ -215,13 +250,11 @@ TEST(decoder, bible_Nicolai)
 
 	unsigned long badChar = 0;
 
-	if (compareFiles(input1, decompressedFile, badChar))
-		ASSERT_TRUE(true);
-	else
-		ASSERT_TRUE(false);
+	bool filesAreEqual = compareFiles(input1, decompressedFile, badChar);
+	ASSERT_TRUE(filesAreEqual);
 }
-
-
+*/
+/*
 TEST(decoder, world_Nicolai)
 {
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> activePairs;
@@ -804,3 +837,4 @@ TEST(decoder, pitches50MB_Nicolai)
 	bool result = compareFiles(input1, decompressedFile, badChar);
 	ASSERT_TRUE(result);
 }
+*/

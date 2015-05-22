@@ -10,13 +10,6 @@ public:
 	~Initializer();
 
 	///<summary>
-	///Maps two numbers to one using the cantor pairing function
-	///</summary>
-	///<param name="fst">Input: The first input number.</param>
-	///<param name="snd">Input: The second input number.</param>
-	unsigned long Initializer::cantor(unsigned char& fst, unsigned char& snd);
-
-	///<summary>
 	///Resets all the major structure after compression is done, deleting allocated memory.
 	///</summary>
 	///<param name="blockSize">Input: The size of the current block of data.</param>
