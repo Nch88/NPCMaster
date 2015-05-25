@@ -141,8 +141,7 @@ void Initializer::setupPairRecord(
 		if (c.test)
 		{
 			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
-			if (c.ts->firstBlock)
-				c.ts->s_maxPairs++;
+			c.ts->s_maxPairs++;
 		}
 			
 	}
@@ -218,6 +217,7 @@ int Initializer::SequenceArray(
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 				c.ts->c_origSize += 2;
+				c.ts->s_currentBlockSize += 2;
 			}
 
 
@@ -231,6 +231,7 @@ int Initializer::SequenceArray(
 					{
 						c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 						c.ts->c_origSize += 2;
+						c.ts->s_currentBlockSize += 2;
 					}
 
 					setupPairRecord(
@@ -259,6 +260,7 @@ int Initializer::SequenceArray(
 				{
 					c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 					c.ts->c_origSize += 2;
+					c.ts->s_currentBlockSize += 2;
 				}
 
 

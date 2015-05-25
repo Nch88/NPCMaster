@@ -17,4 +17,3 @@ public:
 	Conditions(bool v, bool eV, bool t, bool c, bool test);
 	~Conditions();
 };
-

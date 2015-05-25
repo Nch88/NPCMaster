@@ -87,6 +87,50 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.c_huffmanDictionary = testResults[i].c_huffmanDictionary;
 			avgResult.c_origSize = testResults[i].c_origSize;
 			avgResult.c_sequence = testResults[i].c_sequence;
+
+			avgResult.m_huffDic_firstCodes_max_acrossBlocks = testResults[i].m_huffDic_firstCodes_max_acrossBlocks;
+			avgResult.m_huffDic_huffmanToSymbol_max_acrossBlocks = testResults[i].m_huffDic_huffmanToSymbol_max_acrossBlocks;
+			avgResult.m_huffDic_nrOfCodes_max_acrossBlocks = testResults[i].m_huffDic_nrOfCodes_max_acrossBlocks;
+			avgResult.m_huffDic_pairVectors_max_acrossBlocks = testResults[i].m_huffDic_pairVectors_max_acrossBlocks;
+			avgResult.m_huffDic_phraseTable_max_acrossBlocks = testResults[i].m_huffDic_phraseTable_max_acrossBlocks;
+			avgResult.m_huffDic_symbolToGen_max_acrossBlocks = testResults[i].m_huffDic_symbolToGen_max_acrossBlocks;
+			avgResult.m_huffDic_terminalVector_max_acrossBlocks = testResults[i].m_huffDic_terminalVector_max_acrossBlocks;
+			avgResult.m_huffDic_total_acrossBlocks = testResults[i].m_huffDic_total_acrossBlocks;
+			avgResult.m_huffEnc_codeLengths_max_acrossBlocks = testResults[i].m_huffEnc_codeLengths_max_acrossBlocks;
+			avgResult.m_huffEnc_firstCodes_max_acrossBlocks = testResults[i].m_huffEnc_firstCodes_max_acrossBlocks;
+			avgResult.m_huffEnc_frequencies_max_acrossBlocks = testResults[i].m_huffEnc_frequencies_max_acrossBlocks;
+			avgResult.m_huffEnc_huffmanCodes_max_acrossBlocks = testResults[i].m_huffEnc_huffmanCodes_max_acrossBlocks;
+			avgResult.m_huffEnc_huffmanToSymbol_max_acrossBlocks = testResults[i].m_huffEnc_huffmanToSymbol_max_acrossBlocks;
+			avgResult.m_huffEnc_nextCodes_max_acrossBlocks = testResults[i].m_huffEnc_nextCodes_max_acrossBlocks;
+			avgResult.m_huffEnc_nrOfCodes_max_acrossBlocks = testResults[i].m_huffEnc_nrOfCodes_max_acrossBlocks;
+			avgResult.m_huffEnc_phraseTable_max_acrossBlocks = testResults[i].m_huffEnc_phraseTable_max_acrossBlocks;
+			avgResult.m_huffEnc_sequenceArray_max_acrossBlocks = testResults[i].m_huffEnc_sequenceArray_max_acrossBlocks;
+			avgResult.m_huffEnc_total_acrossBlocks = testResults[i].m_huffEnc_total_acrossBlocks;
+			avgResult.m_init_pairRecord_max_acrossBlocks = testResults[i].m_init_pairRecord_max_acrossBlocks;
+			avgResult.m_init_pairTracker_max_acrossBlocks = testResults[i].m_init_pairTracker_max_acrossBlocks;
+			avgResult.m_init_priorityQueue_max_acrossBlocks = testResults[i].m_init_priorityQueue_max_acrossBlocks;
+			avgResult.m_init_sequenceArray_max_acrossBlocks = testResults[i].m_init_sequenceArray_max_acrossBlocks;
+			avgResult.m_init_total_acrossBlocks = testResults[i].m_init_total_acrossBlocks;
+			avgResult.m_norDic_firstCodes_max_acrossBlocks = testResults[i].m_norDic_firstCodes_max_acrossBlocks;
+			avgResult.m_norDic_huffmanToSymbol_max_acrossBlocks = testResults[i].m_norDic_huffmanToSymbol_max_acrossBlocks;
+			avgResult.m_norDic_nrOfCodes_max_acrossBlocks = testResults[i].m_norDic_nrOfCodes_max_acrossBlocks;
+			avgResult.m_norDic_offsets_max_acrossBlocks = testResults[i].m_norDic_offsets_max_acrossBlocks;
+			avgResult.m_norDic_pairVectors_max_acrossBlocks = testResults[i].m_norDic_pairVectors_max_acrossBlocks;
+			avgResult.m_norDic_phraseTable_max_acrossBlocks = testResults[i].m_norDic_phraseTable_max_acrossBlocks;
+			avgResult.m_norDic_roots_max_acrossBlocks = testResults[i].m_norDic_roots_max_acrossBlocks;
+			avgResult.m_norDic_sequenceArray_max_acrossBlocks = testResults[i].m_norDic_sequenceArray_max_acrossBlocks;
+			avgResult.m_norDic_supportStructures_total_acrossBlocks = testResults[i].m_norDic_supportStructures_total_acrossBlocks;
+			avgResult.m_norDic_symbolToGen_max_acrossBlocks = testResults[i].m_norDic_symbolToGen_max_acrossBlocks;
+			avgResult.m_norDic_terminals_max_acrossBlocks = testResults[i].m_norDic_terminals_max_acrossBlocks;
+			avgResult.m_norDic_terminalVector_max_acrossBlocks = testResults[i].m_norDic_terminalVector_max_acrossBlocks;
+			avgResult.m_norDic_total_acrossBlocks = testResults[i].m_norDic_total_acrossBlocks;
+			avgResult.m_repair_pairRecord_max_acrossBlocks = testResults[i].m_repair_pairRecord_max_acrossBlocks;
+			avgResult.m_repair_phraseTable_max_acrossBlocks = testResults[i].m_repair_phraseTable_max_acrossBlocks;
+			avgResult.m_repair_priorityQueue_max_acrossBlocks = testResults[i].m_repair_priorityQueue_max_acrossBlocks;
+			avgResult.m_repair_sequenceArray_max_acrossBlocks = testResults[i].m_repair_sequenceArray_max_acrossBlocks;
+			avgResult.m_repair_total_acrossBlocks = testResults[i].m_repair_total_acrossBlocks;
+			avgResult.m_total_acrossBlocks = testResults[i].m_total_acrossBlocks;
+
 			avgResult.m_huffDic_firstCodes_max = testResults[i].m_huffDic_firstCodes_max;
 			avgResult.m_huffDic_huffmanToSymbol_max = testResults[i].m_huffDic_huffmanToSymbol_max;
 			avgResult.m_huffDic_nrOfCodes_max = testResults[i].m_huffDic_nrOfCodes_max;
@@ -136,16 +180,35 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.m_repair_sequenceArray_max = testResults[i].m_repair_sequenceArray_max;
 			avgResult.m_repair_total = testResults[i].m_repair_total;
 			avgResult.m_total = testResults[i].m_total;
+			avgResult.s_avgNrOfPhrases_acrossBlocks = testResults[i].s_avgNrOfPhrases_acrossBlocks;
+			avgResult.s_filename = testResults[i].s_filename;
+			avgResult.s_huffmanCodeLength_max_acrossBlocks = testResults[i].s_huffmanCodeLength_max_acrossBlocks;
+			avgResult.s_largestGeneration_acrossBlocks = testResults[i].s_largestGeneration_acrossBlocks;
+			avgResult.s_largestGenerationMax_acrossBlocks = testResults[i].s_largestGenerationMax_acrossBlocks;
+			avgResult.s_largestGenerationCount_acrossBlocks = testResults[i].s_largestGenerationCount_acrossBlocks;
+			avgResult.s_largestGenerationCountMax_acrossBlocks = testResults[i].s_largestGenerationCountMax_acrossBlocks;
+			avgResult.s_maxPairs_acrossBlocks = testResults[i].s_maxPairs_acrossBlocks;
+			avgResult.s_nrOfBlocks = testResults[i].s_nrOfBlocks;
+			avgResult.s_nrOfGenerations_acrossBlocks = testResults[i].s_nrOfGenerations_acrossBlocks;
+			avgResult.s_nrOfGenerationsMax_acrossBlocks = testResults[i].s_nrOfGenerationsMax_acrossBlocks;
+			avgResult.s_nrOfPhrases_acrossBlocks = testResults[i].s_nrOfPhrases_acrossBlocks;
+			avgResult.s_nrOfTerminals_acrossBlocks = testResults[i].s_nrOfTerminals_acrossBlocks;
+			avgResult.s_nrOfTerminalsMax_acrossBlocks = testResults[i].s_nrOfTerminalsMax_acrossBlocks;
+
 			avgResult.s_avgNrOfPhrases = testResults[i].s_avgNrOfPhrases;
 			avgResult.s_filename = testResults[i].s_filename;
 			avgResult.s_huffmanCodeLength_max = testResults[i].s_huffmanCodeLength_max;
 			avgResult.s_largestGeneration = testResults[i].s_largestGeneration;
+			avgResult.s_largestGenerationMax = testResults[i].s_largestGenerationMax;
 			avgResult.s_largestGenerationCount = testResults[i].s_largestGenerationCount;
+			avgResult.s_largestGenerationCountMax = testResults[i].s_largestGenerationCountMax;
 			avgResult.s_maxPairs = testResults[i].s_maxPairs;
-			avgResult.s_nrOfBlocks = testResults[i].s_nrOfBlocks;
 			avgResult.s_nrOfGenerations = testResults[i].s_nrOfGenerations;
+			avgResult.s_nrOfGenerationsMax = testResults[i].s_nrOfGenerationsMax;
 			avgResult.s_nrOfPhrases = testResults[i].s_nrOfPhrases;
 			avgResult.s_nrOfTerminals = testResults[i].s_nrOfTerminals;
+			avgResult.s_nrOfTerminalsMax = testResults[i].s_nrOfTerminalsMax;
+
 		}
 
 		avgResult.t_decompression_count += testResults[i].t_decompression.count() / testResults.size();
