@@ -868,19 +868,6 @@ void AlgorithmP::manageLowerPriorityLists(
 			cData,
 			c);
 	}
-	//DEBUG
-	int count = 0;
-	for (int i = 0; i < cutoffValue - 2; i++)
-	{
-		PairRecord *p = priorityQueue[i];
-		while (p)
-		{
-			count++;
-			p = p->nextPair;
-		}
-		cout << "# of pairs with freq " << i + 2 << " is " << count << endl;
-		count = 0;
-	}
 }
 
 //Manages active pairs with frequencies greater than sqrt(n)
