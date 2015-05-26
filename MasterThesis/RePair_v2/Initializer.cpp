@@ -304,11 +304,7 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 			rightSymbol.second.seenOnce = false; //Reset as we need this to be false for later checks
 			if (rightSymbol.second.pairRecord)
 			{
-				if (rightSymbol.second.pairRecord->count > priorityQueueSize)
-					priorityIndex = priorityQueueSize - 1;
-
-				else
-					priorityIndex = rightSymbol.second.pairRecord->count - 2;
+				priorityIndex = rightSymbol.second.pairRecord->count - 2;
 
 				if (priorityQueue[priorityIndex] == nullptr)
 					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;

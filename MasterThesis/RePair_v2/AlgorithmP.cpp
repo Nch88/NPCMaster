@@ -205,10 +205,6 @@ void AlgorithmP::addToPriorityQueueList(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
-	//Put pairs with large frequencies in the last PQ entry
-	if (index > priorityQueue.size() - 1)
-		index = priorityQueue.size() - 1;
-
 	if (priorityQueue[index])
 	{
 		tracker->pairRecord->nextPair =
@@ -229,16 +225,16 @@ void AlgorithmP::moveDownInPriorityQueue(
 	{
 		removeFromPriorityQueueList(0, tracker, priorityQueue);
 	}
-	//Unless we still belong in the entry for very large frequency pairs move down one entry
-	else if (tracker->pairRecord->count - 1 <= priorityQueue.size())
+	else
 	{
+		//Move down one entry
 		removeFromPriorityQueueList(
 			tracker->pairRecord->count - 2,
-			tracker, 
+			tracker,
 			priorityQueue);
 		addToPriorityQueueList(
-			tracker->pairRecord->count - 3, 
-			tracker, 
+			tracker->pairRecord->count - 3,
+			tracker,
 			priorityQueue);
 	}
 }
@@ -247,18 +243,14 @@ void AlgorithmP::moveUpInPriorityQueue(
 	PairTracker *& tracker,
 	vector<PairRecord*>& priorityQueue)
 {
-	//Move up unless we are already in entry for large frequencies
-	if (tracker->pairRecord->count - 1 < priorityQueue.size())
-	{
-		removeFromPriorityQueueList(
-			tracker->pairRecord->count - 2,
-			tracker,
-			priorityQueue);
-		addToPriorityQueueList(
-			tracker->pairRecord->count - 1,
-			tracker,
-			priorityQueue);
-	}
+	removeFromPriorityQueueList(
+		tracker->pairRecord->count - 2,
+		tracker,
+		priorityQueue);
+	addToPriorityQueueList(
+		tracker->pairRecord->count - 1,
+		tracker,
+		priorityQueue);
 }
 
 void AlgorithmP::decrementCount(
@@ -842,7 +834,7 @@ void AlgorithmP::manageOneList(
 	}
 }
 
-void AlgorithmP::manageLowerPriorityLists(
+void AlgorithmP::managePriorityLists(
 	vector<SymbolRecord*> & sequenceArray,
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>>& activePairs,
 	vector<PairRecord*>& priorityQueue,
@@ -851,7 +843,7 @@ void AlgorithmP::manageLowerPriorityLists(
 	Conditions& c)
 {
 	//Runs through all entries from second last to first
-	for (long i = priorityQueue.size() - 2; i >= cutoffValue - 2; i--)
+	for (long i = priorityQueue.size() - 1; i >= cutoffValue - 2; i--)
 	{		
 		manageOneList(
 			i,
@@ -861,83 +853,6 @@ void AlgorithmP::manageLowerPriorityLists(
 			Symbols,
 			cData,
 			c);
-	}
-}
-
-//Manages active pairs with frequencies greater than sqrt(n)
-void AlgorithmP::manageHighPriorityList(
-	vector<SymbolRecord*> & sequenceArray,
-	dense_hash_map<unsigned long, dense_hash_map<unsigned long , PairTracker>>& activePairs,
-	vector<PairRecord*>& priorityQueue,
-	unsigned long & Symbols,
-	CompactionData &cData,
-	Conditions& c)
-{
-	PairRecord * tmpPairRecord = nullptr;
-	PairRecord * tmpPairRecordSelected = nullptr;
-	long sequenceIndex = 0;
-	long last = priorityQueue.size() - 1;
-
-	while (priorityQueue[last])
-	{
-		tmpPairRecordSelected = priorityQueue[last];
-		tmpPairRecord = priorityQueue[last];
-
-		//Find pair with most occurences
-		while (tmpPairRecord->nextPair)
-		{
-			tmpPairRecord = tmpPairRecord->nextPair;
-			if (tmpPairRecord->count > tmpPairRecordSelected->count)
-				tmpPairRecordSelected = tmpPairRecord;
-		}
-		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
-
-		//Remove current pair from priority queue
-		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
-		{
-			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
-			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
-		}
-		else if (tmpPairRecordSelected->previousPair)
-		{
-			tmpPairRecordSelected->previousPair->nextPair = nullptr;
-		}
-		else if (tmpPairRecordSelected->nextPair)
-		{
-			priorityQueue[last] = tmpPairRecordSelected->nextPair;
-			priorityQueue[last]->previousPair = nullptr;
-		}
-		else
-			priorityQueue[last] = nullptr;
-		tmpPairRecordSelected->previousPair = nullptr;
-		tmpPairRecordSelected->nextPair = nullptr;
-
-		//Find the count of the pair to be replaced and update counter for compaction
-		if (c.compact)
-		{
-			long i = sequenceIndex;
-			long s1 = sequenceArray[i]->symbol;
-			long s2 = sequenceArray[i + 1]->symbol != 0 ? sequenceArray[i + 1]->symbol : sequenceArray[i + 1]->next->symbol;
-			cData.replaceCount += activePairs[s1][s2].pairRecord->count;
-		}
-
-		replaceAllPairs(
-			sequenceIndex,
-			sequenceArray,
-			activePairs,
-			priorityQueue,
-			Symbols,
-			c);
-
-		//Compaction
-		if (c.compact)
-		{
-			if (cData.replaceCount > cData.compactTotal)
-			{
-				compact(sequenceArray, activePairs, priorityQueue, c);
-				cData.updateCompactTotal();
-			}
-		}
 	}
 }
 
@@ -957,15 +872,7 @@ void AlgorithmP::run(
 		c.ts->addMemory("repairPrio", c.ts->m_init_priorityQueue_max);
 	}
 
-	manageHighPriorityList(
-		sequenceArray,
-		activePairs,
-		priorityQueue,
-		Symbols,
-		cData,
-		c);
-
-	manageLowerPriorityLists(
+	managePriorityLists(
 		sequenceArray,
 		activePairs,
 		priorityQueue,

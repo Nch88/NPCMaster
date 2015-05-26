@@ -173,17 +173,8 @@ public:
 		CompactionData &cData,
 		Conditions& c);
 
-	//Runs though the priority list from second last to first entry, replacing all pairs
-	void AlgorithmP::manageLowerPriorityLists(
-		vector<SymbolRecord*> & sequenceArray,
-		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
-		unsigned long  & Symbols,
-		CompactionData &cData,
-		Conditions& c);
-
-	//Replaces all pairs in decreasing order of frequency from the last list in the priority queue
-	void AlgorithmP::manageHighPriorityList(
+	//Runs though the priority list from last to first entry, replacing all pairs
+	void AlgorithmP::managePriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
 		vector<PairRecord*>& priorityQueue,

@@ -60,7 +60,7 @@ int Algorithm::run(
 			t.stop();
 			cout << " - Timing: Init of Sequence array and active pairs took " << t.getTime() << " ms" << endl;
 		}
-		priorityQueueSize = sqrt(sequenceArray.size());
+		priorityQueueSize = sequenceArray.size();
 		priorityQueue.resize(priorityQueueSize);
 		if (c.test)
 		{
