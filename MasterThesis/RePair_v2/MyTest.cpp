@@ -13,7 +13,7 @@ MyTest::~MyTest()
 
 int MyTest::SanityCheck(
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*>& priorityQueue, dense_hash_map<unsigned long ,
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue, dense_hash_map<unsigned long ,
 	dense_hash_map<unsigned long , PairTracker >> &activePairs)
 {
 	return SanityCheckThreadingPointers(sequenceArray) + SanityCheckPairRecords(sequenceArray, priorityQueue, activePairs);
@@ -131,16 +131,16 @@ string MyTest::SanityCheckThreadingPointersDetailed(vector<SymbolRecord*> & sequ
 	return output;
 }
 
-string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue)
+string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceArray, vector<pair<PairRecord*,PairRecord*>> & priorityQueue)
 {
 	SymbolRecord* sr;
 	string result = "";
 	//Check priority queue
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
-		if (priorityQueue[i])
+		if (priorityQueue[i].first)
 		{
-			PairRecord* current = priorityQueue[i];
+			PairRecord* current = priorityQueue[i].first;
 			int pairCount = 0;
 			do
 			{
@@ -187,7 +187,7 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 	return result + "\n\n";
 }
 
-int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<PairRecord*>& priorityQueue, dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs)
+int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<pair<PairRecord*,PairRecord*>> & priorityQueue, dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs)
 {
 	bool sane = true;
 	int result = 0;
@@ -195,9 +195,9 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 	//Check priority queue
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
-		if (priorityQueue[i])
+		if (priorityQueue[i].first)
 		{
-			PairRecord* current = priorityQueue[i];
+			PairRecord* current = priorityQueue[i].first;
 			do
 			{
 				sane = sane && ((i < priorityQueue.size() - 1 && current->count == i + 2) || current->count >= i + 2) && (current->arrayIndexFirst < current->arrayIndexLast);
@@ -293,13 +293,13 @@ void MyTest::ActivePairs(string msg, dense_hash_map<unsigned long , dense_hash_m
 
 bool MyTest::inPriorityQueue(
 	PairRecord * pairRecord,
-	vector<PairRecord*> & priorityQueue)
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue)
 {
 	PairRecord * tmpPairRecord;
 
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
-		tmpPairRecord = priorityQueue[i];
+		tmpPairRecord = priorityQueue[i].first;
 
 		while (tmpPairRecord)
 		{
@@ -313,13 +313,13 @@ bool MyTest::inPriorityQueue(
 
 bool MyTest::inPriorityQueueAtPosition(
 	PairRecord * pairRecord,
-	vector<PairRecord*> & priorityQueue,
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 	long index)
 {
 	PairRecord * tmpPairRecord;
 
 	
-	tmpPairRecord = priorityQueue[index];
+	tmpPairRecord = priorityQueue[index].first;
 
 	while (tmpPairRecord)
 	{

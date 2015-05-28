@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
 		activePairs.set_deleted_key(-2);
 
 		vector<SymbolRecord*> sequenceArray;
-		vector<PairRecord*> priorityQueue;
+		vector<pair<PairRecord*,PairRecord*>> priorityQueue;
 		dense_hash_map<unsigned long , Pair> dictionary;
 		dictionary.set_empty_key(-1);
 		dictionary.set_deleted_key(-2);

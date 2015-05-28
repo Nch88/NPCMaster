@@ -30,11 +30,11 @@ public:
 	void Initializer::resetForNextBlock(
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		vector<PairRecord*> & priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	void Initializer::resetBeforeOutput(
 		dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
-		vector<PairRecord*> & priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	///<summary>
 	///Adds a symbol to the sequence array. If a record does not yet exist, memory is allocated for a new one.
@@ -91,6 +91,6 @@ public:
 	void PriorityQueue(
 		int priorityQueueSize,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*> & priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		Conditions & c);
 };

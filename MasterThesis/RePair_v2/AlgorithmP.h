@@ -14,7 +14,7 @@ public:
 	void AlgorithmP::compact(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		Conditions &c);
 
 	void removeSymbolThreadingPointers(
@@ -37,20 +37,20 @@ public:
 	void removeFromPriorityQueueList(
 		long index,
 		PairTracker *& tracker,
-		vector<PairRecord*>& priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	void addToPriorityQueueList(
 		long index,
 		PairTracker *& tracker,
-		vector<PairRecord*>& priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	void moveDownInPriorityQueue(
 		PairTracker *& tracker,
-		vector<PairRecord*>& priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	void AlgorithmP::moveUpInPriorityQueue(
 		PairTracker *& tracker,
-		vector<PairRecord*>& priorityQueue);
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue);
 
 	///Updates the records of a pair that just had an instance removed
 	void decrementCount(
@@ -58,7 +58,7 @@ public:
 		long & indexSymbolRight,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		PairTracker *& tracker,
 		Conditions& c);
 
@@ -69,7 +69,7 @@ public:
 		long & indexSymbolLeft,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		Conditions& c);
 
 	//Decrements count and updates structures of the pair whose left symbol
@@ -79,7 +79,7 @@ public:
 		long & indexSymbolNext,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray, 
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		Conditions& c);
 
 	void incrementCountLeft(
@@ -87,7 +87,7 @@ public:
 		long & indexSymbolLeft,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		bool &skip,
 		Conditions& c);
@@ -97,7 +97,7 @@ public:
 		long & indexSymbolNext,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		vector<PairRecord*>& priorityQueue, 
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue, 
 		unsigned long  & Symbols,
 		Conditions& c);
 
@@ -129,7 +129,7 @@ public:
 		long & indexSymbolNext,
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		bool& skip,
 		Conditions& c);
@@ -149,7 +149,7 @@ public:
 		long sequenceIndex,
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		Conditions& c);
 
@@ -158,7 +158,7 @@ public:
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		CompactionData &cData,
 		Conditions& c);
@@ -168,7 +168,7 @@ public:
 		long i,
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		CompactionData &cData,
 		Conditions& c);
@@ -177,7 +177,7 @@ public:
 	void AlgorithmP::manageLowerPriorityLists(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		CompactionData &cData,
 		Conditions& c);
@@ -186,7 +186,7 @@ public:
 	void AlgorithmP::manageHighPriorityList(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		CompactionData &cData,
 		Conditions& c);
@@ -195,7 +195,7 @@ public:
 	void AlgorithmP::run(
 		vector<SymbolRecord*> & sequenceArray,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs,
-		vector<PairRecord*>& priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & Symbols,
 		Conditions& c);
 };

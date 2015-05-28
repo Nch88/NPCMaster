@@ -15,7 +15,7 @@ public:
 		int blockSize,
 		dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 		vector<SymbolRecord*> & sequenceArray,
-		vector<PairRecord*> & priorityQueue,
+		vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 		unsigned long  & symbols);
 };
 

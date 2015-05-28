@@ -42,7 +42,7 @@ void Initializer::resetCompleted(
 void Initializer::resetForNextBlock(
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
 	vector<SymbolRecord*> & sequenceArray,
-	vector<PairRecord*> & priorityQueue)
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue)
 {
 	//We do not free the memory between blocks as entries will be reused
 	for (int i = 0; i < sequenceArray.size(); i++)
@@ -57,7 +57,7 @@ void Initializer::resetForNextBlock(
 
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
-		priorityQueue[i] = nullptr;
+		priorityQueue[i].first = nullptr;
 	}
 
 	//Here we need to free memory between blocks
@@ -75,12 +75,12 @@ void Initializer::resetForNextBlock(
 
 void Initializer::resetBeforeOutput(
 	dense_hash_map<unsigned long, dense_hash_map<unsigned long, PairTracker>> &activePairs,
-	vector<PairRecord*> & priorityQueue)
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue)
 {
 
 	for (int i = 0; i < priorityQueue.size(); i++)
 	{
-		priorityQueue[i] = nullptr;
+		priorityQueue[i].first = nullptr;
 	}
 
 	//Here we need to free memory between blocks
@@ -285,7 +285,7 @@ int Initializer::SequenceArray(
 
 void Initializer::PriorityQueue(int priorityQueueSize,
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>> &activePairs,
-	vector<PairRecord*> & priorityQueue,
+	vector<pair<PairRecord*,PairRecord*>> & priorityQueue,
 	Conditions & c)
 {
 	int priorityIndex; //Pair count - 2, PQ only counts active pairs
@@ -306,19 +306,20 @@ void Initializer::PriorityQueue(int priorityQueueSize,
 			{
 				if (rightSymbol.second.pairRecord->count > priorityQueueSize)
 					priorityIndex = priorityQueueSize - 1;
-
 				else
 					priorityIndex = rightSymbol.second.pairRecord->count - 2;
 
-				if (priorityQueue[priorityIndex] == nullptr)
-					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;
-
+				if (priorityQueue[priorityIndex].first == nullptr)
+				{
+					priorityQueue[priorityIndex].first = rightSymbol.second.pairRecord;
+					priorityQueue[priorityIndex].second = rightSymbol.second.pairRecord;
+				}
 				else
 				{
-					tmpRecord = priorityQueue[priorityIndex];
+					tmpRecord = priorityQueue[priorityIndex].first;
 					
 					tmpRecord->previousPair = rightSymbol.second.pairRecord;
-					priorityQueue[priorityIndex] = rightSymbol.second.pairRecord;
+					priorityQueue[priorityIndex].first = rightSymbol.second.pairRecord;
 					rightSymbol.second.pairRecord->nextPair = tmpRecord;
 					rightSymbol.second.pairRecord->previousPair = nullptr;
 				}
