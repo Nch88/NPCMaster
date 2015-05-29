@@ -187,6 +187,28 @@ string MyTest::SanityCheckPairRecordsDetailed(vector<SymbolRecord*> & sequenceAr
 	return result + "\n\n";
 }
 
+bool MyTest::SanityCheckPriorityQueue(vector<pair<PairRecord*, PairRecord*>> & priorityQueue)
+{
+	bool sane = true;
+	//Check priority queue
+	for (int i = 0; i < priorityQueue.size(); i++)
+	{
+		if (priorityQueue[i].first)
+		{
+			PairRecord* current = priorityQueue[i].first;
+			sane = sane && (priorityQueue[i].first->previousPair == nullptr);
+			do
+			{
+				if (!current->nextPair)
+					sane = sane && (priorityQueue[i].second == current);
+				current = current->nextPair;
+			} while (current);
+
+		}
+	}
+	return sane;
+}
+
 int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector<pair<PairRecord*,PairRecord*>> & priorityQueue, dense_hash_map<unsigned long , dense_hash_map<unsigned long , PairTracker>>& activePairs)
 {
 	bool sane = true;
@@ -198,6 +220,7 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 		if (priorityQueue[i].first)
 		{
 			PairRecord* current = priorityQueue[i].first;
+			sane = sane && (priorityQueue[i].first->previousPair == nullptr);
 			do
 			{
 				sane = sane && ((i < priorityQueue.size() - 1 && current->count == i + 2) || current->count >= i + 2) && (current->arrayIndexFirst < current->arrayIndexLast);
@@ -208,8 +231,11 @@ int MyTest::SanityCheckPairRecords(vector<SymbolRecord*> & sequenceArray, vector
 				sr = sequenceArray[current->arrayIndexLast];
 				sane = sane && (sr->next == nullptr) && (sr->previous != nullptr);
 
+				if (!current->nextPair)
+					sane = sane && (priorityQueue[i].second == current);
 				current = current->nextPair;
 			} while (current);
+			
 		}
 	}
 	if (!sane)

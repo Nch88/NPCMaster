@@ -627,7 +627,7 @@ void AlgorithmP::replaceInstanceOfPair(
 		activePairs,
 		sequenceArray,
 		priorityQueue,
-		c);
+		c); 
 
 	//Decrement count of by
 	decrementCountRight(
@@ -771,7 +771,7 @@ void AlgorithmP::replaceAllPairs(
 			Symbols,
 			skip,
 			c);
-		
+
 	} while (nextSymbol);
 }
 
@@ -800,7 +800,7 @@ void AlgorithmP::manageOneEntryOnList(
 		priorityQueue[i].first = nullptr;
 	tmpPairRecord->previousPair = nullptr;
 	tmpPairRecord->nextPair = nullptr;
-	
+
 	//Find the count of the pair to be replaced and update counter for compaction
 	if (c.compact)
 	{
@@ -902,22 +902,31 @@ void AlgorithmP::manageHighPriorityList(
 		sequenceIndex = tmpPairRecordSelected->arrayIndexFirst;
 
 		//Remove current pair from priority queue
-		if (tmpPairRecordSelected->previousPair && tmpPairRecordSelected->nextPair)
+		//Middle of list, connect the remaining parts
+		if (tmpPairRecordSelected->nextPair && tmpPairRecordSelected->previousPair)
 		{
+			tmpPairRecordSelected->nextPair->previousPair =	tmpPairRecordSelected->previousPair;
 			tmpPairRecordSelected->previousPair->nextPair = tmpPairRecordSelected->nextPair;
-			tmpPairRecordSelected->nextPair->previousPair = tmpPairRecordSelected->previousPair;
 		}
-		else if (tmpPairRecordSelected->previousPair)
-		{
-			tmpPairRecordSelected->previousPair->nextPair = nullptr;
-		}
+		//First in list
 		else if (tmpPairRecordSelected->nextPair)
 		{
 			priorityQueue[last].first = tmpPairRecordSelected->nextPair;
-			priorityQueue[last].first->previousPair = nullptr;
+			tmpPairRecordSelected->nextPair->previousPair = nullptr;
 		}
+		//Last in list
+		else if (tmpPairRecordSelected->previousPair)
+		{
+			priorityQueue[last].second = tmpPairRecordSelected->previousPair;
+			tmpPairRecordSelected->previousPair->nextPair = nullptr;
+		}
+		//Only in list
 		else
+		{
 			priorityQueue[last].first = nullptr;
+			priorityQueue[last].second = nullptr;
+		}
+
 		tmpPairRecordSelected->previousPair = nullptr;
 		tmpPairRecordSelected->nextPair = nullptr;
 
