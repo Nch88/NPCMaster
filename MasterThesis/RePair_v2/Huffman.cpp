@@ -439,9 +439,7 @@ void Huffman::decodeDictionary(
 	dense_hash_map<unsigned long , dense_hash_map<unsigned long , unsigned long >> &symbolIndices)
 	//Outputs symbolIndices
 {
-	//DEBUG
-	MyTest test;
-
+	
 	GammaCode gc;
 	//void GammaCode::gammaToInt (string &prefix, string gamma, vector<unsigned long > actual, unsigned long  count);
 	if (bitstream.is_open())
@@ -528,10 +526,6 @@ void Huffman::decodeDictionary(
 				intValues.pop_back();											//Remove index we already processed
 			}
 		}
-		//DEBUG
-		if (!test.prefixIsGood(prefix))
-			cout << "Huffman::decodeDictionary bad prefix: " << prefix << endl;
-
 	}
 }
 

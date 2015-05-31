@@ -173,7 +173,11 @@ void Dictionary::switchToOrdinalNumbers(
 	{
 		if (c.ts->firstBlock)
 		{
-			c.ts->s_nrOfTerminals = terminalVector.size();
+			if (terminalVector.size() > c.ts->s_nrOfTerminalsMax)
+			{
+				c.ts->s_nrOfTerminalsMax = terminalVector.size();
+			}
+			c.ts->s_nrOfTerminals += terminalVector.size();
 		}
 	}
 
@@ -211,10 +215,14 @@ void Dictionary::switchToOrdinalNumbers(
 		
 	if (c.test)
 	{
-		if (pairVectors.size() > c.ts->s_nrOfGenerations && c.ts->firstBlock)
+		if (c.ts->firstBlock)
 		{
-			c.ts->s_nrOfGenerations = pairVectors.size();
-		}		
+			if (pairVectors.size() > c.ts->s_nrOfGenerationsMax)
+			{
+				c.ts->s_nrOfGenerationsMax = pairVectors.size();
+			}
+			c.ts->s_nrOfGenerations += pairVectors.size();
+		}
 	}
 	
 	for (int gen = 1; gen < pairVectors.size(); ++gen)
@@ -226,12 +234,17 @@ void Dictionary::switchToOrdinalNumbers(
 				if (c.ts->firstBlock)
 				{
 					c.ts->s_nrOfPhrases++;
+					if (pairVectors[gen].size() > c.ts->s_largestGenerationCountMax)
+					{
+						c.ts->s_largestGenerationCountMax = pairVectors[gen].size();
+						c.ts->s_largestGenerationMax = gen;
+					}
 					if (pairVectors[gen].size() > c.ts->s_largestGenerationCount)
 					{
 						c.ts->s_largestGenerationCount = pairVectors[gen].size();
 						c.ts->s_largestGeneration = gen;
 					}
-				}				
+				}
 			}
 			//First symbol
 			if (pairVectors[gen][i][0] > initialSymbolValue)
@@ -289,7 +302,7 @@ void Dictionary::createDictionary(
 	{
 		if (c.ts->firstBlock)
 		{
-			c.ts->m_norDic_supportStructures_total = c.ts->m_norDic_total;
+			c.ts->m_norDic_supportStructures_total += c.ts->m_norDic_total;
 			c.ts->m_norDic_total -= c.ts->m_norDic_roots_max;
 		}		
 	}

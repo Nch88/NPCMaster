@@ -17,14 +17,17 @@ Conditions::Conditions(bool v, bool eV, bool t, bool c, bool test)
 
 Conditions::~Conditions()
 {
-	if (this->ts)
-	{
-		delete ts;
-	}
 }
 
 long double Conditions::estimatedResultSize()
 {
-	//+ (100.0 - offset_terminals) / 2.0
-	return (1.0 / ((offset_terminals + (100.0 - offset_terminals) / 8.0) / 100.0)) * offset_dictionaryEntries + 0.25 * offset_sequenceSize;
+	double base = 100.0;
+	double baseFactor = 0.25;
+	double terminalFactor = (abs(base - offset_terminals) / base / 4.4);
+	double sequenceFactor = baseFactor - terminalFactor;
+	if (sequenceFactor <= 0)
+	{
+		sequenceFactor = 0.02;
+	}
+	return offset_dictionaryEntries + (sequenceFactor * offset_sequenceSize);
 }

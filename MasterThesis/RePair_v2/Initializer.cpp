@@ -136,8 +136,8 @@ void Initializer::setupPairRecord(
 		if (c.test)
 		{
 			c.ts->addMemory("initPair", c.ts->pairRecordWords); //Dense hash map uses extra memory
-			if (c.ts->firstBlock)
-				c.ts->s_maxPairs++;
+			
+			c.ts->s_maxPairs++;
 		}
 			
 	}
@@ -211,6 +211,7 @@ int Initializer::SequenceArray(
 		{
 			c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 			c.ts->c_origSize++;
+			c.ts->s_currentBlockSize++;
 		}
 			
 
@@ -222,6 +223,7 @@ int Initializer::SequenceArray(
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 				c.ts->c_origSize++;
+				c.ts->s_currentBlockSize++;
 			}
 			
 			setupPairRecord(
@@ -242,6 +244,7 @@ int Initializer::SequenceArray(
 			{
 				c.ts->addMemory("initSeq", c.ts->symbolRecordWords);
 				c.ts->c_origSize++;
+				c.ts->s_currentBlockSize++;
 			}
 			
 			
@@ -282,10 +285,7 @@ int Initializer::SequenceArray(
 
 	
 	c.offset_terminals = terminals.size();
-	//DEBUG
-	cout << "Terminals: " << c.offset_terminals << endl;
 	
-
 	return 0;
 }
 

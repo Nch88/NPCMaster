@@ -477,7 +477,7 @@ void AlgorithmP::incrementCountLeft(
 
 				if (c.test)
 				{
-					c.ts->addMemory("initTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+					c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
 				}
 			}
 
@@ -491,8 +491,7 @@ void AlgorithmP::incrementCountLeft(
 				if (c.test)
 				{
 					c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
-					if (c.ts->firstBlock)
-						c.ts->s_maxPairs++;
+					c.ts->s_maxPairs++;
 				}
 					
 
@@ -558,7 +557,7 @@ void AlgorithmP::incrementCountRight(
 
 			if (c.test)
 			{
-				c.ts->addMemory("initTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+				c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
 			}
 		}
 
@@ -572,8 +571,7 @@ void AlgorithmP::incrementCountRight(
 			if (c.test)
 			{				
 				c.ts->addMemory("repairPair", c.ts->pairRecordWords); //Dense hash map uses double memory
-				if (c.ts->firstBlock)
-					c.ts->s_maxPairs++;
+				c.ts->s_maxPairs++;
 			}
 				
 
@@ -882,16 +880,8 @@ void AlgorithmP::manageLowerPriorityLists(
 			{
 				c.offset_minCompressedSize = c.estimatedResultSize();
 				c.offset_optimalCutoff = i + 2;
-				//DEBUG
-				if (i < 60)
-				{
-					cout << "Optimal cutoff (in repair): " << c.offset_optimalCutoff << ", min value: " << c.offset_minCompressedSize << endl;
-					cout << "Dictionary entries: " << c.offset_dictionaryEntries << ", sequence size: " << c.offset_sequenceSize << endl;
-				}
 			}
-		}
-		
-		
+		}		
 	}
 }
 

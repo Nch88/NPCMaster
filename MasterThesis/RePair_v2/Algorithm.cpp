@@ -63,7 +63,19 @@ int Algorithm::run(
 		priorityQueueSize = sqrt(sequenceArray.size());
 		priorityQueue.resize(priorityQueueSize);
 		if (c.test)
+		{
 			c.ts->addMemory("initPrio", priorityQueueSize);
+
+			//For calculating averages across blocks
+			if (c.ts->s_nrOfBlocks == 1)
+			{
+				c.ts->s_fullBlockSize = c.ts->s_currentBlockSize;
+			}
+			else
+			{
+				c.ts->s_lastBlockSize = c.ts->s_currentBlockSize;
+			}
+		}
 		if (c.timing)
 		{
 			t.start();
@@ -159,8 +171,12 @@ int Algorithm::run(
 
 		if (c.test)
 		{
-			c.ts->firstBlock = false;
-		}		
+			c.ts->resetForNextBlock();
+		}
+	}
+	if (c.test)
+	{
+		c.ts->calculateAverages();
 	}
 	cout << "Completed compression of file: " << filename << endl;
 	init.resetCompleted(blockSize, activePairs, sequenceArray);
