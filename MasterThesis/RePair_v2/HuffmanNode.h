@@ -6,12 +6,7 @@ public:
 	string code;
 
 	HuffmanNode();
-	HuffmanNode(unsigned long  symbol, int frequency);	
-	HuffmanNode(
-		unsigned long  symbol, 
-		int frequency, 
-		HuffmanNode *& leftChild, 
-		HuffmanNode *& rightChild);
+	HuffmanNode(int frequency);	
 	~HuffmanNode();
 
 	
