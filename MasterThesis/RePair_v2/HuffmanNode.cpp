@@ -8,16 +8,7 @@ HuffmanNode::HuffmanNode()
 	this->code = "";
 }
 
-HuffmanNode::HuffmanNode(unsigned long  symbol, int frequency)
-{
-	this->frequency = frequency;
-	this->code = "";
-}
-HuffmanNode::HuffmanNode(
-	unsigned long  symbol,
-	int frequency,
-	HuffmanNode *& leftChild,
-	HuffmanNode *& rightChild)
+HuffmanNode::HuffmanNode(int frequency)
 {
 	this->frequency = frequency;
 	this->code = "";
