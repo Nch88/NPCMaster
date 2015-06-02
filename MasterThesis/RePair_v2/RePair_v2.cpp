@@ -200,7 +200,7 @@ void getAvgResult(TestSuite & avgResult, vector<TestSuite> & testResults)
 			avgResult.s_huffmanCodeLength_max = testResults[i].s_huffmanCodeLength_max;
 			avgResult.s_largestGeneration = testResults[i].s_largestGeneration;
 			avgResult.s_largestGenerationMax = testResults[i].s_largestGenerationMax;
-			avgResult.s_largestGenerationCount= testResults[i].s_largestGenerationCount;
+			avgResult.s_largestGenerationCount = testResults[i].s_largestGenerationCount;
 			avgResult.s_largestGenerationCountMax = testResults[i].s_largestGenerationCountMax;
 			avgResult.s_maxPairs = testResults[i].s_maxPairs;
 			avgResult.s_nrOfGenerations = testResults[i].s_nrOfGenerations;
