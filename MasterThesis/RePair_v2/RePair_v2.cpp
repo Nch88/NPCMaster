@@ -281,6 +281,7 @@ int interpretParameter(char *&arg, Conditions &c, int &blockSize)
 		if (mbs <= 1000)
 		{
 			blockSize = blockSize * mbs;
+			blockSize /= 2; //To compensate for reading two symbols at a time
 			c.blocksizemb = mbs;
 		}
 			
