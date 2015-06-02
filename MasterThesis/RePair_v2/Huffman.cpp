@@ -37,38 +37,6 @@ void Huffman::getFrequencies(
 		}	
 }
 
-void Huffman::unravel(HuffmanNode *& leftChild, HuffmanNode *& rightChild)
-{
-	char zero = '0';
-	char one = '1';
-	if (leftChild->symbol == 0)
-	{
-		leftChild->code += zero;
-		leftChild->leftChild->code = leftChild->code;
-		leftChild->rightChild->code = leftChild->code;
-
-		unravel(leftChild->leftChild, leftChild->rightChild);
-		delete leftChild;
-	}
-	else
-	{
-		leftChild->code += zero;
-	}
-	if (rightChild->symbol == 0)
-	{
-		rightChild->code += one;
-		rightChild->leftChild->code = rightChild->code;
-		rightChild->rightChild->code = rightChild->code;
-
-		unravel(rightChild->leftChild, rightChild->rightChild);
-		delete rightChild;
-	}
-	else
-	{
-		rightChild->code += one;
-	}
-}
-
 void Huffman::sift(
 	int currentNodeIndex,
 	int heapSize,
