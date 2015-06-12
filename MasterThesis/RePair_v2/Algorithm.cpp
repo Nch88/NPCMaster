@@ -64,7 +64,7 @@ int Algorithm::run(
 		priorityQueue.resize(priorityQueueSize);
 		if (c.test)
 		{
-			c.ts->addMemory("initPrio", priorityQueueSize);
+			c.ts->addMemory("initPrio", priorityQueueSize * 2);
 
 			//For calculating averages across blocks
 			if (c.ts->s_nrOfBlocks == 1)

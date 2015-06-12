@@ -479,7 +479,7 @@ void AlgorithmP::incrementCountLeft(
 
 				if (c.test)
 				{
-					c.ts->addMemory("initTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+					c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
 				}
 			}
 
@@ -560,7 +560,7 @@ void AlgorithmP::incrementCountRight(
 
 			if (c.test)
 			{
-				c.ts->addMemory("initTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
+				c.ts->addMemory("repairTracker", c.ts->pairTrackerWords); //Dense hash map uses extra memory
 			}
 		}
 
